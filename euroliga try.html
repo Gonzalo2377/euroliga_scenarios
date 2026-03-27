@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Playoffs Euroliga Ultimate</title>
+    <style>
+        :root {
+            --primary: #ea580c; 
+            --dark: #111827;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --border: #e5e7eb;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav button {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--dark);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        nav button:hover, nav button.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .tab-content {
+            display: none;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            animation: fadeIn 0.4s;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            white-space: nowrap;
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        th {
+            background-color: var(--dark);
+            color: var(--white);
+        }
+        tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .team-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+            font-weight: 500;
+            justify-content: flex-start;
+        }
+        .team-cell-center {
+            justify-content: center;
+        }
+        .team-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .playoff-zone { border-left: 4px solid #10b981; } 
+        .playin-zone { border-left: 4px solid #f59e0b; } 
+        .out-zone { border-left: 4px solid #ef4444; } 
+        
+        /* Controles y Simulador */
+        .jornada-header {
+            background-color: var(--dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin-top: 1.5rem;
+            display: inline-block;
+        }
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .match-card {
+            display: flex;
+            flex-direction: column;
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        .btn-win {
+            background-color: var(--white);
+            color: var(--dark);
+            border: 1px solid var(--border);
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            flex: 1;
+            margin: 0 5px;
+        }
+        .btn-win:hover {
+            background-color: var(--light);
+            border-color: var(--primary);
+        }
+        .btn-win.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Layout del Simulador */
+        @media (min-width: 992px) {
+            .sim-layout {
+                display: flex;
+                gap: 2rem;
+                align-items: flex-start;
+            }
+            .sim-matches {
+                flex: 1.2;
+            }
+            .sim-standings {
+                flex: 1;
+                position: sticky;
+                top: 80px; 
+                background: var(--white);
+                padding: 1rem;
+                border-radius: 8px;
+                border: 1px solid var(--border);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            }
+        }
+        
+        /* Desempates */
+        .matrix-container {
+            margin-bottom: 3rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            background: #fafafa;
+        }
+        .matrix-container h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .h2h-cell {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .h2h-win { color: #10b981; }
+        .h2h-loss { color: #ef4444; }
+        .h2h-tie { color: #f59e0b; }
+        .total-h2h-col {
+            background-color: #f3f4f6;
+            font-weight: bold;
+            color: var(--dark);
+            border-left: 2px solid #d1d5db;
+        }
+        
+        /* Filtros */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .filters select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+            flex: 1;
+        }
+        
+        /* Calendario */
+        .schedule-cell {
+            display: flex;
+            gap: 4px;
+            font-size: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .game-badge {
+            padding: 3px 5px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .badge-home { background-color: #e5e7eb; color: #1f2937; border: 1px solid #d1d5db; }
+        .badge-away { background-color: #374151; color: white; }
+
+        /* Estilos Pestaña Análisis */
+        .insight-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .insight-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-size: 1.25rem;
+        }
+        .insight-date {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .insight-card p {
+            margin: 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏆 Calculadora Euroleague Ultimate 25/26</h1>
+    </header>
+
+    <nav>
+        <button class="tab-link active" onclick="openTab(event, 'clasificacion')">📊 Clasificación</button>
+        <button class="tab-link" onclick="openTab(event, 'simulador')">🎮 Simulador en Vivo</button>
+        <button class="tab-link" onclick="openTab(event, 'desempates')">⚔️ Desempates</button>
+        <button class="tab-link" onclick="openTab(event, 'resultados')">🏀 Resultados Exactos</button>
+        <button class="tab-link" onclick="openTab(event, 'analisis')">📰 Análisis y Claves</button>
+    </nav>
+
+    <div class="container">
+        
+        <div id="clasificacion" class="tab-content active">
+            <h2>Clasificación Oficial</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pos</th>
+                            <th style="text-align: left;">Equipo</th>
+                            <th>J</th>
+                            <th>V</th>
+                            <th>D</th>
+                            <th title="Porcentaje de Victorias">% Vict.</th>
+                            <th title="Diferencia de Puntos">+/-</th>
+                            <th>Calendario Restante (vs Local | @ Visitante)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standings-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="simulador" class="tab-content">
+            <div class="sim-layout">
+                <div class="sim-matches">
+                    <h2>Simulador de Jornadas Restantes</h2>
+                    <p>Selecciona los ganadores. La tabla y los desempates se actualizarán al instante.</p>
+                    <div id="matches-container"></div>
+                </div>
+                <div class="sim-standings">
+                    <h3 style="margin-top:0; color:var(--primary);">Clasificación en Vivo</h3>
+                    <div class="table-responsive">
+                        <table style="font-size: 0.9rem;">
+                            <thead>
+                                <tr>
+                                    <th>Pos</th>
+                                    <th style="text-align: left;">Equipo</th>
+                                    <th>V</th>
+                                    <th>D</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sim-standings-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="desempates" class="tab-content">
+            <h2>Desempates (Head-to-Head)</h2>
+            <p>Grupos calculados automáticamente según tus simulaciones. La última columna muestra el balance de V-D de cada equipo contra el resto de empatados.</p>
+            <div id="matrices-container" class="table-responsive"></div>
+        </div>
+
+        <div id="resultados" class="tab-content">
+            <h2>Resultados Históricos de la Temporada</h2>
+            <p>Filtra por Jornada o por Equipo para encontrar los marcadores exactos.</p>
+            
+            <div class="filters">
+                <select id="filter-jornada" onchange="renderResultados()">
+                    <option value="ALL">Todas las Jornadas</option>
+                </select>
+                <select id="filter-equipo" onchange="renderResultados()">
+                    <option value="ALL">Todos los Equipos</option>
+                </select>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jornada</th>
+                            <th>Local</th>
+                            <th>Resultado</th>
+                            <th>Visitante</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultados-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="analisis" class="tab-content">
+            <h2>El Post-Partido: Lo que nos deja la jornada</h2>
+            <p>Las claves, narrativas y consecuencias matemáticas de los últimos resultados de la Euroliga.</p>
+            
+            <div class="insight-card">
+                <h3>👑 El Real Madrid acaricia el factor cancha</h3>
+                <span class="insight-date">Actualizado: J34 (Real Madrid 82 - 71 Anadolu Efes)</span>
+                <p>Con 22 victorias en su casillero, los de Chus Mateo dan un paso de gigante para asegurar estar entre los 4 primeros. Una defensa asfixiante en el último cuarto dejó sin opciones a un Efes que se despide casi definitivamente del Play-In.</p>
+            </div>
+
+            <div class="insight-card">
+                <h3>🔥 Milano se niega a morir en el derbi italiano</h3>
+                <span class="insight-date">Actualizado: J34 (Olimpia Milano 103 - 87 Virtus Bolonia)</span>
+                <p>Messina y los suyos asaltan las 17 victorias y meten toda la presión a Dubai y al pelotón del Top 10. Si encadenan un par de triunfos más, la zona baja del Play-In va a ser un baño de sangre hasta el último segundo de la temporada.</p>
+            </div>
+
+            <div class="insight-card">
+                <h3>🥵 Maccabi sobrevive a la locura contra Dubai</h3>
+                <span class="insight-date">Actualizado: J34 (Maccabi Tel Aviv 104 - 100 Dubai)</span>
+                <p>Una prórroga de auténtico infarto permite a los israelíes sumar su victoria número 17, empatando a Milano y a su propio rival, el Dubai. Este triunfo vale doble, ya que les mantiene con vida y comprime aún más la lucha por la codiciada décima plaza.</p>
+            </div>
+            
+            <div class="insight-card">
+                <h3>📉 Se acaba el tiempo para Virtus, Efes y Bayern</h3>
+                <span class="insight-date">Análisis de la parte baja</span>
+                <p>Las derrotas de esta jornada dejan a estos tres equipos pendiendo de un hilo absoluto. Necesitarían un milagro matemático, carambolas y ganar todo lo que les queda para tener una mínima esperanza de asomarse a los puestos de postemporada.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // EQUIPOS CORREGIDOS SEGÚN LA IMAGEN OFICIAL + LOS 4 PARTIDOS DE LA J34
+        const teamsBase = [
+            { id: "FEN", name: "Fenerbahçe", flag: "🇹🇷", initialWins: 23, initialLosses: 10, diff: 87 },
+            { id: "OLY", name: "Olympiacos", flag: "🇬🇷", initialWins: 22, initialLosses: 12, diff: 227 },
+            { id: "RMA", name: "Real Madrid", flag: "🇪🇸", initialWins: 22, initialLosses: 12, diff: 176 },
+            { id: "VAL", name: "Valencia Basket", flag: "🇪🇸", initialWins: 21, initialLosses: 12, diff: 128 },
+            { id: "HTA", name: "Hapoel Tel-Aviv", flag: "🇮🇱", initialWins: 20, initialLosses: 12, diff: 121 },
+            { id: "ZAL", name: "Zalgiris Kaunas", flag: "🇱🇹", initialWins: 19, initialLosses: 14, diff: 154 },
+            { id: "MON", name: "Mónaco", flag: "🇲🇨", initialWins: 19, initialLosses: 14, diff: 123 },
+            { id: "CZV", name: "Estrella Roja", flag: "🇷🇸", initialWins: 19, initialLosses: 14, diff: 52 },
+            { id: "PAO", name: "Panathinaikos", flag: "🇬🇷", initialWins: 19, initialLosses: 14, diff: 49 },
+            { id: "BAR", name: "Barcelona", flag: "🇪🇸", initialWins: 19, initialLosses: 14, diff: 27 },
+            { id: "MIL", name: "Olimpia Milano", flag: "🇮🇹", initialWins: 17, initialLosses: 17, diff: -13 },
+            { id: "DUB", name: "Dubai", flag: "🇦🇪", initialWins: 17, initialLosses: 17, diff: -1 },
+            { id: "MAC", name: "Maccabi Tel Aviv", flag: "🇮🇱", initialWins: 17, initialLosses: 16, diff: -59 },
+            { id: "BAY", name: "Bayern", flag: "🇩🇪", initialWins: 14, initialLosses: 20, diff: -103 },
+            { id: "VIR", name: "Virtus Bolonia", flag: "🇮🇹", initialWins: 13, initialLosses: 20, diff: -130 },
+            { id: "PAR", name: "Partizan", flag: "🇷🇸", initialWins: 13, initialLosses: 20, diff: -200 },
+            { id: "PRS", name: "Paris", flag: "🇫🇷", initialWins: 12, initialLosses: 21, diff: -79 },
+            { id: "EFE", name: "Anadolu Efes", flag: "🇹🇷", initialWins: 10, initialLosses: 24, diff: -127 },
+            { id: "BAS", name: "Baskonia", flag: "🇪🇸", initialWins: 9, initialLosses: 24, diff: -182 },
+            { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 26, diff: -250 }
+        ];
+
+        function getLogo(name) {
+            return `https://ui-avatars.com/api/?name=${name.substring(0,2)}&background=random&color=fff&rounded=true&bold=true`;
+        }
+        
+        function getTeamAbrev(name) {
+            let t = teamsBase.find(team => team.name === name);
+            return t ? t.id : name.substring(0,3).toUpperCase();
+        }
+
+        const rawResults = "34|Bayern|Asvel Basket|93|83,34|Maccabi Tel Aviv|Dubai|104|100,34|Olimpia Milano|Virtus Bolonia|103|87,34|Real Madrid|Anadolu Efes|82|71,33|Real Madrid|Hapoel Tel-Aviv|92|83,33|Partizan|Asvel Basket|79|78,33|Barcelona|Anadolu Efes|78|71,33|Valencia Basket|Olympiacos|85|84,33|Dubai|Panathinaikos|104|107,33|Mónaco|Olimpia Milano|90|85,33|Zalgiris Kaunas|Bayern|78|71,33|Maccabi Tel Aviv|Fenerbahçe|94|89,32|Asvel Basket|Maccabi Tel Aviv|85|89,32|Panathinaikos|Estrella Roja|82|74,32|Zalgiris Kaunas|Real Madrid|87|85,32|Fenerbahçe|Olimpia Milano|79|75,32|Paris|Partizan|81|90,32|Bayern|Dubai|74|87,32|Olympiacos|Baskonia|90|80,32|Hapoel Tel-Aviv|Virtus Bolonia|109|91,32|Anadolu Efes|Mónaco|93|98,32|Valencia Basket|Barcelona|62|66,31|Barcelona|Hapoel Tel-Aviv|75|80,31|Olimpia Milano|Maccabi Tel Aviv|96|87,31|Estrella Roja|Fenerbahçe|79|73,31|Panathinaikos|Zalgiris Kaunas|92|88,31|Paris|Asvel Basket|90|81,31|Real Madrid|Valencia Basket|96|79,31|Bayern|Anadolu Efes|80|81,31|Dubai|Baskonia|100|94,31|Mónaco|Olympiacos|81|80,31|Virtus Bolonia|Partizan|82|88,30|Partizan|Dubai|88|74,30|Baskonia|Paris|81|97,30|Olympiacos|Panathinaikos|86|80,30|Estrella Roja|Bayern|80|85,30|Anadolu Efes|Asvel Basket|88|91,30|Real Madrid|Virtus Bolonia|92|84,30|Olimpia Milano|Barcelona|87|84,30|Valencia Basket|Zalgiris Kaunas|91|87,30|Fenerbahçe|Mónaco|88|70,29|Panathinaikos|Paris|99|104,29|Real Madrid|Bayern|93|70,29|Baskonia|Valencia Basket|79|108,29|Hapoel Tel-Aviv|Olimpia Milano|92|86,29|Mónaco|Maccabi Tel Aviv|86|91,29|Dubai|Asvel Basket|96|85,29|Estrella Roja|Anadolu Efes|91|81,29|Virtus Bolonia|Barcelona|85|80,29|Zalgiris Kaunas|Olympiacos|99|94,29|Fenerbahçe|Partizan|81|78,28|Olimpia Milano|Dubai|78|96,28|Partizan|Real Madrid|73|77,28|Panathinaikos|Fenerbahçe|83|85,28|Mónaco|Baskonia|102|92,28|Zalgiris Kaunas|Hapoel Tel-Aviv|93|82,28|Barcelona|Paris|74|85,28|Valencia Basket|Asvel Basket|82|67,28|Olympiacos|Estrella Roja|92|86,28|Maccabi Tel Aviv|Bayern|111|106,28|Anadolu Efes|Virtus Bolonia|91|60,27|Baskonia|Barcelona|91|97,27|Olympiacos|Virtus Bolonia|109|77,27|Asvel Basket|Olimpia Milano|76|77,27|Estrella Roja|Maccabi Tel Aviv|82|83,27|Anadolu Efes|Zalgiris Kaunas|92|82,27|Paris|Fenerbahçe|90|92,27|Bayern|Mónaco|91|82,27|Partizan|Panathinaikos|78|62,27|Hapoel Tel-Aviv|Valencia Basket|99|104,27|Dubai|Real Madrid|93|85,26|Virtus Bolonia|Asvel Basket|70|80,26|Barcelona|Fenerbahçe|78|82,26|Bayern|Paris|81|75,26|Olimpia Milano|Baskonia|109|89,26|Panathinaikos|Real Madrid|82|81,26|Maccabi Tel Aviv|Partizan|95|93,26|Estrella Roja|Hapoel Tel-Aviv|87|75,26|Zalgiris Kaunas|Mónaco|104|87,26|Anadolu Efes|Valencia Basket|107|90,26|Dubai|Olympiacos|108|98,25|Asvel Basket|Panathinaikos|78|79,25|Baskonia|Zalgiris Kaunas|102|91,25|Estrella Roja|Dubai|95|92,25|Mónaco|Virtus Bolonia|82|84,25|Valencia Basket|Maccabi Tel Aviv|94|83,25|Olimpia Milano|Partizan|85|79,25|Olympiacos|Barcelona|87|75,25|Hapoel Tel-Aviv|Bayern|64|79,25|Fenerbahçe|Anadolu Efes|79|62,25|Paris|Real Madrid|98|92,24|Asvel Basket|Barcelona|91|98,24|Partizan|Hapoel Tel-Aviv|104|101,24|Virtus Bolonia|Estrella Roja|93|102,24|Fenerbahçe|Baskonia|84|71,24|Paris|Dubai|79|99,24|Real Madrid|Mónaco|90|78,24|Bayern|Valencia Basket|93|89,24|Olimpia Milano|Zalgiris Kaunas|82|86,24|Maccabi Tel Aviv|Panathinaikos|75|71,24|Anadolu Efes|Olympiacos|68|74,23|Virtus Bolonia|Fenerbahçe|80|85,23|Real Madrid|Olimpia Milano|106|77,23|Barcelona|Dubai|91|89,23|Bayern|Partizan|63|67,23|Valencia Basket|Paris|98|84,23|Panathinaikos|Baskonia|93|74,23|Asvel Basket|Zalgiris Kaunas|77|96,23|Mónaco|Estrella Roja|96|100,23|Hapoel Tel-Aviv|Anadolu Efes|71|66,23|Olympiacos|Maccabi Tel Aviv|100|93,22|Real Madrid|Barcelona|80|61,22|Asvel Basket|Hapoel Tel-Aviv|73|81,22|Fenerbahçe|Valencia Basket|82|79,22|Paris|Mónaco|87|95,22|Olimpia Milano|Estrella Roja|96|104,22|Maccabi Tel Aviv|Zalgiris Kaunas|100|97,22|Bayern|Panathinaikos|85|78,22|Anadolu Efes|Baskonia|75|89,22|Dubai|Virtus Bolonia|72|80,22|Partizan|Olympiacos|66|104,21|Hapoel Tel-Aviv|Paris|93|82,21|Barcelona|Partizan|88|70,21|Baskonia|Asvel Basket|78|73,21|Olimpia Milano|Anadolu Efes|87|74,21|Olympiacos|Bayern|95|80,21|Zalgiris Kaunas|Estrella Roja|99|67,21|Real Madrid|Maccabi Tel Aviv|98|86,21|Valencia Basket|Mónaco|92|101,21|Panathinaikos|Virtus Bolonia|84|71,21|Dubai|Fenerbahçe|92|81,20|Bayern|Baskonia|96|89,20|Anadolu Efes|Paris|79|84,20|Barcelona|Maccabi Tel Aviv|93|83,20|Virtus Bolonia|Zalgiris Kaunas|83|79,20|Panathinaikos|Olimpia Milano|74|87,20|Hapoel Tel-Aviv|Dubai|85|60,20|Asvel Basket|Real Madrid|69|80,20|Estrella Roja|Valencia Basket|89|106,20|Mónaco|Partizan|101|84,20|Fenerbahçe|Olympiacos|88|80,19|Bayern|Maccabi Tel Aviv|95|71,19|Real Madrid|Dubai|107|93,19|Virtus Bolonia|Olimpia Milano|97|85,19|Panathinaikos|Olympiacos|82|87,19|Baskonia|Fenerbahçe|93|108,19|Anadolu Efes|Estrella Roja|65|87,19|Barcelona|Mónaco|74|90,19|Valencia Basket|Partizan|86|73,19|Asvel Basket|Paris|94|89,19|Hapoel Tel-Aviv|Zalgiris Kaunas|80|93,18|Virtus Bolonia|Olympiacos|94|97,18|Mónaco|Real Madrid|100|95,18|Partizan|Maccabi Tel Aviv|87|112,18|Asvel Basket|Anadolu Efes|103|99,18|Paris|Estrella Roja|102|92,18|Valencia Basket|Baskonia|91|81,18|Bayern|Hapoel Tel-Aviv|72|82,18|Zalgiris Kaunas|Panathinaikos|85|92,18|Fenerbahçe|Barcelona|72|71,18|Dubai|Olimpia Milano|99|92,17|Estrella Roja|Virtus Bolonia|90|89,17|Barcelona|Baskonia|134|124,17|Olympiacos|Asvel Basket|107|84,17|Mónaco|Bayern|103|77,17|Zalgiris Kaunas|Partizan|109|68,17|Anadolu Efes|Dubai|76|80,17|Real Madrid|Paris|95|90,17|Olimpia Milano|Fenerbahçe|72|87,17|Panathinaikos|Hapoel Tel-Aviv|93|82,17|Maccabi Tel Aviv|Valencia Basket|85|82,16|Baskonia|Mónaco|85|73,16|Partizan|Virtus Bolonia|68|86,16|Asvel Basket|Bayern|76|74,16|Zalgiris Kaunas|Anadolu Efes|64|87,16|Paris|Barcelona|69|85,16|Olimpia Milano|Real Madrid|89|82,16|Olympiacos|Valencia Basket|92|99,16|Hapoel Tel-Aviv|Estrella Roja|84|78,16|Fenerbahçe|Panathinaikos|77|81,16|Dubai|Maccabi Tel Aviv|95|97,15|Barcelona|Olympiacos|98|85,15|Partizan|Estrella Roja|79|76,15|Virtus Bolonia|Hapoel Tel-Aviv|74|79,15|Mónaco|Fenerbahçe|86|92,15|Dubai|Bayern|89|88,15|Real Madrid|Baskonia|94|87,15|Paris|Zalgiris Kaunas|105|108,15|Olimpia Milano|Panathinaikos|96|89,15|Valencia Basket|Anadolu Efes|94|82,15|Maccabi Tel Aviv|Asvel Basket|92|84,14|Olympiacos|Fenerbahçe|104|87,14|Baskonia|Olimpia Milano|88|78,14|Virtus Bolonia|Dubai|79|78,14|Panathinaikos|Valencia Basket|79|89,14|Estrella Roja|Barcelona|79|89,14|Partizan|Bayern|92|85,14|Hapoel Tel-Aviv|Asvel Basket|87|80,14|Mónaco|Paris|125|104,14|Zalgiris Kaunas|Maccabi Tel Aviv|65|83,14|Anadolu Efes|Real Madrid|75|81,13|Barcelona|Asvel Basket|88|78,13|Estrella Roja|Olympiacos|91|80,13|Mónaco|Anadolu Efes|102|66,13|Maccabi Tel Aviv|Olimpia Milano|88|102,13|Valencia Basket|Bayern|90|64,13|Panathinaikos|Partizan|91|69,13|Hapoel Tel-Aviv|Real Madrid|74|75,13|Zalgiris Kaunas|Baskonia|82|67,13|Fenerbahçe|Virtus Bolonia|66|64,13|Dubai|Paris|90|89,12|Valencia Basket|Estrella Roja|76|73,12|Baskonia|Bayern|95|73,12|Partizan|Fenerbahçe|87|99,12|Virtus Bolonia|Maccabi Tel Aviv|99|89,12|Olympiacos|Paris|98|86,12|Real Madrid|Zalgiris Kaunas|100|99,12|Olimpia Milano|Hapoel Tel-Aviv|83|105,12|Panathinaikos|Dubai|103|82,12|Anadolu Efes|Barcelona|74|73,12|Asvel Basket|Mónaco|52|84,11|Barcelona|Virtus Bolonia|88|81,11|Olimpia Milano|Olympiacos|88|87,11|Asvel Basket|Partizan|88|87,11|Anadolu Efes|Bayern|74|72,11|Dubai|Zalgiris Kaunas|95|89,11|Maccabi Tel Aviv|Baskonia|89|83,11|Paris|Valencia Basket|90|86,11|Real Madrid|Panathinaikos|77|87,11|Estrella Roja|Mónaco|91|79,11|Fenerbahçe|Hapoel Tel-Aviv|74|68,10|Bayern|Barcelona|74|75,10|Olimpia Milano|Asvel Basket|80|72,10|Olympiacos|Zalgiris Kaunas|95|78,10|Paris|Panathinaikos|95|101,10|Partizan|Mónaco|78|76,10|Valencia Basket|Real Madrid|89|76,10|Virtus Bolonia|Anadolu Efes|99|89,10|Hapoel Tel-Aviv|Baskonia|114|89,10|Fenerbahçe|Maccabi Tel Aviv|84|75,10|Dubai|Estrella Roja|102|86,9|Barcelona|Real Madrid|92|101,9|Olympiacos|Partizan|80|71,9|Zalgiris Kaunas|Valencia Basket|86|77,9|Anadolu Efes|Olimpia Milano|93|97,9|Maccabi Tel Aviv|Mónaco|107|112,9|Paris|Bayern|82|86,9|Baskonia|Virtus Bolonia|87|76,9|Dubai|Hapoel Tel-Aviv|97|109,9|Fenerbahçe|Asvel Basket|81|67,9|Estrella Roja|Panathinaikos|86|68,8|Baskonia|Anadolu Efes|86|75,8|Partizan|Barcelona|76|78,8|Olympiacos|Hapoel Tel-Aviv|62|58,8|Mónaco|Panathinaikos|92|84,8|Real Madrid|Fenerbahçe|84|58,8|Bayern|Virtus Bolonia|86|70,8|Olimpia Milano|Paris|86|77,8|Valencia Basket|Dubai|80|78,8|Maccabi Tel Aviv|Estrella Roja|92|99,8|Zalgiris Kaunas|Asvel Basket|96|59,7|Olympiacos|Mónaco|87|92,7|Hapoel Tel-Aviv|Partizan|97|84,7|Valencia Basket|Fenerbahçe|94|79,7|Paris|Anadolu Efes|80|90,7|Barcelona|Olimpia Milano|74|72,7|Baskonia|Dubai|92|85,7|Panathinaikos|Maccabi Tel Aviv|99|85,7|Bayern|Real Madrid|90|84,7|Estrella Roja|Asvel Basket|79|65,7|Zalgiris Kaunas|Virtus Bolonia|86|65,6|Bayern|Olympiacos|71|96,6|Partizan|Paris|83|101,6|Virtus Bolonia|Panathinaikos|92|75,6|Anadolu Efes|Fenerbahçe|69|79,6|Estrella Roja|Baskonia|90|72,6|Barcelona|Zalgiris Kaunas|73|88,6|Olimpia Milano|Valencia Basket|100|103,6|Hapoel Tel-Aviv|Mónaco|85|77,6|Asvel Basket|Dubai|85|79,6|Maccabi Tel Aviv|Real Madrid|92|91,5|Baskonia|Partizan|79|91,5|Paris|Hapoel Tel-Aviv|88|89,5|Asvel Basket|Virtus Bolonia|83|90,5|Anadolu Efes|Panathinaikos|81|95,5|Mónaco|Valencia Basket|90|84,5|Estrella Roja|Real Madrid|90|75,5|Maccabi Tel Aviv|Olympiacos|94|95,5|Fenerbahçe|Bayern|88|73,5|Zalgiris Kaunas|Olimpia Milano|78|89,5|Dubai|Barcelona|83|78,4|Paris|Baskonia|105|87,4|Real Madrid|Partizan|93|86,4|Valencia Basket|Hapoel Tel-Aviv|93|100,4|Virtus Bolonia|Mónaco|77|73,4|Panathinaikos|Asvel Basket|91|85,4|Bayern|Olimpia Milano|64|53,4|Olympiacos|Anadolu Efes|78|82,4|Estrella Roja|Zalgiris Kaunas|88|79,4|Fenerbahçe|Dubai|69|93,4|Maccabi Tel Aviv|Barcelona|71|92,3|Barcelona|Valencia Basket|108|102,3|Bayern|Zalgiris Kaunas|70|98,3|Olympiacos|Dubai|86|67,3|Fenerbahçe|Estrella Roja|81|86,3|Real Madrid|Asvel Basket|85|72,3|Paris|Virtus Bolonia|90|79,3|Baskonia|Panathinaikos|84|86,3|Olimpia Milano|Mónaco|79|82,3|Partizan|Anadolu Efes|93|87,3|Hapoel Tel-Aviv|Maccabi Tel Aviv|90|103,2|Maccabi Tel Aviv|Paris|94|101,2|Valencia Basket|Virtus Bolonia|103|94,2|Panathinaikos|Barcelona|96|103,2|Asvel Basket|Baskonia|102|95,2|Anadolu Efes|Hapoel Tel-Aviv|81|87,2|Mónaco|Dubai|103|81,2|Zalgiris Kaunas|Fenerbahçe|84|81,2|Real Madrid|Olympiacos|89|77,2|Bayern|Estrella Roja|97|88,2|Partizan|Olimpia Milano|80|78,1|Asvel Basket|Valencia Basket|77|80,1|Fenerbahçe|Paris|96|77,1|Mónaco|Zalgiris Kaunas|84|89,1|Virtus Bolonia|Real Madrid|74|68,1|Baskonia|Olympiacos|96|102,1|Panathinaikos|Bayern|87|79,1|Estrella Roja|Olimpia Milano|82|92,1|Anadolu Efes|Maccabi Tel Aviv|85|78,1|Dubai|Partizan|89|76,1|Hapoel Tel-Aviv|Barcelona|103|87";
+
+        let pastMatches = [];
+        rawResults.split(',').forEach(match => {
+            let data = match.split('|');
+            pastMatches.push({
+                jornada: parseInt(data[0]), home: data[1], away: data[2], scoreH: parseInt(data[3]), scoreA: parseInt(data[4])
+            });
+        });
+
+        const schedule = [
+            {
+                jornada: "Partidos Aplazados",
+                games: [
+                    { id: 331, home: "Virtus Bolonia", away: "Paris" },
+                    { id: 301, home: "Maccabi Tel Aviv", away: "Hapoel Tel-Aviv" }
+                ]
+            },
+            {
+                jornada: "Jornada 34",
+                games: [
+                    { id: 341, home: "Bayern", away: "Asvel Basket", played: true, scoreH: 93, scoreA: 83 },
+                    { id: 342, home: "Maccabi Tel Aviv", away: "Dubai", played: true, scoreH: 104, scoreA: 100 },
+                    { id: 343, home: "Olimpia Milano", away: "Virtus Bolonia", played: true, scoreH: 103, scoreA: 87 },
+                    { id: 344, home: "Real Madrid", away: "Anadolu Efes", played: true, scoreH: 82, scoreA: 71 },
+                    { id: 345, home: "Fenerbahçe", away: "Zalgiris Kaunas" },
+                    { id: 346, home: "Panathinaikos", away: "Mónaco" },
+                    { id: 347, home: "Barcelona", away: "Estrella Roja" },
+                    { id: 348, home: "Baskonia", away: "Hapoel Tel-Aviv" },
+                    { id: 349, home: "Partizan", away: "Valencia Basket" },
+                    { id: 3410, home: "Paris", away: "Olympiacos", played: true, scoreH: 87, scoreA: 104 }
+                ]
+            },
+            {
+                jornada: "Jornada 35",
+                games: [
+                    { id: 351, home: "Bayern", away: "Fenerbahçe" },
+                    { id: 352, home: "Hapoel Tel-Aviv", away: "Panathinaikos" },
+                    { id: 353, home: "Zalgiris Kaunas", away: "Barcelona" },
+                    { id: 354, home: "Dubai", away: "Mónaco" },
+                    { id: 355, home: "Estrella Roja", away: "Partizan" },
+                    { id: 356, home: "Paris", away: "Olimpia Milano" },
+                    { id: 357, home: "Maccabi Tel Aviv", away: "Anadolu Efes" },
+                    { id: 358, home: "Asvel Basket", away: "Olympiacos" },
+                    { id: 359, home: "Baskonia", away: "Real Madrid" },
+                    { id: 3510, home: "Virtus Bolonia", away: "Valencia Basket" }
+                ]
+            },
+            {
+                jornada: "Jornada 36",
+                games: [
+                    { id: 361, home: "Hapoel Tel-Aviv", away: "Fenerbahçe" },
+                    { id: 362, home: "Zalgiris Kaunas", away: "Dubai" },
+                    { id: 363, home: "Estrella Roja", away: "Paris" },
+                    { id: 364, home: "Olympiacos", away: "Real Madrid" },
+                    { id: 365, home: "Barcelona", away: "Panathinaikos" },
+                    { id: 366, home: "Valencia Basket", away: "Olimpia Milano" },
+                    { id: 367, home: "Virtus Bolonia", away: "Bayern" },
+                    { id: 368, home: "Baskonia", away: "Maccabi Tel Aviv" },
+                    { id: 369, home: "Anadolu Efes", away: "Partizan" },
+                    { id: 3610, home: "Mónaco", away: "Asvel Basket" }
+                ]
+            },
+            {
+                jornada: "Jornada 37",
+                games: [
+                    { id: 371, home: "Hapoel Tel-Aviv", away: "Olympiacos" },
+                    { id: 372, home: "Fenerbahçe", away: "Real Madrid" },
+                    { id: 373, home: "Olimpia Milano", away: "Bayern" },
+                    { id: 374, home: "Valencia Basket", away: "Panathinaikos" },
+                    { id: 375, home: "Paris", away: "Maccabi Tel Aviv" },
+                    { id: 376, home: "Mónaco", away: "Barcelona" },
+                    { id: 377, home: "Dubai", away: "Anadolu Efes" },
+                    { id: 378, home: "Partizan", away: "Zalgiris Kaunas" },
+                    { id: 379, home: "Virtus Bolonia", away: "Baskonia" },
+                    { id: 3710, home: "Asvel Basket", away: "Estrella Roja" }
+                ]
+            },
+            {
+                jornada: "Jornada 38",
+                games: [
+                    { id: 381, home: "Asvel Basket", away: "Fenerbahçe" },
+                    { id: 382, home: "Maccabi Tel Aviv", away: "Virtus Bolonia" },
+                    { id: 383, home: "Olympiacos", away: "Olimpia Milano" },
+                    { id: 384, home: "Partizan", away: "Baskonia" },
+                    { id: 385, home: "Real Madrid", away: "Estrella Roja" },
+                    { id: 386, home: "Dubai", away: "Valencia Basket" },
+                    { id: 387, home: "Zalgiris Kaunas", away: "Paris" },
+                    { id: 388, home: "Mónaco", away: "Hapoel Tel-Aviv" },
+                    { id: 389, home: "Panathinaikos", away: "Anadolu Efes" },
+                    { id: 3810, home: "Barcelona", away: "Bayern" }
+                ]
+            }
+        ];
+
+        let simulatedPicks = {};
+
+        function getLiveTeams() {
+            let currentTeams = JSON.parse(JSON.stringify(teamsBase));
+            
+            currentTeams.forEach(t => { 
+                t.wins = t.initialWins; 
+                t.losses = t.initialLosses; 
+            });
+
+            Object.values(simulatedPicks).forEach(pick => {
+                let winnerTeam = currentTeams.find(t => t.name === pick.winner);
+                let loserName = (pick.winner === pick.home) ? pick.away : pick.home;
+                let loserTeam = currentTeams.find(t => t.name === loserName);
+                
+                if(winnerTeam) winnerTeam.wins++;
+                if(loserTeam) loserTeam.losses++;
+            });
+            
+            return currentTeams;
+        }
+
+        function getNextOpponentsHTML(teamName) {
+            let html = '<div class="schedule-cell">';
+            schedule.forEach(j => {
+                j.games.forEach(g => {
+                    if(!g.played) {
+                        if (g.home === teamName) html += `<span class="game-badge badge-home" title="${j.jornada} vs ${g.away}">vs ${getTeamAbrev(g.away)}</span>`;
+                        if (g.away === teamName) html += `<span class="game-badge badge-away" title="${j.jornada} en casa de ${g.home}">@ ${getTeamAbrev(g.home)}</span>`;
+                    }
+                });
+            });
+            html += '</div>';
+            return html;
+        }
+
+        function calculateH2HStats(teamA, teamB) {
+            let winsA = 0; let winsB = 0; let played = 0;
+            pastMatches.forEach(m => {
+                if (m.home === teamA && m.away === teamB) { played++; if(m.scoreH > m.scoreA) winsA++; else winsB++; }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.scoreH > m.scoreA) winsB++; else winsA++; }
+            });
+            Object.values(simulatedPicks).forEach(m => {
+                if (m.home === teamA && m.away === teamB) { played++; if(m.winner === teamA) winsA++; else winsB++; }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.winner === teamB) winsB++; else winsA++; }
+            });
+            return { winsA, winsB, played };
+        }
+
+        function getH2HHTML(stats) {
+            let asterisk = stats.played < 2 ? " *" : "";
+            let htmlClass = stats.winsA > stats.winsB ? "h2h-win" : (stats.winsB > stats.winsA ? "h2h-loss" : "h2h-tie");
+            return `<span class="${htmlClass}">${stats.winsA}-${stats.winsB}${asterisk}</span>`;
+        }
+
+        function renderStandings() {
+            let teams = getLiveTeams();
+            teams.sort((a, b) => b.wins - a.wins || b.diff - a.diff);
+            
+            const tbodyMain = document.getElementById("standings-body");
+            const tbodySim = document.getElementById("sim-standings-body");
+            tbodyMain.innerHTML = "";
+            tbodySim.innerHTML = "";
+
+            teams.forEach((team, index) => {
+                let games = team.wins + team.losses; 
+                let pct = games > 0 ? (team.wins / games).toFixed(3).replace('0.', '.') : ".000";
+                let rowClass = index < 6 ? "playoff-zone" : (index < 10 ? "playin-zone" : "out-zone");
+                let diffSign = team.diff > 0 ? "+" : "";
+
+                tbodyMain.innerHTML += `
+                <tr>
+                    <td class="${rowClass}"><strong>${index + 1}</strong></td>
+                    <td>
+                        <div class="team-cell">
+                            <span>${team.flag}</span>
+                            <img src="${getLogo(team.name)}" class="team-logo">
+                            ${team.name}
+                        </div>
+                    </td>
+                    <td>${games}</td>
+                    <td><strong>${team.wins}</strong></td>
+                    <td>${team.losses}</td>
+                    <td>${pct}</td>
+                    <td>${diffSign}${team.diff}</td>
+                    <td>${getNextOpponentsHTML(team.name)}</td>
+                </tr>`;
+
+                tbodySim.innerHTML += `
+                <tr>
+                    <td class="${rowClass}"><strong>${index + 1}</strong></td>
+                    <td>
+                        <div class="team-cell">
+                            <img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">
+                            ${team.name}
+                        </div>
+                    </td>
+                    <td><strong>${team.wins}</strong></td>
+                    <td>${team.losses}</td>
+                </tr>`;
+            });
+        }
+
+        function renderMatches() {
+            const container = document.getElementById("matches-container");
+            container.innerHTML = "";
+            schedule.forEach(jornada => {
+                let jHeader = `<h3 class="jornada-header">${jornada.jornada}</h3><div class="match-grid">`;
+                let jGames = "";
+                jornada.games.forEach(match => {
+                    if (match.played) {
+                        jGames += `<div class="match-card">
+                            <div class="match-teams"><span>${match.home}</span> vs <span>${match.away}</span></div>
+                            <div style="color:var(--primary); font-weight:bold;">Resultado Final: ${match.scoreH} - ${match.scoreA}</div>
+                        </div>`;
+                    } else {
+                        jGames += `<div class="match-card">
+                            <div class="match-teams"><span>${match.home}</span> vs <span>${match.away}</span></div>
+                            <div style="display:flex;">
+                                <button id="btn-${match.id}-home" class="btn-win" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')">Local</button>
+                                <button id="btn-${match.id}-away" class="btn-win" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')">Visitante</button>
+                            </div>
+                        </div>`;
+                    }
+                });
+                container.innerHTML += jHeader + jGames + `</div>`;
+            });
+        }
+
+        function pickWinner(matchId, homeName, awayName, side) {
+            document.getElementById(`btn-${matchId}-home`).classList.remove('selected');
+            document.getElementById(`btn-${matchId}-away`).classList.remove('selected');
+            document.getElementById(`btn-${matchId}-${side}`).classList.add('selected');
+            
+            simulatedPicks[matchId] = { 
+                home: homeName, 
+                away: awayName, 
+                winner: side === 'home' ? homeName : awayName 
+            };
+            
+            renderStandings(); 
+            renderMatrices();
+        }
+
+        function renderMatrices() {
+            const container = document.getElementById("matrices-container");
+            container.innerHTML = "";
+            let teams = getLiveTeams();
+            let grouped = {};
+            
+            teams.forEach(t => {
+                if(!grouped[t.wins]) grouped[t.wins] = [];
+                grouped[t.wins].push(t);
+            });
+
+            let winKeys = Object.keys(grouped).sort((a,b) => b - a);
+            let hasTies = false;
+
+            winKeys.forEach(wins => {
+                let tiedTeams = grouped[wins];
+                if(tiedTeams.length > 1) {
+                    hasTies = true;
+                    let html = `<div class="matrix-container">
+                        <h3>Empatados a ${wins} victorias</h3>
+                        <table><tr><th>Equipo</th>`;
+                    
+                    tiedTeams.forEach(t => { 
+                        html += `<th>
+                            <div class="team-cell team-cell-center">
+                                ${t.flag} <img src="${getLogo(t.name)}" class="team-logo" title="${t.name}">
+                            </div>
+                        </th>`; 
+                    });
+                    
+                    html += `<th class="total-h2h-col">Total V-D</th></tr>`;
+
+                    tiedTeams.forEach(tRow => {
+                        html += `<tr><td>
+                            <div class="team-cell">
+                                ${tRow.flag} <img src="${getLogo(tRow.name)}" class="team-logo"> <strong>${tRow.name}</strong>
+                            </div>
+                        </td>`;
+                        
+                        let totalWinsInGroup = 0;
+                        let totalLossesInGroup = 0;
+
+                        tiedTeams.forEach(tCol => {
+                            if(tRow.id === tCol.id) {
+                                html += `<td style="background:#e5e7eb;">-</td>`;
+                            } else {
+                                let stats = calculateH2HStats(tRow.name, tCol.name);
+                                totalWinsInGroup += stats.winsA;
+                                totalLossesInGroup += stats.winsB;
+                                html += `<td class="h2h-cell">${getH2HHTML(stats)}</td>`;
+                            }
+                        });
+
+                        html += `<td class="total-h2h-col">${totalWinsInGroup} - ${totalLossesInGroup}</td></tr>`;
+                    });
+                    html += `</table></div>`;
+                    container.innerHTML += html;
+                }
+            });
+
+            if(!hasTies) container.innerHTML = "<p>No hay empates actuales.</p>";
+        }
+
+        function initFilters() {
+            let jSelect = document.getElementById("filter-jornada");
+            let eSelect = document.getElementById("filter-equipo");
+            
+            let jornadasUnicas = [...new Set(pastMatches.map(m => m.jornada))].sort((a,b)=>b-a);
+            jornadasUnicas.forEach(j => {
+                jSelect.innerHTML += `<option value="${j}">Jornada ${j}</option>`;
+            });
+
+            let equiposOrdenados = [...teamsBase].sort((a,b) => a.name.localeCompare(b.name));
+            equiposOrdenados.forEach(t => {
+                eSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+            });
+        }
+
+        function renderResultados() {
+            const tbody = document.getElementById("resultados-body");
+            tbody.innerHTML = "";
+            
+            let valJ = document.getElementById("filter-jornada").value;
+            let valE = document.getElementById("filter-equipo").value;
+
+            let filtrados = pastMatches.filter(m => {
+                let pasaJornada = (valJ === "ALL" || m.jornada.toString() === valJ);
+                let pasaEquipo = (valE === "ALL" || m.home === valE || m.away === valE);
+                return pasaJornada && pasaEquipo;
+            });
+
+            if (filtrados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4">No hay resultados que coincidan con esta búsqueda.</td></tr>`;
+                return;
+            }
+
+            filtrados.forEach(m => {
+                let winnerHome = m.scoreH > m.scoreA;
+                tbody.innerHTML += `<tr>
+                    <td>Jornada ${m.jornada}</td>
+                    <td style="${winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${m.home}</td>
+                    <td style="font-weight:bold; font-size:1.1rem; background:#f3f4f6;">${m.scoreH} - ${m.scoreA}</td>
+                    <td style="${!winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${m.away}</td>
+                </tr>`;
+            });
+        }
+
+        function openTab(evt, tabName) {
+            let tabcontent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabcontent.length; i++) tabcontent[i].style.display = "none";
+            let tablinks = document.getElementsByClassName("tab-link");
+            for (let i = 0; i < tablinks.length; i++) tablinks[i].className = tablinks[i].className.replace(" active", "");
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        initFilters();
+        renderStandings();
+        renderMatches();
+        renderMatrices();
+        renderResultados();
+    </script>
+</body>
+</html>
