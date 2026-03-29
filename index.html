@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Playoffs Euroliga Ultimate</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7QJ4NGV13R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7QJ4NGV13R');
+    </script>
+
     <style>
         :root {
             --primary: #ea580c; 
@@ -252,7 +262,6 @@
         .team-dashboard { background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); margin-top: 1.5rem; }
         .rival-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; align-items: center; }
         
-        /* Estilos Matriz Probabilidades */
         .oracle-table th { padding: 8px 4px; font-size: 0.85rem; }
         .oracle-table td { padding: 6px 4px; font-size: 0.85rem; }
         .bg-t6 { background-color: #ecfdf5; }
@@ -317,8 +326,7 @@
                     <option value="" disabled selected id="opt-select-team">-- Selecciona tu equipo --</option>
                 </select>
             </div>
-            <div id="myteam-dashboard" class="team-dashboard" style="display:none;">
-                </div>
+            <div id="myteam-dashboard" class="team-dashboard" style="display:none;"></div>
         </div>
 
         <div id="probabilidades" class="tab-content">
@@ -329,8 +337,7 @@
             <div class="table-responsive" id="prob-results" style="display:none; margin-top:20px;">
                 <table class="oracle-table">
                     <thead>
-                        <tr id="prob-head-row">
-                            </tr>
+                        <tr id="prob-head-row"></tr>
                     </thead>
                     <tbody id="prob-body"></tbody>
                 </table>
@@ -414,8 +421,7 @@
                 prob_desc: "El simulador juega 2.000 finales aleatorios y calcula el % exacto de terminar en cada posición.",
                 run_prob: "🎲 Ejecutar 2.000 Simulaciones", computing: "Calculando futuros paralelos... ⏳",
                 select_team: "-- Selecciona tu equipo --", next_games: "Próximos Partidos", direct_rivals: "Rivales Directos (±2 victorias)",
-                diag_title: "Diagnóstico Actual",
-                diag_eliminated: "Matemáticamente eliminado del Top 10.",
+                diag_title: "Diagnóstico Actual", diag_eliminated: "Matemáticamente eliminado del Top 10.",
                 diag_top6_safe: "Actualmente en zona de Top 6. Mantén el ritmo para asegurar el pase directo a Playoffs.",
                 diag_top6_reach: "Para alcanzar el corte actual del Top 6 ({top6Wins}V), necesitas ganar al menos {toTop6} de los {unplayed} partidos que te quedan.",
                 diag_top6_impossible: "El Top 6 directo ya es inalcanzable matemáticamente.",
@@ -433,8 +439,7 @@
                 prob_desc: "The simulator plays 2,000 random season endings and calculates the exact % of finishing in each position.",
                 run_prob: "🎲 Run 2,000 Simulations", computing: "Computing parallel futures... ⏳",
                 select_team: "-- Select your team --", next_games: "Next Games", direct_rivals: "Direct Rivals (±2 wins)",
-                diag_title: "Current Diagnosis",
-                diag_eliminated: "Mathematically eliminated from the Top 10.",
+                diag_title: "Current Diagnosis", diag_eliminated: "Mathematically eliminated from the Top 10.",
                 diag_top6_safe: "Currently in Top 6 zone. Keep winning to secure direct Playoff entry.",
                 diag_top6_reach: "To reach the current Top 6 threshold ({top6Wins}W), you need to win at least {toTop6} of the remaining {unplayed} games.",
                 diag_top6_impossible: "Direct Top 6 is mathematically impossible.",
@@ -469,7 +474,7 @@
                 select_team: "-- Takımınızı seçin --", next_games: "Gelecek Maçlar", direct_rivals: "Doğrudan Rakipler",
                 diag_title: "Güncel Durum", diag_eliminated: "Top 10'dan elendi.",
                 diag_top6_safe: "Top 6 içinde. Tempoyu koruyun.", diag_top6_reach: "Top 6 için ({top6Wins}G), kalan {unplayed} maçın {toTop6}'sını kazanmalısınız.", diag_top6_impossible: "Top 6 imkansız.",
-                diag_playin_safe: "Play-In (Top 10) bölgesinde.", diag_playin_reach: "Play-In için ({top10Wins}G), kalan {unplayed} maçın {toTop10}'unu kazanmalısınız."
+                diag_playin_safe: "Play-In bölgesinde.", diag_playin_reach: "Play-In için ({top10Wins}G), kalan {unplayed} maçın {toTop10}'unu kazanmalısınız."
             },
             gr: {
                 title: "🏆 EuroLeague Ultimate Υπολογιστής 25/26",
@@ -478,7 +483,7 @@
                 team: "Ομάδα", w: "Ν", l: "Η", form: "Φόρμα", diff_pct: "Δυσκολία %", schedule: "Πρόγραμμα", round: "Αγωνιστική", score: "Σκορ",
                 home: "Γηπεδούχος", away: "Φιλοξενούμενος", ties_desc: "Αυτόματος υπολογισμός.",
                 all_rounds: "Όλες οι Αγωνιστικές", all_teams: "Όλες οι Ομάδες", final_res: "Τελικό Σκορ", btn_home: "Εντός", btn_away: "Εκτός",
-                tied_at: "Ισοβαθμία", victories: "νίκες", total_vd: "Σύνολο Ν-Η", no_ties: "Δεν υπάρχουν ισοβαθμίες.",
+                tied_at: "Ισοβαθμία", victories: "νίκες", total_vd: "Σύνολο", no_ties: "Δεν υπάρχουν ισοβαθμίες.",
                 prob_desc: "2.000 προσομοιώσεις για τον υπολογισμό ακριβών πιθανοτήτων.",
                 run_prob: "🎲 2.000 Προσομοιώσεις", computing: "Υπολογισμός... ⏳",
                 select_team: "-- Επιλέξτε ομάδα --", next_games: "Επόμενοι Αγώνες", direct_rivals: "Άμεσοι Αντίπαλοι",
@@ -661,7 +666,6 @@
             document.querySelectorAll('.t-score').forEach(el => el.textContent = t.score);
             document.querySelectorAll('.t-away').forEach(el => el.textContent = t.away);
 
-            // Generar cabecera matriz 1 a 20
             let pHead = document.getElementById("prob-head-row");
             pHead.innerHTML = `<th class="t-team" style="text-align:left;">${t.team}</th>`;
             for(let i=1; i<=20; i++) pHead.innerHTML += `<th>${i}</th>`;
@@ -769,7 +773,6 @@
                 </div>
             </div>`;
 
-            // DIAGNÓSTICO (Con Lógica Matemática de topes)
             let unplayed = 0;
             schedule.forEach(j => j.games.forEach(g => { if(!g.played && (g.home === teamName || g.away === teamName)) unplayed++; }));
             
@@ -808,7 +811,6 @@
             dashboard.innerHTML = html; dashboard.style.display = "block";
         }
 
-        // --- PROBABILIDADES MATRIZ 1 A 20 ---
         function runProbabilities() {
             document.getElementById('prob-loading').style.display = 'block';
             document.getElementById('prob-results').style.display = 'none';
@@ -856,7 +858,6 @@
                 document.getElementById('prob-results').style.display = 'block';
             }, 50);
         }
-
 
         function renderMatches() {
             const container = document.getElementById("matches-container");
