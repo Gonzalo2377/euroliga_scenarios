@@ -433,7 +433,7 @@
                 official_standings: "Classement Officiel", live_standings: "Classement en Direct", sim_desc: "Choisissez les gagnants pour mettre à jour le tableau.",
                 team: "Équipe", w: "V", l: "D", schedule: "Calendrier Restant", round: "Journée", score: "Résultat",
                 home: "Domicile", away: "Extérieur", ties_desc: "Groupes calculés automatiquement selon vos simulations.",
-                all_rounds: "Toutes las Journées", all_teams: "Toutes les Équipes", final_res: "Résultat Final", btn_home: "Dom.", btn_away: "Ext.",
+                all_rounds: "Toutes les Journées", all_teams: "Toutes les Équipes", final_res: "Résultat Final", btn_home: "Dom.", btn_away: "Ext.",
                 tied_at: "Égalité à", victories: "victoires", total_vd: "Total V-D", no_ties: "Aucune égalité actuelle."
             },
             tr: {
@@ -538,6 +538,16 @@
             { id: "EFE", name: "Anadolu Efes", flag: "🇹🇷", initialWins: 10, initialLosses: 24, diff: -127 },
             { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 26, diff: -250 }
         ];
+
+        // FUNCIONES VITALES QUE SE HABÍAN BORRADO
+        function getLogo(name) {
+            return `https://ui-avatars.com/api/?name=${name.substring(0,2)}&background=random&color=fff&rounded=true&bold=true`;
+        }
+        
+        function getTeamAbrev(name) {
+            let t = teamsBase.find(team => team.name === name);
+            return t ? t.id : name.substring(0,3).toUpperCase();
+        }
 
         const rawResultsArray = [
             "34|Paris|Olympiacos|87|104",
