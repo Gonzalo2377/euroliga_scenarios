@@ -408,8 +408,6 @@
     </div>
 
     <script>
-        let currentLang = localStorage.getItem('euroLang') || 'es';
-
         const i18n = {
             es: {
                 title: "🏆 Calculadora Euroleague Ultimate 25/26",
@@ -476,6 +474,10 @@
             }
         };
 
+        // Lógica de idioma a prueba de fallos
+        let savedLang = localStorage.getItem('euroLang');
+        let currentLang = (savedLang && i18n[savedLang]) ? savedLang : 'es';
+
         const analysisData = {
             es: [
                 { title: "🍿 Atasco monumental", desc: "La zona de acceso directo a Playoffs está que echa chispas. Las victorias de Barça, Panathinaikos y Zalgiris provocan un triple empate." },
@@ -537,7 +539,6 @@
             { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 26, diff: -250 }
         ];
 
-        // Partidos desglosados para evitar cortes al copiar y pegar
         const rawResultsArray = [
             "34|Paris|Olympiacos|87|104",
             "34|Fenerbahçe|Zalgiris Kaunas|82|92",
@@ -895,6 +896,7 @@
         let simulatedPicks = {};
 
         function changeLang(lang) {
+            if (!i18n[lang]) return;
             currentLang = lang;
             localStorage.setItem('euroLang', lang);
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
@@ -904,8 +906,11 @@
         }
 
         function updateUI() {
-            const t = i18n[currentLang];
-            if (!t) return;
+            let t = i18n[currentLang];
+            if (!t) {
+                currentLang = 'es';
+                t = i18n['es'];
+            }
             
             document.getElementById('main-title').textContent = t.title;
             document.getElementById('tab-standings').textContent = t.standings;
@@ -1086,7 +1091,6 @@
             let eSelect = document.getElementById("filter-equipo");
             [...new Set(pastMatches.map(m => m.jornada))].sort((a,b)=>b-a).forEach(j => { jSelect.innerHTML += `<option value="${j}">Round ${j}</option>`; });
             
-            // Creamos una copia para no alterar el array original al ordenar
             let eqCopy = [...teamsBase].sort((a,b) => a.name.localeCompare(b.name));
             eqCopy.forEach(t => { eSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`; });
         }
