@@ -830,7 +830,7 @@
 
         function runProbabilities() {
             document.getElementById('prob-loading').style.display = 'block';
-            document.getElementById('prob-results-div').style.display = 'none';
+            document.getElementById('prob-results').style.display = 'none';
             document.getElementById('btn-run-prob').innerText = i18n[currentLang].computing;
             
             setTimeout(() => {
@@ -874,7 +874,7 @@
 
                 document.getElementById('prob-loading').style.display = 'none';
                 document.getElementById('btn-run-prob').innerText = i18n[currentLang].run_prob;
-                document.getElementById('prob-results-div').style.display = 'block';
+                document.getElementById('prob-results').style.display = 'block';
             }, 50);
         }
 
