@@ -424,10 +424,17 @@
             </div>
         </div>
 
-        <div id="analisis" class="tab-content">
-            <h2 id="title-news">Insights del Laboratorio de Análisis</h2>
-            <div id="analysis-container"></div>
-        </div>
+        <div class="insight-card">
+                <h3>📈 Evolución de la Clasificación</h3>
+                <p>Selecciona el rango de jornadas para ver la evolución de los 20 equipos.</p>
+                <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0; background:var(--light); padding:10px; border-radius:6px;">
+                    <label style="font-weight:bold;">Desde J:</label>
+                    <select id="evoStart" onchange="updateEvoChart()" style="padding:5px; border-radius:4px;"></select>
+                    <label style="font-weight:bold; margin-left:10px;">Hasta J:</label>
+                    <select id="evoEnd" onchange="updateEvoChart()" style="padding:5px; border-radius:4px;"></select>
+                </div>
+                <div style="height: 350px; position: relative;"><canvas id="chartEvolucion"></canvas></div>
+            </div>
 
         <div id="graficos" class="tab-content">
             <h2 id="title-charts">Análisis Gráfico Avanzado</h2>
@@ -534,7 +541,7 @@
         const teamImages = {};
         teamsBase.forEach(t => {
             let img = new Image();
-            // Usamos UI avatars para tener logos limpios como en la referencia
+            img.crossOrigin = "Anonymous"; // ESTO SOLUCIONA QUE NO SE VEAN
             img.src = `https://ui-avatars.com/api/?name=${t.id}&background=random&color=fff&rounded=true&bold=true&size=24`;
             teamImages[t.name] = img;
         });
@@ -757,33 +764,63 @@
             }
         }
 
+        function updateEvoChart() {
+            const sStart = document.getElementById('evoStart');
+            const sEnd = document.getElementById('evoEnd');
+            
+            // Rellenar selectores la primera vez
+            if(sStart.options.length === 0) {
+                for(let i=1; i<=34; i++) {
+                    sStart.innerHTML += `<option value="${i}">${i}</option>`;
+                    sEnd.innerHTML += `<option value="${i}" ${i===34?'selected':''}>${i}</option>`;
+                }
+            }
+
+            let start = parseInt(sStart.value);
+            let end = parseInt(sEnd.value);
+            
+            // Validar que el inicio no sea mayor que el final
+            if(start >= end) { start = Math.max(1, end - 1); sStart.value = start; }
+            
+            if(!charts.evo) return;
+            charts.evo.data.labels = Array.from({length: end - start + 1}, (_, i) => "J"+(start + i));
+            charts.evo.data.datasets.forEach(ds => {
+                let fullName = teamsBase.find(t => t.id === ds.label).name;
+                ds.data = positionsHistory[fullName].slice(start - 1, end);
+            });
+            charts.evo.update();
+        }
+
         function initCharts() {
             if(!Object.keys(positionsHistory).length) buildHistory();
 
-            // 1. Gráfico de Evolución de 20 Equipos (Sin Puntos)
+            // 1. Gráfico de Evolución
             if(charts.evo) charts.evo.destroy();
             charts.evo = new Chart(document.getElementById('chartEvolucion'), {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: 34}, (_, i) => "J"+(i+1)),
+                    labels: [], // Se llenará en updateEvoChart
                     datasets: teamsBase.map((t, i) => ({
                         label: t.id,
-                        data: positionsHistory[t.name],
-                        borderColor: `hsl(${(i * 360) / 20}, 70%, 50%)`, // Colores distintos para los 20
-                        tension: 0.3, fill: false, borderWidth: 2,
-                        pointRadius: 0, // Quitar los círculos de datos, solo línea
-                        pointHitRadius: 5 // Mantener interacción
+                        data: [],
+                        borderColor: `hsl(${(i * 360) / 20}, 70%, 50%)`,
+                        tension: 0.3, fill: false, borderWidth: 2, pointRadius: 0, pointHitRadius: 5
                     }))
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { reverse: true, min: 1, max: 20 } }, plugins: { legend: { display: false } } }
+                options: { 
+                    responsive: true, maintainAspectRatio: false, 
+                    scales: { y: { reverse: true, min: 1, max: 20 } }, 
+                    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10 } } } // LEYENDA ACTIVADA
+                }
             });
+            
+            updateEvoChart(); // Llama a la actualización para fijar los datos iniciales
 
             // 2. Gráfico Net Rating (Con logos de equipos y fondo Hack a Stat)
             let effData = teamsBase.map(t => {
                 let m = pastMatches.filter(x => x.home === t.name || x.away === t.name);
                 let off = m.reduce((acc, x) => acc + (x.home === t.name ? x.scoreH : x.scoreA), 0) / (m.length || 1);
                 let def = m.reduce((acc, x) => acc + (x.home === t.name ? x.scoreA : x.scoreH), 0) / (m.length || 1);
-                // OFF RTG en eje X, DEF RTG en eje Y
                 return { x: off, y: def, team: t };
             });
 
@@ -792,18 +829,12 @@
                 type: 'scatter',
                 data: {
                     datasets: [{
-                        label: 'Equipos',
-                        data: effData,
-                        // El estilo del punto lo dibujamos nosotros con el plugin teamLogosPlugin
-                        pointRadius: 10, // Tamaño de interacción
-                        pointHoverRadius: 10,
-                        showLine: false
+                        label: 'Equipos', data: effData, pointRadius: 10, pointHoverRadius: 10, showLine: false
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: { 
-                        // Desactivar leyenda superior para coincidir con la referencia
                         legend: { display: false },
                         tooltip: { callbacks: { label: (c) => `${c.raw.team.name} | OFF: ${c.raw.x.toFixed(1)} | DEF: ${c.raw.y.toFixed(1)}` } } 
                     },
@@ -814,23 +845,7 @@
                 }
             });
         }
-
-        function updateEvoChart(val) {
-            document.getElementById('evoLabel').textContent = "J" + val;
-            if(!charts.evo) return;
-            charts.evo.data.labels = Array.from({length: val}, (_, i) => "J"+(i+1));
-            charts.evo.data.datasets.forEach(ds => {
-                let fullName = teamsBase.find(t => t.id === ds.label).name;
-                ds.data = positionsHistory[fullName].slice(0, val);
-            });
-            charts.evo.update();
-        }
-
-        function moveSlider(dir) {
-            let s = document.getElementById('evoSlider');
-            let val = parseInt(s.value) + dir;
-            if(val >= 1 && val <= 34) { s.value = val; updateEvoChart(val); }
-        }
+        
 
         function getFormHTML(teamName) {
             let teamMatches = pastMatches.filter(m => m.home === teamName || m.away === teamName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
@@ -872,7 +887,7 @@
                     <td>${getFormHTML(team.name)}</td>
                     <td>${team.diff > 0 ? '+' : ''}${team.diff}</td>
                     <td>${getNextOpponentsHTML(team.name)}</td>
-                    <td style="font-weight:bold; font-family:monospace; color:#4b5563;">.500</td>
+                    <td style="font-weight:bold; font-family:monospace; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
                 tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${team.name}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
             });
@@ -918,15 +933,20 @@
                 </div>
             `;
 
-            html += `<h4>${t.next_games}</h4><div style="margin-bottom:20px;">${getNextOpponentsHTML(teamName)}</div>`;
-            html += `<h4>${t.direct_rivals}</h4>`;
+            // AÑADIDO: Racha (Form) y Próximos partidos
+            html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">Racha Reciente</h4><div style="margin-bottom:20px;">${getFormHTML(teamName)}</div>`;
+            html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.next_games}</h4><div style="margin-bottom:20px; font-size: 1.1rem;">${getNextOpponentsHTML(teamName).replace('class="schedule-cell"', 'style="display:flex; gap:10px; flex-wrap:wrap;"')}</div>`;
+            html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.direct_rivals}</h4>`;
             
             let rivals = teamsBase.filter(tb => tb.name !== teamName && Math.abs(tb.initialWins - team.initialWins) <= 2).sort((a,b) => b.initialWins - a.initialWins);
             rivals.forEach(rival => {
                 let stats = calculateH2HStats(teamName, rival.name);
+                let diffStr = stats.diffA > 0 ? `+${stats.diffA}` : stats.diffA;
+                let asterisco = stats.played < 2 ? '*' : ''; // Asterisco si no han jugado 2 veces
+                
                 html += `<div class="rival-row">
                     <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${rival.name}</div>
-                    <div>H2H: <strong>${stats.winsA} - ${stats.winsB}</strong></div>
+                    <div>H2H: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280; font-size:0.9rem;">(${diffStr}${asterisco})</span></div>
                 </div>`;
             });
             dashboard.innerHTML = html; dashboard.style.display = "block";
@@ -959,11 +979,13 @@
                 const tbody = document.getElementById("prob-body");
                 tbody.innerHTML = "";
                 sortedTeams.forEach(team => {
+                    let maxVal = Math.max(...tRes[team].positions); // Encuentra el valor máximo de repeticiones
                     let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
                     for(let i=0; i<20; i++) {
                         let pct = Math.round((tRes[team].positions[i] / iterations) * 100);
+                        let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0); // Verifica si es el top
                         let bgClass = i < 6 ? 'bg-t6' : (i < 10 ? 'bg-pi' : 'bg-out');
-                        let style = pct > 50 ? 'font-weight:bold;' : (pct === 0 ? 'color:#ccc;' : '');
+                        let style = isMax ? 'font-weight:bold; color:var(--dark); font-size:1.05rem; text-decoration:underline;' : (pct === 0 ? 'color:#ccc;' : '');
                         tr += `<td class="${bgClass}" style="${style}">${pct === 0 ? '-' : pct+'%'}</td>`;
                     }
                     tr += "</tr>"; tbody.innerHTML += tr;
@@ -1007,14 +1029,16 @@
         }
 
         function calculateH2HStats(teamA, teamB) {
-            let winsA = 0; let winsB = 0;
+            let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
             pastMatches.forEach(m => {
-                if (m.home === teamA && m.away === teamB && m.scoreH > m.scoreA) winsA++;
-                if (m.home === teamA && m.away === teamB && m.scoreH < m.scoreA) winsB++;
-                if (m.home === teamB && m.away === teamA && m.scoreH > m.scoreA) winsB++;
-                if (m.home === teamB && m.away === teamA && m.scoreH < m.scoreA) winsA++;
+                if (m.home === teamA && m.away === teamB) { played++; if(m.scoreH > m.scoreA) winsA++; else winsB++; diffA += (m.scoreH - m.scoreA); }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.scoreH > m.scoreA) winsB++; else winsA++; diffA += (m.scoreA - m.scoreH); }
             });
-            return { winsA, winsB };
+            Object.values(simulatedPicks).forEach(m => {
+                if (m.home === teamA && m.away === teamB) { played++; if(m.winner === teamA) winsA++; else winsB++; }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.winner === teamB) winsB++; else winsA++; }
+            });
+            return { winsA, winsB, played, diffA };
         }
 
         function renderMatrices() {
