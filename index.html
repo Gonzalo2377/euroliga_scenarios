@@ -311,6 +311,7 @@
             #myteam-dashboard > div:first-child { flex-direction: column; text-align: center; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -335,122 +336,144 @@
         <button class="tab-link" onclick="openTab(event, 'desempates')" id="tab-ties">⚔️ Desempates</button>
         <button class="tab-link" onclick="openTab(event, 'resultados')" id="tab-results">🏀 Resultados</button>
         <button class="tab-link" onclick="openTab(event, 'analisis')" id="tab-analysis">📰 Análisis</button>
+        <button class="tab-link" onclick="openTab(event, 'analisis')">📊 Análisis</button>
     </nav>
 
     <div class="container">
-        
-        <div id="clasificacion" class="tab-content active">
-            <h2 id="title-standings">Clasificación Oficial</h2>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr id="table-head">
-                            <th>Pos</th>
-                            <th style="text-align: left;" class="t-team">Equipo</th>
-                            <th>J</th>
-                            <th class="t-w">V</th>
-                            <th class="t-l">D</th>
-                            <th title="Porcentaje de Victorias">% Vict.</th>
-                            <th class="t-form" title="Últimos 5 partidos">Racha</th>
-                            <th title="Diferencia de Puntos">+/-</th>
-                            <th class="t-schedule">Calendario Restante</th>
-                            <th class="t-diff-pct" title="Promedio de victorias de los rivales restantes">SOS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standings-body"></tbody>
-                </table>
-            </div>
+    <div id="clasificacion" class="tab-content active">
+        <h2 id="title-standings">Clasificación Oficial</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr id="table-head">
+                        <th>Pos</th>
+                        <th style="text-align: left;" class="t-team">Equipo</th>
+                        <th>J</th>
+                        <th class="t-w">V</th>
+                        <th class="t-l">D</th>
+                        <th title="Porcentaje de Victorias">% Vict.</th>
+                        <th class="t-form" title="Últimos 5 partidos">Racha</th>
+                        <th title="Diferencia de Puntos">+/-</th>
+                        <th class="t-schedule">Calendario Restante</th>
+                        <th class="t-diff-pct" title="Promedio de victorias de los rivales restantes">SOS</th>
+                    </tr>
+                </thead>
+                <tbody id="standings-body"></tbody>
+            </table>
         </div>
-
-        <div id="miequipo" class="tab-content">
-            <h2 id="title-myteam">Análisis de Mi Equipo</h2>
-            <div class="filters">
-                <select id="select-myteam" onchange="renderMyTeam()">
-                    <option value="" disabled selected id="opt-select-team">-- Selecciona tu equipo --</option>
-                </select>
-            </div>
-            <div id="myteam-dashboard" class="team-dashboard" style="display:none;"></div>
-        </div>
-
-        <div id="probabilidades" class="tab-content">
-            <h2 id="title-prob">Probabilidades Matemáticas</h2>
-            <p id="prob-desc">El simulador juega 2.000 finales de temporada aleatorios para calcular la probabilidad real de terminar en cada posición (1º al 20º).</p>
-            <button class="btn-action" onclick="runProbabilities()" id="btn-run-prob">🎲 Ejecutar 2.000 Simulaciones</button>
-            <div id="prob-loading" style="display:none; margin-top:20px; font-weight:bold; color:var(--primary);">Calculando futuros paralelos... ⏳</div>
-            <div class="table-responsive" id="prob-results" style="display:none; margin-top:20px;">
-                <table class="oracle-table">
-                    <thead>
-                        <tr id="prob-head-row"></tr>
-                    </thead>
-                    <tbody id="prob-body"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="simulador" class="tab-content">
-            <div class="sim-layout">
-                <div class="sim-matches">
-                    <h2 id="title-simulator">Simulador de Jornadas</h2>
-                    <p id="sim-desc">Selecciona los ganadores para actualizar la tabla.</p>
-                    <div id="matches-container"></div>
-                </div>
-                <div class="sim-standings">
-                    <h3 style="margin-top:0; color:var(--primary);" id="title-live">Clasificación en Vivo</h3>
-                    <div class="table-responsive">
-                        <table style="font-size: 0.9rem;">
-                            <thead>
-                                <tr>
-                                    <th>Pos</th>
-                                    <th style="text-align: left;" class="t-team">Equipo</th>
-                                    <th class="t-w">V</th>
-                                    <th class="t-l">D</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sim-standings-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="desempates" class="tab-content">
-            <h2 id="title-ties">Desempates (Head-to-Head)</h2>
-            <p id="ties-desc">Calculado automáticamente según tus simulaciones.</p>
-            <div id="matrices-container" class="table-responsive"></div>
-        </div>
-
-        <div id="resultados" class="tab-content">
-            <h2 id="title-results">Resultados Históricos</h2>
-            <div class="filters">
-                <select id="filter-jornada" onchange="renderResultados()">
-                    <option value="ALL" id="opt-all-rounds">Todas las Jornadas</option>
-                </select>
-                <select id="filter-equipo" onchange="renderResultados()">
-                    <option value="ALL" id="opt-all-teams">Todos los Equipos</option>
-                </select>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr id="results-head">
-                            <th class="t-round">Jornada</th>
-                            <th class="t-home">Local</th>
-                            <th class="t-score">Resultado</th>
-                            <th class="t-away">Visitante</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultados-body"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="analisis" class="tab-content">
-            <h2 id="title-analysis">El Post-Partido: Análisis</h2>
-            <div id="analysis-container"></div>
-        </div>
-
     </div>
 
+    <div id="miequipo" class="tab-content">
+        <h2 id="title-myteam">Análisis de Mi Equipo</h2>
+        <div class="filters">
+            <select id="select-myteam" onchange="renderMyTeam()">
+                <option value="" disabled selected id="opt-select-team">-- Selecciona tu equipo --</option>
+            </select>
+        </div>
+        <div id="myteam-dashboard" class="team-dashboard" style="display:none;"></div>
+    </div>
+
+    <div id="probabilidades" class="tab-content">
+        <h2 id="title-prob">Probabilidades Matemáticas</h2>
+        <p id="prob-desc">El simulador juega 2.000 finales de temporada aleatorios para calcular la probabilidad real de terminar en cada posición.</p>
+        <button class="btn-action" onclick="runProbabilities()" id="btn-run-prob">🎲 Ejecutar 2.000 Simulaciones</button>
+        <div id="prob-loading" style="display:none; margin-top:20px; font-weight:bold; color:var(--primary);">Calculando futuros paralelos... ⏳</div>
+        <div class="table-responsive" id="prob-results" style="display:none; margin-top:20px;">
+            <table class="oracle-table">
+                <thead>
+                    <tr id="prob-head-row"></tr>
+                </thead>
+                <tbody id="prob-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="simulador" class="tab-content">
+        <div class="sim-layout">
+            <div class="sim-matches">
+                <h2 id="title-simulator">Simulador de Jornadas</h2>
+                <p id="sim-desc">Selecciona los ganadores para actualizar la tabla.</p>
+                <div id="matches-container"></div>
+            </div>
+            <div class="sim-standings">
+                <h3 style="margin-top:0; color:var(--primary);" id="title-live">Clasificación en Vivo</h3>
+                <div class="table-responsive">
+                    <table style="font-size: 0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th style="text-align: left;" class="t-team">Equipo</th>
+                                <th class="t-w">V</th>
+                                <th class="t-l">D</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sim-standings-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="desempates" class="tab-content">
+        <h2 id="title-ties">Desempates (Head-to-Head)</h2>
+        <p id="ties-desc">Calculado automáticamente según tus simulaciones.</p>
+        <div id="matrices-container" class="table-responsive"></div>
+    </div>
+
+    <div id="resultados" class="tab-content">
+        <h2 id="title-results">Resultados Históricos</h2>
+        <div class="filters">
+            <select id="filter-jornada" onchange="renderResultados()">
+                <option value="ALL" id="opt-all-rounds">Todas las Jornadas</option>
+            </select>
+            <select id="filter-equipo" onchange="renderResultados()">
+                <option value="ALL" id="opt-all-teams">Todos los Equipos</option>
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr id="results-head">
+                        <th class="t-round">Jornada</th>
+                        <th class="t-home">Local</th>
+                        <th class="t-score">Resultado</th>
+                        <th class="t-away">Visitante</th>
+                    </tr>
+                </thead>
+                <tbody id="resultados-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="analisis" class="tab-content">
+        <h2 id="title-analysis">Laboratorio de Análisis Avanzado</h2>
+
+        <div class="insight-card">
+            <h3>📈 Evolución de la Clasificación</h3>
+            <p>Desliza para ver cómo han cambiado las posiciones jornada a jornada.</p>
+            <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0;">
+                <button onclick="moveSlider(-1)" style="background:var(--dark); color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">⬅️</button>
+                <input type="range" id="evoSlider" min="1" max="34" value="34" oninput="updateEvoChart(this.value)" style="flex: 1; cursor: pointer;">
+                <button onclick="moveSlider(1)" style="background:var(--dark); color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">➡️</button>
+                <span id="evoLabel" style="font-weight:bold; color:var(--primary); font-size:1.2rem; min-width:50px;">J34</span>
+            </div>
+            <div style="height: 350px; position: relative;"><canvas id="chartEvolucion"></canvas></div>
+        </div>
+
+        <div class="insight-card">
+            <h3>🎯 Rating Chart (Ataque vs Defensa)</h3>
+            <p><strong>Eje X:</strong> Puntos Anotados | <strong>Eje Y:</strong> Puntos Recibidos (Invertido).<br>
+            <em>* El área verde indica un Net Rating positivo general.</em></p>
+            <div style="height: 500px; position: relative;"><canvas id="chartEficiencia"></canvas></div>
+        </div>
+    </div>
+
+        <div class="insight-card">
+            <h3>🔥 Mapa de Rachas (Rendimiento Reciente)</h3>
+            <div id="streakMatrix" class="table-responsive"></div>
+        </div>
+    </div> 
+</div>
     <script>
         const i18n = {
             es: {
@@ -654,6 +677,25 @@
         ];
 
         let simulatedPicks = {};
+        let charts = {};
+        let positionsHistory = {};
+
+        // Plugin para el fondo Mitad Verde / Mitad Rojo
+        const netRatingBackground = {
+            id: 'netRatingBackground',
+            beforeDraw: (chart) => {
+                const {ctx, chartArea: {top, bottom, left, right}} = chart;
+                ctx.save();
+                ctx.beginPath(); ctx.moveTo(left, bottom); ctx.lineTo(right, top); ctx.lineTo(right, bottom);
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.15)'; // Verde
+                ctx.fill();
+                ctx.beginPath(); ctx.moveTo(left, bottom); ctx.lineTo(left, top); ctx.lineTo(right, top);
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.1)'; // Rojo
+                ctx.fill();
+                ctx.restore();
+            }
+        };
+        Chart.register(netRatingBackground);
 
         function changeLang(lang) {
             if (!i18n[lang]) return;
@@ -713,6 +755,90 @@
             renderResultados();
             renderAnalysis();
             if (document.getElementById('select-myteam').value) renderMyTeam();
+        }
+        function buildHistory() {
+            teamsBase.forEach(t => positionsHistory[t.name] = []);
+            for(let j=1; j<=34; j++) {
+                let tTemp = JSON.parse(JSON.stringify(teamsBase));
+                tTemp.forEach(t => { t.wins = 0; t.losses = 0; t.diff = 0; });
+                pastMatches.filter(m => m.jornada <= j).forEach(m => {
+                    let home = tTemp.find(t => t.name === m.home);
+                    let away = tTemp.find(t => t.name === m.away);
+                    if(home && away) {
+                        if(m.scoreH > m.scoreA) { home.wins++; away.losses++; } else { away.wins++; home.losses++; }
+                        home.diff += (m.scoreH - m.scoreA);
+                        away.diff += (m.scoreA - m.scoreH);
+                    }
+                });
+                tTemp.sort((a,b) => b.wins - a.wins || b.diff - a.diff);
+                tTemp.forEach((t, index) => positionsHistory[t.name].push(index + 1));
+            }
+        }
+
+        function initCharts() {
+            if(!Object.keys(positionsHistory).length) buildHistory();
+
+            // 1. Gráfico de Evolución
+            if(charts.evo) charts.evo.destroy();
+            charts.evo = new Chart(document.getElementById('chartEvolucion'), {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 34}, (_, i) => "J"+(i+1)),
+                    datasets: teamsBase.slice(0, 8).map((t, i) => ({
+                        label: t.id,
+                        data: positionsHistory[t.name],
+                        borderColor: `hsl(${(i * 360) / 8}, 70%, 50%)`, // Colores distintos
+                        tension: 0.3, fill: false, borderWidth: 3
+                    }))
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { reverse: true, min: 1, max: 20 } } }
+            });
+
+            // 2. Gráfico Net Rating
+            let effData = teamsBase.map(t => {
+                let m = pastMatches.filter(x => x.home === t.name || x.away === t.name);
+                let off = m.reduce((acc, x) => acc + (x.home === t.name ? x.scoreH : x.scoreA), 0) / (m.length || 1);
+                let def = m.reduce((acc, x) => acc + (x.home === t.name ? x.scoreA : x.scoreH), 0) / (m.length || 1);
+                return { x: off, y: def, team: t };
+            });
+
+            if(charts.eff) charts.eff.destroy();
+            charts.eff = new Chart(document.getElementById('chartEficiencia'), {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Equipos',
+                        data: effData,
+                        backgroundColor: '#111827',
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { tooltip: { callbacks: { label: (c) => `${c.raw.team.name} | OFF: ${c.raw.x.toFixed(1)} | DEF: ${c.raw.y.toFixed(1)}` } } },
+                    scales: {
+                        x: { min: 70, max: 95, title: { display: true, text: 'OFF RTG (Anotados)' } },
+                        y: { reverse: true, min: 70, max: 95, title: { display: true, text: 'DEF RTG (Recibidos)' } }
+                    }
+                }
+            });
+        }
+
+        function updateEvoChart(val) {
+            document.getElementById('evoLabel').textContent = "J" + val;
+            if(!charts.evo) return;
+            charts.evo.data.labels = Array.from({length: val}, (_, i) => "J"+(i+1));
+            charts.evo.data.datasets.forEach(ds => {
+                let fullName = teamsBase.find(t => t.id === ds.label).name;
+                ds.data = positionsHistory[fullName].slice(0, val);
+            });
+            charts.evo.update();
+        }
+
+        function moveSlider(dir) {
+            let s = document.getElementById('jornadaSlider') || document.getElementById('evoSlider');
+            let val = parseInt(s.value) + dir;
+            if(val >= 1 && val <= 34) { s.value = val; updateEvoChart(val); }
         }
 
         function getFormHTML(teamName) {
@@ -856,10 +982,85 @@
             let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
 
             // ==========================================
-            // LÓGICA INTELIGENTE H2H PARA EL PRÓXIMO PARTIDO
+            // DICCIONARIO H2H Y FRASES DINÁMICAS
             // ==========================================
-            let winExtra = currentLang === 'es' ? "Mejora tu posición y SOS." : "Improves your position and SOS.";
-            let loseExtra = currentLang === 'es' ? "Te obliga a ganar casi todo lo demás." : "Forces you to win almost everything else.";
+            const h2hDict = {
+                "es": {
+                    rival: "RIVAL DIRECTO",
+                    winBase: "Mejora tu posición y SOS.",
+                    loseBase: "Te obliga a ganar casi todo lo demás.",
+                    sweepWin: "Aseguras el desempate (H2H) al barrer la serie 2-0.",
+                    saveLose: "Si pierdes por menos de <strong>{X} puntos</strong>, salvas el desempate.",
+                    stealWin: "Necesitas ganar por más de <strong>{X} puntos</strong> para robar el desempate.",
+                    sweepLose: "Pierdes el desempate directo al caer 0-2 en la serie.",
+                    pathTitle: "Ruta al objetivo actual"
+                },
+                "en": {
+                    rival: "DIRECT RIVAL",
+                    winBase: "Improves your position and SOS.",
+                    loseBase: "Forces you to win almost everything else.",
+                    sweepWin: "You secure the tiebreaker (H2H) by sweeping the series 2-0.",
+                    saveLose: "If you lose by less than <strong>{X} points</strong>, you save the tiebreaker.",
+                    stealWin: "You need to win by more than <strong>{X} points</strong> to steal the tiebreaker.",
+                    sweepLose: "You lose the tiebreaker after falling 0-2 in the series.",
+                    pathTitle: "Path to current objective"
+                },
+                "fr": {
+                    rival: "RIVAL DIRECT",
+                    winBase: "Améliore votre position et SOS.",
+                    loseBase: "Vous oblige à presque tout gagner ensuite.",
+                    sweepWin: "Vous assurez le tie-breaker (H2H) en balayant la série 2-0.",
+                    saveLose: "Si vous perdez de moins de <strong>{X} points</strong>, vous sauvez le tie-breaker.",
+                    stealWin: "Vous devez gagner de plus de <strong>{X} points</strong> pour voler le tie-breaker.",
+                    sweepLose: "Vous perdez le tie-breaker direct après avoir été mené 0-2.",
+                    pathTitle: "Chemin vers l'objectif"
+                },
+                "tr": {
+                    rival: "DOĞRUDAN RAKİP",
+                    winBase: "Pozisyonunuzu ve SOS'i iyileştirir.",
+                    loseBase: "Kalan maçların çoğunu kazanmanızı gerektirir.",
+                    sweepWin: "Seriyi 2-0 süpürerek ikili averajı (H2H) garantilersiniz.",
+                    saveLose: "<strong>{X} sayıdan</strong> az farkla yenilirseniz averajı korursunuz.",
+                    stealWin: "Averajı çalmak için <strong>{X} sayıdan</strong> fazla farkla kazanmalısınız.",
+                    sweepLose: "Seride 0-2 geriye düşerek doğrudan averajı kaybedersiniz.",
+                    pathTitle: "Hedefe giden yol"
+                },
+                "gr": {
+                    rival: "ΑΜΕΣΟΣ ΑΝΤΙΠΑΛΟΣ",
+                    winBase: "Βελτιώνει τη θέση σας και το SOS.",
+                    loseBase: "Σε αναγκάζει να κερδίσεις σχεδόν όλα τα υπόλοιπα.",
+                    sweepWin: "Εξασφαλίζεις την ισοβαθμία (H2H) κάνοντας το 2-0.",
+                    saveLose: "Αν χάσεις με λιγότερους από <strong>{X} πόντους</strong>, σώζεις την ισοβαθμία.",
+                    stealWin: "Πρέπει να κερδίσεις με περισσότερους από <strong>{X} πόντους</strong> για την ισοβαθμία.",
+                    sweepLose: "Χάνεις την ισοβαθμία μετά το 0-2 στη σειρά.",
+                    pathTitle: "Πορεία προς τον στόχο"
+                },
+                "rs": {
+                    rival: "DIREKTNI RIVAL",
+                    winBase: "Poboljšava vašu poziciju i SOS.",
+                    loseBase: "Primorava vas da pobedite skoro sve ostalo.",
+                    sweepWin: "Osiguravate bolji međusobni skor (H2H) sa 2-0.",
+                    saveLose: "Ako izgubite sa manje od <strong>{X} poena</strong>, čuvate međusobni skor.",
+                    stealWin: "Morate pobediti sa više od <strong>{X} poena</strong> da biste ukrali međusobni skor.",
+                    sweepLose: "Gubite direktan međusobni skor nakon 0-2 u seriji.",
+                    pathTitle: "Put do cilja"
+                },
+                "lt": {
+                    rival: "TIESIOGINIS VARŽOVAS",
+                    winBase: "Pagerina jūsų poziciją ir SOS.",
+                    loseBase: "Verčia laimėti beveik viską, kas liko.",
+                    sweepWin: "Užtikrinate pranašumą (H2H) laimėdami seriją 2-0.",
+                    saveLose: "Jei pralaimite mažiau nei <strong>{X} taškų</strong>, išsaugote pranašumą.",
+                    stealWin: "Turite laimėti daugiau nei <strong>{X} taškų</strong>, kad perimtumėte pranašumą.",
+                    sweepLose: "Pralaimite tarpusavio pranašumą po 0-2 serijoje.",
+                    pathTitle: "Kelias link tikslo"
+                }
+            };
+
+            const hT = h2hDict[currentLang] || h2hDict['en'];
+
+            let winExtra = hT.winBase;
+            let loseExtra = hT.loseBase;
 
             if (opponent !== "?") {
                 let pastEncounters = pastMatches.filter(m => (m.home === teamName && m.away === opponent) || (m.home === opponent && m.away === teamName));
@@ -871,21 +1072,21 @@
                     let oppInfo = teamsBase.find(tb => tb.name === opponent);
                     let isDirectRival = oppInfo ? Math.abs(team.initialWins - oppInfo.initialWins) <= 2 : false;
                     
-                    let rivalTag = isDirectRival ? `<span style='background:#fef08a; padding:2px 5px; border-radius:4px; font-size:0.8rem; margin-right:5px;'>⚠️ ${currentLang === 'es' ? 'RIVAL DIRECTO' : 'DIRECT RIVAL'}</span> ` : "";
+                    let rivalTag = isDirectRival ? `<span style='background:#fef08a; color:#854d0e; padding:2px 5px; border-radius:4px; font-size:0.8rem; margin-right:5px; font-weight:bold;'>⚠️ ${hT.rival}</span> ` : "";
 
                     if (diff > 0) {
-                        winExtra = rivalTag + (currentLang === 'es' ? "Aseguras el desempate (H2H) al barrer la serie 2-0." : "You secure the tiebreaker (H2H) by sweeping the series 2-0.");
-                        loseExtra = rivalTag + (currentLang === 'es' ? `Si pierdes por menos de <strong>${diff} puntos</strong>, salvas el desempate.` : `If you lose by less than <strong>${diff} points</strong>, you save the tiebreaker.`);
+                        winExtra = rivalTag + hT.sweepWin;
+                        loseExtra = rivalTag + hT.saveLose.replace('{X}', diff);
                     } else if (diff < 0) {
                         let absDiff = Math.abs(diff);
-                        winExtra = rivalTag + (currentLang === 'es' ? `Necesitas ganar por más de <strong>${absDiff} puntos</strong> para robar el desempate.` : `You need to win by more than <strong>${absDiff} points</strong> to steal the tiebreaker.`);
-                        loseExtra = rivalTag + (currentLang === 'es' ? "Pierdes el desempate directo al caer 0-2 en la serie." : "You lose the tiebreaker after falling 0-2 in the series.");
+                        winExtra = rivalTag + hT.stealWin.replace('{X}', absDiff);
+                        loseExtra = rivalTag + hT.sweepLose;
                     }
                 }
             }
 
             // ==========================================
-            // DICCIONARIO MULTI-IDIOMA (ES, EN, FR, TR, GR, RS, LT)
+            // DICCIONARIO MULTI-IDIOMA DE ESTADOS (ES, EN, FR, TR, GR, RS, LT)
             // ==========================================
             const statusTranslations = {
                 "es": {
@@ -976,7 +1177,7 @@
                     </div>
                 </div>
                 <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0;">
-                    <h4 style="margin-top:0;">🎯 ${currentLang === 'es' ? 'Ruta al objetivo actual' : 'Path to current objective'}</h4>
+                    <h4 style="margin-top:0;">🎯 ${hT.pathTitle}</h4>
                     <p><strong>Top 6:</strong> ${teamStatus.top6}</p>
                     <p><strong>Play-In:</strong> ${teamStatus.playin}</p>
                 </div>
@@ -988,11 +1189,17 @@
             
             let rivals = teamsBase.filter(tb => tb.name !== teamName && Math.abs(tb.initialWins - team.initialWins) <= 2).sort((a,b) => b.initialWins - a.initialWins);
             rivals.forEach(rival => {
-                html += `<div class="rival-row"><div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${rival.name}</div><div>H2H: <strong>${calculateH2HStats(teamName, rival.name).winsA} - ${calculateH2HStats(teamName, rival.name).winsB}</strong></div></div>`;
+                let stats = calculateH2HStats(teamName, rival.name);
+                let diffStr = stats.diffA > 0 ? `+${stats.diffA}` : stats.diffA;
+                let asterisco = stats.played < 2 ? '*' : ''; // Aquí está el asterisco si falta partido
+                
+                html += `<div class="rival-row">
+                    <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${rival.name}</div>
+                    <div>H2H: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280; font-size:0.9rem;">(${diffStr}${asterisco})</span></div>
+                </div>`;
             });
             dashboard.innerHTML = html; dashboard.style.display = "block";
         }
-
         function runProbabilities() {
             document.getElementById('prob-loading').style.display = 'block';
             document.getElementById('prob-results').style.display = 'none';
@@ -1180,7 +1387,7 @@
                 let btn = document.querySelector(`button[onclick*="${tabName}"]`);
                 if (btn) btn.classList.add("active");
             }
-            
+            if (tabName === 'analisis') { setTimeout(initCharts, 100); }
             // LA MAGIA: Cambia la URL sin recargar la página (Añade #nombre-pestaña)
             if (window.history.pushState) {
                 window.history.pushState(null, null, '#' + tabName);
