@@ -3,33 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Calculadora Playoffs EuroLeague Ultimate 25/26</title>
     <meta name="description" content="Simula los Playoffs de la Euroliga, calcula desempates H2H automáticamente y descubre las probabilidades reales de tu equipo con nuestro Oráculo Monte Carlo.">
     <link rel="canonical" href="https://euroleaguecalculator.online/">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏀</text></svg>">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://euroleaguecalculator.online/">
     <meta property="og:title" content="Calculadora EuroLeague Ultimate 25/26">
     <meta property="og:description" content="Simula el final de la Euroliga, descubre desempates y mira las probabilidades de Play-In y Top 6 con el Oráculo.">
-    <meta property="og:image" content="https://euroleaguecalculator.online/portada.png">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://euroleaguecalculator.online/">
-    <meta name="twitter:title" content="Calculadora EuroLeague Ultimate 25/26">
-    <meta name="twitter:description" content="Simula el final de la Euroliga, calcula desempates y mira las probabilidades de Play-In y Top 6 con nuestro simulador Monte Carlo.">
-    <meta name="twitter:image" content="https://euroleaguecalculator.online/portada.png">
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7QJ4NGV13R"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-7QJ4NGV13R');
-    </script>
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421" crossorigin="anonymous"></script>
 
     <style>
         :root {
@@ -286,31 +269,21 @@
         .bg-pi { background-color: #fffbeb; }
         .bg-out { background-color: #fef2f2; }
         @media (max-width: 768px) {
-            /* 1. Cabecera y banderas */
             header { padding: 3rem 1rem 1rem 1rem; } 
             header h1 { font-size: 1.3rem; margin: 0; line-height: 1.2; }
             .lang-switcher { top: 10px; left: 50%; transform: translateX(-50%); right: auto; width: max-content; background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-            
-            /* 2. Menú de pestañas */
             nav { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0.5rem; }
             nav button { white-space: nowrap; padding: 0.7rem 0.8rem; font-size: 0.85rem; flex: 0 0 auto; }
-            
-            /* 3. Espaciado general del cuerpo */
             .container { margin: 1rem auto; padding: 0 0.5rem; }
             .tab-content { padding: 1rem 0.5rem; }
-
-            /* 4. Tablas ULTRA compactas (Clasificación) */
             th, td { padding: 8px 3px; font-size: 0.8rem; }
             .team-cell { gap: 4px; font-size: 0.85rem; }
             .team-logo { width: 18px; height: 18px; }
             .dot { width: 10px; height: 10px; margin: 0 1px; }
             .game-badge { padding: 2px 3px; font-size: 0.65rem; margin-right: 1px; }
-            
-            /* 5. Cabecera de "Mi Equipo" */
             #myteam-dashboard > div:first-child { flex-direction: column; text-align: center; }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -335,7 +308,6 @@
         <button class="tab-link" onclick="openTab(event, 'desempates')" id="tab-ties">⚔️ Desempates</button>
         <button class="tab-link" onclick="openTab(event, 'resultados')" id="tab-results">🏀 Resultados</button>
         <button class="tab-link" onclick="openTab(event, 'analisis')" id="tab-news">📰 Insights</button>
-        <button class="tab-link" onclick="openTab(event, 'graficos')" id="tab-charts">📈 Gráficos Avanzados</button>
     </nav>
 
     <div class="container">
@@ -424,40 +396,10 @@
             </div>
         </div>
 
-        <div class="insight-card">
-                <h3>📈 Evolución de la Clasificación</h3>
-                <p>Selecciona el rango de jornadas para ver la evolución de los 20 equipos.</p>
-                <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0; background:var(--light); padding:10px; border-radius:6px;">
-                    <label style="font-weight:bold;">Desde J:</label>
-                    <select id="evoStart" onchange="updateEvoChart()" style="padding:5px; border-radius:4px;"></select>
-                    <label style="font-weight:bold; margin-left:10px;">Hasta J:</label>
-                    <select id="evoEnd" onchange="updateEvoChart()" style="padding:5px; border-radius:4px;"></select>
-                </div>
-                <div style="height: 350px; position: relative;"><canvas id="chartEvolucion"></canvas></div>
-            </div>
-
-        <div id="graficos" class="tab-content">
-            <h2 id="title-charts">Análisis Gráfico Avanzado</h2>
-
-            <div class="insight-card">
-                <h3>📈 Evolución de la Clasificación (20 equipos)</h3>
-                <p>Desliza para ver el cambio de posiciones jornada a jornada.</p>
-                <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0;">
-                    <button onclick="moveSlider(-1)" style="background:var(--dark); color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">⬅️</button>
-                    <input type="range" id="evoSlider" min="1" max="34" value="34" oninput="updateEvoChart(this.value)" style="flex: 1; cursor: pointer;">
-                    <button onclick="moveSlider(1)" style="background:var(--dark); color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">➡️</button>
-                    <span id="evoLabel" style="font-weight:bold; color:var(--primary); font-size:1.2rem; min-width:50px;">J34</span>
-                </div>
-                <div style="height: 350px; position: relative;"><canvas id="chartEvolucion"></canvas></div>
-            </div>
-
-            <div class="insight-card">
-                <h3>🎯 Rating Chart (Hack a Stat Style)</h3>
-                <p><strong>Eje X:</strong> Puntos Anotados | <strong>Eje Y:</strong> Puntos Recibidos (Invertido).<br>
-                <em>* El área verde (arriba-derecha) indica un Net Rating positivo general superior.</em></p>
-                <div style="height: 500px; position: relative;"><canvas id="chartEficiencia"></canvas></div>
-            </div>
-        </div> 
+        <div id="analisis" class="tab-content">
+            <h2 id="title-news">Insights del Laboratorio de Análisis</h2>
+            <div id="analysis-container"></div>
+        </div>
 
     </div>
 
@@ -465,7 +407,7 @@
         const i18n = {
             es: {
                 title: "🏆 Calculadora EuroLeague Ultimate 25/26",
-                standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Insights", charts: "📈 Gráficos",
+                standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Insights",
                 official_standings: "Clasificación Oficial", live_standings: "Clasificación en Vivo", sim_desc: "Selecciona los ganadores para actualizar la tabla.",
                 team: "Equipo", w: "V", l: "D", form: "Racha", diff_pct: "SOS", schedule: "Calendario", round: "Jornada", score: "Resultado",
                 home: "Local", away: "Visitante", ties_desc: "Grupos calculados automáticamente según tus simulaciones.",
@@ -479,7 +421,7 @@
             },
             en: {
                 title: "🏆 EuroLeague Ultimate Calculator 25/26",
-                standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Insights", charts: "📈 Charts",
+                standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Insights",
                 official_standings: "Official Standings", live_standings: "Live Standings", sim_desc: "Pick the winners to update the standings.",
                 team: "Team", w: "W", l: "L", form: "Form", diff_pct: "SOS", schedule: "Schedule", round: "Round", score: "Score",
                 home: "Home", away: "Away", ties_desc: "Groups calculated automatically based on your simulations.",
@@ -491,11 +433,11 @@
                 sc_next: "Key next game", sc_win_next: "If wins vs {opp}:", sc_lose_next: "If loses vs {opp}:",
                 sc_needed: "Path to goal", sc_for_top6: "To secure Top 6:", sc_for_top10: "To secure Play-In:"
             },
-            fr: { title: "🏆 Calculateur EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Égalités", results: "🏀 Résultats", news: "📰 Insights", charts: "📈 Graphiques", official_standings: "Classement Officiel", live_standings: "Classement en Direct", sim_desc: "Choisissez les gagnants.", team: "Équipe", w: "V", l: "D", form: "Forme", diff_pct: "SOS", schedule: "Calendrier", round: "Journée", score: "Résultat", home: "Domicile", away: "Extérieur", ties_desc: "Groupes calculés automatiquement.", all_rounds: "Toutes Journées", all_teams: "Toutes Équipes", final_res: "Résultat Final", btn_home: "Dom.", btn_away: "Ext.", tied_at: "Égalité à", victories: "victoires", total_vd: "Total V-D", no_ties: "Aucune égalité.", prob_desc: "2.000 simulations Monte Carlo.", run_prob: "🎲 2.000 Simulations", computing: "Calcul en cours... ⏳", select_team: "-- Choisissez équipe --", next_games: "Prochains Matchs", direct_rivals: "Rivaux Directs", sc_next: "Match clave", sc_win_next: "Si gagne vs {opp}:", sc_lose_next: "Si perd vs {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Dedicación Top 6:", sc_for_top10: "Dedicación Play-In:" },
-            tr: { title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26", standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 Olasılıklar", simulator: "🎮 Simülatör", ties: "⚔️ Averaj", results: "🏀 Sonuçlar", news: "📰 Insights", charts: "📈 Grafikler", official_standings: "Resmi Puan Durumu", live_standings: "Canlı Puan Durumu", sim_desc: "Kazananları seçin.", team: "Takım", w: "G", l: "M", form: "Form", diff_pct: "SOS", schedule: "Maçlar", round: "Hafta", score: "Skor", home: "Ev", away: "Dep", ties_desc: "Otomatik averaj.", all_rounds: "Tüm Haftalar", all_teams: "Tüm Takımlar", final_res: "Kraj", btn_home: "Ev", btn_away: "Dep", tied_at: "Eşitlik:", victories: "galibiyet", total_vd: "G-M", no_ties: "Eşitlik yok.", prob_desc: "2.000 Monte Carlo simülasyonu.", run_prob: "🎲 2.000 Simülasyon", computing: "Hesaplanıyor... ⏳", select_team: "-- Takım seç --", next_games: "Gelecek Maçlar", direct_rivals: "Doğrudan Rakipler", sc_next: "Önemli maç", sc_win_next: "Kazanırsa {opp}:", sc_lose_next: "Kaybederse {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Dedicación Top 6:", sc_for_top10: "Dedicación Play-In:" },
-            gr: { title: "🏆 EuroLeague Ultimate Υπολογιστής 25/26", standings: "📊 Κατάταξη", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Insights", charts: "📈 Γραφήματα", official_standings: "Επίσημη Κατάταξη", live_standings: "Ζωντανή Κατάταξη", sim_desc: "Επιλέξτε νικητές.", team: "Ομάδα", w: "Ν", l: "Η", form: "Φόρμα", diff_pct: "SOS", schedule: "Πρόγραμμα", round: "Αγωνιστική", score: "Σκορ", home: "Εντός", away: "Εκτός", ties_desc: "Αυτόματος υπολογισμός.", all_rounds: "Όλες οι Αγωνιστικές", all_teams: "Όλες οι Ομάδες", final_res: "Τελικό Σκορ", btn_home: "Εντός", btn_away: "Εκτός", tied_at: "Ισοβαθμία", victories: "νίκες", total_vd: "Σύνολο", no_ties: "Δεν υπάρχουν ισοβαθμίες.", prob_desc: "2.000 προσομοιώσεις Monte Carlo.", run_prob: "🎲 2.000 Προσομοιώσεις", computing: "Υπολογισμός... ⏳", select_team: "-- Επιλέξτε ομάδα --", next_games: "Επόμενοι Αγώνες", direct_rivals: "Άμεσοι Αντίπαλοι", sc_next: "Match clave", sc_win_next: "Si gagne vs {opp}:", sc_lose_next: "Si perd vs {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Dedicación Top 6:", sc_for_top10: "Dedicación Play-In:" },
-            sr: { title: "🏆 EuroLeague Ultimate Kalkulator 25/26", standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Krugovi", results: "🏀 Rezultati", news: "📰 Insights", charts: "📈 Grafici", official_standings: "Zvanična Tabela", live_standings: "Tabela Uživo", sim_desc: "Izaberi pobednike.", team: "Ekipa", w: "P", l: "I", form: "Forma", diff_pct: "SOS", schedule: "Raspored", round: "Kolo", score: "Rezultat", home: "Dom", away: "Gost", ties_desc: "Automatski krugovi.", all_rounds: "Sva Kola", all_teams: "Sve Ekipe", final_res: "Kraj", btn_home: "Dom", btn_away: "Gost", tied_at: "Izjednačeni", victories: "pobeda", total_vd: "P-I", no_ties: "Nema krugova.", prob_desc: "2.000 Monte Carlo simulacija.", run_prob: "🎲 2.000 Simulacija", computing: "Računam... ⏳", select_team: "-- Izaberi ekipu --", next_games: "Naredni Mečevi", direct_rivals: "Direktni Rivali", sc_next: "Match clave", sc_win_next: "Si gagne vs {opp}:", sc_lose_next: "Si perd vs {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Dedicación Top 6:", sc_for_top10: "Dedicación Play-In:" },
-            lt: { title: "🏆 EuroLeague Ultimate Skaičiuoklė 25/26", standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Lygiuotis", results: "🏀 Rezultatai", news: "📰 Insights", charts: "📈 Grafikai", official_standings: "Oficiali Lentelė", live_standings: "Gyva Lentelė", sim_desc: "Pasirinkite nugalėtojus.", team: "Komanda", w: "L", l: "P", form: "Forma", diff_pct: "SOS", schedule: "Tvarkaraštis", round: "Turas", score: "Rezultatas", home: "Namai", away: "Išvyka", ties_desc: "Skaičiuojama automatiškai.", all_rounds: "Visi Turai", all_teams: "Visos Komandos", final_res: "Kraj", btn_home: "Namai", btn_away: "Išvyka", tied_at: "Lygiosios", victories: "perg.", total_vd: "L-P", no_ties: "Lygiųjų nėra.", prob_desc: "2.000 Monte Carlo simuliacijų.", run_prob: "🎲 2.000 Simuliacijų", computing: "Skaičiuojama... ⏳", select_team: "-- Pasirinkite komandą --", next_games: "Kitos Rungtynės", direct_rivals: "Tiesioginiai Varžovai", sc_next: "Match clave", sc_win_next: "Si gagne vs {opp}:", sc_lose_next: "Si perd vs {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Dedicación Top 6:", sc_for_top10: "Dedicación Play-In:" }
+            fr: { title: "🏆 Calculateur EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Égalités", results: "🏀 Résultats", news: "📰 Insights", official_standings: "Classement Officiel", live_standings: "Classement en Direct", sim_desc: "Choisissez les gagnants.", team: "Équipe", w: "V", l: "D", form: "Forme", diff_pct: "SOS", schedule: "Calendrier", round: "Journée", score: "Résultat", home: "Domicile", away: "Extérieur", ties_desc: "Groupes calculés automatiquement.", all_rounds: "Toutes Journées", all_teams: "Toutes Équipes", final_res: "Résultat Final", btn_home: "Dom.", btn_away: "Ext.", tied_at: "Égalité à", victories: "victoires", total_vd: "Total V-D", no_ties: "Aucune égalité.", prob_desc: "2.000 simulations Monte Carlo.", run_prob: "🎲 2.000 Simulations", computing: "Calcul en cours... ⏳", select_team: "-- Choisissez équipe --", next_games: "Prochains Matchs", direct_rivals: "Rivaux Directs", sc_next: "Match clave", sc_win_next: "Si gagne vs {opp}:", sc_lose_next: "Si perd vs {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Dedicación Top 6:", sc_for_top10: "Dedicación Play-In:" },
+            tr: { title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26", standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 Olasılıklar", simulator: "🎮 Simülatör", ties: "⚔️ Averaj", results: "🏀 Sonuçlar", news: "📰 Insights", official_standings: "Resmi Puan Durumu", live_standings: "Canlı Puan Durumu", sim_desc: "Kazananları seçin.", team: "Takım", w: "G", l: "M", form: "Form", diff_pct: "SOS", schedule: "Maçlar", round: "Hafta", score: "Skor", home: "Ev", away: "Dep", ties_desc: "Otomatik averaj.", all_rounds: "Tüm Haftalar", all_teams: "Tüm Takımlar", final_res: "Kraj", btn_home: "Ev", btn_away: "Dep", tied_at: "Eşitlik:", victories: "galibiyet", total_vd: "G-M", no_ties: "Eşitlik yok.", prob_desc: "2.000 Monte Carlo simülasyonu.", run_prob: "🎲 2.000 Simülasyon", computing: "Hesaplanıyor... ⏳", select_team: "-- Takım seç --", next_games: "Gelecek Maçlar", direct_rivals: "Doğrudan Rakipler", sc_next: "Önemli maç", sc_win_next: "Kazanırsa {opp}:", sc_lose_next: "Kaybederse {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Top 6 için:", sc_for_top10: "Play-In için:" },
+            gr: { title: "🏆 EuroLeague Ultimate Υπολογιστής 25/26", standings: "📊 Κατάταξη", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Insights", official_standings: "Επίσημη Κατάταξη", live_standings: "Ζωντανή Κατάταξη", sim_desc: "Επιλέξτε νικητές.", team: "Ομάδα", w: "Ν", l: "Η", form: "Φόρμα", diff_pct: "SOS", schedule: "Πρόγραμμα", round: "Αγωνιστική", score: "Σκορ", home: "Εντός", away: "Εκτός", ties_desc: "Αυτόματος υπολογισμός.", all_rounds: "Όλες οι Αγωνιστικές", all_teams: "Όλες οι Ομάδες", final_res: "Τελικό Σκορ", btn_home: "Εντός", btn_away: "Εκτός", tied_at: "Ισοβαθμία", victories: "νίκες", total_vd: "Σύνολο", no_ties: "Δεν υπάρχουν ισοβαθμίες.", prob_desc: "2.000 προσομοιώσεις Monte Carlo.", run_prob: "🎲 2.000 Προσομοιώσεις", computing: "Υπολογισμός... ⏳", select_team: "-- Επιλέξτε ομάδα --", next_games: "Επόμενοι Αγώνες", direct_rivals: "Άμεσοι Αντίπαλοι", sc_next: "Match clave", sc_win_next: "Αν νικήσει vs {opp}:", sc_lose_next: "Αν χάσει vs {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Dedicación Top 6:", sc_for_top10: "Dedicación Play-In:" },
+            sr: { title: "🏆 EuroLeague Ultimate Kalkulator 25/26", standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Krugovi", results: "🏀 Rezultati", news: "📰 Insights", official_standings: "Zvanična Tabela", live_standings: "Tabela Uživo", sim_desc: "Izaberi pobednike.", team: "Ekipa", w: "P", l: "I", form: "Forma", diff_pct: "SOS", schedule: "Raspored", round: "Kolo", score: "Rezultat", home: "Dom", away: "Gost", ties_desc: "Automatski krugovi.", all_rounds: "Sva Kola", all_teams: "Sve Ekipe", final_res: "Kraj", btn_home: "Dom", btn_away: "Gost", tied_at: "Izjednačeni", victories: "pobeda", total_vd: "P-I", no_ties: "Nema krugova.", prob_desc: "2.000 Monte Carlo simulacija.", run_prob: "🎲 2.000 Simulacija", computing: "Računam... ⏳", select_team: "-- Izaberi ekipu --", next_games: "Naredni Mečevi", direct_rivals: "Direktni Rivali", sc_next: "Match clave", sc_win_next: "Ako pobedi vs {opp}:", sc_lose_next: "Ako izgubi vs {opp}:", sc_needed: "Ruta al objetivo", sc_for_top6: "Dedicación Top 6:", sc_for_top10: "Dedicación Play-In:" },
+            lt: { title: "🏆 EuroLeague Ultimate Skaičiuoklė 25/26", standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Lygiuotis", results: "🏀 Rezultatai", news: "📰 Insights", official_standings: "Oficiali Lentelė", live_standings: "Gyva Lentelė", sim_desc: "Pasirinkite nugalėtojus.", team: "Komanda", w: "L", l: "P", form: "Forma", diff_pct: "SOS", schedule: "Tvarkaraštis", round: "Turas", score: "Rezultatas", home: "Namai", away: "Išvyka", ties_desc: "Skaičiuojama automatiškai.", all_rounds: "Visi Turai", all_teams: "Visos Komandos", final_res: "Kraj", btn_home: "Namai", btn_away: "Išvyka", tied_at: "Lygiosios", victories: "perg.", total_vd: "L-P", no_ties: "Lygiųjų nėra.", prob_desc: "2.000 Monte Carlo simuliacijų.", run_prob: "🎲 2.000 Simuliacijų", computing: "Skaičiuojama... ⏳", select_team: "-- Pasirinkite komandą --", next_games: "Kitos Rungtynės", direct_rivals: "Tiesioginiai Varžovai", sc_next: "Match clave", sc_win_next: "Jei laimi vs {opp}:", sc_lose_next: "Jei pralaimi vs {opp}:", sc_needed: "Tikslas", sc_for_top6: "Dėl Top 6:", sc_for_top10: "Dėl Play-In:" }
         };
 
         let savedLang = localStorage.getItem('euroLang');
@@ -537,15 +479,6 @@
             { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 26, diff: -250 }
         ];
 
-        // Precarga de logos para el Scatter Chart
-        const teamImages = {};
-        teamsBase.forEach(t => {
-            let img = new Image();
-            img.crossOrigin = "Anonymous"; // ESTO SOLUCIONA QUE NO SE VEAN
-            img.src = `https://ui-avatars.com/api/?name=${t.id}&background=random&color=fff&rounded=true&bold=true&size=24`;
-            teamImages[t.name] = img;
-        });
-
         function getLogo(name) { let t = teamsBase.find(team => team.name === name); return `https://ui-avatars.com/api/?name=${t?t.id:name.substring(0,2)}&background=random&color=fff&rounded=true&bold=true`; }
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
@@ -581,7 +514,7 @@
             "6|Bayern|Olympiacos|71|96", "6|Partizan|Paris|83|101", "6|Virtus Bolonia|Panathinaikos|92|75", "6|Anadolu Efes|Fenerbahçe|69|79", "6|Estrella Roja|Baskonia|90|72", "6|Barcelona|Zalgiris Kaunas|73|88", "6|Olimpia Milano|Valencia Basket|100|103", "6|Hapoel Tel-Aviv|Mónaco|85|77", "6|Asvel Basket|Dubai|85|79", "6|Maccabi Tel Aviv|Real Madrid|92|91",
             "5|Baskonia|Partizan|79|91", "5|Paris|Hapoel Tel-Aviv|88|89", "5|Asvel Basket|Virtus Bolonia|83|90", "5|Anadolu Efes|Panathinaikos|81|95", "5|Mónaco|Valencia Basket|90|84", "5|Estrella Roja|Real Madrid|90|75", "5|Maccabi Tel Aviv|Olympiacos|94|95", "5|Fenerbahçe|Bayern|88|73", "5|Zalgiris Kaunas|Olimpia Milano|78|89", "5|Dubai|Barcelona|83|78",
             "4|Paris|Baskonia|105|87", "4|Real Madrid|Partizan|93|86", "4|Valencia Basket|Hapoel Tel-Aviv|93|100", "4|Virtus Bolonia|Mónaco|77|73", "4|Panathinaikos|Asvel Basket|91|85", "4|Bayern|Olimpia Milano|64|53", "4|Olympiacos|Anadolu Efes|78|82", "4|Estrella Roja|Zalgiris Kaunas|88|79", "4|Fenerbahçe|Dubai|69|93", "4|Maccabi Tel Aviv|Barcelona|71|92",
-            "3|Barcelona|Valencia Basket|108|102", "3|Bayern|Zalgiris Kaunas|70|98", "3|Olympiacos|Dubai|86|67", "3|Fenerbahçe|Estrella Roja|81|86", "3|Real Madrid|Asvel Basket|75|72", "3|Paris|Virtus Bolonia|90|79", "3|Baskonia|Panathinaikos|84|86", "3|Olimpia Milano|Mónaco|79|82", "3|Partizan|Anadolu Efes|93|87", "3|Hapoel Tel-Aviv|Maccabi Tel Aviv|90|103",
+            "3|Barcelona|Valencia Basket|108|102", "3|Bayern|Zalgiris Kaunas|70|98", "3|Olympiacos|Dubai|86|67", "3|Fenerbahçe|Estrella Roja|81|86", "3|Real Madrid|Asvel Basket|85|72", "3|Paris|Virtus Bolonia|90|79", "3|Baskonia|Panathinaikos|84|86", "3|Olimpia Milano|Mónaco|79|82", "3|Partizan|Anadolu Efes|93|87", "3|Hapoel Tel-Aviv|Maccabi Tel Aviv|90|103",
             "2|Maccabi Tel Aviv|Paris|94|101", "2|Valencia Basket|Virtus Bolonia|103|94", "2|Panathinaikos|Barcelona|96|103", "2|Asvel Basket|Baskonia|102|95", "2|Anadolu Efes|Hapoel Tel-Aviv|81|87", "2|Mónaco|Dubai|103|81", "2|Zalgiris Kaunas|Fenerbahçe|84|81", "2|Real Madrid|Olympiacos|89|77", "2|Bayern|Estrella Roja|97|88", "2|Partizan|Olimpia Milano|80|78",
             "1|Asvel Basket|Valencia Basket|77|80", "1|Fenerbahçe|Paris|96|77", "1|Mónaco|Zalgiris Kaunas|84|89", "1|Virtus Bolonia|Real Madrid|74|68", "1|Baskonia|Olympiacos|96|102", "1|Panathinaikos|Bayern|87|79", "1|Estrella Roja|Olimpia Milano|82|92", "1|Anadolu Efes|Maccabi Tel Aviv|85|78", "1|Dubai|Partizan|89|76", "1|Hapoel Tel-Aviv|Barcelona|103|87"
         ]; 
@@ -601,89 +534,6 @@
         ];
 
         let simulatedPicks = {};
-        let charts = {};
-        let positionsHistory = {};
-
-        // Plugin para el fondo del Rating Chart: división diagonal y etiquetas de NET
-        const ratingBackgroundPlugin = {
-            id: 'ratingBackground',
-            beforeDraw: (chart) => {
-                const {ctx, chartArea: {top, bottom, left, right}, scales: {x, y}} = chart;
-                ctx.save();
-                
-                // 1. Fondo dividido diagonalmente (Net Rating + / -)
-                ctx.beginPath();
-                ctx.moveTo(left, bottom);
-                ctx.lineTo(right, top);
-                ctx.lineTo(right, bottom);
-                ctx.fillStyle = 'rgba(16, 185, 129, 0.15)'; // Verde
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.moveTo(left, bottom);
-                ctx.lineTo(right, top);
-                ctx.lineTo(left, top);
-                ctx.fillStyle = 'rgba(239, 68, 68, 0.1)'; // Rojo
-                ctx.fill();
-
-                // 2. Líneas diagonales de NET punteadas y etiquetas de texto
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-                ctx.setLineDash([5, 5]); // Punteado
-                ctx.fillStyle = 'rgba(0,0,0,0.5)';
-                ctx.font = 'bold 11px sans-serif';
-                ctx.textAlign = 'right';
-
-                // Definimos los Net Ratings a dibujar
-                const nets = [20, 15, 10, 5, 0];
-                nets.forEach(net => {
-                    ctx.beginPath();
-                    // Fórmula: DEF RTG = OFF RTG - NET. Dibujamos del X=105 al X=130.
-                    let xStart = 105; let yStart = xStart - net;
-                    let xEnd = 130; let yEnd = xEnd - net;
-
-                    // Dibujar la línea punteada
-                    ctx.moveTo(x.getPixelForValue(xStart), y.getPixelForValue(yStart));
-                    ctx.lineTo(x.getPixelForValue(xEnd), y.getPixelForValue(yEnd));
-                    ctx.stroke();
-
-                    // Dibujar la etiqueta de texto cerca del final de la línea
-                    if (net !== 0) { // Omitimos el 0 para limpiar
-                        ctx.setLineDash([]); // Quitar punteado para el texto
-                        ctx.fillText(`NET +${net}`, x.getPixelForValue(xEnd - 1), y.getPixelForValue(yEnd - 1));
-                        ctx.setLineDash([5, 5]); // Restaurar punteado
-                    }
-                });
-
-                ctx.restore();
-            }
-        };
-
-        // Plugin para dibujar logos de equipos sobre los puntos de datos
-        const teamLogosPlugin = {
-            id: 'teamLogos',
-            afterDatasetsDraw: (chart) => {
-                const {ctx, scales: {x, y}} = chart;
-                ctx.save();
-                
-                chart.data.datasets.forEach((dataset, datasetIndex) => {
-                    const meta = chart.getDatasetMeta(datasetIndex);
-                    
-                    dataset.data.forEach((point, index) => {
-                        const img = teamImages[point.team.name];
-                        if (img && img.complete) {
-                            const {x: xPos, y: yPos} = meta.data[index].getProps(['x', 'y'], true);
-                            
-                            // Centrar la imagen (asumimos tamaño de imagen 24x24 pre-cargado)
-                            const size = 24;
-                            ctx.drawImage(img, xPos - size/2, yPos - size/2, size, size);
-                        }
-                    });
-                });
-                ctx.restore();
-            }
-        };
-        Chart.register(ratingBackgroundPlugin, teamLogosPlugin);
 
         function changeLang(lang) {
             if (!i18n[lang]) return;
@@ -707,7 +557,6 @@
             document.getElementById('tab-ties').textContent = t.ties;
             document.getElementById('tab-results').textContent = t.results;
             document.getElementById('tab-news').textContent = t.news;
-            document.getElementById('tab-charts').textContent = t.charts;
             
             document.getElementById('title-standings').textContent = t.official_standings;
             document.getElementById('title-myteam').textContent = t.my_team;
@@ -722,7 +571,6 @@
             document.getElementById('ties-desc').textContent = t.ties_desc;
             document.getElementById('title-results').textContent = t.results;
             document.getElementById('title-news').textContent = t.news;
-            document.getElementById('title-charts').textContent = t.charts;
             
             document.querySelectorAll('.t-team').forEach(el => el.textContent = t.team);
             document.querySelectorAll('.t-w').forEach(el => el.textContent = t.w);
@@ -745,107 +593,6 @@
             renderAnalysis();
             if (document.getElementById('select-myteam').value) renderMyTeam();
         }
-        function buildHistory() {
-            teamsBase.forEach(t => positionsHistory[t.name] = []);
-            for(let j=1; j<=34; j++) {
-                let tTemp = JSON.parse(JSON.stringify(teamsBase));
-                tTemp.forEach(t => { t.wins = 0; t.losses = 0; t.diff = 0; });
-                pastMatches.filter(m => m.jornada <= j).forEach(m => {
-                    let home = tTemp.find(t => t.name === m.home);
-                    let away = tTemp.find(t => t.name === m.away);
-                    if(home && away) {
-                        if(m.scoreH > m.scoreA) { home.wins++; away.losses++; } else { away.wins++; home.losses++; }
-                        home.diff += (m.scoreH - m.scoreA);
-                        away.diff += (m.scoreA - m.scoreH);
-                    }
-                });
-                tTemp.sort((a,b) => b.wins - a.wins || b.diff - a.diff);
-                tTemp.forEach((t, index) => positionsHistory[t.name].push(index + 1));
-            }
-        }
-
-        function updateEvoChart() {
-            const sStart = document.getElementById('evoStart');
-            const sEnd = document.getElementById('evoEnd');
-            
-            // Rellenar selectores la primera vez
-            if(sStart.options.length === 0) {
-                for(let i=1; i<=34; i++) {
-                    sStart.innerHTML += `<option value="${i}">${i}</option>`;
-                    sEnd.innerHTML += `<option value="${i}" ${i===34?'selected':''}>${i}</option>`;
-                }
-            }
-
-            let start = parseInt(sStart.value);
-            let end = parseInt(sEnd.value);
-            
-            // Validar que el inicio no sea mayor que el final
-            if(start >= end) { start = Math.max(1, end - 1); sStart.value = start; }
-            
-            if(!charts.evo) return;
-            charts.evo.data.labels = Array.from({length: end - start + 1}, (_, i) => "J"+(start + i));
-            charts.evo.data.datasets.forEach(ds => {
-                let fullName = teamsBase.find(t => t.id === ds.label).name;
-                ds.data = positionsHistory[fullName].slice(start - 1, end);
-            });
-            charts.evo.update();
-        }
-
-        function initCharts() {
-            if(!Object.keys(positionsHistory).length) buildHistory();
-
-            // 1. Gráfico de Evolución
-            if(charts.evo) charts.evo.destroy();
-            charts.evo = new Chart(document.getElementById('chartEvolucion'), {
-                type: 'line',
-                data: {
-                    labels: [], // Se llenará en updateEvoChart
-                    datasets: teamsBase.map((t, i) => ({
-                        label: t.id,
-                        data: [],
-                        borderColor: `hsl(${(i * 360) / 20}, 70%, 50%)`,
-                        tension: 0.3, fill: false, borderWidth: 2, pointRadius: 0, pointHitRadius: 5
-                    }))
-                },
-                options: { 
-                    responsive: true, maintainAspectRatio: false, 
-                    scales: { y: { reverse: true, min: 1, max: 20 } }, 
-                    plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10 } } } // LEYENDA ACTIVADA
-                }
-            });
-            
-            updateEvoChart(); // Llama a la actualización para fijar los datos iniciales
-
-            // 2. Gráfico Net Rating (Con logos de equipos y fondo Hack a Stat)
-            let effData = teamsBase.map(t => {
-                let m = pastMatches.filter(x => x.home === t.name || x.away === t.name);
-                let off = m.reduce((acc, x) => acc + (x.home === t.name ? x.scoreH : x.scoreA), 0) / (m.length || 1);
-                let def = m.reduce((acc, x) => acc + (x.home === t.name ? x.scoreA : x.scoreH), 0) / (m.length || 1);
-                return { x: off, y: def, team: t };
-            });
-
-            if(charts.eff) charts.eff.destroy();
-            charts.eff = new Chart(document.getElementById('chartEficiencia'), {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Equipos', data: effData, pointRadius: 10, pointHoverRadius: 10, showLine: false
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false },
-                        tooltip: { callbacks: { label: (c) => `${c.raw.team.name} | OFF: ${c.raw.x.toFixed(1)} | DEF: ${c.raw.y.toFixed(1)}` } } 
-                    },
-                    scales: {
-                        x: { min: 105, max: 130, title: { display: true, text: 'OFF RTG (Anotados)' } },
-                        y: { reverse: true, min: 105, max: 130, title: { display: true, text: 'DEF RTG (Recibidos, Invertido)' } }
-                    }
-                }
-            });
-        }
-        
 
         function getFormHTML(teamName) {
             let teamMatches = pastMatches.filter(m => m.home === teamName || m.away === teamName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
@@ -857,6 +604,23 @@
             html += '</div>'; return html;
         }
 
+        function getSOS(teamName) {
+            let opps = [];
+            schedule.forEach(j => j.games.forEach(g => {
+                if(!g.played) {
+                    if(g.home === teamName) opps.push(g.away);
+                    if(g.away === teamName) opps.push(g.home);
+                }
+            }));
+            if(opps.length === 0) return ".000";
+            let totalWinPct = 0;
+            opps.forEach(opp => {
+                let t = teamsBase.find(x => x.name === opp);
+                totalWinPct += (t.initialWins / (t.initialWins + t.initialLosses));
+            });
+            return (totalWinPct / opps.length).toFixed(3).replace('0.', '.');
+        }
+
         function getLiveTeams() {
             let currentTeams = JSON.parse(JSON.stringify(teamsBase));
             currentTeams.forEach(t => { t.wins = t.initialWins; t.losses = t.initialLosses; });
@@ -866,20 +630,72 @@
                 if(winnerTeam) winnerTeam.wins++;
                 if(loserTeam) loserTeam.losses++;
             });
-            currentTeams.sort((a,b) => b.wins - a.wins || b.diff - a.diff);
             return currentTeams;
+        }
+
+        function calculateH2HStats(teamA, teamB) {
+            let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
+            pastMatches.forEach(m => {
+                if (m.home === teamA && m.away === teamB) { played++; if(m.scoreH > m.scoreA) winsA++; else winsB++; diffA += (m.scoreH - m.scoreA); }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.scoreH > m.scoreA) winsB++; else winsA++; diffA += (m.scoreA - m.scoreH); }
+            });
+            Object.values(simulatedPicks).forEach(m => {
+                if (m.home === teamA && m.away === teamB) { played++; if(m.winner === teamA) winsA++; else winsB++; }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.winner === teamB) winsB++; else winsA++; }
+            });
+            return { winsA, winsB, played, diffA };
+        }
+
+        function sortTeamsWithH2H(teamsArray) {
+            teamsArray.sort((a, b) => b.wins - a.wins);
+
+            let finalSorted = [];
+            let index = 0;
+
+            while (index < teamsArray.length) {
+                let currentWins = teamsArray[index].wins;
+                let tiedGroup = [];
+
+                while (index < teamsArray.length && teamsArray[index].wins === currentWins) {
+                    tiedGroup.push(teamsArray[index]);
+                    index++;
+                }
+
+                if (tiedGroup.length > 1) {
+                    tiedGroup.forEach(t => {
+                        t.h2hWins = 0;
+                        t.h2hDiff = 0;
+                        tiedGroup.forEach(other => {
+                            if (t.name !== other.name) {
+                                let stats = calculateH2HStats(t.name, other.name);
+                                t.h2hWins += stats.winsA;
+                                t.h2hDiff += stats.diffA;
+                            }
+                        });
+                    });
+                    tiedGroup.sort((a, b) => b.h2hWins - a.h2hWins || b.h2hDiff - a.h2hDiff || b.diff - a.diff);
+                }
+                
+                finalSorted.push(...tiedGroup);
+            }
+            return finalSorted;
         }
 
         function renderStandings() {
             let teams = getLiveTeams();
             if (!teams || teams.length === 0) return;
+            
+            teams = sortTeamsWithH2H(teams); 
+            
             const tbodyMain = document.getElementById("standings-body");
             const tbodySim = document.getElementById("sim-standings-body");
             tbodyMain.innerHTML = ""; tbodySim.innerHTML = "";
+            
             teams.forEach((team, index) => {
                 let games = team.wins + team.losses; 
                 let pct = games > 0 ? (team.wins / games).toFixed(3).replace('0.', '.') : ".000";
                 let rowClass = index < 6 ? "playoff-zone" : (index < 10 ? "playin-zone" : "out-zone");
+                
                 tbodyMain.innerHTML += `<tr>
                     <td class="${rowClass}"><strong>${index + 1}</strong></td>
                     <td><div class="team-cell"><span>${team.flag}</span><img src="${getLogo(team.name)}" class="team-logo">${team.name}</div></td>
@@ -889,6 +705,7 @@
                     <td>${getNextOpponentsHTML(team.name)}</td>
                     <td style="font-weight:bold; font-family:monospace; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
+                
                 tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${team.name}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
             });
         }
@@ -910,7 +727,7 @@
             const teamName = document.getElementById("select-myteam").value;
             if(!teamName) return;
             const dashboard = document.getElementById("myteam-dashboard");
-            const t = i18n[currentLang] || i18n['en'];
+            const t = i18n[currentLang] || i18n['es'];
             const team = teamsBase.find(tb => tb.name === teamName);
             
             let html = `<div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
@@ -933,7 +750,6 @@
                 </div>
             `;
 
-            // AÑADIDO: Racha (Form) y Próximos partidos
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">Racha Reciente</h4><div style="margin-bottom:20px;">${getFormHTML(teamName)}</div>`;
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.next_games}</h4><div style="margin-bottom:20px; font-size: 1.1rem;">${getNextOpponentsHTML(teamName).replace('class="schedule-cell"', 'style="display:flex; gap:10px; flex-wrap:wrap;"')}</div>`;
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.direct_rivals}</h4>`;
@@ -942,7 +758,7 @@
             rivals.forEach(rival => {
                 let stats = calculateH2HStats(teamName, rival.name);
                 let diffStr = stats.diffA > 0 ? `+${stats.diffA}` : stats.diffA;
-                let asterisco = stats.played < 2 ? '*' : ''; // Asterisco si no han jugado 2 veces
+                let asterisco = stats.played < 2 ? '*' : ''; 
                 
                 html += `<div class="rival-row">
                     <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${rival.name}</div>
@@ -951,6 +767,7 @@
             });
             dashboard.innerHTML = html; dashboard.style.display = "block";
         }
+
         function runProbabilities() {
             document.getElementById('prob-loading').style.display = 'block';
             document.getElementById('prob-results').style.display = 'none';
@@ -979,11 +796,11 @@
                 const tbody = document.getElementById("prob-body");
                 tbody.innerHTML = "";
                 sortedTeams.forEach(team => {
-                    let maxVal = Math.max(...tRes[team].positions); // Encuentra el valor máximo de repeticiones
+                    let maxVal = Math.max(...tRes[team].positions); 
                     let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
                     for(let i=0; i<20; i++) {
                         let pct = Math.round((tRes[team].positions[i] / iterations) * 100);
-                        let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0); // Verifica si es el top
+                        let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0);
                         let bgClass = i < 6 ? 'bg-t6' : (i < 10 ? 'bg-pi' : 'bg-out');
                         let style = isMax ? 'font-weight:bold; color:var(--dark); font-size:1.05rem; text-decoration:underline;' : (pct === 0 ? 'color:#ccc;' : '');
                         tr += `<td class="${bgClass}" style="${style}">${pct === 0 ? '-' : pct+'%'}</td>`;
@@ -998,6 +815,7 @@
 
         function renderMatches() {
             const container = document.getElementById("matches-container");
+            const t = i18n[currentLang] || i18n['es'];
             container.innerHTML = "";
             schedule.forEach(jornada => {
                 let jHeader = `<h3 class="jornada-header">${jornada.jornada}</h3><div class="match-grid">`;
@@ -1005,17 +823,17 @@
                 jornada.games.forEach(match => {
                     if (match.played) {
                         jGames += `<div class="match-card" style="flex-direction:row; padding:10px; gap:5px; align-items:center;">
-                            <div style="flex:1; text-align:right;">${match.home}</div>
-                            <div style="color:var(--primary); font-weight:bold;">${match.scoreH} - ${match.scoreA}</div>
-                            <div style="flex:1; text-align:left;">${match.away}</div>
+                            <div style="flex:1; text-align:right; font-size:0.9rem;">${match.home}</div>
+                            <div style="color:var(--primary); font-weight:bold; white-space:nowrap; padding:0 5px;">${match.scoreH} - ${match.scoreA}</div>
+                            <div style="flex:1; text-align:left; font-size:0.9rem;">${match.away}</div>
                         </div>`;
                     } else {
                         let selH = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.home ? 'selected' : '';
                         let selA = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.away ? 'selected' : '';
                         jGames += `<div class="match-card" style="flex-direction:row; padding:5px; gap:5px; align-items:stretch;">
-                            <button class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0;">${match.home}</button>
-                            <div style="display:flex; align-items:center; font-weight:bold; color:#9ca3af; padding:0 2px;">vs</div>
-                            <button class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0;">${match.away}</button>
+                            <button class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 5px; font-size:0.9rem; line-height:1.2;">${match.home}</button>
+                            <div style="display:flex; align-items:center; font-weight:bold; color:#9ca3af; font-size:0.8rem; padding:0 2px;">vs</div>
+                            <button class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 5px; font-size:0.9rem; line-height:1.2;">${match.away}</button>
                         </div>`;
                     }
                 });
@@ -1026,19 +844,6 @@
         function pickWinner(matchId, homeName, awayName, side) {
             simulatedPicks[matchId] = { home: homeName, away: awayName, winner: side === 'home' ? homeName : awayName };
             updateUI();
-        }
-
-        function calculateH2HStats(teamA, teamB) {
-            let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
-            pastMatches.forEach(m => {
-                if (m.home === teamA && m.away === teamB) { played++; if(m.scoreH > m.scoreA) winsA++; else winsB++; diffA += (m.scoreH - m.scoreA); }
-                if (m.home === teamB && m.away === teamA) { played++; if(m.scoreH > m.scoreA) winsB++; else winsA++; diffA += (m.scoreA - m.scoreH); }
-            });
-            Object.values(simulatedPicks).forEach(m => {
-                if (m.home === teamA && m.away === teamB) { played++; if(m.winner === teamA) winsA++; else winsB++; }
-                if (m.home === teamB && m.away === teamA) { played++; if(m.winner === teamB) winsB++; else winsA++; }
-            });
-            return { winsA, winsB, played, diffA };
         }
 
         function renderMatrices() {
@@ -1103,7 +908,9 @@
             let jSelect = document.getElementById("filter-jornada");
             let eSelect = document.getElementById("filter-equipo");
             let mtSelect = document.getElementById("select-myteam");
+            
             [...new Set(pastMatches.map(m => m.jornada))].sort((a,b)=>b-a).forEach(j => { jSelect.innerHTML += `<option value="${j}">Round ${j}</option>`; });
+            
             let eqCopy = [...teamsBase].sort((a,b) => a.name.localeCompare(b.name));
             eqCopy.forEach(t => { 
                 eSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`; 
@@ -1114,11 +921,29 @@
         function openTab(evt, tabName) {
             document.querySelectorAll(".tab-content").forEach(tab => tab.style.display = "none");
             document.querySelectorAll(".tab-link").forEach(link => link.classList.remove("active"));
+            
             document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.classList.add("active");
-            // Inicializar gráficos solo cuando la pestaña esté activa
-            if (tabName === 'graficos') { setTimeout(initCharts, 100); }
+            
+            if (evt) {
+                evt.currentTarget.classList.add("active");
+            } else {
+                let btn = document.querySelector(`button[onclick*="${tabName}"]`);
+                if (btn) btn.classList.add("active");
+            }
+            
+            if (window.history.pushState) {
+                window.history.pushState(null, null, '#' + tabName);
+            } else {
+                window.location.hash = '#' + tabName;
+            }
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            let hash = window.location.hash.substring(1); 
+            if (hash && document.getElementById(hash)) {
+                openTab(null, hash);
+            }
+        });
 
         initFilters();
         updateUI();
