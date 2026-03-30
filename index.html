@@ -718,7 +718,35 @@
             });
             return currentTeams;
         }
-
+        function calculateWinOdds(homeTeamName, awayTeamName) {
+            let homeTeam = teamsBase.find(t => t.name === homeTeamName);
+            let awayTeam = teamsBase.find(t => t.name === awayTeamName);
+            
+            // 1. Porcentaje de victorias actual (Peso principal)
+            let homeGames = homeTeam.initialWins + homeTeam.initialLosses;
+            let awayGames = awayTeam.initialWins + awayTeam.initialLosses;
+            let homeBasePct = homeGames > 0 ? (homeTeam.initialWins / homeGames) : 0.5;
+            let awayBasePct = awayGames > 0 ? (awayTeam.initialWins / awayGames) : 0.5;
+            
+            // 2. Racha reciente (últimos 5 partidos)
+            function getFormScore(tName) {
+                let matches = pastMatches.filter(m => m.home === tName || m.away === tName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
+                if (matches.length === 0) return 0.5;
+                let wins = matches.filter(m => (m.home === tName && m.scoreH > m.scoreA) || (m.away === tName && m.scoreA > m.scoreH)).length;
+                return wins / matches.length; 
+            }
+            
+            // 3. Fórmula Ponderada: 70% Nivel General + 30% Racha + 12% Factor Cancha
+            let homeRaw = (homeBasePct * 0.70) + (getFormScore(homeTeamName) * 0.30) + 0.12;
+            let awayRaw = (awayBasePct * 0.70) + (getFormScore(awayTeamName) * 0.30);
+            
+            // Normalizamos para que sume exactamente 100%
+            let totalRaw = homeRaw + awayRaw;
+            let homeProb = homeRaw / totalRaw;
+            
+            let homeInt = Math.round(homeProb * 100);
+            return { home: homeInt, away: 100 - homeInt, homeDecimal: homeProb };
+        }
         function calculateH2HStats(teamA, teamB) {
             let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
             pastMatches.forEach(m => {
@@ -963,16 +991,25 @@
                 let tRes = {};
                 teamsBase.forEach(t => { tRes[t.name] = { positions: Array(20).fill(0), avg: 0 }; });
 
+                // PRE-CALCULAMOS las probabilidades de los partidos pendientes para no saturar el navegador
                 let unplayed = [];
-                schedule.forEach(j => j.games.forEach(g => { if(!g.played) unplayed.push(g); }));
+                schedule.forEach(j => j.games.forEach(g => { 
+                    if(!g.played) {
+                        let odds = calculateWinOdds(g.home, g.away);
+                        unplayed.push({ home: g.home, away: g.away, homeWinProb: odds.homeDecimal });
+                    } 
+                }));
 
                 for(let i=0; i<iterations; i++) {
                     let tempStd = JSON.parse(JSON.stringify(teamsBase));
+                    
                     unplayed.forEach(g => {
-                        let hWins = Math.random() > 0.5; 
+                        // LA MAGIA ESTÁ AQUÍ: Ahora tiramos el dado usando el % real del equipo local
+                        let hWins = Math.random() < g.homeWinProb; 
                         tempStd.find(t => t.name === (hWins ? g.home : g.away)).initialWins++;
                         tempStd.find(t => t.name === (hWins ? g.away : g.home)).initialLosses++;
                     });
+                    
                     tempStd.sort((a,b) => b.initialWins - a.initialWins || b.diff - a.diff);
                     tempStd.forEach((t, index) => { tRes[t.name].positions[index]++; tRes[t.name].avg += (index+1); });
                 }
@@ -1004,16 +1041,13 @@
             container.innerHTML = "";
             schedule.forEach(jornada => {
                 
-                // --- MAGIA DE TRADUCCIÓN PARA EL SIMULADOR ---
-                // Reemplazamos la palabra española por la del diccionario actual
                 let roundTitle = jornada.jornada
                     .replace('Jornada', t.round)
                     .replace('Partidos Aplazados', t.postponed);
 
-                // Usamos roundTitle en lugar de jornada.jornada
                 let jHeader = `<h3 class="jornada-header">${roundTitle}</h3><div class="match-grid">`;
-                
                 let jGames = "";
+                
                 jornada.games.forEach(match => {
                     if (match.played) {
                         jGames += `<div class="match-card" style="flex-direction:row; padding:10px; gap:5px; align-items:center;">
@@ -1022,12 +1056,17 @@
                             <div style="flex:1; text-align:left; font-size:0.9rem;">${match.away}</div>
                         </div>`;
                     } else {
+                        // CALCULAMOS LAS PROBABILIDADES AQUÍ
+                        let odds = calculateWinOdds(match.home, match.away);
+                        
                         let selH = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.home ? 'selected' : '';
                         let selA = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.away ? 'selected' : '';
+                        
+                        // Añadimos el % al texto del botón
                         jGames += `<div class="match-card" style="flex-direction:row; padding:5px; gap:5px; align-items:stretch;">
-                            <button class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 5px; font-size:0.9rem; line-height:1.2;">${match.home}</button>
+                            <button class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${match.home}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.home}%</span></button>
                             <div style="display:flex; align-items:center; font-weight:bold; color:#9ca3af; font-size:0.8rem; padding:0 2px;">vs</div>
-                            <button class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 5px; font-size:0.9rem; line-height:1.2;">${match.away}</button>
+                            <button class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${match.away}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.away}%</span></button>
                         </div>`;
                     }
                 });
