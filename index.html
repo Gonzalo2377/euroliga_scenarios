@@ -855,12 +855,36 @@
             schedule.forEach(j => j.games.forEach(g => { if(!nextGame && !g.played && (g.home === teamName || g.away === teamName)) nextGame = g; }));
             let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
 
+            // Calcular partidos restantes y victorias máximas posibles
             let rem = 0;
             schedule.forEach(j => j.games.forEach(g => { if(!g.played && (g.home === teamName || g.away === teamName)) rem++; }));
+            let maxWins = team.initialWins + rem;
             
             let sortedTeams = [...teamsBase].sort((a,b) => b.initialWins - a.initialWins || b.diff - a.diff);
             let top6Wins = sortedTeams[5].initialWins;
             let top10Wins = sortedTeams[9].initialWins;
+
+            // LÓGICA INTELIGENTE PARA EL TOP 6
+            let top6Text = "";
+            let needed6 = top6Wins - team.initialWins;
+            if (needed6 <= 0) {
+                top6Text = `<span style="color:var(--win); font-weight:bold;">✅ Asegurado / Virtualmente clasificado</span>`;
+            } else if (maxWins < top6Wins) {
+                top6Text = `<span style="color:var(--loss); font-weight:bold;">❌ Matemáticamente imposible (Máx: ${maxWins}V)</span>`;
+            } else {
+                top6Text = `Necesita ganar <strong>${needed6}</strong> de los <strong>${rem}</strong> partidos restantes.`;
+            }
+
+            // LÓGICA INTELIGENTE PARA EL PLAY-IN (TOP 10)
+            let top10Text = "";
+            let needed10 = top10Wins - team.initialWins;
+            if (needed10 <= 0) {
+                top10Text = `<span style="color:var(--win); font-weight:bold;">✅ Asegurado / Virtualmente clasificado</span>`;
+            } else if (maxWins < top10Wins) {
+                top10Text = `<span style="color:var(--loss); font-weight:bold;">☠️ Eliminado matemáticamente (Máx: ${maxWins}V)</span>`;
+            } else {
+                top10Text = `Necesita ganar <strong>${needed10}</strong> de los <strong>${rem}</strong> partidos restantes.`;
+            }
 
             html += `
                 <div class="scenario-box">
@@ -870,8 +894,8 @@
                 </div>
                 <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0;">
                     <h4 style="margin-top:0;">🎯 ${t.sc_needed}</h4>
-                    <p><strong>${t.sc_for_top6} (${top6Wins}V):</strong> ${t.wins_needed.replace('{w}', Math.max(0, top6Wins - team.initialWins)).replace('{rem}', rem)}</p>
-                    <p><strong>${t.sc_for_top10} (${top10Wins}V):</strong> ${t.wins_needed.replace('{w}', Math.max(0, top10Wins - team.initialWins)).replace('{rem}', rem)}</p>
+                    <p><strong>${t.sc_for_top6} (Corte en ${top6Wins}V):</strong> ${top6Text}</p>
+                    <p><strong>${t.sc_for_top10} (Corte en ${top10Wins}V):</strong> ${top10Text}</p>
                 </div>
             `;
 
