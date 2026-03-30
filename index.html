@@ -768,37 +768,138 @@
                 </div>
             </div>`;
 
-            // --- CAJA VERDE: TEXTOS LITERALES Y ESTÁTICOS ---
-            const teamScenarios = {
-                "Fenerbahçe": "<strong>If Fenerbahçe finishes with the maximum wins (27) and ties for 1st place:</strong><br>• They win the tiebreaker vs Panathinaikos and Hapoel.<br>• They lose it vs Zalgiris and Valencia.<br>• Against teams like Real Madrid or Olympiacos, it depends on point differential.<br>• In multi-team ties, the standings are decided by a mini-league between the tied teams.",
-                "Real Madrid": "<strong>If Real Madrid finishes with the maximum wins (26) and ties for 1st/2nd place:</strong><br>• They win the tiebreaker vs Valencia Basket.<br>• They lose it vs Panathinaikos and Zalgiris Kaunas.<br>• Against Fenerbahçe or Olympiacos, it depends on the point differential of the upcoming games.<br>• In multi-team ties, the standings are decided by a mini-league.",
-                "Olympiacos": "<strong>If Olympiacos finishes with the maximum wins (26) and ties for 1st/2nd place:</strong><br>• They win the tiebreaker vs Panathinaikos.<br>• They lose it vs Valencia Basket.<br>• Against Zalgiris, Real Madrid or Fenerbahçe, it depends on point differential (+/-).<br>• In multi-team ties, the standings are decided by a mini-league.",
-                "Valencia Basket": "<strong>Fighting for Top 4 (Home Court Advantage):</strong><br>• They win the tiebreaker vs Olympiacos and Fenerbahçe.<br>• They lose it vs Real Madrid.<br>• Crucial upcoming games against Zalgiris and Panathinaikos will define their H2H against direct rivals.",
-                "Zalgiris Kaunas": "<strong>If Žalgiris finishes with the maximum wins (24) and ties for Top 4:</strong><br>• They win the tiebreaker vs Fenerbahçe and Hapoel.<br>• They lose it vs Panathinaikos.<br>• Against teams like Real Madrid, Valencia or Olympiacos, it depends on point differential (they win vs Madrid, lose vs Olympiacos).<br>• In multi-team ties, the standings are decided by a mini-league.",
-                "Panathinaikos": "<strong>If Panathinaikos finishes with the maximum wins (24) and ties for Top 4:</strong><br>• They win the tiebreaker vs Real Madrid and Zalgiris Kaunas.<br>• They lose it vs Olympiacos and Fenerbahçe.<br>• They have a strong position in multi-team ties involving Spanish or Lithuanian teams, but suffer against Fener/Oly.",
-                "Hapoel Tel-Aviv": "<strong>Fighting for Top 6 (Direct Playoffs):</strong><br>• They lose the direct tiebreaker against Zalgiris Kaunas.<br>• Need to secure wins in their pending game to avoid dangerous multi-team ties.<br>• Currently holding a solid position to secure at least Play-In.",
-                "Barcelona": "<strong>Fighting for Top 6 (Direct Playoffs):</strong><br>• They win the tiebreaker vs Real Madrid.<br>• They lose it vs Panathinaikos and Hapoel Tel-Aviv.<br>• Must protect their home court to avoid falling into the Play-In tournament.",
-                "Estrella Roja": "<strong>Fighting for Top 8 (Play-In Advantage):</strong><br>• Needs to win most of the remaining games to guarantee a spot.<br>• Every H2H tiebreaker is critical now to stay above Monaco and the chasing pack.",
-                "Mónaco": "<strong>Fighting for Top 8 (Play-In Advantage):</strong><br>• Needs a strong finish to stay in the Play-In zone.<br>• Dependent on direct matchups against other teams in the 17-19 win range.",
-                "Dubai": "<strong>Fighting for Top 10 (Last Play-In Spot):</strong><br>• Tied at 17 wins with Milan and Maccabi.<br>• Must win almost every remaining game to sneak into the Top 10.",
-                "Olimpia Milano": "<strong>Fighting for Top 10 (Last Play-In Spot):</strong><br>• Tied at 17 wins. Margin of error is zero.<br>• H2H against Maccabi and Dubai will be the deciding factor.",
-                "Maccabi Tel Aviv": "<strong>Fighting for Top 10 (Last Play-In Spot):</strong><br>• Has one game in hand (pending vs Hapoel) which gives them a slight edge over Dubai and Milan.<br>• Needs to capitalize on that extra game to secure the 10th spot."
+            // --- CEREBRO MULTILINGÜE: ESCENARIOS TOP 1 / 4 / 6 / 10 ---
+            const scenariosLang = {
+                es: {
+                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Líder. Gana H2H a PAO/HTA, pierde vs ZAL/VAL.</li><li><strong>Top 4/6/10:</strong> Asegurado.</li></ul>",
+                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Al acecho. Gana H2H a VAL, pierde vs PAO/ZAL.</li><li><strong>Top 4:</strong> A un paso.</li><li><strong>Top 6/10:</strong> Asegurado.</li></ul>",
+                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Al acecho. Gana H2H a PAO, pierde vs VAL.</li><li><strong>Top 4:</strong> A un paso.</li><li><strong>Top 6/10:</strong> Asegurado.</li></ul>",
+                    "Valencia Basket": "<ul><li><strong>Top 1:</strong> Posible matemáticamente.</li><li><strong>Top 4:</strong> Gana H2H a OLY/FEN, pierde vs RMA.</li><li><strong>Top 6/10:</strong> Virtualmente clasificado.</li></ul>",
+                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> Gana H2H a FEN/RMA/HTA, pierde vs PAO.</li><li><strong>Top 6:</strong> En la pelea.</li><li><strong>Top 10:</strong> Asegurado.</li></ul>",
+                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Partido aplazado clave. Opciones vivas.</li><li><strong>Top 6:</strong> Gran posición.</li><li><strong>Top 10:</strong> Asegurado.</li></ul>",
+                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> Gana H2H a RMA/ZAL, pierde vs OLY/FEN.</li><li><strong>Top 6:</strong> En la pelea.</li><li><strong>Top 10:</strong> Asegurado.</li></ul>",
+                    "Barcelona": "<ul><li><strong>Top 4:</strong> Obligado a ganar. Gana H2H a RMA, pierde vs PAO/HTA.</li><li><strong>Top 6:</strong> En la pelea.</li><li><strong>Top 10:</strong> Asegurado.</li></ul>",
+                    "Mónaco": "<ul><li><strong>Top 6:</strong> A 1 victoria del grupo de 20.</li><li><strong>Top 10 (Play-In):</strong> Virtualmente clasificado.</li></ul>",
+                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> A 1 victoria del grupo de 20.</li><li><strong>Top 10 (Play-In):</strong> Virtualmente clasificado.</li></ul>",
+                    "Olimpia Milano": "<ul><li><strong>Top 10 (Play-In):</strong> Empate a 17V en el corte. Margen de error nulo. H2H vital.</li></ul>",
+                    "Dubai": "<ul><li><strong>Top 10 (Play-In):</strong> Empate a 17V. Obligado a ganar para no caer en desempates.</li></ul>",
+                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10 (Play-In):</strong> 17V, pero el partido aplazado le da ligera ventaja.</li></ul>",
+                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Matemáticamente eliminado. Pensando en la próxima temporada.</li></ul>"
+                },
+                en: {
+                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Leader. Wins H2H vs PAO/HTA, loses vs ZAL/VAL.</li><li><strong>Top 4/6/10:</strong> Secured.</li></ul>",
+                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Chasing. Wins H2H vs VAL, loses vs PAO/ZAL.</li><li><strong>Top 4:</strong> Very close.</li><li><strong>Top 6/10:</strong> Secured.</li></ul>",
+                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Chasing. Wins H2H vs PAO, loses vs VAL.</li><li><strong>Top 4:</strong> Very close.</li><li><strong>Top 6/10:</strong> Secured.</li></ul>",
+                    "Valencia Basket": "<ul><li><strong>Top 1:</strong> Mathematically possible.</li><li><strong>Top 4:</strong> Wins H2H vs OLY/FEN, loses vs RMA.</li><li><strong>Top 6/10:</strong> Virtually secured.</li></ul>",
+                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> Wins H2H vs FEN/RMA/HTA, loses vs PAO.</li><li><strong>Top 6:</strong> In the fight.</li><li><strong>Top 10:</strong> Secured.</li></ul>",
+                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Game in hand advantage.</li><li><strong>Top 6:</strong> Great position.</li><li><strong>Top 10:</strong> Secured.</li></ul>",
+                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> Wins H2H vs RMA/ZAL, loses vs OLY/FEN.</li><li><strong>Top 6:</strong> In the fight.</li><li><strong>Top 10:</strong> Secured.</li></ul>",
+                    "Barcelona": "<ul><li><strong>Top 4:</strong> Must win out. Wins H2H vs RMA, loses vs PAO/HTA.</li><li><strong>Top 6:</strong> In the fight.</li><li><strong>Top 10:</strong> Secured.</li></ul>",
+                    "Mónaco": "<ul><li><strong>Top 6:</strong> 1 win behind the 20-win pack.</li><li><strong>Top 10 (Play-In):</strong> Virtually secured.</li></ul>",
+                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> 1 win behind the 20-win pack.</li><li><strong>Top 10 (Play-In):</strong> Virtually secured.</li></ul>",
+                    "Olimpia Milano": "<ul><li><strong>Top 10 (Play-In):</strong> Tied at 17W. Zero margin for error.</li></ul>",
+                    "Dubai": "<ul><li><strong>Top 10 (Play-In):</strong> Tied at 17W. Zero margin for error.</li></ul>",
+                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10 (Play-In):</strong> 17W, but game in hand gives slight edge.</li></ul>",
+                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Mathematically eliminated. Focusing on next season.</li></ul>"
+                },
+                fr: {
+                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Leader. Gagne H2H vs PAO/HTA, perd vs ZAL/VAL.</li><li><strong>Top 4/6/10:</strong> Assuré.</li></ul>",
+                    "Real Madrid": "<ul><li><strong>Top 1:</strong> En chasse. Gagne H2H vs VAL, perd vs PAO/ZAL.</li><li><strong>Top 4:</strong> Très proche.</li><li><strong>Top 6/10:</strong> Assuré.</li></ul>",
+                    "Olympiacos": "<ul><li><strong>Top 1:</strong> En chasse. Gagne H2H vs PAO, perd vs VAL.</li><li><strong>Top 4:</strong> Très proche.</li><li><strong>Top 6/10:</strong> Assuré.</li></ul>",
+                    "Valencia Basket": "<ul><li><strong>Top 1:</strong> Mathématiquement possible.</li><li><strong>Top 4:</strong> Gagne H2H vs OLY/FEN, perd vs RMA.</li><li><strong>Top 6/10:</strong> Presque assuré.</li></ul>",
+                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> Gagne H2H vs FEN/RMA/HTA, perd vs PAO.</li><li><strong>Top 6:</strong> À la lutte.</li><li><strong>Top 10:</strong> Assuré.</li></ul>",
+                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Match en retard décisif.</li><li><strong>Top 6:</strong> Bonne position.</li><li><strong>Top 10:</strong> Assuré.</li></ul>",
+                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> Gagne H2H vs RMA/ZAL, perd vs OLY/FEN.</li><li><strong>Top 6:</strong> À la lutte.</li><li><strong>Top 10:</strong> Assuré.</li></ul>",
+                    "Barcelona": "<ul><li><strong>Top 4:</strong> Doit tout gagner. Gagne H2H vs RMA, perd vs PAO/HTA.</li><li><strong>Top 6:</strong> À la lutte.</li><li><strong>Top 10:</strong> Assuré.</li></ul>",
+                    "Mónaco": "<ul><li><strong>Top 6:</strong> À 1 victoire du groupe de 20.</li><li><strong>Top 10 (Play-In):</strong> Presque assuré.</li></ul>",
+                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> À 1 victoire du groupe de 20.</li><li><strong>Top 10 (Play-In):</strong> Presque assuré.</li></ul>",
+                    "Olimpia Milano": "<ul><li><strong>Top 10 (Play-In):</strong> Égalité à 17V. Marge d'erreur nulle.</li></ul>",
+                    "Dubai": "<ul><li><strong>Top 10 (Play-In):</strong> Égalité à 17V. Marge d'erreur nulle.</li></ul>",
+                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10 (Play-In):</strong> 17V, mais match en retard donne l'avantage.</li></ul>",
+                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Mathématiquement éliminé. Focus sur la saison prochaine.</li></ul>"
+                },
+                tr: {
+                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Lider. PAO/HTA'ya karşı H2H üstün, ZAL/VAL'e karşı geride.</li><li><strong>Top 4/6/10:</strong> Garantilendi.</li></ul>",
+                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Takipte. VAL'e karşı H2H üstün, PAO/ZAL'e karşı geride.</li><li><strong>Top 4:</strong> Çok yakın.</li><li><strong>Top 6/10:</strong> Garantilendi.</li></ul>",
+                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Takipte. PAO'ya karşı H2H üstün, VAL'e karşı geride.</li><li><strong>Top 4:</strong> Çok yakın.</li><li><strong>Top 6/10:</strong> Garantilendi.</li></ul>",
+                    "Valencia Basket": "<ul><li><strong>Top 1:</strong> İhtimal var.</li><li><strong>Top 4:</strong> OLY/FEN'e karşı H2H üstün, RMA'ya karşı geride.</li><li><strong>Top 6/10:</strong> Neredeyse garantilendi.</li></ul>",
+                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> FEN/RMA/HTA'ya karşı H2H üstün, PAO'ya karşı geride.</li><li><strong>Top 6:</strong> Savaşta.</li><li><strong>Top 10:</strong> Garantilendi.</li></ul>",
+                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Eksik maç avantajı.</li><li><strong>Top 6:</strong> Harika pozisyon.</li><li><strong>Top 10:</strong> Garantilendi.</li></ul>",
+                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> RMA/ZAL'a karşı H2H üstün, OLY/FEN'e karşı geride.</li><li><strong>Top 6:</strong> Savaşta.</li><li><strong>Top 10:</strong> Garantilendi.</li></ul>",
+                    "Barcelona": "<ul><li><strong>Top 4:</strong> Kazanmak zorunda. RMA'ya karşı H2H üstün.</li><li><strong>Top 6:</strong> Savaşta.</li><li><strong>Top 10:</strong> Garantilendi.</li></ul>",
+                    "Mónaco": "<ul><li><strong>Top 6:</strong> 20 galibiyetli grubun 1 maç gerisinde.</li><li><strong>Top 10 (Play-In):</strong> Neredeyse garantilendi.</li></ul>",
+                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> 20 galibiyetli grubun 1 maç gerisinde.</li><li><strong>Top 10 (Play-In):</strong> Neredeyse garantilendi.</li></ul>",
+                    "Olimpia Milano": "<ul><li><strong>Top 10 (Play-In):</strong> 17 galibiyette eşitlik. Hata payı sıfır.</li></ul>",
+                    "Dubai": "<ul><li><strong>Top 10 (Play-In):</strong> 17 galibiyette eşitlik. Hata payı sıfır.</li></ul>",
+                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10 (Play-In):</strong> 17 galibiyet, eksik maç avantajı var.</li></ul>",
+                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Matematiksel olarak elendi. Gelecek sezona odaklanıyor.</li></ul>"
+                },
+                gr: {
+                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Πρωτοπόρος. Κερδίζει H2H PAO/HTA, χάνει ZAL/VAL.</li><li><strong>Top 4/6/10:</strong> Εξασφαλισμένο.</li></ul>",
+                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Στο κυνήγι. Κερδίζει H2H VAL, χάνει PAO/ZAL.</li><li><strong>Top 4:</strong> Πολύ κοντά.</li><li><strong>Top 6/10:</strong> Εξασφαλισμένο.</li></ul>",
+                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Στο κυνήγι. Κερδίζει H2H PAO, χάνει VAL.</li><li><strong>Top 4:</strong> Πολύ κοντά.</li><li><strong>Top 6/10:</strong> Εξασφαλισμένο.</li></ul>",
+                    "Valencia Basket": "<ul><li><strong>Top 1:</strong> Μαθηματικά πιθανό.</li><li><strong>Top 4:</strong> Κερδίζει H2H OLY/FEN, χάνει RMA.</li><li><strong>Top 6/10:</strong> Σχεδόν εξασφαλισμένο.</li></ul>",
+                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> Κερδίζει H2H FEN/RMA/HTA, χάνει PAO.</li><li><strong>Top 6:</strong> Στη μάχη.</li><li><strong>Top 10:</strong> Εξασφαλισμένο.</li></ul>",
+                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Ματς λιγότερο. Καλές πιθανότητες.</li><li><strong>Top 6:</strong> Εξαιρετική θέση.</li><li><strong>Top 10:</strong> Εξασφαλισμένο.</li></ul>",
+                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> Κερδίζει H2H RMA/ZAL, χάνει OLY/FEN.</li><li><strong>Top 6:</strong> Στη μάχη.</li><li><strong>Top 10:</strong> Εξασφαλισμένο.</li></ul>",
+                    "Barcelona": "<ul><li><strong>Top 4:</strong> Πρέπει να κερδίσει. Κερδίζει H2H RMA.</li><li><strong>Top 6:</strong> Στη μάχη.</li><li><strong>Top 10:</strong> Εξασφαλισμένο.</li></ul>",
+                    "Mónaco": "<ul><li><strong>Top 6:</strong> 1 νίκη πίσω από το γκρουπ των 20.</li><li><strong>Top 10 (Play-In):</strong> Σχεδόν εξασφαλισμένο.</li></ul>",
+                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> 1 νίκη πίσω από το γκρουπ των 20.</li><li><strong>Top 10 (Play-In):</strong> Σχεδόν εξασφαλισμένο.</li></ul>",
+                    "Olimpia Milano": "<ul><li><strong>Top 10 (Play-In):</strong> Ισοβαθμία στις 17 νίκες. Μηδενικό περιθώριο λάθους.</li></ul>",
+                    "Dubai": "<ul><li><strong>Top 10 (Play-In):</strong> Ισοβαθμία στις 17 νίκες. Μηδενικό περιθώριο λάθους.</li></ul>",
+                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10 (Play-In):</strong> 17 νίκες, ματς λιγότερο δίνει πλεονέκτημα.</li></ul>",
+                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Μαθηματικά αποκλεισμένος.</li></ul>"
+                },
+                sr: {
+                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Lider. Bolji H2H od PAO/HTA, slabiji od ZAL/VAL.</li><li><strong>Top 4/6/10:</strong> Osigurano.</li></ul>",
+                    "Real Madrid": "<ul><li><strong>Top 1:</strong> U poteri. Bolji H2H od VAL, slabiji od PAO/ZAL.</li><li><strong>Top 4:</strong> Veoma blizu.</li><li><strong>Top 6/10:</strong> Osigurano.</li></ul>",
+                    "Olympiacos": "<ul><li><strong>Top 1:</strong> U poteri. Bolji H2H od PAO, slabiji od VAL.</li><li><strong>Top 4:</strong> Veoma blizu.</li><li><strong>Top 6/10:</strong> Osigurano.</li></ul>",
+                    "Valencia Basket": "<ul><li><strong>Top 1:</strong> Matematički moguće.</li><li><strong>Top 4:</strong> Bolji H2H od OLY/FEN, slabiji od RMA.</li><li><strong>Top 6/10:</strong> Skoro osigurano.</li></ul>",
+                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> Bolji H2H od FEN/RMA/HTA, slabiji od PAO.</li><li><strong>Top 6:</strong> U borbi.</li><li><strong>Top 10:</strong> Osigurano.</li></ul>",
+                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Utakmica manje. Dobre šanse.</li><li><strong>Top 6:</strong> Odlična pozicija.</li><li><strong>Top 10:</strong> Osigurano.</li></ul>",
+                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> Bolji H2H od RMA/ZAL, slabiji od OLY/FEN.</li><li><strong>Top 6:</strong> U borbi.</li><li><strong>Top 10:</strong> Osigurano.</li></ul>",
+                    "Barcelona": "<ul><li><strong>Top 4:</strong> Mora da pobedi. Bolji H2H od RMA.</li><li><strong>Top 6:</strong> U borbi.</li><li><strong>Top 10:</strong> Osigurano.</li></ul>",
+                    "Mónaco": "<ul><li><strong>Top 6:</strong> 1 pobeda iza grupe sa 20.</li><li><strong>Top 10 (Play-In):</strong> Skoro osigurano.</li></ul>",
+                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> 1 pobeda iza grupe sa 20.</li><li><strong>Top 10 (Play-In):</strong> Skoro osigurano.</li></ul>",
+                    "Olimpia Milano": "<ul><li><strong>Top 10 (Play-In):</strong> Izjednačeni na 17 pobeda. Nema prostora za grešku.</li></ul>",
+                    "Dubai": "<ul><li><strong>Top 10 (Play-In):</strong> Izjednačeni na 17 pobeda. Nema prostora za grešku.</li></ul>",
+                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10 (Play-In):</strong> 17 pobeda, ali utakmica manje daje prednost.</li></ul>",
+                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Matematički eliminisan.</li></ul>"
+                },
+                lt: {
+                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Lyderis. Laimi H2H prieš PAO/HTA, pralaimi prieš ZAL/VAL.</li><li><strong>Top 4/6/10:</strong> Užtikrinta.</li></ul>",
+                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Vejasi. Laimi H2H prieš VAL, pralaimi prieš PAO/ZAL.</li><li><strong>Top 4:</strong> Labai arti.</li><li><strong>Top 6/10:</strong> Užtikrinta.</li></ul>",
+                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Vejasi. Laimi H2H prieš PAO, pralaimi prieš VAL.</li><li><strong>Top 4:</strong> Labai arti.</li><li><strong>Top 6/10:</strong> Užtikrinta.</li></ul>",
+                    "Valencia Basket": "<ul><li><strong>Top 1:</strong> Matematiškai įmanoma.</li><li><strong>Top 4:</strong> Laimi H2H prieš OLY/FEN, pralaimi prieš RMA.</li><li><strong>Top 6/10:</strong> Beveik užtikrinta.</li></ul>",
+                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> Laimi H2H prieš FEN/RMA/HTA, pralaimi prieš PAO.</li><li><strong>Top 6:</strong> Kovoja.</li><li><strong>Top 10:</strong> Užtikrinta.</li></ul>",
+                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Turi rungtynių atsargą.</li><li><strong>Top 6:</strong> Puiki pozicija.</li><li><strong>Top 10:</strong> Užtikrinta.</li></ul>",
+                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> Laimi H2H prieš RMA/ZAL, pralaimi prieš OLY/FEN.</li><li><strong>Top 6:</strong> Kovoja.</li><li><strong>Top 10:</strong> Užtikrinta.</li></ul>",
+                    "Barcelona": "<ul><li><strong>Top 4:</strong> Privalo laimėti viską. Laimi H2H prieš RMA.</li><li><strong>Top 6:</strong> Kovoja.</li><li><strong>Top 10:</strong> Užtikrinta.</li></ul>",
+                    "Mónaco": "<ul><li><strong>Top 6:</strong> 1 pergalė iki 20 pergalių grupės.</li><li><strong>Top 10 (Play-In):</strong> Beveik užtikrinta.</li></ul>",
+                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> 1 pergalė iki 20 pergalių grupės.</li><li><strong>Top 10 (Play-In):</strong> Beveik užtikrinta.</li></ul>",
+                    "Olimpia Milano": "<ul><li><strong>Top 10 (Play-In):</strong> Lygiosios su 17 pergalių. Nėra vietos klaidoms.</li></ul>",
+                    "Dubai": "<ul><li><strong>Top 10 (Play-In):</strong> Lygiosios su 17 pergalių. Nėra vietos klaidoms.</li></ul>",
+                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10 (Play-In):</strong> 17 perg., bet turi rungtynių atsargą.</li></ul>",
+                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Matematiškai eliminuota.</li></ul>"
+                }
             };
 
-            let scenarioText = teamScenarios[teamName] || "<strong>Eliminated or virtually impossible to reach Play-In.</strong><br>• Focus is on finishing the season strongly and preparing for the next year.";
+            let currentScenarios = scenariosLang[currentLang] || scenariosLang['en'];
+            let scenarioText = currentScenarios[teamName] || currentScenarios['default'];
+            let localizedGoalsTitle = currentLang === 'es' ? '🎯 Opciones Matemáticas y Objetivos (J34)' : '🎯 Mathematical Options & Goals (J34)'; // Fallback simple para el título
 
             html += `
                 <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:20px;">
-                    <h4 style="margin-top:0;">🎯 Opciones Matemáticas y Objetivos (J34)</h4>
-                    <p style="margin:0; font-size:0.95rem; line-height:1.6;">${scenarioText}</p>
+                    <h4 style="margin-top:0;">${localizedGoalsTitle}</h4>
+                    <div style="font-size:0.95rem; line-height:1.6;">${scenarioText}</div>
                 </div>
             `;
 
+            // --- CAJA AMARILLA: H2H Y CONDICIONES (PARTIDO A PARTIDO) ---
             let nextGame = null;
             schedule.forEach(j => j.games.forEach(g => { if(!nextGame && !g.played && (g.home === teamName || g.away === teamName)) nextGame = g; }));
             let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
 
-            // --- CAJA AMARILLA: H2H Y CONDICIONES ---
             let h2hInfo = "";
             if (opponent !== "?") {
                 let stats = calculateH2HStats(teamName, opponent);
@@ -806,10 +907,9 @@
                 
                 h2hInfo = `<div style="margin-bottom:10px; font-size:1rem;">H2H vs ${opponent}: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280;">(${diffStr})</span></div>`;
                 
-                // Si solo han jugado 1 partido, calculamos la diferencia requerida
                 if (stats.played === 1) {
                     if (stats.diffA > 0) {
-                        h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>* Gana el desempate si gana el partido, o si pierde por ${stats.diffA} puntos o menos.</em></div>`;
+                        h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>* Gana el desempate ganando o perdiendo por ${stats.diffA} puntos o menos.</em></div>`;
                     } else if (stats.diffA < 0) {
                         h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>* Necesita ganar por al menos ${Math.abs(stats.diffA) + 1} puntos para ganar el desempate.</em></div>`;
                     }
@@ -826,6 +926,7 @@
                 </div>
             `;
 
+            // --- BLOQUE FINAL: RACHA, PRÓXIMOS PARTIDOS Y RIVALES DIRECTOS ---
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">Racha Reciente</h4><div style="margin-bottom:20px;">${getFormHTML(teamName)}</div>`;
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.next_games}</h4><div style="margin-bottom:20px; font-size: 1.1rem;">${getNextOpponentsHTML(teamName).replace('class="schedule-cell"', 'style="display:flex; gap:10px; flex-wrap:wrap;"')}</div>`;
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.direct_rivals}</h4>`;
