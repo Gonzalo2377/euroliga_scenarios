@@ -840,7 +840,7 @@
             const teamName = document.getElementById("select-myteam").value;
             if(!teamName) return;
             const dashboard = document.getElementById("myteam-dashboard");
-            const t = i18n[currentLang];
+            const t = i18n[currentLang] || i18n['en'];
             const team = teamsBase.find(tb => tb.name === teamName);
             
             let html = `<div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
@@ -858,42 +858,32 @@
             // ==========================================
             // LÓGICA INTELIGENTE H2H PARA EL PRÓXIMO PARTIDO
             // ==========================================
-            let winExtra = "Mejora tu posición y SOS.";
-            let loseExtra = "Te obliga a ganar casi todo lo demás.";
+            let winExtra = currentLang === 'es' ? "Mejora tu posición y SOS." : "Improves your position and SOS.";
+            let loseExtra = currentLang === 'es' ? "Te obliga a ganar casi todo lo demás." : "Forces you to win almost everything else.";
 
             if (opponent !== "?") {
-                // Buscamos si ya han jugado en la primera vuelta
-                let pastEncounters = pastMatches.filter(m => 
-                    (m.home === teamName && m.away === opponent) || 
-                    (m.home === opponent && m.away === teamName)
-                );
-
+                let pastEncounters = pastMatches.filter(m => (m.home === teamName && m.away === opponent) || (m.home === opponent && m.away === teamName));
                 if (pastEncounters.length === 1) {
                     let prev = pastEncounters[0];
                     let myScore = prev.home === teamName ? prev.scoreH : prev.scoreA;
                     let oppScore = prev.home === opponent ? prev.scoreH : prev.scoreA;
                     let diff = myScore - oppScore;
-
                     let oppInfo = teamsBase.find(tb => tb.name === opponent);
                     let isDirectRival = oppInfo ? Math.abs(team.initialWins - oppInfo.initialWins) <= 2 : false;
-                    let rivalTag = isDirectRival ? "<span style='background:#fef08a; padding:2px 5px; border-radius:4px; font-size:0.8rem; margin-right:5px;'>⚠️ RIVAL DIRECTO</span> " : "";
+                    
+                    let rivalTag = isDirectRival ? `<span style='background:#fef08a; padding:2px 5px; border-radius:4px; font-size:0.8rem; margin-right:5px;'>⚠️ ${currentLang === 'es' ? 'RIVAL DIRECTO' : 'DIRECT RIVAL'}</span> ` : "";
 
                     if (diff > 0) {
-                        // Ganamos en la ida
-                        winExtra = `${rivalTag}Aseguras el desempate (H2H) al barrer la serie 2-0.`;
-                        loseExtra = `${rivalTag}Si pierdes por menos de <strong>${diff} puntos</strong>, salvas el desempate (H2H).`;
+                        winExtra = rivalTag + (currentLang === 'es' ? "Aseguras el desempate (H2H) al barrer la serie 2-0." : "You secure the tiebreaker (H2H) by sweeping the series 2-0.");
+                        loseExtra = rivalTag + (currentLang === 'es' ? `Si pierdes por menos de <strong>${diff} puntos</strong>, salvas el desempate.` : `If you lose by less than <strong>${diff} points</strong>, you save the tiebreaker.`);
                     } else if (diff < 0) {
-                        // Perdimos en la ida
                         let absDiff = Math.abs(diff);
-                        winExtra = `${rivalTag}Necesitas ganar por más de <strong>${absDiff} puntos</strong> para robarle el desempate (H2H).`;
-                        loseExtra = `${rivalTag}Pierdes el desempate (H2H) directo al caer 0-2 en la serie.`;
+                        winExtra = rivalTag + (currentLang === 'es' ? `Necesitas ganar por más de <strong>${absDiff} puntos</strong> para robar el desempate.` : `You need to win by more than <strong>${absDiff} points</strong> to steal the tiebreaker.`);
+                        loseExtra = rivalTag + (currentLang === 'es' ? "Pierdes el desempate directo al caer 0-2 en la serie." : "You lose the tiebreaker after falling 0-2 in the series.");
                     }
                 }
             }
 
-            // ==========================================
-            // DICCIONARIO MANUAL DE ESTADOS
-            // ==========================================
             // ==========================================
             // DICCIONARIO MULTI-IDIOMA (ES, EN, FR, TR, GR, RS, LT)
             // ==========================================
@@ -970,12 +960,8 @@
                 }
             };
 
-            const defaultEliminated = {
-                top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
-                playin: "<span style='color:var(--loss); font-weight:bold;'>☠️ Eliminado matemáticamente</span>"
-            };
-
-            let teamStatus = statusText[teamName] || defaultEliminated;
+            const langDict = statusTranslations[currentLang] || statusTranslations['en'];
+            const teamStatus = langDict[teamName] || langDict["eliminated"];
 
             html += `
                 <div class="scenario-box">
@@ -990,9 +976,9 @@
                     </div>
                 </div>
                 <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0;">
-                    <h4 style="margin-top:0;">🎯 Ruta al objetivo actual</h4>
-                    <p><strong>Para asegurar Top 6:</strong> ${teamStatus.top6}</p>
-                    <p><strong>Para asegurar Play-In:</strong> ${teamStatus.playin}</p>
+                    <h4 style="margin-top:0;">🎯 ${currentLang === 'es' ? 'Ruta al objetivo actual' : 'Path to current objective'}</h4>
+                    <p><strong>Top 6:</strong> ${teamStatus.top6}</p>
+                    <p><strong>Play-In:</strong> ${teamStatus.playin}</p>
                 </div>
             `;
 
