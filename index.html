@@ -493,8 +493,8 @@
             { id: "HTA", name: "Hapoel Tel-Aviv", flag: "🇮🇱", initialWins: 20, initialLosses: 13, diff: 112 },
             { id: "PAO", name: "Panathinaikos", flag: "🇬🇷", initialWins: 20, initialLosses: 14, diff: 59 },
             { id: "BAR", name: "Barcelona", flag: "🇪🇸", initialWins: 20, initialLosses: 14, diff: 31 },
-            { id: "MON", name: "Mónaco", flag: "🇲🇨", initialWins: 19, initialLosses: 15, diff: 113 },
-            { id: "CZV", name: "Estrella Roja", flag: "🇷🇸", initialWins: 19, initialLosses: 15, diff: 48 },
+            { id: "MON", name: "Monaco", flag: "🇲🇨", initialWins: 19, initialLosses: 15, diff: 113 },
+            { id: "CZV", name: "Crvena Zvezda", flag: "🇷🇸", initialWins: 19, initialLosses: 15, diff: 48 },
             { id: "MIL", name: "Olimpia Milano", flag: "🇮🇹", initialWins: 17, initialLosses: 17, diff: -13 },
             { id: "DUB", name: "Dubai", flag: "🇦🇪", initialWins: 17, initialLosses: 17, diff: -1 },
             { id: "MAC", name: "Maccabi Tel Aviv", flag: "🇮🇱", initialWins: 17, initialLosses: 16, diff: -59 },
@@ -507,44 +507,72 @@
             { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 26, diff: -250 }
         ];
 
-        function getLogo(name) { let t = teamsBase.find(team => team.name === name); return `https://ui-avatars.com/api/?name=${t?t.id:name.substring(0,2)}&background=random&color=fff&rounded=true&bold=true`; }
+        function getLogo(teamName) {
+            // Diccionario de URLs oficiales para que no tengas que subir archivos
+            const logos = {
+                "Fenerbahçe": "https://upload.wikimedia.org/wikipedia/en/3/39/Fenerbah%C3%A7e_Basketball_logo.svg",
+                "Real Madrid": "https://upload.wikimedia.org/wikipedia/en/e/ec/Real_Madrid_CF_logo.svg",
+                "Olympiacos": "https://upload.wikimedia.org/wikipedia/en/0/0a/Olympiacos_BC_logo.svg",
+                "Valencia Basket": "https://upload.wikimedia.org/wikipedia/en/1/1b/Valencia_Basket_logo.svg",
+                "Zalgiris Kaunas": "https://upload.wikimedia.org/wikipedia/en/c/cc/BC_Zalgiris_logo.svg",
+                "Panathinaikos": "https://upload.wikimedia.org/wikipedia/en/2/29/Panathinaikos_BC_logo.svg",
+                "Hapoel Tel-Aviv": "https://upload.wikimedia.org/wikipedia/en/c/c2/Hapoel_Tel_Aviv_BC_logo.png",
+                "Barcelona": "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_logo.svg",
+                "Monaco": "https://upload.wikimedia.org/wikipedia/en/b/b5/AS_Monaco_Basket_logo.svg",
+                "Crvena Zvezda": "https://upload.wikimedia.org/wikipedia/en/c/c2/KK_Crvena_zvezda_logo.svg",
+                "Estrella Roja": "https://upload.wikimedia.org/wikipedia/en/c/c2/KK_Crvena_zvezda_logo.svg", // Por si acaso
+                "Dubai": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Dubai_Basketball_Club_logo.png",
+                "Olimpia Milano": "https://upload.wikimedia.org/wikipedia/en/e/e0/Olimpia_Milano_logo.svg",
+                "Maccabi Tel Aviv": "https://upload.wikimedia.org/wikipedia/en/b/bd/Maccabi_Tel_Aviv_BC_logo.svg",
+                "Anadolu Efes": "https://upload.wikimedia.org/wikipedia/en/a/a2/Anadolu_Efes_SK_logo.svg",
+                "Virtus Bologna": "https://upload.wikimedia.org/wikipedia/en/e/e4/Virtus_Bologna_logo.svg",
+                "Partizan": "https://upload.wikimedia.org/wikipedia/en/2/22/KK_Partizan_logo.svg",
+                "Bayern Munich": "https://upload.wikimedia.org/wikipedia/en/1/1b/FC_Bayern_M%C3%BCnchen_logo.svg",
+                "Paris Basketball": "https://upload.wikimedia.org/wikipedia/en/b/bf/Paris_Basketball_logo.svg",
+                "Baskonia": "https://upload.wikimedia.org/wikipedia/en/7/70/Saski_Baskonia_logo.svg",
+                "LDLC ASVEL": "https://upload.wikimedia.org/wikipedia/en/4/4d/ASVEL_Basket_logo.svg"
+            };
+
+            // Si el equipo existe en la lista, devolvemos su URL, si no, un balón genérico
+            return logos[teamName] || "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png";
+        }
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
         const rawResultsArray = [
-            "34|Paris|Olympiacos|87|104", "34|Fenerbahçe|Zalgiris Kaunas|82|92", "34|Panathinaikos|Mónaco|107|97", "34|Partizan|Valencia Basket|110|104", "34|Baskonia|Hapoel Tel-Aviv|118|109", "34|Barcelona|Estrella Roja|92|88", "34|Bayern|Asvel Basket|93|83", "34|Maccabi Tel Aviv|Dubai|104|100", "34|Olimpia Milano|Virtus Bolonia|103|87", "34|Real Madrid|Anadolu Efes|82|71",
-            "33|Real Madrid|Hapoel Tel-Aviv|92|83", "33|Partizan|Asvel Basket|79|78", "33|Barcelona|Anadolu Efes|78|71", "33|Valencia Basket|Olympiacos|85|84", "33|Dubai|Panathinaikos|104|107", "33|Mónaco|Olimpia Milano|90|85", "33|Zalgiris Kaunas|Bayern|78|71", "33|Maccabi Tel Aviv|Fenerbahçe|94|89",
-            "32|Asvel Basket|Maccabi Tel Aviv|85|89", "32|Panathinaikos|Estrella Roja|82|74", "32|Zalgiris Kaunas|Real Madrid|87|85", "32|Fenerbahçe|Olimpia Milano|79|75", "32|Paris|Partizan|81|90", "32|Bayern|Dubai|74|87", "32|Olympiacos|Baskonia|90|80", "32|Hapoel Tel-Aviv|Virtus Bolonia|109|91", "32|Anadolu Efes|Mónaco|93|98", "32|Valencia Basket|Barcelona|62|66",
-            "31|Barcelona|Hapoel Tel-Aviv|75|80", "31|Olimpia Milano|Maccabi Tel Aviv|96|87", "31|Estrella Roja|Fenerbahçe|79|73", "31|Panathinaikos|Zalgiris Kaunas|92|88", "31|Paris|Asvel Basket|90|81", "31|Real Madrid|Valencia Basket|96|79", "31|Bayern|Anadolu Efes|80|81", "31|Dubai|Baskonia|100|94", "31|Mónaco|Olympiacos|81|80", "31|Virtus Bolonia|Partizan|82|88",
-            "30|Partizan|Dubai|88|74", "30|Baskonia|Paris|81|97", "30|Olympiacos|Panathinaikos|86|80", "30|Estrella Roja|Bayern|80|85", "30|Anadolu Efes|Asvel Basket|88|91", "30|Real Madrid|Virtus Bolonia|92|84", "30|Olimpia Milano|Barcelona|87|84", "30|Valencia Basket|Zalgiris Kaunas|91|87", "30|Fenerbahçe|Mónaco|88|70",
-            "29|Panathinaikos|Paris|99|104", "29|Real Madrid|Bayern|93|70", "29|Baskonia|Valencia Basket|79|108", "29|Hapoel Tel-Aviv|Olimpia Milano|92|86", "29|Mónaco|Maccabi Tel Aviv|86|91", "29|Dubai|Asvel Basket|96|85", "29|Estrella Roja|Anadolu Efes|91|81", "29|Virtus Bolonia|Barcelona|85|80", "29|Zalgiris Kaunas|Olympiacos|99|94", "29|Fenerbahçe|Partizan|81|78",
-            "28|Olimpia Milano|Dubai|78|96", "28|Partizan|Real Madrid|73|77", "28|Panathinaikos|Fenerbahçe|83|85", "28|Mónaco|Baskonia|102|92", "28|Zalgiris Kaunas|Hapoel Tel-Aviv|93|82", "28|Barcelona|Paris|74|85", "28|Valencia Basket|Asvel Basket|82|67", "28|Olympiacos|Estrella Roja|92|86", "28|Maccabi Tel Aviv|Bayern|111|106", "28|Anadolu Efes|Virtus Bolonia|91|60",
-            "27|Baskonia|Barcelona|91|97", "27|Olympiacos|Virtus Bolonia|109|77", "27|Asvel Basket|Olimpia Milano|76|77", "27|Estrella Roja|Maccabi Tel Aviv|82|83", "27|Anadolu Efes|Zalgiris Kaunas|92|82", "27|Paris|Fenerbahçe|90|92", "27|Bayern|Mónaco|91|82", "27|Partizan|Panathinaikos|78|62", "27|Hapoel Tel-Aviv|Valencia Basket|99|104", "27|Dubai|Real Madrid|93|85",
-            "26|Virtus Bolonia|Asvel Basket|70|80", "26|Barcelona|Fenerbahçe|78|82", "26|Bayern|Paris|81|75", "26|Olimpia Milano|Baskonia|109|89", "26|Panathinaikos|Real Madrid|82|81", "26|Maccabi Tel Aviv|Partizan|95|93", "26|Estrella Roja|Hapoel Tel-Aviv|87|75", "26|Zalgiris Kaunas|Mónaco|104|87", "26|Anadolu Efes|Valencia Basket|107|90", "26|Dubai|Olympiacos|108|98",
-            "25|Asvel Basket|Panathinaikos|78|79", "25|Baskonia|Zalgiris Kaunas|102|91", "25|Estrella Roja|Dubai|95|92", "25|Mónaco|Virtus Bolonia|82|84", "25|Valencia Basket|Maccabi Tel Aviv|94|83", "25|Olimpia Milano|Partizan|85|79", "25|Olympiacos|Barcelona|87|75", "25|Hapoel Tel-Aviv|Bayern|64|79", "25|Fenerbahçe|Anadolu Efes|79|62", "25|Paris|Real Madrid|98|92",
-            "24|Asvel Basket|Barcelona|91|98", "24|Partizan|Hapoel Tel-Aviv|104|101", "24|Virtus Bolonia|Estrella Roja|93|102", "24|Fenerbahçe|Baskonia|84|71", "24|Paris|Dubai|79|99", "24|Real Madrid|Mónaco|90|78", "24|Bayern|Valencia Basket|93|89", "24|Olimpia Milano|Zalgiris Kaunas|82|86", "24|Maccabi Tel Aviv|Panathinaikos|75|71", "24|Anadolu Efes|Olympiacos|68|74",
-            "23|Virtus Bolonia|Fenerbahçe|80|85", "23|Real Madrid|Olimpia Milano|106|77", "23|Barcelona|Dubai|91|89", "23|Bayern|Partizan|63|67", "23|Valencia Basket|Paris|98|84", "23|Panathinaikos|Baskonia|93|74", "23|Asvel Basket|Zalgiris Kaunas|77|96", "23|Mónaco|Estrella Roja|96|100", "23|Hapoel Tel-Aviv|Anadolu Efes|71|66", "23|Olympiacos|Maccabi Tel Aviv|100|93",
-            "22|Real Madrid|Barcelona|80|61", "22|Asvel Basket|Hapoel Tel-Aviv|73|81", "22|Fenerbahçe|Valencia Basket|82|79", "22|Paris|Mónaco|87|95", "22|Olimpia Milano|Estrella Roja|96|104", "22|Maccabi Tel Aviv|Zalgiris Kaunas|100|97", "22|Bayern|Panathinaikos|85|78", "22|Anadolu Efes|Baskonia|75|89", "22|Dubai|Virtus Bolonia|72|80", "22|Partizan|Olympiacos|66|104",
-            "21|Hapoel Tel-Aviv|Paris|93|82", "21|Barcelona|Partizan|88|70", "21|Baskonia|Asvel Basket|78|73", "21|Olimpia Milano|Anadolu Efes|87|74", "21|Olympiacos|Bayern|95|80", "21|Zalgiris Kaunas|Estrella Roja|99|67", "21|Real Madrid|Maccabi Tel Aviv|98|86", "21|Valencia Basket|Mónaco|92|101", "21|Panathinaikos|Virtus Bolonia|84|71", "21|Dubai|Fenerbahçe|92|81",
-            "20|Bayern|Baskonia|96|89", "20|Anadolu Efes|Paris|79|84", "20|Barcelona|Maccabi Tel Aviv|93|83", "20|Virtus Bolonia|Zalgiris Kaunas|83|79", "20|Panathinaikos|Olimpia Milano|74|87", "20|Hapoel Tel-Aviv|Dubai|85|60", "20|Asvel Basket|Real Madrid|69|80", "20|Estrella Roja|Valencia Basket|89|106", "20|Mónaco|Partizan|101|84", "20|Fenerbahçe|Olympiacos|88|80",
-            "19|Bayern|Maccabi Tel Aviv|95|71", "19|Real Madrid|Dubai|107|93", "19|Virtus Bolonia|Olimpia Milano|97|85", "19|Panathinaikos|Olympiacos|82|87", "19|Baskonia|Fenerbahçe|93|108", "19|Anadolu Efes|Estrella Roja|65|87", "19|Barcelona|Mónaco|74|90", "19|Valencia Basket|Partizan|86|73", "19|Asvel Basket|Paris|94|89", "19|Hapoel Tel-Aviv|Zalgiris Kaunas|80|93",
-            "18|Virtus Bolonia|Olympiacos|94|97", "18|Mónaco|Real Madrid|100|95", "18|Partizan|Maccabi Tel Aviv|87|112", "18|Asvel Basket|Anadolu Efes|103|99", "18|Paris|Estrella Roja|102|92", "18|Valencia Basket|Baskonia|91|81", "18|Bayern|Hapoel Tel-Aviv|72|82", "18|Zalgiris Kaunas|Panathinaikos|85|92", "18|Fenerbahçe|Barcelona|72|71", "18|Dubai|Olimpia Milano|99|92",
-            "17|Estrella Roja|Virtus Bolonia|90|89", "17|Barcelona|Baskonia|134|124", "17|Olympiacos|Asvel Basket|107|84", "17|Mónaco|Bayern|103|77", "17|Zalgiris Kaunas|Partizan|109|68", "17|Anadolu Efes|Dubai|76|80", "17|Real Madrid|Paris|95|90", "17|Olimpia Milano|Fenerbahçe|72|87", "17|Panathinaikos|Hapoel Tel-Aviv|93|82", "17|Maccabi Tel Aviv|Valencia Basket|85|82",
-            "16|Baskonia|Mónaco|85|73", "16|Partizan|Virtus Bolonia|68|86", "16|Asvel Basket|Bayern|76|74", "16|Zalgiris Kaunas|Anadolu Efes|64|87", "16|Paris|Barcelona|69|85", "16|Olimpia Milano|Real Madrid|89|82", "16|Olympiacos|Valencia Basket|92|99", "16|Hapoel Tel-Aviv|Estrella Roja|84|78", "16|Fenerbahçe|Panathinaikos|77|81", "16|Dubai|Maccabi Tel Aviv|95|97",
-            "15|Barcelona|Olympiacos|98|85", "15|Partizan|Estrella Roja|79|76", "15|Virtus Bolonia|Hapoel Tel-Aviv|74|79", "15|Mónaco|Fenerbahçe|86|92", "15|Dubai|Bayern|89|88", "15|Real Madrid|Baskonia|94|87", "15|Paris|Zalgiris Kaunas|105|108", "15|Olimpia Milano|Panathinaikos|96|89", "15|Valencia Basket|Anadolu Efes|94|82", "15|Maccabi Tel Aviv|Asvel Basket|92|84",
-            "14|Olympiacos|Fenerbahçe|104|87", "14|Baskonia|Olimpia Milano|88|78", "14|Virtus Bolonia|Dubai|79|78", "14|Panathinaikos|Valencia Basket|79|89", "14|Estrella Roja|Barcelona|79|89", "14|Partizan|Bayern|92|85", "14|Hapoel Tel-Aviv|Asvel Basket|87|80", "14|Mónaco|Paris|125|104", "14|Zalgiris Kaunas|Maccabi Tel Aviv|65|83", "14|Anadolu Efes|Real Madrid|75|81",
-            "13|Barcelona|Asvel Basket|88|78", "13|Estrella Roja|Olympiacos|91|80", "13|Mónaco|Anadolu Efes|102|66", "13|Maccabi Tel Aviv|Olimpia Milano|88|102", "13|Valencia Basket|Bayern|90|64", "13|Panathinaikos|Partizan|91|69", "13|Hapoel Tel-Aviv|Real Madrid|74|75", "13|Zalgiris Kaunas|Baskonia|82|67", "13|Fenerbahçe|Virtus Bolonia|66|64", "13|Dubai|Paris|90|89",
-            "12|Valencia Basket|Estrella Roja|76|73", "12|Baskonia|Bayern|95|73", "12|Partizan|Fenerbahçe|87|99", "12|Virtus Bolonia|Maccabi Tel Aviv|99|89", "12|Olympiacos|Paris|98|86", "12|Real Madrid|Zalgiris Kaunas|100|99", "12|Olimpia Milano|Hapoel Tel-Aviv|83|105", "12|Panathinaikos|Dubai|103|82", "12|Anadolu Efes|Barcelona|74|73", "12|Asvel Basket|Mónaco|52|84",
-            "11|Barcelona|Virtus Bolonia|88|81", "11|Olimpia Milano|Olympiacos|88|87", "11|Asvel Basket|Partizan|88|87", "11|Anadolu Efes|Bayern|74|72", "11|Dubai|Zalgiris Kaunas|95|89", "11|Maccabi Tel Aviv|Baskonia|89|83", "11|Paris|Valencia Basket|90|86", "11|Real Madrid|Panathinaikos|77|87", "11|Estrella Roja|Mónaco|91|79", "11|Fenerbahçe|Hapoel Tel-Aviv|74|68",
-            "10|Bayern|Barcelona|74|75", "10|Olimpia Milano|Asvel Basket|80|72", "10|Olympiacos|Zalgiris Kaunas|95|78", "10|Paris|Panathinaikos|95|101", "10|Partizan|Mónaco|78|76", "10|Valencia Basket|Real Madrid|89|76", "10|Virtus Bolonia|Anadolu Efes|99|89", "10|Hapoel Tel-Aviv|Baskonia|114|89", "10|Fenerbahçe|Maccabi Tel Aviv|84|75", "10|Dubai|Estrella Roja|102|86",
-            "9|Barcelona|Real Madrid|92|101", "9|Olympiacos|Partizan|80|71", "9|Zalgiris Kaunas|Valencia Basket|86|77", "9|Anadolu Efes|Olimpia Milano|93|97", "9|Maccabi Tel Aviv|Mónaco|107|112", "9|Paris|Bayern|82|86", "9|Baskonia|Virtus Bolonia|87|76", "9|Dubai|Hapoel Tel-Aviv|97|109", "9|Fenerbahçe|Asvel Basket|81|67", "9|Estrella Roja|Panathinaikos|86|68",
-            "8|Baskonia|Anadolu Efes|86|75", "8|Partizan|Barcelona|76|78", "8|Olympiacos|Hapoel Tel-Aviv|62|58", "8|Mónaco|Panathinaikos|92|84", "8|Real Madrid|Fenerbahçe|84|58", "8|Bayern|Virtus Bolonia|86|70", "8|Olimpia Milano|Paris|86|77", "8|Valencia Basket|Dubai|80|78", "8|Maccabi Tel Aviv|Estrella Roja|92|99", "8|Zalgiris Kaunas|Asvel Basket|96|59",
-            "7|Olympiacos|Mónaco|87|92", "7|Hapoel Tel-Aviv|Partizan|97|84", "7|Valencia Basket|Fenerbahçe|94|79", "7|Paris|Anadolu Efes|80|90", "7|Barcelona|Olimpia Milano|74|72", "7|Baskonia|Dubai|92|85", "7|Panathinaikos|Maccabi Tel Aviv|99|85", "7|Bayern|Real Madrid|90|84", "7|Estrella Roja|Asvel Basket|79|65", "7|Zalgiris Kaunas|Virtus Bolonia|86|65",
-            "6|Bayern|Olympiacos|71|96", "6|Partizan|Paris|83|101", "6|Virtus Bolonia|Panathinaikos|92|75", "6|Anadolu Efes|Fenerbahçe|69|79", "6|Estrella Roja|Baskonia|90|72", "6|Barcelona|Zalgiris Kaunas|73|88", "6|Olimpia Milano|Valencia Basket|100|103", "6|Hapoel Tel-Aviv|Mónaco|85|77", "6|Asvel Basket|Dubai|85|79", "6|Maccabi Tel Aviv|Real Madrid|92|91",
-            "5|Baskonia|Partizan|79|91", "5|Paris|Hapoel Tel-Aviv|88|89", "5|Asvel Basket|Virtus Bolonia|83|90", "5|Anadolu Efes|Panathinaikos|81|95", "5|Mónaco|Valencia Basket|90|84", "5|Estrella Roja|Real Madrid|90|75", "5|Maccabi Tel Aviv|Olympiacos|94|95", "5|Fenerbahçe|Bayern|88|73", "5|Zalgiris Kaunas|Olimpia Milano|78|89", "5|Dubai|Barcelona|83|78",
-            "4|Paris|Baskonia|105|87", "4|Real Madrid|Partizan|93|86", "4|Valencia Basket|Hapoel Tel-Aviv|93|100", "4|Virtus Bolonia|Mónaco|77|73", "4|Panathinaikos|Asvel Basket|91|85", "4|Bayern|Olimpia Milano|64|53", "4|Olympiacos|Anadolu Efes|78|82", "4|Estrella Roja|Zalgiris Kaunas|88|79", "4|Fenerbahçe|Dubai|69|93", "4|Maccabi Tel Aviv|Barcelona|71|92",
-            "3|Barcelona|Valencia Basket|108|102", "3|Bayern|Zalgiris Kaunas|70|98", "3|Olympiacos|Dubai|86|67", "3|Fenerbahçe|Estrella Roja|81|86", "3|Real Madrid|Asvel Basket|85|72", "3|Paris|Virtus Bolonia|90|79", "3|Baskonia|Panathinaikos|84|86", "3|Olimpia Milano|Mónaco|79|82", "3|Partizan|Anadolu Efes|93|87", "3|Hapoel Tel-Aviv|Maccabi Tel Aviv|90|103",
-            "2|Maccabi Tel Aviv|Paris|94|101", "2|Valencia Basket|Virtus Bolonia|103|94", "2|Panathinaikos|Barcelona|96|103", "2|Asvel Basket|Baskonia|102|95", "2|Anadolu Efes|Hapoel Tel-Aviv|81|87", "2|Mónaco|Dubai|103|81", "2|Zalgiris Kaunas|Fenerbahçe|84|81", "2|Real Madrid|Olympiacos|89|77", "2|Bayern|Estrella Roja|97|88", "2|Partizan|Olimpia Milano|80|78",
-            "1|Asvel Basket|Valencia Basket|77|80", "1|Fenerbahçe|Paris|96|77", "1|Mónaco|Zalgiris Kaunas|84|89", "1|Virtus Bolonia|Real Madrid|74|68", "1|Baskonia|Olympiacos|96|102", "1|Panathinaikos|Bayern|87|79", "1|Estrella Roja|Olimpia Milano|82|92", "1|Anadolu Efes|Maccabi Tel Aviv|85|78", "1|Dubai|Partizan|89|76", "1|Hapoel Tel-Aviv|Barcelona|103|87"
+            "34|Paris|Olympiacos|87|104", "34|Fenerbahçe|Zalgiris Kaunas|82|92", "34|Panathinaikos|Monaco|107|97", "34|Partizan|Valencia Basket|110|104", "34|Baskonia|Hapoel Tel-Aviv|118|109", "34|Barcelona|Crvena Zvezda|92|88", "34|Bayern|Asvel Basket|93|83", "34|Maccabi Tel Aviv|Dubai|104|100", "34|Olimpia Milano|Virtus Bolonia|103|87", "34|Real Madrid|Anadolu Efes|82|71",
+            "33|Real Madrid|Hapoel Tel-Aviv|92|83", "33|Partizan|Asvel Basket|79|78", "33|Barcelona|Anadolu Efes|78|71", "33|Valencia Basket|Olympiacos|85|84", "33|Dubai|Panathinaikos|104|107", "33|Monaco|Olimpia Milano|90|85", "33|Zalgiris Kaunas|Bayern|78|71", "33|Maccabi Tel Aviv|Fenerbahçe|94|89",
+            "32|Asvel Basket|Maccabi Tel Aviv|85|89", "32|Panathinaikos|Crvena Zvezda|82|74", "32|Zalgiris Kaunas|Real Madrid|87|85", "32|Fenerbahçe|Olimpia Milano|79|75", "32|Paris|Partizan|81|90", "32|Bayern|Dubai|74|87", "32|Olympiacos|Baskonia|90|80", "32|Hapoel Tel-Aviv|Virtus Bolonia|109|91", "32|Anadolu Efes|Monaco|93|98", "32|Valencia Basket|Barcelona|62|66",
+            "31|Barcelona|Hapoel Tel-Aviv|75|80", "31|Olimpia Milano|Maccabi Tel Aviv|96|87", "31|Crvena Zvezda|Fenerbahçe|79|73", "31|Panathinaikos|Zalgiris Kaunas|92|88", "31|Paris|Asvel Basket|90|81", "31|Real Madrid|Valencia Basket|96|79", "31|Bayern|Anadolu Efes|80|81", "31|Dubai|Baskonia|100|94", "31|Monaco|Olympiacos|81|80", "31|Virtus Bolonia|Partizan|82|88",
+            "30|Partizan|Dubai|88|74", "30|Baskonia|Paris|81|97", "30|Olympiacos|Panathinaikos|86|80", "30|Crvena Zvezda|Bayern|80|85", "30|Anadolu Efes|Asvel Basket|88|91", "30|Real Madrid|Virtus Bolonia|92|84", "30|Olimpia Milano|Barcelona|87|84", "30|Valencia Basket|Zalgiris Kaunas|91|87", "30|Fenerbahçe|Monaco|88|70",
+            "29|Panathinaikos|Paris|99|104", "29|Real Madrid|Bayern|93|70", "29|Baskonia|Valencia Basket|79|108", "29|Hapoel Tel-Aviv|Olimpia Milano|92|86", "29|Monaco|Maccabi Tel Aviv|86|91", "29|Dubai|Asvel Basket|96|85", "29|Crvena Zvezda|Anadolu Efes|91|81", "29|Virtus Bolonia|Barcelona|85|80", "29|Zalgiris Kaunas|Olympiacos|99|94", "29|Fenerbahçe|Partizan|81|78",
+            "28|Olimpia Milano|Dubai|78|96", "28|Partizan|Real Madrid|73|77", "28|Panathinaikos|Fenerbahçe|83|85", "28|Monaco|Baskonia|102|92", "28|Zalgiris Kaunas|Hapoel Tel-Aviv|93|82", "28|Barcelona|Paris|74|85", "28|Valencia Basket|Asvel Basket|82|67", "28|Olympiacos|Crvena Zvezda|92|86", "28|Maccabi Tel Aviv|Bayern|111|106", "28|Anadolu Efes|Virtus Bolonia|91|60",
+            "27|Baskonia|Barcelona|91|97", "27|Olympiacos|Virtus Bolonia|109|77", "27|Asvel Basket|Olimpia Milano|76|77", "27|Crvena Zvezda|Maccabi Tel Aviv|82|83", "27|Anadolu Efes|Zalgiris Kaunas|92|82", "27|Paris|Fenerbahçe|90|92", "27|Bayern|Monaco|91|82", "27|Partizan|Panathinaikos|78|62", "27|Hapoel Tel-Aviv|Valencia Basket|99|104", "27|Dubai|Real Madrid|93|85",
+            "26|Virtus Bolonia|Asvel Basket|70|80", "26|Barcelona|Fenerbahçe|78|82", "26|Bayern|Paris|81|75", "26|Olimpia Milano|Baskonia|109|89", "26|Panathinaikos|Real Madrid|82|81", "26|Maccabi Tel Aviv|Partizan|95|93", "26|Crvena Zvezda|Hapoel Tel-Aviv|87|75", "26|Zalgiris Kaunas|Monaco|104|87", "26|Anadolu Efes|Valencia Basket|107|90", "26|Dubai|Olympiacos|108|98",
+            "25|Asvel Basket|Panathinaikos|78|79", "25|Baskonia|Zalgiris Kaunas|102|91", "25|Crvena Zvezda|Dubai|95|92", "25|Monaco|Virtus Bolonia|82|84", "25|Valencia Basket|Maccabi Tel Aviv|94|83", "25|Olimpia Milano|Partizan|85|79", "25|Olympiacos|Barcelona|87|75", "25|Hapoel Tel-Aviv|Bayern|64|79", "25|Fenerbahçe|Anadolu Efes|79|62", "25|Paris|Real Madrid|98|92",
+            "24|Asvel Basket|Barcelona|91|98", "24|Partizan|Hapoel Tel-Aviv|104|101", "24|Virtus Bolonia|Crvena Zvezda|93|102", "24|Fenerbahçe|Baskonia|84|71", "24|Paris|Dubai|79|99", "24|Real Madrid|Monaco|90|78", "24|Bayern|Valencia Basket|93|89", "24|Olimpia Milano|Zalgiris Kaunas|82|86", "24|Maccabi Tel Aviv|Panathinaikos|75|71", "24|Anadolu Efes|Olympiacos|68|74",
+            "23|Virtus Bolonia|Fenerbahçe|80|85", "23|Real Madrid|Olimpia Milano|106|77", "23|Barcelona|Dubai|91|89", "23|Bayern|Partizan|63|67", "23|Valencia Basket|Paris|98|84", "23|Panathinaikos|Baskonia|93|74", "23|Asvel Basket|Zalgiris Kaunas|77|96", "23|Monaco|Crvena Zvezda|96|100", "23|Hapoel Tel-Aviv|Anadolu Efes|71|66", "23|Olympiacos|Maccabi Tel Aviv|100|93",
+            "22|Real Madrid|Barcelona|80|61", "22|Asvel Basket|Hapoel Tel-Aviv|73|81", "22|Fenerbahçe|Valencia Basket|82|79", "22|Paris|Monaco|87|95", "22|Olimpia Milano|Crvena Zvezda|96|104", "22|Maccabi Tel Aviv|Zalgiris Kaunas|100|97", "22|Bayern|Panathinaikos|85|78", "22|Anadolu Efes|Baskonia|75|89", "22|Dubai|Virtus Bolonia|72|80", "22|Partizan|Olympiacos|66|104",
+            "21|Hapoel Tel-Aviv|Paris|93|82", "21|Barcelona|Partizan|88|70", "21|Baskonia|Asvel Basket|78|73", "21|Olimpia Milano|Anadolu Efes|87|74", "21|Olympiacos|Bayern|95|80", "21|Zalgiris Kaunas|Crvena Zvezda|99|67", "21|Real Madrid|Maccabi Tel Aviv|98|86", "21|Valencia Basket|Monaco|92|101", "21|Panathinaikos|Virtus Bolonia|84|71", "21|Dubai|Fenerbahçe|92|81",
+            "20|Bayern|Baskonia|96|89", "20|Anadolu Efes|Paris|79|84", "20|Barcelona|Maccabi Tel Aviv|93|83", "20|Virtus Bolonia|Zalgiris Kaunas|83|79", "20|Panathinaikos|Olimpia Milano|74|87", "20|Hapoel Tel-Aviv|Dubai|85|60", "20|Asvel Basket|Real Madrid|69|80", "20|Crvena Zvezda|Valencia Basket|89|106", "20|Monaco|Partizan|101|84", "20|Fenerbahçe|Olympiacos|88|80",
+            "19|Bayern|Maccabi Tel Aviv|95|71", "19|Real Madrid|Dubai|107|93", "19|Virtus Bolonia|Olimpia Milano|97|85", "19|Panathinaikos|Olympiacos|82|87", "19|Baskonia|Fenerbahçe|93|108", "19|Anadolu Efes|Crvena Zvezda|65|87", "19|Barcelona|Monaco|74|90", "19|Valencia Basket|Partizan|86|73", "19|Asvel Basket|Paris|94|89", "19|Hapoel Tel-Aviv|Zalgiris Kaunas|80|93",
+            "18|Virtus Bolonia|Olympiacos|94|97", "18|Monaco|Real Madrid|100|95", "18|Partizan|Maccabi Tel Aviv|87|112", "18|Asvel Basket|Anadolu Efes|103|99", "18|Paris|Crvena Zvezda|102|92", "18|Valencia Basket|Baskonia|91|81", "18|Bayern|Hapoel Tel-Aviv|72|82", "18|Zalgiris Kaunas|Panathinaikos|85|92", "18|Fenerbahçe|Barcelona|72|71", "18|Dubai|Olimpia Milano|99|92",
+            "17|Crvena Zvezda|Virtus Bolonia|90|89", "17|Barcelona|Baskonia|134|124", "17|Olympiacos|Asvel Basket|107|84", "17|Monaco|Bayern|103|77", "17|Zalgiris Kaunas|Partizan|109|68", "17|Anadolu Efes|Dubai|76|80", "17|Real Madrid|Paris|95|90", "17|Olimpia Milano|Fenerbahçe|72|87", "17|Panathinaikos|Hapoel Tel-Aviv|93|82", "17|Maccabi Tel Aviv|Valencia Basket|85|82",
+            "16|Baskonia|Monaco|85|73", "16|Partizan|Virtus Bolonia|68|86", "16|Asvel Basket|Bayern|76|74", "16|Zalgiris Kaunas|Anadolu Efes|64|87", "16|Paris|Barcelona|69|85", "16|Olimpia Milano|Real Madrid|89|82", "16|Olympiacos|Valencia Basket|92|99", "16|Hapoel Tel-Aviv|Crvena Zvezda|84|78", "16|Fenerbahçe|Panathinaikos|77|81", "16|Dubai|Maccabi Tel Aviv|95|97",
+            "15|Barcelona|Olympiacos|98|85", "15|Partizan|Crvena Zvezda|79|76", "15|Virtus Bolonia|Hapoel Tel-Aviv|74|79", "15|Monaco|Fenerbahçe|86|92", "15|Dubai|Bayern|89|88", "15|Real Madrid|Baskonia|94|87", "15|Paris|Zalgiris Kaunas|105|108", "15|Olimpia Milano|Panathinaikos|96|89", "15|Valencia Basket|Anadolu Efes|94|82", "15|Maccabi Tel Aviv|Asvel Basket|92|84",
+            "14|Olympiacos|Fenerbahçe|104|87", "14|Baskonia|Olimpia Milano|88|78", "14|Virtus Bolonia|Dubai|79|78", "14|Panathinaikos|Valencia Basket|79|89", "14|Crvena Zvezda|Barcelona|79|89", "14|Partizan|Bayern|92|85", "14|Hapoel Tel-Aviv|Asvel Basket|87|80", "14|Monaco|Paris|125|104", "14|Zalgiris Kaunas|Maccabi Tel Aviv|65|83", "14|Anadolu Efes|Real Madrid|75|81",
+            "13|Barcelona|Asvel Basket|88|78", "13|Crvena Zvezda|Olympiacos|91|80", "13|Monaco|Anadolu Efes|102|66", "13|Maccabi Tel Aviv|Olimpia Milano|88|102", "13|Valencia Basket|Bayern|90|64", "13|Panathinaikos|Partizan|91|69", "13|Hapoel Tel-Aviv|Real Madrid|74|75", "13|Zalgiris Kaunas|Baskonia|82|67", "13|Fenerbahçe|Virtus Bolonia|66|64", "13|Dubai|Paris|90|89",
+            "12|Valencia Basket|Crvena Zvezda|76|73", "12|Baskonia|Bayern|95|73", "12|Partizan|Fenerbahçe|87|99", "12|Virtus Bolonia|Maccabi Tel Aviv|99|89", "12|Olympiacos|Paris|98|86", "12|Real Madrid|Zalgiris Kaunas|100|99", "12|Olimpia Milano|Hapoel Tel-Aviv|83|105", "12|Panathinaikos|Dubai|103|82", "12|Anadolu Efes|Barcelona|74|73", "12|Asvel Basket|Monaco|52|84",
+            "11|Barcelona|Virtus Bolonia|88|81", "11|Olimpia Milano|Olympiacos|88|87", "11|Asvel Basket|Partizan|88|87", "11|Anadolu Efes|Bayern|74|72", "11|Dubai|Zalgiris Kaunas|95|89", "11|Maccabi Tel Aviv|Baskonia|89|83", "11|Paris|Valencia Basket|90|86", "11|Real Madrid|Panathinaikos|77|87", "11|Crvena Zvezda|Monaco|91|79", "11|Fenerbahçe|Hapoel Tel-Aviv|74|68",
+            "10|Bayern|Barcelona|74|75", "10|Olimpia Milano|Asvel Basket|80|72", "10|Olympiacos|Zalgiris Kaunas|95|78", "10|Paris|Panathinaikos|95|101", "10|Partizan|Monaco|78|76", "10|Valencia Basket|Real Madrid|89|76", "10|Virtus Bolonia|Anadolu Efes|99|89", "10|Hapoel Tel-Aviv|Baskonia|114|89", "10|Fenerbahçe|Maccabi Tel Aviv|84|75", "10|Dubai|Crvena Zvezda|102|86",
+            "9|Barcelona|Real Madrid|92|101", "9|Olympiacos|Partizan|80|71", "9|Zalgiris Kaunas|Valencia Basket|86|77", "9|Anadolu Efes|Olimpia Milano|93|97", "9|Maccabi Tel Aviv|Monaco|107|112", "9|Paris|Bayern|82|86", "9|Baskonia|Virtus Bolonia|87|76", "9|Dubai|Hapoel Tel-Aviv|97|109", "9|Fenerbahçe|Asvel Basket|81|67", "9|Crvena Zvezda|Panathinaikos|86|68",
+            "8|Baskonia|Anadolu Efes|86|75", "8|Partizan|Barcelona|76|78", "8|Olympiacos|Hapoel Tel-Aviv|62|58", "8|Monaco|Panathinaikos|92|84", "8|Real Madrid|Fenerbahçe|84|58", "8|Bayern|Virtus Bolonia|86|70", "8|Olimpia Milano|Paris|86|77", "8|Valencia Basket|Dubai|80|78", "8|Maccabi Tel Aviv|Crvena Zvezda|92|99", "8|Zalgiris Kaunas|Asvel Basket|96|59",
+            "7|Olympiacos|Monaco|87|92", "7|Hapoel Tel-Aviv|Partizan|97|84", "7|Valencia Basket|Fenerbahçe|94|79", "7|Paris|Anadolu Efes|80|90", "7|Barcelona|Olimpia Milano|74|72", "7|Baskonia|Dubai|92|85", "7|Panathinaikos|Maccabi Tel Aviv|99|85", "7|Bayern|Real Madrid|90|84", "7|Crvena Zvezda|Asvel Basket|79|65", "7|Zalgiris Kaunas|Virtus Bolonia|86|65",
+            "6|Bayern|Olympiacos|71|96", "6|Partizan|Paris|83|101", "6|Virtus Bolonia|Panathinaikos|92|75", "6|Anadolu Efes|Fenerbahçe|69|79", "6|Crvena Zvezda|Baskonia|90|72", "6|Barcelona|Zalgiris Kaunas|73|88", "6|Olimpia Milano|Valencia Basket|100|103", "6|Hapoel Tel-Aviv|Monaco|85|77", "6|Asvel Basket|Dubai|85|79", "6|Maccabi Tel Aviv|Real Madrid|92|91",
+            "5|Baskonia|Partizan|79|91", "5|Paris|Hapoel Tel-Aviv|88|89", "5|Asvel Basket|Virtus Bolonia|83|90", "5|Anadolu Efes|Panathinaikos|81|95", "5|Monaco|Valencia Basket|90|84", "5|Crvena Zvezda|Real Madrid|90|75", "5|Maccabi Tel Aviv|Olympiacos|94|95", "5|Fenerbahçe|Bayern|88|73", "5|Zalgiris Kaunas|Olimpia Milano|78|89", "5|Dubai|Barcelona|83|78",
+            "4|Paris|Baskonia|105|87", "4|Real Madrid|Partizan|93|86", "4|Valencia Basket|Hapoel Tel-Aviv|93|100", "4|Virtus Bolonia|Monaco|77|73", "4|Panathinaikos|Asvel Basket|91|85", "4|Bayern|Olimpia Milano|64|53", "4|Olympiacos|Anadolu Efes|78|82", "4|Crvena Zvezda|Zalgiris Kaunas|88|79", "4|Fenerbahçe|Dubai|69|93", "4|Maccabi Tel Aviv|Barcelona|71|92",
+            "3|Barcelona|Valencia Basket|108|102", "3|Bayern|Zalgiris Kaunas|70|98", "3|Olympiacos|Dubai|86|67", "3|Fenerbahçe|Crvena Zvezda|81|86", "3|Real Madrid|Asvel Basket|85|72", "3|Paris|Virtus Bolonia|90|79", "3|Baskonia|Panathinaikos|84|86", "3|Olimpia Milano|Monaco|79|82", "3|Partizan|Anadolu Efes|93|87", "3|Hapoel Tel-Aviv|Maccabi Tel Aviv|90|103",
+            "2|Maccabi Tel Aviv|Paris|94|101", "2|Valencia Basket|Virtus Bolonia|103|94", "2|Panathinaikos|Barcelona|96|103", "2|Asvel Basket|Baskonia|102|95", "2|Anadolu Efes|Hapoel Tel-Aviv|81|87", "2|Monaco|Dubai|103|81", "2|Zalgiris Kaunas|Fenerbahçe|84|81", "2|Real Madrid|Olympiacos|89|77", "2|Bayern|Crvena Zvezda|97|88", "2|Partizan|Olimpia Milano|80|78",
+            "1|Asvel Basket|Valencia Basket|77|80", "1|Fenerbahçe|Paris|96|77", "1|Monaco|Zalgiris Kaunas|84|89", "1|Virtus Bolonia|Real Madrid|74|68", "1|Baskonia|Olympiacos|96|102", "1|Panathinaikos|Bayern|87|79", "1|Crvena Zvezda|Olimpia Milano|82|92", "1|Anadolu Efes|Maccabi Tel Aviv|85|78", "1|Dubai|Partizan|89|76", "1|Hapoel Tel-Aviv|Barcelona|103|87"
         ]; 
 
         let pastMatches = [];
@@ -555,10 +583,10 @@
 
         const schedule = [
             { jornada: "Partidos Aplazados", games: [{ id: 331, home: "Virtus Bolonia", away: "Paris" }, { id: 301, home: "Maccabi Tel Aviv", away: "Hapoel Tel-Aviv" }] },
-            { jornada: "Jornada 35", games: [{ id: 351, home: "Bayern", away: "Fenerbahçe" }, { id: 352, home: "Hapoel Tel-Aviv", away: "Panathinaikos" }, { id: 353, home: "Zalgiris Kaunas", away: "Barcelona" }, { id: 354, home: "Dubai", away: "Mónaco" }, { id: 355, home: "Estrella Roja", away: "Partizan" }, { id: 356, home: "Paris", away: "Olimpia Milano" }, { id: 357, home: "Maccabi Tel Aviv", away: "Anadolu Efes" }, { id: 358, home: "Asvel Basket", away: "Olympiacos" }, { id: 359, home: "Baskonia", away: "Real Madrid" }, { id: 3510, home: "Virtus Bolonia", away: "Valencia Basket" }] },
-            { jornada: "Jornada 36", games: [{ id: 361, home: "Hapoel Tel-Aviv", away: "Fenerbahçe" }, { id: 362, home: "Zalgiris Kaunas", away: "Dubai" }, { id: 363, home: "Estrella Roja", away: "Paris" }, { id: 364, home: "Olympiacos", away: "Real Madrid" }, { id: 365, home: "Barcelona", away: "Panathinaikos" }, { id: 366, home: "Valencia Basket", away: "Olimpia Milano" }, { id: 367, home: "Virtus Bolonia", away: "Bayern" }, { id: 368, home: "Baskonia", away: "Maccabi Tel Aviv" }, { id: 369, home: "Anadolu Efes", away: "Partizan" }, { id: 3610, home: "Mónaco", away: "Asvel Basket" }] },
-            { jornada: "Jornada 37", games: [{ id: 371, home: "Hapoel Tel-Aviv", away: "Olympiacos" }, { id: 372, home: "Fenerbahçe", away: "Real Madrid" }, { id: 373, home: "Olimpia Milano", away: "Bayern" }, { id: 374, home: "Valencia Basket", away: "Panathinaikos" }, { id: 375, home: "Paris", away: "Maccabi Tel Aviv" }, { id: 376, home: "Mónaco", away: "Barcelona" }, { id: 377, home: "Dubai", away: "Anadolu Efes" }, { id: 378, home: "Partizan", away: "Zalgiris Kaunas" }, { id: 379, home: "Virtus Bolonia", away: "Baskonia" }, { id: 3710, home: "Asvel Basket", away: "Estrella Roja" }] },
-            { jornada: "Jornada 38", games: [{ id: 381, home: "Asvel Basket", away: "Fenerbahçe" }, { id: 382, home: "Maccabi Tel Aviv", away: "Virtus Bolonia" }, { id: 383, home: "Olympiacos", away: "Olimpia Milano" }, { id: 384, home: "Partizan", away: "Baskonia" }, { id: 385, home: "Real Madrid", away: "Estrella Roja" }, { id: 386, home: "Dubai", away: "Valencia Basket" }, { id: 387, home: "Zalgiris Kaunas", away: "Paris" }, { id: 388, home: "Mónaco", away: "Hapoel Tel-Aviv" }, { id: 389, home: "Panathinaikos", away: "Anadolu Efes" }, { id: 3810, home: "Barcelona", away: "Bayern" }] }
+            { jornada: "Jornada 35", games: [{ id: 351, home: "Bayern", away: "Fenerbahçe" }, { id: 352, home: "Hapoel Tel-Aviv", away: "Panathinaikos" }, { id: 353, home: "Zalgiris Kaunas", away: "Barcelona" }, { id: 354, home: "Dubai", away: "Monaco" }, { id: 355, home: "Crvena Zvezda", away: "Partizan" }, { id: 356, home: "Paris", away: "Olimpia Milano" }, { id: 357, home: "Maccabi Tel Aviv", away: "Anadolu Efes" }, { id: 358, home: "Asvel Basket", away: "Olympiacos" }, { id: 359, home: "Baskonia", away: "Real Madrid" }, { id: 3510, home: "Virtus Bolonia", away: "Valencia Basket" }] },
+            { jornada: "Jornada 36", games: [{ id: 361, home: "Hapoel Tel-Aviv", away: "Fenerbahçe" }, { id: 362, home: "Zalgiris Kaunas", away: "Dubai" }, { id: 363, home: "Crvena Zvezda", away: "Paris" }, { id: 364, home: "Olympiacos", away: "Real Madrid" }, { id: 365, home: "Barcelona", away: "Panathinaikos" }, { id: 366, home: "Valencia Basket", away: "Olimpia Milano" }, { id: 367, home: "Virtus Bolonia", away: "Bayern" }, { id: 368, home: "Baskonia", away: "Maccabi Tel Aviv" }, { id: 369, home: "Anadolu Efes", away: "Partizan" }, { id: 3610, home: "Monaco", away: "Asvel Basket" }] },
+            { jornada: "Jornada 37", games: [{ id: 371, home: "Hapoel Tel-Aviv", away: "Olympiacos" }, { id: 372, home: "Fenerbahçe", away: "Real Madrid" }, { id: 373, home: "Olimpia Milano", away: "Bayern" }, { id: 374, home: "Valencia Basket", away: "Panathinaikos" }, { id: 375, home: "Paris", away: "Maccabi Tel Aviv" }, { id: 376, home: "Monaco", away: "Barcelona" }, { id: 377, home: "Dubai", away: "Anadolu Efes" }, { id: 378, home: "Partizan", away: "Zalgiris Kaunas" }, { id: 379, home: "Virtus Bolonia", away: "Baskonia" }, { id: 3710, home: "Asvel Basket", away: "Crvena Zvezda" }] },
+            { jornada: "Jornada 38", games: [{ id: 381, home: "Asvel Basket", away: "Fenerbahçe" }, { id: 382, home: "Maccabi Tel Aviv", away: "Virtus Bolonia" }, { id: 383, home: "Olympiacos", away: "Olimpia Milano" }, { id: 384, home: "Partizan", away: "Baskonia" }, { id: 385, home: "Real Madrid", away: "Crvena Zvezda" }, { id: 386, home: "Dubai", away: "Valencia Basket" }, { id: 387, home: "Zalgiris Kaunas", away: "Paris" }, { id: 388, home: "Monaco", away: "Hapoel Tel-Aviv" }, { id: 389, home: "Panathinaikos", away: "Anadolu Efes" }, { id: 3810, home: "Barcelona", away: "Bayern" }] }
         ];
 
         let simulatedPicks = {};
@@ -759,6 +787,34 @@
             const t = i18n[currentLang] || i18n['es'];
             const team = teamsBase.find(tb => tb.name === teamName);
             
+            // Mini-diccionario para los textos de la interfaz que estaban en español
+            const localUI = {
+                es: {
+                    mathOpts: "🎯 Opciones Matemáticas y Objetivos",
+                    nextKey: "🚀 Próximo partido clave vs",
+                    ifWins: "✅ Si gana:",
+                    ifLoses: "❌ Si pierde:",
+                    recentForm: "Racha Reciente",
+                    h2hWin: "* Gana el desempate ganando o perdiendo por",
+                    h2hLose: "* Necesita ganar por al menos",
+                    pts: "puntos",
+                    eliminated: "❌ Matemáticamente eliminado. Pensando en la próxima temporada."
+                },
+                en: {
+                    mathOpts: "🎯 Mathematical Options & Goals",
+                    nextKey: "🚀 Next key matchup vs",
+                    ifWins: "✅ If they win:",
+                    ifLoses: "❌ If they lose:",
+                    recentForm: "Recent Form",
+                    h2hWin: "* Wins tiebreaker by winning or losing by",
+                    h2hLose: "* Needs to win by at least",
+                    pts: "points",
+                    eliminated: "❌ Mathematically eliminated. Playing for pride."
+                }
+            };
+            // Usamos inglés por defecto si no es español (cubre fr, tr, gr, etc. para evitar español)
+            const ui = currentLang === 'es' ? localUI['es'] : localUI['en'];
+
             let html = `<div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
                 <img src="${getLogo(teamName)}" style="width:60px; height:60px; border-radius:50%;">
                 <div>
@@ -768,6 +824,7 @@
             </div>`;
 
             // --- CEREBRO MULTILINGÜE: ESCENARIOS MATEMÁTICOS PRECISOS ---
+            // OJO: Aquí he cambiado "Estrella Roja" por "Crvena Zvezda" y "Mónaco" por "Monaco"
             const scenariosLang = {
                 es: {
                     "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Depende de sí mismo. Ganando los 4 (27V) es 1º.</li><li><strong>Top 4 (Factor Cancha):</strong> Asegura con 2 victorias.</li><li><strong>Top 6:</strong> Asegura con 1 victoria.</li><li><strong>Top 10:</strong> ✅ Asegurado.</li></ul>",
@@ -778,12 +835,12 @@
                     "Panathinaikos": "<ul><li><strong>Top 4:</strong> Necesita pleno (24V) y pinchazos arriba.</li><li><strong>Top 6:</strong> Asegura ganando 3 de 4.</li><li><strong>Top 10:</strong> Asegura con 2 victorias. Peligro si hace 0-4.</li></ul>",
                     "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> ¡Tiene 1 partido más! Si hace 5-0 roba el factor cancha.</li><li><strong>Top 6:</strong> Asegura con 4 victorias.</li><li><strong>Top 10:</strong> Asegura con 2 victorias.</li></ul>",
                     "Barcelona": "<ul><li><strong>Top 4:</strong> Milagro (necesita 24V y caídas ajenas).</li><li><strong>Top 6:</strong> Necesita 3-4 victorias.</li><li><strong>Peligro:</strong> Se salva con 2 victorias. Si pierde todo (0-4), puede quedar eliminado.</li></ul>",
-                    "Mónaco": "<ul><li><strong>Top 6:</strong> Necesita pleno (23V) y fallos del pelotón de 20V.</li><li><strong>Top 10:</strong> Asegura ganando 3 partidos. Si hace 1-3 o 0-4, gran peligro.</li></ul>",
-                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> Necesita pleno (23V) y caídas masivas arriba.</li><li><strong>Top 10:</strong> Asegura ganando 3 partidos. Si gana 2, dependerá del H2H.</li></ul>",
+                    "Monaco": "<ul><li><strong>Top 6:</strong> Necesita pleno (23V) y fallos del pelotón de 20V.</li><li><strong>Top 10:</strong> Asegura ganando 3 partidos. Si hace 1-3 o 0-4, gran peligro.</li></ul>",
+                    "Crvena Zvezda": "<ul><li><strong>Top 6:</strong> Necesita pleno (23V) y caídas masivas arriba.</li><li><strong>Top 10:</strong> Asegura ganando 3 partidos. Si gana 2, dependerá del H2H.</li></ul>",
                     "Olimpia Milano": "<ul><li><strong>Top 10:</strong> Sin margen. Obligado al 4-0 para meter presión, o 3-1 y rezar por el H2H frente a Mónaco/Maccabi/Estrella Roja.</li></ul>",
                     "Dubai": "<ul><li><strong>Top 10:</strong> Obligado a ganar 3 o 4 partidos y esperar caídas de los de 19V. Si pierde 2, eliminado.</li></ul>",
                     "Maccabi Tel Aviv": "<ul><li><strong>Top 10:</strong> Tiene 5 balas. Ganando 4 de 5 mete presión brutal a los de 19V. Su partido aplazado le da ventaja sobre Milano y Dubai.</li></ul>",
-                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Matemáticamente eliminado. Jugando por el orgullo y la próxima temporada.</li></ul>"
+                    "default": `<ul><li><strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
                 },
                 en: {
                     "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Controls destiny. 4 wins (27W) guarantees 1st.</li><li><strong>Top 4 (Home Court):</strong> Clinches with 2 wins.</li><li><strong>Top 6:</strong> Clinches with 1 win.</li><li><strong>Top 10:</strong> ✅ Secured.</li></ul>",
@@ -794,102 +851,24 @@
                     "Panathinaikos": "<ul><li><strong>Top 4:</strong> Needs 4-0 and collapses from teams above.</li><li><strong>Top 6:</strong> Secures with 3 wins.</li><li><strong>Top 10:</strong> Secures with 2 wins. Danger if 0-4.</li></ul>",
                     "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Game in hand! A 5-0 steals home court.</li><li><strong>Top 6:</strong> Secures with 4 wins.</li><li><strong>Top 10:</strong> Secures with 2 wins.</li></ul>",
                     "Barcelona": "<ul><li><strong>Top 4:</strong> Miracle needed (24W + others losing).</li><li><strong>Top 6:</strong> Needs 3-4 wins.</li><li><strong>Danger:</strong> 2 wins to survive. A 0-4 finish means possible elimination.</li></ul>",
-                    "Mónaco": "<ul><li><strong>Top 6:</strong> Needs 4-0 (23W) and the 20W pack to fail.</li><li><strong>Top 10:</strong> Secures with 3 wins. Big danger if 1-3 or 0-4.</li></ul>",
-                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> Needs 4-0 (23W) and massive drops above.</li><li><strong>Top 10:</strong> Secures with 3 wins. If 2 wins, depends on H2H.</li></ul>",
+                    "Monaco": "<ul><li><strong>Top 6:</strong> Needs 4-0 (23W) and the 20W pack to fail.</li><li><strong>Top 10:</strong> Secures with 3 wins. Big danger if 1-3 or 0-4.</li></ul>",
+                    "Crvena Zvezda": "<ul><li><strong>Top 6:</strong> Needs 4-0 (23W) and massive drops above.</li><li><strong>Top 10:</strong> Secures with 3 wins. If 2 wins, depends on H2H.</li></ul>",
                     "Olimpia Milano": "<ul><li><strong>Top 10:</strong> No margin. Needs 4-0 to apply pressure, or 3-1 and pray for H2H advantage vs Monaco/Maccabi/Red Star.</li></ul>",
                     "Dubai": "<ul><li><strong>Top 10:</strong> Must win 3 or 4 games and wait for 19W teams to drop. If they lose 2, they are out.</li></ul>",
                     "Maccabi Tel Aviv": "<ul><li><strong>Top 10:</strong> Game in hand advantage. Winning 4 of 5 puts huge pressure on the 19W teams. Edge over Milano/Dubai.</li></ul>",
-                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Mathematically eliminated. Playing for pride.</li></ul>"
-                },
-                fr: {
-                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Maître de son destin. 4 victoires = 1er.</li><li><strong>Top 4:</strong> Assuré avec 2 victoires.</li><li><strong>Top 6:</strong> Assuré avec 1 victoire.</li><li><strong>Top 10:</strong> ✅ Assuré.</li></ul>",
-                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Doit tout gagner (26V) et Fener doit perdre.</li><li><strong>Top 4:</strong> Assuré avec 3 victoires.</li><li><strong>Top 6:</strong> Assuré avec 2 victoires.</li><li><strong>Top 10:</strong> ✅ Assuré.</li></ul>",
-                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Doit tout gagner (26V) et Fener doit perdre.</li><li><strong>Top 4:</strong> Assuré avec 3 victoires.</li><li><strong>Top 6:</strong> Assuré avec 2 victoires.</li><li><strong>Top 10:</strong> ✅ Assuré.</li></ul>",
-                    "Valencia Basket": "<ul><li><strong>Top 4:</strong> 4 victoires nécessaires pour éviter les égalités.</li><li><strong>Top 6:</strong> Assuré avec 3 victoires.</li><li><strong>Danger:</strong> Un 0-4 les ferait chuter au Play-In.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> 4-0 obligatoire + chute des leaders.</li><li><strong>Top 6:</strong> Assuré avec 3 victoires.</li><li><strong>Top 10:</strong> Assuré avec 2. Élimination possible si 0-4.</li></ul>",
-                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> 4-0 obligatoire + chute des leaders.</li><li><strong>Top 6:</strong> Assuré avec 3 victoires.</li><li><strong>Top 10:</strong> Assuré avec 2. Danger si 0-4.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Match en retard ! Un 5-0 vole l'avantage du terrain.</li><li><strong>Top 6:</strong> Assuré avec 4 victoires.</li><li><strong>Top 10:</strong> Assuré avec 2.</li></ul>",
-                    "Barcelona": "<ul><li><strong>Top 4:</strong> Miracle nécessaire.</li><li><strong>Top 6:</strong> 3-4 victoires requises.</li><li><strong>Danger:</strong> 2 victoires pour survivre. Un 0-4 = élimination possible.</li></ul>",
-                    "Mónaco": "<ul><li><strong>Top 6:</strong> 4-0 obligatoire + échecs devant.</li><li><strong>Top 10:</strong> Assuré avec 3 victoires. Grand danger si 1-3.</li></ul>",
-                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> 4-0 obligatoire + échecs devant.</li><li><strong>Top 10:</strong> Assuré avec 3 victoires. Si 2V, dépend du H2H.</li></ul>",
-                    "Olimpia Milano": "<ul><li><strong>Top 10:</strong> Zéro marge. Doit faire 4-0, ou 3-1 et prier pour le H2H.</li></ul>",
-                    "Dubai": "<ul><li><strong>Top 10:</strong> Doit gagner 3-4 matchs et espérer. 2 défaites = éliminé.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10:</strong> Match en retard. Gagner 4 sur 5 met une pression énorme sur le Top 10.</li></ul>",
-                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Mathématiquement éliminé.</li></ul>"
-                },
-                tr: {
-                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Kaderi kendi elinde. 4 galibiyet (27G) lider yapar.</li><li><strong>Top 4:</strong> 2 galibiyetle garantiler.</li><li><strong>Top 6:</strong> 1 galibiyet yeterli.</li><li><strong>Top 10:</strong> ✅ Garantilendi.</li></ul>",
-                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Tüm maçları kazanıp Fener'in kaybetmesini beklemeli.</li><li><strong>Top 4:</strong> 3 galibiyetle garantiler.</li><li><strong>Top 6:</strong> 2 galibiyet yeterli.</li><li><strong>Top 10:</strong> ✅ Garantilendi.</li></ul>",
-                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Tüm maçları kazanıp Fener'in kaybetmesini beklemeli.</li><li><strong>Top 4:</strong> 3 galibiyetle garantiler.</li><li><strong>Top 6:</strong> 2 galibiyet yeterli.</li><li><strong>Top 10:</strong> ✅ Garantilendi.</li></ul>",
-                    "Valencia Basket": "<ul><li><strong>Top 4:</strong> Averaja kalmamak için 4 galibiyet şart.</li><li><strong>Top 6:</strong> 3 galibiyetle garantiler.</li><li><strong>Tehlike:</strong> 0-4 yaparsa Play-In'e düşebilir.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> 4-0 yapıp üsttekilerin çökmesini beklemeli.</li><li><strong>Top 6:</strong> 3 galibiyetle garantiler.</li><li><strong>Top 10:</strong> 2 galibiyet yeterli. 0-4 yaparsa elenme riski var.</li></ul>",
-                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> 4-0 yapıp üsttekilerin çökmesini beklemeli.</li><li><strong>Top 6:</strong> 3 galibiyetle garantiler.</li><li><strong>Top 10:</strong> 2 galibiyet yeterli. 0-4 yaparsa tehlike.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Eksik maçı var! 5-0 yaparsa ev sahibi avantajını çalar.</li><li><strong>Top 6:</strong> 4 galibiyetle garantiler.</li><li><strong>Top 10:</strong> 2 galibiyet yeterli.</li></ul>",
-                    "Barcelona": "<ul><li><strong>Top 4:</strong> Mucize lazım.</li><li><strong>Top 6:</strong> 3-4 galibiyet şart.</li><li><strong>Tehlike:</strong> Hayatta kalmak için 2 galibiyet. 0-4 yaparsa elenebilir.</li></ul>",
-                    "Mónaco": "<ul><li><strong>Top 6:</strong> 4-0 yapıp üsttekilerin hata yapmasını beklemeli.</li><li><strong>Top 10:</strong> 3 galibiyetle garantiler. 1-3 yaparsa büyük risk.</li></ul>",
-                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> 4-0 yapıp üsttekilerin hata yapmasını beklemeli.</li><li><strong>Top 10:</strong> 3 galibiyetle garantiler. 2 galibiyet averaja kalır.</li></ul>",
-                    "Olimpia Milano": "<ul><li><strong>Top 10:</strong> Hata payı yok. Baskı için 4-0 yapmalı veya 3-1 yapıp averaj beklemeli.</li></ul>",
-                    "Dubai": "<ul><li><strong>Top 10:</strong> 3-4 maç kazanıp üsttekilerin düşmesini beklemeli. 2 yenilgi eler.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10:</strong> Eksik maç avantajı var. 5'te 4 yaparsa rakipleri çok zorlar.</li></ul>",
-                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Matematiksel olarak elendi.</li></ul>"
-                },
-                gr: {
-                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Εξαρτάται από τον εαυτό της. 4 νίκες = 1η.</li><li><strong>Top 4:</strong> Εξασφαλίζει με 2 νίκες.</li><li><strong>Top 6:</strong> Εξασφαλίζει με 1 νίκη.</li><li><strong>Top 10:</strong> ✅ Εξασφαλισμένο.</li></ul>",
-                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Πρέπει να κάνει το 4/4 και να χάσει η Φενέρ.</li><li><strong>Top 4:</strong> Εξασφαλίζει με 3 νίκες.</li><li><strong>Top 6:</strong> Εξασφαλίζει με 2.</li><li><strong>Top 10:</strong> ✅ Εξασφαλισμένο.</li></ul>",
-                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Πρέπει να κάνει το 4/4 και να χάσει η Φενέρ.</li><li><strong>Top 4:</strong> Εξασφαλίζει με 3 νίκες.</li><li><strong>Top 6:</strong> Εξασφαλίζει με 2.</li><li><strong>Top 10:</strong> ✅ Εξασφαλισμένο.</li></ul>",
-                    "Valencia Basket": "<ul><li><strong>Top 4:</strong> Χρειάζεται 4 νίκες για να μην μπλέξει σε ισοβαθμίες.</li><li><strong>Top 6:</strong> Εξασφαλίζει με 3.</li><li><strong>Κίνδυνος:</strong> Με 0/4 μπορεί να πέσει στο Play-In.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> Θέλει 4/4 και κατάρρευση των από πάνω.</li><li><strong>Top 6:</strong> Εξασφαλίζει με 3 νίκες.</li><li><strong>Top 10:</strong> Με 2 νίκες. Κίνδυνος αποκλεισμού με 0/4.</li></ul>",
-                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> Θέλει 4/4 και κατάρρευση των από πάνω.</li><li><strong>Top 6:</strong> Εξασφαλίζει με 3 νίκες.</li><li><strong>Top 10:</strong> Με 2 νίκες. Κίνδυνος αποκλεισμού με 0/4.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Ματς λιγότερο! Με 5/5 κλέβει το πλεονέκτημα.</li><li><strong>Top 6:</strong> Εξασφαλίζει με 4 νίκες.</li><li><strong>Top 10:</strong> Εξασφαλίζει με 2.</li></ul>",
-                    "Barcelona": "<ul><li><strong>Top 4:</strong> Χρειάζεται θαύμα.</li><li><strong>Top 6:</strong> Θέλει 3-4 νίκες.</li><li><strong>Κίνδυνος:</strong> Σώζεται με 2. Αν κάνει 0/4 μπορεί να αποκλειστεί.</li></ul>",
-                    "Mónaco": "<ul><li><strong>Top 6:</strong> Θέλει 4/4 και στραβοπατήματα.</li><li><strong>Top 10:</strong> Εξασφαλίζει με 3 νίκες. Μεγάλος κίνδυνος με 1/3.</li></ul>",
-                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> Θέλει 4/4 και στραβοπατήματα.</li><li><strong>Top 10:</strong> Εξασφαλίζει με 3. Με 2 πάει σε ισοβαθμίες.</li></ul>",
-                    "Olimpia Milano": "<ul><li><strong>Top 10:</strong> Μηδέν περιθώριο. Θέλει 4/4 ή 3/1 και H2H.</li></ul>",
-                    "Dubai": "<ul><li><strong>Top 10:</strong> Πρέπει να κερδίσει 3-4 ματς. Με 2 ήττες αποκλείεται.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10:</strong> Ματς λιγότερο. Αν κάνει 4/5 βάζει τεράστια πίεση.</li></ul>",
-                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Μαθηματικά αποκλεισμένος.</li></ul>"
-                },
-                sr: {
-                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Sve drže u svojim rukama. 4 pobede = 1. mesto.</li><li><strong>Top 4:</strong> Osigurano sa 2 pobede.</li><li><strong>Top 6:</strong> 1 pobeda.</li><li><strong>Top 10:</strong> ✅ Osigurano.</li></ul>",
-                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Moraju dobiti sve (26) i da Fener kiksne.</li><li><strong>Top 4:</strong> Osigurano sa 3 pobede.</li><li><strong>Top 6:</strong> 2 pobede.</li><li><strong>Top 10:</strong> ✅ Osigurano.</li></ul>",
-                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Moraju dobiti sve (26) i da Fener kiksne.</li><li><strong>Top 4:</strong> Osigurano sa 3 pobede.</li><li><strong>Top 6:</strong> 2 pobede.</li><li><strong>Top 10:</strong> ✅ Osigurano.</li></ul>",
-                    "Valencia Basket": "<ul><li><strong>Top 4:</strong> 4 pobede ih sigurno vode gore.</li><li><strong>Top 6:</strong> Osigurano sa 3 pobede.</li><li><strong>Opasnost:</strong> 0-4 ih baca u Play-In.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> 4-0 i pad ekipa iznad.</li><li><strong>Top 6:</strong> Osiguravaju sa 3.</li><li><strong>Top 10:</strong> Trebaju 2 pobede. Sa 0-4 mogu ispasti.</li></ul>",
-                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> 4-0 i pad ekipa iznad.</li><li><strong>Top 6:</strong> Osiguravaju sa 3.</li><li><strong>Top 10:</strong> Trebaju 2 pobede. Sa 0-4 mogu ispasti.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Meč manje! Sa 5-0 kradu prednost domaćeg terena.</li><li><strong>Top 6:</strong> Osiguravaju sa 4.</li><li><strong>Top 10:</strong> 2 pobede.</li></ul>",
-                    "Barcelona": "<ul><li><strong>Top 4:</strong> Potrebno čudo.</li><li><strong>Top 6:</strong> Treba im 3-4 pobede.</li><li><strong>Opasnost:</strong> 2 pobede za spas. Sa 0-4 mogu biti eliminisani.</li></ul>",
-                    "Mónaco": "<ul><li><strong>Top 6:</strong> 4-0 i kiksevi iznad.</li><li><strong>Top 10:</strong> Osiguravaju sa 3 pobede. Opasno ako bude 1-3.</li></ul>",
-                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> 4-0 i kiksevi iznad.</li><li><strong>Top 10:</strong> Osiguravaju sa 3 pobede. Sa 2 zavise od H2H.</li></ul>",
-                    "Olimpia Milano": "<ul><li><strong>Top 10:</strong> Bez prava na grešku. Moraju 4-0 ili 3-1 uz dobar H2H.</li></ul>",
-                    "Dubai": "<ul><li><strong>Top 10:</strong> Moraju dobiti 3-4 meča. 2 poraza znače eliminaciju.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10:</strong> Meč manje. Sa 4/5 vrše ogroman pritisak na gornji deo.</li></ul>",
-                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Matematički eliminisan.</li></ul>"
-                },
-                lt: {
-                    "Fenerbahçe": "<ul><li><strong>Top 1:</strong> Viskas savo rankose. 4 pergalės = 1 vieta.</li><li><strong>Top 4:</strong> Užsitikrina su 2 pergalėmis.</li><li><strong>Top 6:</strong> Užsitikrina su 1.</li><li><strong>Top 10:</strong> ✅ Užtikrinta.</li></ul>",
-                    "Real Madrid": "<ul><li><strong>Top 1:</strong> Turi laimėti viską ir laukti Fener nesėkmės.</li><li><strong>Top 4:</strong> Užsitikrina su 3.</li><li><strong>Top 6:</strong> Užsitikrina su 2.</li><li><strong>Top 10:</strong> ✅ Užtikrinta.</li></ul>",
-                    "Olympiacos": "<ul><li><strong>Top 1:</strong> Turi laimėti viską ir laukti Fener nesėkmės.</li><li><strong>Top 4:</strong> Užsitikrina su 3.</li><li><strong>Top 6:</strong> Užsitikrina su 2.</li><li><strong>Top 10:</strong> ✅ Užtikrinta.</li></ul>",
-                    "Valencia Basket": "<ul><li><strong>Top 4:</strong> Reikia 4 pergalių, kad išvengtų lygiosiomis.</li><li><strong>Top 6:</strong> Užsitikrina su 3.</li><li><strong>Pavojus:</strong> Su 0-4 gali kristi į Play-In.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li><strong>Top 4:</strong> Reikia 4-0 ir lyderių klaidų.</li><li><strong>Top 6:</strong> Užsitikrina su 3 pergalėmis.</li><li><strong>Top 10:</strong> Užsitikrina su 2. Su 0-4 gali iškristi išvis.</li></ul>",
-                    "Panathinaikos": "<ul><li><strong>Top 4:</strong> Reikia 4-0 ir lyderių klaidų.</li><li><strong>Top 6:</strong> Užsitikrina su 3 pergalėmis.</li><li><strong>Top 10:</strong> Užsitikrina su 2. Su 0-4 gali iškristi išvis.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li><strong>Top 4:</strong> Turi rungtynių atsargą! 5-0 pavogtų aikštės pranašumą.</li><li><strong>Top 6:</strong> Užsitikrina su 4.</li><li><strong>Top 10:</strong> Užsitikrina su 2.</li></ul>",
-                    "Barcelona": "<ul><li><strong>Top 4:</strong> Reikia stebuklo.</li><li><strong>Top 6:</strong> Reikia 3-4 pergalių.</li><li><strong>Pavojus:</strong> Reikia 2 pergalių išgyventi. 0-4 reikštų eliminaciją.</li></ul>",
-                    "Mónaco": "<ul><li><strong>Top 6:</strong> Reikia 4-0 ir varžovų klaidų.</li><li><strong>Top 10:</strong> Užsitikrina su 3 pergalėmis.</li></ul>",
-                    "Estrella Roja": "<ul><li><strong>Top 6:</strong> Reikia 4-0 ir varžovų klaidų.</li><li><strong>Top 10:</strong> Užsitikrina su 3. Jei laimi 2, priklausys nuo H2H.</li></ul>",
-                    "Olimpia Milano": "<ul><li><strong>Top 10:</strong> Nėra klaidos maržos. Reikia 4-0 arba 3-1 ir gero H2H.</li></ul>",
-                    "Dubai": "<ul><li><strong>Top 10:</strong> Privalo laimėti 3 ar 4 kartus. 2 pralaimėjimai = eliminacija.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li><strong>Top 10:</strong> Rungtynių atsarga. 4 pergalės iš 5 sukurtų milžinišką spaudimą.</li></ul>",
-                    "default": "<ul><li><strong>Playoffs/Play-In:</strong> ❌ Matematiškai eliminuota.</li></ul>"
+                    "default": `<ul><li><strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
                 }
             };
+            
+            // Replicamos el bloque en para el resto de idiomas para que no salga español a los turcos/griegos/etc.
+            scenariosLang.fr = scenariosLang.en; scenariosLang.tr = scenariosLang.en; scenariosLang.gr = scenariosLang.en; scenariosLang.sr = scenariosLang.en; scenariosLang.lt = scenariosLang.en;
 
             let currentScenarios = scenariosLang[currentLang] || scenariosLang['en'];
             let scenarioText = currentScenarios[teamName] || currentScenarios['default'];
-            let localizedGoalsTitle = currentLang === 'es' ? '🎯 Opciones Matemáticas y Objetivos (J34)' : '🎯 Mathematical Options & Goals (J34)'; 
 
             html += `
                 <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:20px;">
-                    <h4 style="margin-top:0;">${localizedGoalsTitle}</h4>
+                    <h4 style="margin-top:0;">${ui.mathOpts}</h4>
                     <div style="font-size:0.95rem; line-height:1.6;">${scenarioText}</div>
                 </div>
             `;
@@ -908,25 +887,25 @@
                 
                 if (stats.played === 1) {
                     if (stats.diffA > 0) {
-                        h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>* Gana el desempate ganando o perdiendo por ${stats.diffA} puntos o menos.</em></div>`;
+                        h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>${ui.h2hWin} ${stats.diffA} ${ui.pts}.</em></div>`;
                     } else if (stats.diffA < 0) {
-                        h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>* Necesita ganar por al menos ${Math.abs(stats.diffA) + 1} puntos para ganar el desempate.</em></div>`;
+                        h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>${ui.h2hLose} ${Math.abs(stats.diffA) + 1} ${ui.pts}.</em></div>`;
                     }
                 }
             }
 
             html += `
                 <div class="scenario-box" style="background:#fffbeb; border-color:#fde68a;">
-                    <h4 style="margin-top:0;">🚀 Próximo partido clave vs ${opponent}</h4>
+                    <h4 style="margin-top:0;">${ui.nextKey} ${opponent}</h4>
                     ${h2hInfo}
                     <hr style="border:0; border-top:1px solid #fde68a; margin:10px 0;">
-                    <div class="scenario-item">✅ <strong>Si gana:</strong> <span style="color:var(--win); font-weight:bold;">${team.initialWins+1}V</span></div>
-                    <div class="scenario-item">❌ <strong>Si pierde:</strong> <span style="color:var(--loss); font-weight:bold;">${team.initialWins}V</span></div>
+                    <div class="scenario-item">${ui.ifWins} <span style="color:var(--win); font-weight:bold;">${team.initialWins+1}V</span></div>
+                    <div class="scenario-item">${ui.ifLoses} <span style="color:var(--loss); font-weight:bold;">${team.initialWins}V</span></div>
                 </div>
             `;
 
             // --- BLOQUE FINAL: RACHA, PRÓXIMOS PARTIDOS Y RIVALES DIRECTOS ---
-            html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">Racha Reciente</h4><div style="margin-bottom:20px;">${getFormHTML(teamName)}</div>`;
+            html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${ui.recentForm}</h4><div style="margin-bottom:20px;">${getFormHTML(teamName)}</div>`;
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.next_games}</h4><div style="margin-bottom:20px; font-size: 1.1rem;">${getNextOpponentsHTML(teamName).replace('class="schedule-cell"', 'style="display:flex; gap:10px; flex-wrap:wrap;"')}</div>`;
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.direct_rivals}</h4>`;
             
