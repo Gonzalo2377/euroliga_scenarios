@@ -539,33 +539,32 @@
         ];
 
         function getLogo(teamName) {
-            // Diccionario de URLs oficiales para que no tengas que subir archivos
+            // Ahora la web buscará las imágenes locales que has subido a tu servidor
             const logos = {
-                "Fenerbahçe": "https://upload.wikimedia.org/wikipedia/en/3/39/Fenerbah%C3%A7e_Basketball_logo.svg",
-                "Real Madrid": "https://upload.wikimedia.org/wikipedia/en/e/ec/Real_Madrid_CF_logo.svg",
-                "Olympiacos": "https://upload.wikimedia.org/wikipedia/en/0/0a/Olympiacos_BC_logo.svg",
-                "Valencia Basket": "https://upload.wikimedia.org/wikipedia/en/1/1b/Valencia_Basket_logo.svg",
-                "Zalgiris Kaunas": "https://upload.wikimedia.org/wikipedia/en/c/cc/BC_Zalgiris_logo.svg",
-                "Panathinaikos": "https://upload.wikimedia.org/wikipedia/en/2/29/Panathinaikos_BC_logo.svg",
-                "Hapoel Tel-Aviv": "https://upload.wikimedia.org/wikipedia/en/c/c2/Hapoel_Tel_Aviv_BC_logo.png",
-                "Barcelona": "https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_logo.svg",
-                "Monaco": "https://upload.wikimedia.org/wikipedia/en/b/b5/AS_Monaco_Basket_logo.svg",
-                "Crvena Zvezda": "https://upload.wikimedia.org/wikipedia/en/c/c2/KK_Crvena_zvezda_logo.svg",
-                "Estrella Roja": "https://upload.wikimedia.org/wikipedia/en/c/c2/KK_Crvena_zvezda_logo.svg", // Por si acaso
-                "Dubai": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Dubai_Basketball_Club_logo.png",
-                "Olimpia Milano": "https://upload.wikimedia.org/wikipedia/en/e/e0/Olimpia_Milano_logo.svg",
-                "Maccabi Tel Aviv": "https://upload.wikimedia.org/wikipedia/en/b/bd/Maccabi_Tel_Aviv_BC_logo.svg",
-                "Anadolu Efes": "https://upload.wikimedia.org/wikipedia/en/a/a2/Anadolu_Efes_SK_logo.svg",
-                "Virtus Bologna": "https://upload.wikimedia.org/wikipedia/en/e/e4/Virtus_Bologna_logo.svg",
-                "Partizan": "https://upload.wikimedia.org/wikipedia/en/2/22/KK_Partizan_logo.svg",
-                "Bayern Munich": "https://upload.wikimedia.org/wikipedia/en/1/1b/FC_Bayern_M%C3%BCnchen_logo.svg",
-                "Paris Basketball": "https://upload.wikimedia.org/wikipedia/en/b/bf/Paris_Basketball_logo.svg",
-                "Baskonia": "https://upload.wikimedia.org/wikipedia/en/7/70/Saski_Baskonia_logo.svg",
-                "LDLC ASVEL": "https://upload.wikimedia.org/wikipedia/en/4/4d/ASVEL_Basket_logo.svg"
+                "Fenerbahçe": "fenerbahce.png",
+                "Real Madrid": "real_madrid.png",
+                "Olympiacos": "olympiacos.png",
+                "Valencia Basket": "valencia.png",
+                "Zalgiris Kaunas": "zalgiris.png",
+                "Panathinaikos": "panathinaikos.png",
+                "Hapoel Tel-Aviv": "hapoel.png",
+                "Barcelona": "barcelona.png",
+                "Monaco": "monaco.png",
+                "Crvena Zvezda": "zvezda.png",
+                "Dubai": "dubai.png",
+                "Olimpia Milano": "milano.png",
+                "Maccabi Tel Aviv": "maccabi.png",
+                "Anadolu Efes": "efes.png",
+                "Virtus Bolonia": "virtus.png", 
+                "Partizan": "partizan.png",
+                "Bayern": "bayern.png",
+                "Paris": "paris.png",
+                "Baskonia": "baskonia.png",
+                "Asvel Basket": "asvel.png"
             };
 
-            // Si el equipo existe en la lista, devolvemos su URL, si no, un balón genérico
-            return logos[teamName] || "https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png";
+            // Si encuentra el equipo, devuelve tu imagen. Si falla, carga tu logo general por defecto.
+            return logos[teamName] || "logo.png";
         }
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
