@@ -855,36 +855,71 @@
             schedule.forEach(j => j.games.forEach(g => { if(!nextGame && !g.played && (g.home === teamName || g.away === teamName)) nextGame = g; }));
             let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
 
-            // Calcular partidos restantes y victorias máximas posibles
-            let rem = 0;
-            schedule.forEach(j => j.games.forEach(g => { if(!g.played && (g.home === teamName || g.away === teamName)) rem++; }));
-            let maxWins = team.initialWins + rem;
-            
-            let sortedTeams = [...teamsBase].sort((a,b) => b.initialWins - a.initialWins || b.diff - a.diff);
-            let top6Wins = sortedTeams[5].initialWins;
-            let top10Wins = sortedTeams[9].initialWins;
+            // ==========================================
+            // DICCIONARIO MANUAL DE ESTADOS (¡Lo editas tú cada jornada!)
+            // ==========================================
+            const statusText = {
+                "Fenerbahçe": {
+                    top6: "Necesita <strong>1 victoria</strong> más para asegurarlo matemáticamente.",
+                    playin: "<span style='color:var(--win); font-weight:bold;'>✅ Asegurado matemáticamente</span>"
+                },
+                "Olympiacos": {
+                    top6: "Necesita ganar <strong>2 de los 4</strong> partidos restantes para amarrarlo.",
+                    playin: "<span style='color:var(--win); font-weight:bold;'>✅ Asegurado matemáticamente</span>"
+                },
+                "Real Madrid": {
+                    top6: "Necesita ganar <strong>2 de los 4</strong> partidos restantes para amarrarlo.",
+                    playin: "<span style='color:var(--win); font-weight:bold;'>✅ Asegurado matemáticamente</span>"
+                },
+                "Valencia Basket": {
+                    top6: "Está a <strong>3 victorias</strong> de asegurar el pase de forma directa.",
+                    playin: "<span style='color:var(--win); font-weight:bold;'>✅ Asegurado matemáticamente</span>"
+                },
+                "Zalgiris Kaunas": {
+                    top6: "Obligado a hacer un <strong>4/4</strong> (o 3/4 y rezar con desempates).",
+                    playin: "A solo <strong>1 victoria</strong> de asegurar el pase matemáticamente."
+                },
+                "Panathinaikos": {
+                    top6: "Obligado a hacer un <strong>4/4</strong> (o 3/4 y rezar con desempates).",
+                    playin: "A solo <strong>1 victoria</strong> de asegurar el pase matemáticamente."
+                },
+                "Barcelona": {
+                    top6: "Obligado a hacer un <strong>4/4</strong> (o 3/4 y rezar con desempates).",
+                    playin: "A solo <strong>1 victoria</strong> de asegurar el pase matemáticamente."
+                },
+                "Hapoel Tel-Aviv": {
+                    top6: "Depende de sí mismo: necesita ganar <strong>4 de sus 5</strong> partidos restantes.",
+                    playin: "A solo <strong>1 victoria</strong> de asegurar el pase matemáticamente."
+                },
+                "Mónaco": {
+                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Prácticamente imposible</span>",
+                    playin: "Necesita ganar <strong>3 de 4</strong> partidos para no depender de nadie."
+                },
+                "Estrella Roja": {
+                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Prácticamente imposible</span>",
+                    playin: "Necesita ganar <strong>3 de 4</strong> partidos para no depender de nadie."
+                },
+                "Olimpia Milano": {
+                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
+                    playin: "Margen de error nulo. Necesita un <strong>4/4</strong> y que los de arriba pinchen."
+                },
+                "Dubai": {
+                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
+                    playin: "Margen de error nulo. Necesita un <strong>4/4</strong> y que los de arriba pinchen."
+                },
+                "Maccabi Tel Aviv": {
+                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
+                    playin: "Tiene un partido más. Si gana <strong>4 de 5</strong>, adelanta a rivales directos seguro."
+                }
+            };
 
-            // LÓGICA INTELIGENTE PARA EL TOP 6
-            let top6Text = "";
-            let needed6 = top6Wins - team.initialWins;
-            if (needed6 <= 0) {
-                top6Text = `<span style="color:var(--win); font-weight:bold;">✅ Asegurado / Virtualmente clasificado</span>`;
-            } else if (maxWins < top6Wins) {
-                top6Text = `<span style="color:var(--loss); font-weight:bold;">❌ Matemáticamente imposible (Máx: ${maxWins}V)</span>`;
-            } else {
-                top6Text = `Necesita ganar <strong>${needed6}</strong> de los <strong>${rem}</strong> partidos restantes.`;
-            }
+            // Si un equipo no está en la lista de arriba, significa que está completamente frito:
+            const defaultEliminated = {
+                top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
+                playin: "<span style='color:var(--loss); font-weight:bold;'>☠️ Eliminado matemáticamente</span>"
+            };
 
-            // LÓGICA INTELIGENTE PARA EL PLAY-IN (TOP 10)
-            let top10Text = "";
-            let needed10 = top10Wins - team.initialWins;
-            if (needed10 <= 0) {
-                top10Text = `<span style="color:var(--win); font-weight:bold;">✅ Asegurado / Virtualmente clasificado</span>`;
-            } else if (maxWins < top10Wins) {
-                top10Text = `<span style="color:var(--loss); font-weight:bold;">☠️ Eliminado matemáticamente (Máx: ${maxWins}V)</span>`;
-            } else {
-                top10Text = `Necesita ganar <strong>${needed10}</strong> de los <strong>${rem}</strong> partidos restantes.`;
-            }
+            let teamStatus = statusText[teamName] || defaultEliminated;
 
             html += `
                 <div class="scenario-box">
@@ -893,9 +928,9 @@
                     <div class="scenario-item">❌ <strong>${t.sc_lose_next.replace('{opp}', opponent)}</strong> <span style="color:var(--loss); font-weight:bold;">${team.initialWins}V</span>. Te obliga a ganar casi todo lo demás.</div>
                 </div>
                 <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0;">
-                    <h4 style="margin-top:0;">🎯 ${t.sc_needed}</h4>
-                    <p><strong>${t.sc_for_top6} (Corte en ${top6Wins}V):</strong> ${top6Text}</p>
-                    <p><strong>${t.sc_for_top10} (Corte en ${top10Wins}V):</strong> ${top10Text}</p>
+                    <h4 style="margin-top:0;">🎯 Ruta al objetivo actual</h4>
+                    <p><strong>Para asegurar Top 6:</strong> ${teamStatus.top6}</p>
+                    <p><strong>Para asegurar Play-In:</strong> ${teamStatus.playin}</p>
                 </div>
             `;
 
