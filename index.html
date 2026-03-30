@@ -289,6 +289,31 @@
         .bg-t6 { background-color: #ecfdf5; }
         .bg-pi { background-color: #fffbeb; }
         .bg-out { background-color: #fef2f2; }
+        @media (max-width: 768px) {
+            /* 1. Cabecera y banderas */
+            header { padding: 3rem 1rem 1rem 1rem; } 
+            header h1 { font-size: 1.4rem; margin: 0; line-height: 1.2; }
+            .lang-switcher { top: 10px; left: 50%; transform: translateX(-50%); right: auto; width: max-content; }
+            
+            /* 2. Menú de pestañas */
+            nav { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5px; }
+            nav button { white-space: nowrap; padding: 0.8rem 1rem; font-size: 0.9rem; }
+            
+            /* 3. Espaciado general del cuerpo */
+            .container { margin: 1rem auto; padding: 0 0.5rem; }
+            .tab-content { padding: 1rem 0.5rem; }
+            
+            /* 4. Simulador */
+            .match-card { flex-wrap: wrap !important; justify-content: center !important; padding: 15px 10px !important; }
+            .match-card > div { flex: 0 0 100% !important; text-align: center !important; margin: 5px 0 !important; font-size: 1.1rem; }
+            .match-card > button { flex: 1 !important; padding: 12px !important; margin: 0 5px !important; }
+            
+            /* 5. Cabecera de "Mi Equipo" */
+            #myteam-dashboard > div:first-child { flex-direction: column; text-align: center; }
+            
+            /* 6. Tablas táctiles */
+            .table-responsive { -webkit-overflow-scrolling: touch; }
+        }
     </style>
 </head>
 <body>
