@@ -894,58 +894,79 @@
             // ==========================================
             // DICCIONARIO MANUAL DE ESTADOS
             // ==========================================
-            const statusText = {
-                "Fenerbahçe": {
-                    top6: "Necesita <strong>1 victoria</strong> más para asegurarlo matemáticamente.",
-                    playin: "<span style='color:var(--win); font-weight:bold;'>✅ Asegurado matemáticamente</span>"
+            // ==========================================
+            // DICCIONARIO MULTI-IDIOMA (ES, EN, FR, TR, GR, RS, LT)
+            // ==========================================
+            const statusTranslations = {
+                "es": {
+                    "Fenerbahçe": { top6: "Necesita <strong>1 victoria</strong> para asegurar.", playin: "✅ Asegurado" },
+                    "Olympiacos": { top6: "Necesita ganar <strong>2 de 4</strong>.", playin: "✅ Asegurado" },
+                    "Real Madrid": { top6: "Necesita ganar <strong>2 de 4</strong>.", playin: "✅ Asegurado" },
+                    "Valencia Basket": { top6: "Necesita <strong>3 victorias</strong>.", playin: "✅ Asegurado" },
+                    "Zalgiris Kaunas": { top6: "Obligado a 4/4 (o 3/4 y desempates).", playin: "A <strong>1 victoria</strong> de asegurar." },
+                    "Panathinaikos": { top6: "Obligado a 4/4 (o 3/4 y desempates).", playin: "A <strong>1 victoria</strong> de asegurar." },
+                    "Barcelona": { top6: "Obligado a 4/4 (o 3/4 y desempates).", playin: "A <strong>1 victoria</strong> de asegurar." },
+                    "eliminated": { top6: "❌ Matemáticamente imposible", playin: "☠️ Eliminado matemáticamente" }
                 },
-                "Olympiacos": {
-                    top6: "Necesita ganar <strong>2 de los 4</strong> partidos restantes para amarrarlo.",
-                    playin: "<span style='color:var(--win); font-weight:bold;'>✅ Asegurado matemáticamente</span>"
+                "en": {
+                    "Fenerbahçe": { top6: "Needs <strong>1 victory</strong> to secure.", playin: "✅ Secured" },
+                    "Olympiacos": { top6: "Needs to win <strong>2 of 4</strong>.", playin: "✅ Secured" },
+                    "Real Madrid": { top6: "Needs to win <strong>2 of 4</strong>.", playin: "✅ Secured" },
+                    "Valencia Basket": { top6: "Needs <strong>3 victories</strong>.", playin: "✅ Secured" },
+                    "Zalgiris Kaunas": { top6: "Forced to 4/4 (or 3/4 & tiebreakers).", playin: "<strong>1 win</strong> away from securing." },
+                    "Panathinaikos": { top6: "Forced to 4/4 (or 3/4 & tiebreakers).", playin: "<strong>1 win</strong> away from securing." },
+                    "Barcelona": { top6: "Forced to 4/4 (or 3/4 & tiebreakers).", playin: "<strong>1 win</strong> away from securing." },
+                    "eliminated": { top6: "❌ Mathematically impossible", playin: "☠️ Mathematically eliminated" }
                 },
-                "Real Madrid": {
-                    top6: "Necesita ganar <strong>2 de los 4</strong> partidos restantes para amarrarlo.",
-                    playin: "<span style='color:var(--win); font-weight:bold;'>✅ Asegurado matemáticamente</span>"
+                "fr": {
+                    "Fenerbahçe": { top6: "A besoin d'<strong>1 victoire</strong> pour assurer.", playin: "✅ Assuré" },
+                    "Olympiacos": { top6: "Doit gagner <strong>2 sur 4</strong>.", playin: "✅ Assuré" },
+                    "Real Madrid": { top6: "Doit gagner <strong>2 sur 4</strong>.", playin: "✅ Assuré" },
+                    "Valencia Basket": { top6: "A besoin de <strong>3 victoires</strong>.", playin: "✅ Assuré" },
+                    "Zalgiris Kaunas": { top6: "Obligé de faire 4/4 (ou 3/4 et miracle).", playin: "À <strong>1 victoire</strong> d'assurer." },
+                    "Panathinaikos": { top6: "Obligé de faire 4/4 (ou 3/4 et miracle).", playin: "À <strong>1 victoire</strong> d'assurer." },
+                    "Barcelona": { top6: "Obligé de faire 4/4 (ou 3/4 et miracle).", playin: "À <strong>1 victoire</strong> d'assurer." },
+                    "eliminated": { top6: "❌ Mathématiquement impossible", playin: "☠️ Mathématiquement éliminé" }
                 },
-                "Valencia Basket": {
-                    top6: "Está a <strong>3 victorias</strong> de asegurar el pase de forma directa.",
-                    playin: "<span style='color:var(--win); font-weight:bold;'>✅ Asegurado matemáticamente</span>"
+                "tr": {
+                    "Fenerbahçe": { top6: "Garantilemek için <strong>1 galibiyet</strong> lazım.", playin: "✅ Garantilendi" },
+                    "Olympiacos": { top6: "4 maçın <strong>2'sini</strong> kazanmalı.", playin: "✅ Garantilendi" },
+                    "Real Madrid": { top6: "4 maçın <strong>2'sini</strong> kazanmalı.", playin: "✅ Garantilendi" },
+                    "Valencia Basket": { top6: "<strong>3 galibiyete</strong> ihtiyacı var.", playin: "✅ Garantilendi" },
+                    "Zalgiris Kaunas": { top6: "4/4 yapmalı (veya 3/4 ve averaj).", playin: "Garantilemeye <strong>1 galibiyet</strong> uzaklıkta." },
+                    "Panathinaikos": { top6: "4/4 yapmalı (veya 3/4 ve averaj).", playin: "Garantilemeye <strong>1 galibiyet</strong> uzaklıkta." },
+                    "Barcelona": { top6: "4/4 yapmalı (veya 3/4 ve averaj).", playin: "Garantilemeye <strong>1 galibiyet</strong> uzaklıkta." },
+                    "eliminated": { top6: "❌ Matematiksel olarak imkansız", playin: "☠️ Matematiksel olarak elendi" }
                 },
-                "Zalgiris Kaunas": {
-                    top6: "Obligado a hacer un <strong>4/4</strong> (o 3/4 y rezar con desempates).",
-                    playin: "A solo <strong>1 victoria</strong> de asegurar el pase matemáticamente."
+                "gr": {
+                    "Fenerbahçe": { top6: "Χρειάζεται <strong>1 νίκη</strong>.", playin: "✅ Εξασφαλισμένο" },
+                    "Olympiacos": { top6: "Πρέπει να κερδίσει <strong>2 από τα 4</strong>.", playin: "✅ Εξασφαλισμένο" },
+                    "Real Madrid": { top6: "Πρέπει να κερδίσει <strong>2 από τα 4</strong>.", playin: "✅ Εξασφαλισμένο" },
+                    "Valencia Basket": { top6: "Χρειάζεται <strong>3 νίκες</strong>.", playin: "✅ Εξασφαλισμένο" },
+                    "Zalgiris Kaunas": { top6: "Υποχρεωτικό 4/4 (ή 3/4 και ισοβαθμίες).", playin: "Απέχει <strong>1 νίκη</strong>." },
+                    "Panathinaikos": { top6: "Υποχρεωτικό 4/4 (ή 3/4 και ισοβαθμίες).", playin: "Απέχει <strong>1 νίκη</strong>." },
+                    "Barcelona": { top6: "Υποχρεωτικό 4/4 (ή 3/4 και ισοβαθμίες).", playin: "Απέχει <strong>1 νίκη</strong>." },
+                    "eliminated": { top6: "❌ Μαθηματικά αδύνατο", playin: "☠️ Μαθηματικά αποκλεισμένος" }
                 },
-                "Panathinaikos": {
-                    top6: "Obligado a hacer un <strong>4/4</strong> (o 3/4 y rezar con desempates).",
-                    playin: "A solo <strong>1 victoria</strong> de asegurar el pase matemáticamente."
+                "rs": {
+                    "Fenerbahçe": { top6: "Potrebna mu je <strong>1 pobeda</strong>.", playin: "✅ Osigurano" },
+                    "Olympiacos": { top6: "Mora da pobedi <strong>2 od 4</strong>.", playin: "✅ Osigurano" },
+                    "Real Madrid": { top6: "Mora da pobedi <strong>2 od 4</strong>.", playin: "✅ Osigurano" },
+                    "Valencia Basket": { top6: "Potrebne su <strong>3 pobede</strong>.", playin: "✅ Osigurano" },
+                    "Zalgiris Kaunas": { top6: "Mora 4/4 (ili 3/4 i međusobni skor).", playin: "Samo <strong>1 pobeda</strong> do cilja." },
+                    "Panathinaikos": { top6: "Mora 4/4 (ili 3/4 i međusobni skor).", playin: "Samo <strong>1 pobeda</strong> do cilja." },
+                    "Barcelona": { top6: "Mora 4/4 (ili 3/4 i međusobni skor).", playin: "Samo <strong>1 pobeda</strong> do cilja." },
+                    "eliminated": { top6: "❌ Matematički nemoguće", playin: "☠️ Matematički eliminisan" }
                 },
-                "Barcelona": {
-                    top6: "Obligado a hacer un <strong>4/4</strong> (o 3/4 y rezar con desempates).",
-                    playin: "A solo <strong>1 victoria</strong> de asegurar el pase matemáticamente."
-                },
-                "Hapoel Tel-Aviv": {
-                    top6: "Depende de sí mismo: necesita ganar <strong>4 de sus 5</strong> partidos restantes.",
-                    playin: "A solo <strong>1 victoria</strong> de asegurar el pase matemáticamente."
-                },
-                "Mónaco": {
-                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Prácticamente imposible</span>",
-                    playin: "Necesita ganar <strong>3 de 4</strong> partidos para no depender de nadie."
-                },
-                "Estrella Roja": {
-                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Prácticamente imposible</span>",
-                    playin: "Necesita ganar <strong>3 de 4</strong> partidos para no depender de nadie."
-                },
-                "Olimpia Milano": {
-                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
-                    playin: "Margen de error nulo. Necesita un <strong>4/4</strong> y que los de arriba pinchen."
-                },
-                "Dubai": {
-                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
-                    playin: "Margen de error nulo. Necesita un <strong>4/4</strong> y que los de arriba pinchen."
-                },
-                "Maccabi Tel Aviv": {
-                    top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
-                    playin: "Tiene un partido más. Si gana <strong>4 de 5</strong>, adelanta a rivales directos seguro."
+                "lt": {
+                    "Fenerbahçe": { top6: "Reikia <strong>1 pergalės</strong>.", playin: "✅ Užtikrinta" },
+                    "Olympiacos": { top6: "Turi laimėti <strong>2 iš 4</strong>.", playin: "✅ Užtikrinta" },
+                    "Real Madrid": { top6: "Turi laimėti <strong>2 iš 4</strong>.", playin: "✅ Užtikrinta" },
+                    "Valencia Basket": { top6: "Reikia <strong>3 pergalių</strong>.", playin: "✅ Užtikrinta" },
+                    "Zalgiris Kaunas": { top6: "Privalo pasiekti 4/4 (arba 3/4).", playin: "Trūksta <strong>1 pergalės</strong>." },
+                    "Panathinaikos": { top6: "Privalo pasiekti 4/4 (arba 3/4).", playin: "Trūksta <strong>1 pergalės</strong>." },
+                    "Barcelona": { top6: "Privalo pasiekti 4/4 (arba 3/4).", playin: "Trūksta <strong>1 pergalės</strong>." },
+                    "eliminated": { top6: "❌ Matematiškai neįmanoma", playin: "☠️ Matematiškai eliminuota" }
                 }
             };
 
@@ -1159,11 +1180,36 @@
         }
 
         function openTab(evt, tabName) {
+            // Ocultamos todas las pestañas y quitamos la clase 'active' de los botones
             document.querySelectorAll(".tab-content").forEach(tab => tab.style.display = "none");
             document.querySelectorAll(".tab-link").forEach(link => link.classList.remove("active"));
+            
+            // Mostramos la pestaña seleccionada
             document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.classList.add("active");
+            
+            // Activamos el botón correspondiente (ya sea por click o por carga de URL)
+            if (evt) {
+                evt.currentTarget.classList.add("active");
+            } else {
+                let btn = document.querySelector(`button[onclick*="${tabName}"]`);
+                if (btn) btn.classList.add("active");
+            }
+            
+            // LA MAGIA: Cambia la URL sin recargar la página (Añade #nombre-pestaña)
+            if (window.history.pushState) {
+                window.history.pushState(null, null, '#' + tabName);
+            } else {
+                window.location.hash = '#' + tabName;
+            }
         }
+
+        // Lector de arranque: Al cargar la web, miramos si alguien ha entrado con un enlace directo (ej: /#simulador)
+        window.addEventListener('DOMContentLoaded', () => {
+            let hash = window.location.hash.substring(1); // Cogemos la palabra después del #
+            if (hash && document.getElementById(hash)) {
+                openTab(null, hash);
+            }
+        });
 
         initFilters();
         updateUI();
