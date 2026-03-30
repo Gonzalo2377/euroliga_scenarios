@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Calculadora Playoffs EuroLeague Ultimate 25/26</title>
-    <meta name="description" content="Simula los Playoffs de la Euroliga, calcula desempates H2H automáticamente y descubre las probabilidades reales de tu equipo con nuestro Oráculo Monte Carlo.">
+    <meta name="description" content="Simulador interactivo de los Playoffs de la Euroliga 25/26. Calcula desempates H2H automáticamente, probabilidades matemáticas para el Top 4, Top 6 y Play-In.">
+    <meta name="keywords" content="euroliga, euroleague, calculadora, simulador, playoffs, play-in, clasificacion, desempates, h2h, baloncesto, predicciones, monte carlo">
     <link rel="canonical" href="https://euroleaguecalculator.online/">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏀</text></svg>">
 
@@ -13,6 +14,34 @@
     <meta property="og:url" content="https://euroleaguecalculator.online/">
     <meta property="og:title" content="Calculadora EuroLeague Ultimate 25/26">
     <meta property="og:description" content="Simula el final de la Euroliga, descubre desempates y mira las probabilidades de Play-In y Top 6 con el Oráculo.">
+    <meta property="og:image" content="https://euroleaguecalculator.online/portada.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://euroleaguecalculator.online/">
+    <meta name="twitter:title" content="Calculadora EuroLeague Ultimate 25/26">
+    <meta name="twitter:description" content="Simula el final de la Euroliga, calcula desempates y mira las probabilidades de Play-In y Top 6 con nuestro simulador Monte Carlo.">
+    <meta name="twitter:image" content="https://euroleaguecalculator.online/portada.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calculadora EuroLeague Ultimate 25/26",
+      "url": "https://euroleaguecalculator.online/",
+      "description": "Simulador interactivo para predecir la clasificación de la EuroLeague, desempates H2H y opciones de Playoffs.",
+      "applicationCategory": "SportsApplication",
+      "operatingSystem": "All"
+    }
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7QJ4NGV13R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7QJ4NGV13R');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421" crossorigin="anonymous"></script>
 
     <style>
         :root {
@@ -647,7 +676,7 @@
         }
 
         function sortTeamsWithH2H(teamsArray) {
-            teamsArray.sort((a, b) => b.wins - a.wins);
+            teamsArray.sort((a, b) => b.wins - a.wins); // 1º Victorias totales
 
             let finalSorted = [];
             let index = 0;
@@ -673,6 +702,7 @@
                             }
                         });
                     });
+                    // 2º Victorias H2H -> 3º +/- del H2H -> 4º +/- General
                     tiedGroup.sort((a, b) => b.h2hWins - a.h2hWins || b.h2hDiff - a.h2hDiff || b.diff - a.diff);
                 }
                 
@@ -739,8 +769,38 @@
             </div>`;
 
             let nextGame = null;
-            schedule.forEach(j => j.games.forEach(g => { if(!nextGame && !g.played && (g.home === teamName || g.away === teamName)) nextGame = g; }));
+            let unplayedGames = 0;
+            schedule.forEach(j => j.games.forEach(g => { 
+                if(!g.played && (g.home === teamName || g.away === teamName)) {
+                    unplayedGames++;
+                    if(!nextGame) nextGame = g; 
+                }
+            }));
             let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
+            
+            // --- NUEVO: LÓGICA DE EXPLICACIONES TOP 1, 4, 6, 10 ---
+            let maxWins = team.initialWins + unplayedGames;
+            let targetText = `<div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:20px;">
+                <h4 style="margin-top:0;">🎯 Opciones Matemáticas y Objetivos</h4>
+                <ul style="margin:0; padding-left:20px; font-size:0.95rem; line-height:1.6;">`;
+                
+            if(maxWins >= 23) targetText += `<li><strong>Top 1 (Liderato):</strong> Opciones vivas. Necesita ganar casi todo y asegurar el H2H con Fener/Olympiacos/Madrid.</li>`;
+            
+            if(team.initialWins >= 21) targetText += `<li><strong>Top 4 (Factor Cancha):</strong> 🟢 Prácticamente asegurado.</li>`;
+            else if(maxWins >= 21) targetText += `<li><strong>Top 4 (Factor Cancha):</strong> Posible. Necesita sumar hasta las 21-22 victorias.</li>`;
+            else targetText += `<li><strong>Top 4 (Factor Cancha):</strong> ❌ Matemáticamente imposible.</li>`;
+            
+            if(team.initialWins >= 20) targetText += `<li><strong>Top 6 (Playoffs Directo):</strong> 🟢 Virtualmente dentro.</li>`;
+            else if(maxWins >= 19) targetText += `<li><strong>Top 6 (Playoffs Directo):</strong> En la pelea. El corte estimado está en 19-20 victorias.</li>`;
+            else targetText += `<li><strong>Top 6 (Playoffs Directo):</strong> ❌ Inalcanzable.</li>`;
+            
+            if(team.initialWins >= 17) targetText += `<li><strong>Top 10 (Play-In):</strong> 🟢 Clasificado de facto.</li>`;
+            else if(maxWins >= 17) targetText += `<li><strong>Top 10 (Play-In):</strong> Al límite. Obligado a ganar todo para rozar las 17 victorias.</li>`;
+            else targetText += `<li><strong>Top 10 (Play-In):</strong> ☠️ Eliminado de la postemporada.</li>`;
+            
+            targetText += `</ul></div>`;
+            html += targetText;
+            // ------------------------------------------------------
 
             html += `
                 <div class="scenario-box">
