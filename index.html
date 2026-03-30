@@ -768,45 +768,61 @@
                 </div>
             </div>`;
 
-            let nextGame = null;
-            let unplayedGames = 0;
-            schedule.forEach(j => j.games.forEach(g => { 
-                if(!g.played && (g.home === teamName || g.away === teamName)) {
-                    unplayedGames++;
-                    if(!nextGame) nextGame = g; 
-                }
-            }));
-            let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
-            
-            // --- NUEVO: LÓGICA DE EXPLICACIONES TOP 1, 4, 6, 10 ---
-            let maxWins = team.initialWins + unplayedGames;
-            let targetText = `<div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:20px;">
-                <h4 style="margin-top:0;">🎯 Opciones Matemáticas y Objetivos</h4>
-                <ul style="margin:0; padding-left:20px; font-size:0.95rem; line-height:1.6;">`;
-                
-            if(maxWins >= 23) targetText += `<li><strong>Top 1 (Liderato):</strong> Opciones vivas. Necesita ganar casi todo y asegurar el H2H con Fener/Olympiacos/Madrid.</li>`;
-            
-            if(team.initialWins >= 21) targetText += `<li><strong>Top 4 (Factor Cancha):</strong> 🟢 Prácticamente asegurado.</li>`;
-            else if(maxWins >= 21) targetText += `<li><strong>Top 4 (Factor Cancha):</strong> Posible. Necesita sumar hasta las 21-22 victorias.</li>`;
-            else targetText += `<li><strong>Top 4 (Factor Cancha):</strong> ❌ Matemáticamente imposible.</li>`;
-            
-            if(team.initialWins >= 20) targetText += `<li><strong>Top 6 (Playoffs Directo):</strong> 🟢 Virtualmente dentro.</li>`;
-            else if(maxWins >= 19) targetText += `<li><strong>Top 6 (Playoffs Directo):</strong> En la pelea. El corte estimado está en 19-20 victorias.</li>`;
-            else targetText += `<li><strong>Top 6 (Playoffs Directo):</strong> ❌ Inalcanzable.</li>`;
-            
-            if(team.initialWins >= 17) targetText += `<li><strong>Top 10 (Play-In):</strong> 🟢 Clasificado de facto.</li>`;
-            else if(maxWins >= 17) targetText += `<li><strong>Top 10 (Play-In):</strong> Al límite. Obligado a ganar todo para rozar las 17 victorias.</li>`;
-            else targetText += `<li><strong>Top 10 (Play-In):</strong> ☠️ Eliminado de la postemporada.</li>`;
-            
-            targetText += `</ul></div>`;
-            html += targetText;
-            // ------------------------------------------------------
+            // --- CAJA VERDE: TEXTOS LITERALES Y ESTÁTICOS ---
+            const teamScenarios = {
+                "Fenerbahçe": "<strong>If Fenerbahçe finishes with the maximum wins (27) and ties for 1st place:</strong><br>• They win the tiebreaker vs Panathinaikos and Hapoel.<br>• They lose it vs Zalgiris and Valencia.<br>• Against teams like Real Madrid or Olympiacos, it depends on point differential.<br>• In multi-team ties, the standings are decided by a mini-league between the tied teams.",
+                "Real Madrid": "<strong>If Real Madrid finishes with the maximum wins (26) and ties for 1st/2nd place:</strong><br>• They win the tiebreaker vs Valencia Basket.<br>• They lose it vs Panathinaikos and Zalgiris Kaunas.<br>• Against Fenerbahçe or Olympiacos, it depends on the point differential of the upcoming games.<br>• In multi-team ties, the standings are decided by a mini-league.",
+                "Olympiacos": "<strong>If Olympiacos finishes with the maximum wins (26) and ties for 1st/2nd place:</strong><br>• They win the tiebreaker vs Panathinaikos.<br>• They lose it vs Valencia Basket.<br>• Against Zalgiris, Real Madrid or Fenerbahçe, it depends on point differential (+/-).<br>• In multi-team ties, the standings are decided by a mini-league.",
+                "Valencia Basket": "<strong>Fighting for Top 4 (Home Court Advantage):</strong><br>• They win the tiebreaker vs Olympiacos and Fenerbahçe.<br>• They lose it vs Real Madrid.<br>• Crucial upcoming games against Zalgiris and Panathinaikos will define their H2H against direct rivals.",
+                "Zalgiris Kaunas": "<strong>If Žalgiris finishes with the maximum wins (24) and ties for Top 4:</strong><br>• They win the tiebreaker vs Fenerbahçe and Hapoel.<br>• They lose it vs Panathinaikos.<br>• Against teams like Real Madrid, Valencia or Olympiacos, it depends on point differential (they win vs Madrid, lose vs Olympiacos).<br>• In multi-team ties, the standings are decided by a mini-league.",
+                "Panathinaikos": "<strong>If Panathinaikos finishes with the maximum wins (24) and ties for Top 4:</strong><br>• They win the tiebreaker vs Real Madrid and Zalgiris Kaunas.<br>• They lose it vs Olympiacos and Fenerbahçe.<br>• They have a strong position in multi-team ties involving Spanish or Lithuanian teams, but suffer against Fener/Oly.",
+                "Hapoel Tel-Aviv": "<strong>Fighting for Top 6 (Direct Playoffs):</strong><br>• They lose the direct tiebreaker against Zalgiris Kaunas.<br>• Need to secure wins in their pending game to avoid dangerous multi-team ties.<br>• Currently holding a solid position to secure at least Play-In.",
+                "Barcelona": "<strong>Fighting for Top 6 (Direct Playoffs):</strong><br>• They win the tiebreaker vs Real Madrid.<br>• They lose it vs Panathinaikos and Hapoel Tel-Aviv.<br>• Must protect their home court to avoid falling into the Play-In tournament.",
+                "Estrella Roja": "<strong>Fighting for Top 8 (Play-In Advantage):</strong><br>• Needs to win most of the remaining games to guarantee a spot.<br>• Every H2H tiebreaker is critical now to stay above Monaco and the chasing pack.",
+                "Mónaco": "<strong>Fighting for Top 8 (Play-In Advantage):</strong><br>• Needs a strong finish to stay in the Play-In zone.<br>• Dependent on direct matchups against other teams in the 17-19 win range.",
+                "Dubai": "<strong>Fighting for Top 10 (Last Play-In Spot):</strong><br>• Tied at 17 wins with Milan and Maccabi.<br>• Must win almost every remaining game to sneak into the Top 10.",
+                "Olimpia Milano": "<strong>Fighting for Top 10 (Last Play-In Spot):</strong><br>• Tied at 17 wins. Margin of error is zero.<br>• H2H against Maccabi and Dubai will be the deciding factor.",
+                "Maccabi Tel Aviv": "<strong>Fighting for Top 10 (Last Play-In Spot):</strong><br>• Has one game in hand (pending vs Hapoel) which gives them a slight edge over Dubai and Milan.<br>• Needs to capitalize on that extra game to secure the 10th spot."
+            };
+
+            let scenarioText = teamScenarios[teamName] || "<strong>Eliminated or virtually impossible to reach Play-In.</strong><br>• Focus is on finishing the season strongly and preparing for the next year.";
 
             html += `
-                <div class="scenario-box">
-                    <h4 style="margin-top:0;">🚀 ${t.sc_next} vs ${opponent}</h4>
-                    <div class="scenario-item">✅ <strong>${t.sc_win_next.replace('{opp}', opponent)}</strong> <span style="color:var(--win); font-weight:bold;">${team.initialWins+1}V</span></div>
-                    <div class="scenario-item">❌ <strong>${t.sc_lose_next.replace('{opp}', opponent)}</strong> <span style="color:var(--loss); font-weight:bold;">${team.initialWins}V</span></div>
+                <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:20px;">
+                    <h4 style="margin-top:0;">🎯 Opciones Matemáticas y Objetivos (J34)</h4>
+                    <p style="margin:0; font-size:0.95rem; line-height:1.6;">${scenarioText}</p>
+                </div>
+            `;
+
+            let nextGame = null;
+            schedule.forEach(j => j.games.forEach(g => { if(!nextGame && !g.played && (g.home === teamName || g.away === teamName)) nextGame = g; }));
+            let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
+
+            // --- CAJA AMARILLA: H2H Y CONDICIONES ---
+            let h2hInfo = "";
+            if (opponent !== "?") {
+                let stats = calculateH2HStats(teamName, opponent);
+                let diffStr = stats.diffA > 0 ? `+${stats.diffA}` : stats.diffA;
+                
+                h2hInfo = `<div style="margin-bottom:10px; font-size:1rem;">H2H vs ${opponent}: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280;">(${diffStr})</span></div>`;
+                
+                // Si solo han jugado 1 partido, calculamos la diferencia requerida
+                if (stats.played === 1) {
+                    if (stats.diffA > 0) {
+                        h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>* Gana el desempate si gana el partido, o si pierde por ${stats.diffA} puntos o menos.</em></div>`;
+                    } else if (stats.diffA < 0) {
+                        h2hInfo += `<div style="font-size:0.9rem; color:#d97706; margin-bottom:10px;"><em>* Necesita ganar por al menos ${Math.abs(stats.diffA) + 1} puntos para ganar el desempate.</em></div>`;
+                    }
+                }
+            }
+
+            html += `
+                <div class="scenario-box" style="background:#fffbeb; border-color:#fde68a;">
+                    <h4 style="margin-top:0;">🚀 Próximo partido clave vs ${opponent}</h4>
+                    ${h2hInfo}
+                    <hr style="border:0; border-top:1px solid #fde68a; margin:10px 0;">
+                    <div class="scenario-item">✅ <strong>Si gana:</strong> <span style="color:var(--win); font-weight:bold;">${team.initialWins+1}V</span></div>
+                    <div class="scenario-item">❌ <strong>Si pierde:</strong> <span style="color:var(--loss); font-weight:bold;">${team.initialWins}V</span></div>
                 </div>
             `;
 
@@ -915,17 +931,39 @@
             getLiveTeams().forEach(te => { if(!grouped[te.wins]) grouped[te.wins] = []; grouped[te.wins].push(te); });
             let winKeys = Object.keys(grouped).sort((a,b) => b - a);
             let hasTies = false;
+            
             winKeys.forEach(wins => {
                 let tiedTeams = grouped[wins];
                 if(tiedTeams.length > 1) {
                     hasTies = true;
-                    let html = `<div class="matrix-container"><h3>${t.tied_at} ${wins} ${t.victories}</h3><table><tr><th>${t.team}</th>`;
-                    tiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center">${te.flag} <img src="${getLogo(te.name)}" class="team-logo"></div></th>`; });
-                    html += `<th class="total-h2h-col">${t.total_vd}</th></tr>`;
-                    tiedTeams.forEach(tRow => {
-                        html += `<tr><td><div class="team-cell">${tRow.flag} <img src="${getLogo(tRow.name)}" class="team-logo"> <strong>${tRow.name}</strong></div></td>`;
-                        let totalWins = 0, totalLosses = 0;
+                    
+                    // 1. Calcular mini-liga y ORDENAR por Total V-D
+                    let miniLeague = tiedTeams.map(tRow => {
+                        let totalW = 0, totalL = 0;
                         tiedTeams.forEach(tCol => {
+                            if(tRow.id !== tCol.id) {
+                                let s = calculateH2HStats(tRow.name, tCol.name);
+                                totalW += s.winsA; totalL += s.winsB;
+                            }
+                        });
+                        return { team: tRow, w: totalW, l: totalL };
+                    });
+                    
+                    // Ordenar de más victorias a menos
+                    miniLeague.sort((a, b) => b.w - a.w); 
+                    let sortedTiedTeams = miniLeague.map(m => m.team);
+
+                    let html = `<div class="matrix-container"><h3>${t.tied_at} ${wins} ${t.victories}</h3><table><tr><th>${t.team}</th>`;
+                    
+                    // Cabeceras ordenadas
+                    sortedTiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.75rem; color:#9ca3af; margin-right:4px;">${te.flag}</span> <img src="${getLogo(te.name)}" class="team-logo" style="width:20px;height:20px;margin-right:2px;"> <span style="font-size:0.8rem;">${te.id}</span></div></th>`; });
+                    html += `<th class="total-h2h-col">${t.total_vd}</th></tr>`;
+                    
+                    // Filas ordenadas
+                    sortedTiedTeams.forEach(tRow => {
+                        html += `<tr><td><div class="team-cell"><span style="font-size:0.8rem; color:#9ca3af;">${tRow.flag}</span> <img src="${getLogo(tRow.name)}" class="team-logo"> <strong>${tRow.name}</strong></div></td>`;
+                        let totalWins = 0, totalLosses = 0;
+                        sortedTiedTeams.forEach(tCol => {
                             if(tRow.id === tCol.id) html += `<td style="background:#e5e7eb;">-</td>`;
                             else {
                                 let stats = calculateH2HStats(tRow.name, tCol.name);
