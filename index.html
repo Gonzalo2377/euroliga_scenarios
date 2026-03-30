@@ -856,7 +856,43 @@
             let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
 
             // ==========================================
-            // DICCIONARIO MANUAL DE ESTADOS (¡Lo editas tú cada jornada!)
+            // LÓGICA INTELIGENTE H2H PARA EL PRÓXIMO PARTIDO
+            // ==========================================
+            let winExtra = "Mejora tu posición y SOS.";
+            let loseExtra = "Te obliga a ganar casi todo lo demás.";
+
+            if (opponent !== "?") {
+                // Buscamos si ya han jugado en la primera vuelta
+                let pastEncounters = pastMatches.filter(m => 
+                    (m.home === teamName && m.away === opponent) || 
+                    (m.home === opponent && m.away === teamName)
+                );
+
+                if (pastEncounters.length === 1) {
+                    let prev = pastEncounters[0];
+                    let myScore = prev.home === teamName ? prev.scoreH : prev.scoreA;
+                    let oppScore = prev.home === opponent ? prev.scoreH : prev.scoreA;
+                    let diff = myScore - oppScore;
+
+                    let oppInfo = teamsBase.find(tb => tb.name === opponent);
+                    let isDirectRival = oppInfo ? Math.abs(team.initialWins - oppInfo.initialWins) <= 2 : false;
+                    let rivalTag = isDirectRival ? "<span style='background:#fef08a; padding:2px 5px; border-radius:4px; font-size:0.8rem; margin-right:5px;'>⚠️ RIVAL DIRECTO</span> " : "";
+
+                    if (diff > 0) {
+                        // Ganamos en la ida
+                        winExtra = `${rivalTag}Aseguras el desempate (H2H) al barrer la serie 2-0.`;
+                        loseExtra = `${rivalTag}Si pierdes por menos de <strong>${diff} puntos</strong>, salvas el desempate (H2H).`;
+                    } else if (diff < 0) {
+                        // Perdimos en la ida
+                        let absDiff = Math.abs(diff);
+                        winExtra = `${rivalTag}Necesitas ganar por más de <strong>${absDiff} puntos</strong> para robarle el desempate (H2H).`;
+                        loseExtra = `${rivalTag}Pierdes el desempate (H2H) directo al caer 0-2 en la serie.`;
+                    }
+                }
+            }
+
+            // ==========================================
+            // DICCIONARIO MANUAL DE ESTADOS
             // ==========================================
             const statusText = {
                 "Fenerbahçe": {
@@ -913,7 +949,6 @@
                 }
             };
 
-            // Si un equipo no está en la lista de arriba, significa que está completamente frito:
             const defaultEliminated = {
                 top6: "<span style='color:var(--loss); font-weight:bold;'>❌ Matemáticamente imposible</span>",
                 playin: "<span style='color:var(--loss); font-weight:bold;'>☠️ Eliminado matemáticamente</span>"
@@ -924,8 +959,14 @@
             html += `
                 <div class="scenario-box">
                     <h4 style="margin-top:0;">🚀 ${t.sc_next}</h4>
-                    <div class="scenario-item">✅ <strong>${t.sc_win_next.replace('{opp}', opponent)}</strong> <span style="color:var(--win); font-weight:bold;">${team.initialWins+1}V</span>. Mejora tu posición y SOS.</div>
-                    <div class="scenario-item">❌ <strong>${t.sc_lose_next.replace('{opp}', opponent)}</strong> <span style="color:var(--loss); font-weight:bold;">${team.initialWins}V</span>. Te obliga a ganar casi todo lo demás.</div>
+                    <div class="scenario-item" style="align-items:flex-start;">
+                        <span style="margin-top:2px;">✅</span> 
+                        <div><strong>${t.sc_win_next.replace('{opp}', opponent)}</strong> <span style="color:var(--win); font-weight:bold;">${team.initialWins+1}V</span>. <br> ${winExtra}</div>
+                    </div>
+                    <div class="scenario-item" style="align-items:flex-start; margin-top:10px;">
+                        <span style="margin-top:2px;">❌</span> 
+                        <div><strong>${t.sc_lose_next.replace('{opp}', opponent)}</strong> <span style="color:var(--loss); font-weight:bold;">${team.initialWins}V</span>. <br> ${loseExtra}</div>
+                    </div>
                 </div>
                 <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0;">
                     <h4 style="margin-top:0;">🎯 Ruta al objetivo actual</h4>
