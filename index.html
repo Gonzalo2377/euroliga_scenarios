@@ -429,11 +429,6 @@
 
     </div>
 
-    <div style="text-align: center; padding: 20px; color: #6b7280; font-size: 0.85rem; margin-top: 40px; border-top: 1px solid #e5e7eb;">
-        <strong>Euroleague Calculator & Playoff Simulator</strong> - The ultimate tool to simulate the EuroLeague Basketball standings, calculate tiebreakers, and predict Top 6 and Play-In probabilities. <br>
-        <em>Calculadora Euroliga - Simulador de Playoffs y posiciones.</em>
-    </div>
-
     <script>
         const i18n = {
             es: {
@@ -736,11 +731,52 @@
             });
             return currentTeams;
         }
+// 1. NUEVO MOTOR DE DESEMPATES H2H PARA EL SIMULADOR
+        function sortTeamsWithH2H(teamsArray) {
+            teamsArray.sort((a, b) => b.wins - a.wins); // Orden principal por victorias
 
+            let finalSorted = [];
+            let index = 0;
+
+            while (index < teamsArray.length) {
+                let currentWins = teamsArray[index].wins;
+                let tiedGroup = [];
+
+                // Agrupar equipos empatados a victorias
+                while (index < teamsArray.length && teamsArray[index].wins === currentWins) {
+                    tiedGroup.push(teamsArray[index]);
+                    index++;
+                }
+
+                if (tiedGroup.length > 1) {
+                    // Calcular victorias y DIFERENCIA DE PUNTOS H2H
+                    tiedGroup.forEach(t => {
+                        t.h2hWins = 0;
+                        t.h2hDiff = 0;
+                        tiedGroup.forEach(other => {
+                            if (t.name !== other.name) {
+                                let stats = calculateH2HStats(t.name, other.name);
+                                t.h2hWins += stats.winsA;
+                                t.h2hDiff += stats.diffA;
+                            }
+                        });
+                    });
+                    // Regla Euroliga: 1º Victorias H2H | 2º Puntos H2H | 3º Puntos Generales
+                    tiedGroup.sort((a, b) => b.h2hWins - a.h2hWins || b.h2hDiff - a.h2hDiff || b.diff - a.diff);
+                }
+                
+                finalSorted.push(...tiedGroup);
+            }
+            return finalSorted;
+        }
+
+        // 2. FUNCIÓN DE TABLA ACTUALIZADA
         function renderStandings() {
             let teams = getLiveTeams();
             if (!teams || teams.length === 0) return;
-            teams.sort((a, b) => b.wins - a.wins || b.diff - a.diff);
+            
+            // ¡AQUÍ APLICAMOS LA MAGIA DEL DESEMPATE!
+            teams = sortTeamsWithH2H(teams); 
             
             const tbodyMain = document.getElementById("standings-body");
             const tbodySim = document.getElementById("sim-standings-body");
@@ -907,27 +943,31 @@
         }
 
         function calculateH2HStats(teamA, teamB) {
-            let winsA = 0; let winsB = 0; let played = 0;
+            let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
             pastMatches.forEach(m => {
-                if (m.home === teamA && m.away === teamB) { played++; if(m.scoreH > m.scoreA) winsA++; else winsB++; }
-                if (m.home === teamB && m.away === teamA) { played++; if(m.scoreH > m.scoreA) winsB++; else winsA++; }
+                if (m.home === teamA && m.away === teamB) { played++; if(m.scoreH > m.scoreA) winsA++; else winsB++; diffA += (m.scoreH - m.scoreA); }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.scoreH > m.scoreA) winsB++; else winsA++; diffA += (m.scoreA - m.scoreH); }
             });
             Object.values(simulatedPicks).forEach(m => {
                 if (m.home === teamA && m.away === teamB) { played++; if(m.winner === teamA) winsA++; else winsB++; }
                 if (m.home === teamB && m.away === teamA) { played++; if(m.winner === teamB) winsB++; else winsA++; }
             });
-            return { winsA, winsB, played };
+            return { winsA, winsB, played, diffA };
         }
 
         function renderMatrices() {
             const container = document.getElementById("matrices-container");
             const t = i18n[currentLang] || i18n['es'];
             container.innerHTML = "";
+            
             let teams = getLiveTeams();
+            teams = sortTeamsWithH2H(teams); // ¡La pieza clave que ordena la matriz visualmente!
+            
             let grouped = {};
             teams.forEach(te => { if(!grouped[te.wins]) grouped[te.wins] = []; grouped[te.wins].push(te); });
             let winKeys = Object.keys(grouped).sort((a,b) => b - a);
             let hasTies = false;
+            
             winKeys.forEach(wins => {
                 let tiedTeams = grouped[wins];
                 if(tiedTeams.length > 1) {
