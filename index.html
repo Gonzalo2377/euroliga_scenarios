@@ -312,6 +312,7 @@
             #myteam-dashboard > div:first-child { flex-direction: column; text-align: center; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -1175,19 +1176,99 @@
         }
 
         function renderAnalysis() {
-            const container = document.getElementById("analysis-container"); // Asegúrate de que el div de tu pestaña Análisis tenga este ID
+            const container = document.getElementById("analysis-container");
             if(!container) return;
             
             const t = i18n[currentLang] || i18n['es'];
             
             container.innerHTML = `
                 <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">
-                    ${t.analysis_title}
+                    📊 ${t.analysis_title || 'Análisis Avanzado'}
                 </h2>
-                <div style="font-size: 1.1rem; line-height: 1.8; color: var(--text);">
-                    ${t.analysis_text}
+                <div style="font-size: 1.1rem; line-height: 1.8; color: var(--text); margin-bottom: 20px;">
+                    Descubre el estado de forma real de los equipos. El <strong>Net Rating</strong> muestra la diferencia media de puntos a favor y en contra por partido.
+                </div>
+                
+                <div style="position: relative; height: 600px; width: 100%; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <canvas id="netRatingChart"></canvas>
                 </div>
             `;
+            
+            // Le damos 100ms al navegador para que cree el HTML antes de dibujar encima
+            setTimeout(drawNetRatingChart, 100); 
+        }
+        let netChartInstance = null; // Guardamos el gráfico para que no se duplique al cambiar de idioma
+
+        function drawNetRatingChart() {
+            const ctx = document.getElementById('netRatingChart');
+            if(!ctx) return;
+
+            // 1. Recopilar los puntos a favor (pf) y en contra (pa) de todos los partidos jugados
+            let stats = {};
+            teamsBase.forEach(t => { stats[t.name] = { played: 0, pf: 0, pa: 0 }; });
+
+            pastMatches.forEach(m => {
+                if(stats[m.home]) { stats[m.home].played++; stats[m.home].pf += m.scoreH; stats[m.home].pa += m.scoreA; }
+                if(stats[m.away]) { stats[m.away].played++; stats[m.away].pf += m.scoreA; stats[m.away].pa += m.scoreH; }
+            });
+
+            // 2. Calcular el Net Rating (Media de diferencia de puntos por partido)
+            let chartData = [];
+            Object.keys(stats).forEach(team => {
+                let s = stats[team];
+                let netRating = s.played > 0 ? ((s.pf - s.pa) / s.played).toFixed(2) : 0;
+                chartData.push({ name: team, net: parseFloat(netRating) });
+            });
+
+            // 3. Ordenar del mejor al peor
+            chartData.sort((a, b) => b.net - a.net);
+
+            let labels = chartData.map(d => d.name);
+            let dataValues = chartData.map(d => d.net);
+            
+            // Magia visual: Verde para positivos, Rojo para negativos
+            let bgColors = dataValues.map(v => v > 0 ? 'rgba(16, 185, 129, 0.8)' : 'rgba(239, 68, 68, 0.8)');
+            let borderColors = dataValues.map(v => v > 0 ? 'rgb(16, 185, 129)' : 'rgb(239, 68, 68)');
+
+            // Si ya había un gráfico dibujado (al cambiar de pestaña), lo borramos antes de repintar
+            if(netChartInstance) netChartInstance.destroy();
+
+            // 4. Dibujar el gráfico usando Chart.js
+            netChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Net Rating (Diferencia Media de Puntos)',
+                        data: dataValues,
+                        backgroundColor: bgColors,
+                        borderColor: borderColors,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Barras horizontales
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            callbacks: {
+                                label: function(context) {
+                                    let val = context.raw;
+                                    return ' Net Rating: ' + (val > 0 ? '+' + val : val) + ' pts';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: '#f3f4f6' } },
+                        y: { ticks: { font: { weight: 'bold', size: 12 } } }
+                    }
+                }
+            });
         }
 
         function initFilters() {
