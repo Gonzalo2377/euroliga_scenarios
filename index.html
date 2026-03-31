@@ -722,44 +722,52 @@
             let homeTeam = teamsBase.find(t => t.name === homeTeamName);
             let awayTeam = teamsBase.find(t => t.name === awayTeamName);
             
-            // 1. Porcentaje de victorias actual (Peso principal)
-            let homeGames = homeTeam.initialWins + homeTeam.initialLosses;
-            let awayGames = awayTeam.initialWins + awayTeam.initialLosses;
-            let homeBasePct = homeGames > 0 ? (homeTeam.initialWins / homeGames) : 0.5;
-            let awayBasePct = awayGames > 0 ? (awayTeam.initialWins / awayGames) : 0.5;
+            // 1. Porcentaje base de victorias
+            let hGames = homeTeam.initialWins + homeTeam.initialLosses;
+            let aGames = awayTeam.initialWins + awayTeam.initialLosses;
+            let hPct = hGames > 0 ? (homeTeam.initialWins / hGames) : 0.5;
+            let aPct = aGames > 0 ? (awayTeam.initialWins / aGames) : 0.5;
             
-            // 2. Racha reciente (últimos 5 partidos)
-            function getFormScore(tName) {
-                let matches = pastMatches.filter(m => m.home === tName || m.away === tName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
-                if (matches.length === 0) return 0.5;
-                let wins = matches.filter(m => (m.home === tName && m.scoreH > m.scoreA) || (m.away === tName && m.scoreA > m.scoreH)).length;
-                return wins / matches.length; 
+            // 2. Racha reciente (0 a 1)
+            function getForm(tName) {
+                let m = pastMatches.filter(x => x.home === tName || x.away === tName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
+                if (!m.length) return 0.5;
+                let w = m.filter(x => (x.home === tName && x.scoreH > x.scoreA) || (x.away === tName && x.scoreA > x.scoreH)).length;
+                return w / m.length; 
             }
             
-            // 3. Fórmula Ponderada: 70% Nivel General + 30% Racha + 12% Factor Cancha
-            let homeRaw = (homeBasePct * 0.70) + (getFormScore(homeTeamName) * 0.30) + 0.12;
-            let awayRaw = (awayBasePct * 0.70) + (getFormScore(awayTeamName) * 0.30);
-            
-            // Normalizamos para que sume exactamente 100%
-            let totalRaw = homeRaw + awayRaw;
-            let homeProb = homeRaw / totalRaw;
-            
-            let homeInt = Math.round(homeProb * 100);
-            return { home: homeInt, away: 100 - homeInt, homeDecimal: homeProb };
-        }
-        function calculateH2HStats(teamA, teamB) {
-            let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
-            pastMatches.forEach(m => {
-                if (m.home === teamA && m.away === teamB) { played++; if(m.scoreH > m.scoreA) winsA++; else winsB++; diffA += (m.scoreH - m.scoreA); }
-                if (m.home === teamB && m.away === teamA) { played++; if(m.scoreH > m.scoreA) winsB++; else winsA++; diffA += (m.scoreA - m.scoreH); }
-            });
-            Object.values(simulatedPicks).forEach(m => {
-                if (m.home === teamA && m.away === teamB) { played++; if(m.winner === teamA) winsA++; else winsB++; }
-                if (m.home === teamB && m.away === teamA) { played++; if(m.winner === teamB) winsB++; else winsA++; }
-            });
-            return { winsA, winsB, played, diffA };
-        }
+            // 3. Poder Real (80% temporada, 20% racha)
+            let hPower = (hPct * 0.8) + (getForm(homeTeamName) * 0.2);
+            let aPower = (aPct * 0.8) + (getForm(awayTeamName) * 0.2);
 
+            hPower = Math.max(0.05, Math.min(0.95, hPower));
+            aPower = Math.max(0.05, Math.min(0.95, aPower));
+            
+            // 4. Factor Cancha (+7% al local)
+            hPower = Math.min(0.95, hPower + 0.07); 
+
+            // 5. Fórmula Log5 Avanzada
+            let probHome = (hPower * (1 - aPower)) / ((hPower * (1 - aPower)) + (aPower * (1 - hPower)));
+            
+            // 6. FACTOR PARTIDO DE IDA (H2H)
+            // Usamos la función que ya tienes para ver cómo quedaron en la 1ª vuelta
+            let h2h = calculateH2HStats(homeTeamName, awayTeamName);
+            if (h2h.played > 0) {
+                if (h2h.winsA > h2h.winsB) {
+                    // Si el local ganó en la ida, le sumamos un 5% de confianza
+                    probHome += 0.05;
+                } else if (h2h.winsB > h2h.winsA) {
+                    // Si el visitante ganó en la ida, le restamos un 5% al local
+                    probHome -= 0.05;
+                }
+            }
+
+            // Limitamos para que nunca pase del 99% ni baje del 1% (en el basket todo es posible)
+            probHome = Math.max(0.01, Math.min(0.99, probHome));
+            
+            let homeInt = Math.round(probHome * 100);
+            return { home: homeInt, away: 100 - homeInt, homeDecimal: probHome };
+        }
         function sortTeamsWithH2H(teamsArray) {
             teamsArray.sort((a, b) => b.wins - a.wins); // 1º Victorias totales
 
