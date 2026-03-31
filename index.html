@@ -718,6 +718,18 @@
             });
             return currentTeams;
         }
+        function calculateH2HStats(teamA, teamB) {
+            let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
+            pastMatches.forEach(m => {
+                if (m.home === teamA && m.away === teamB) { played++; if(m.scoreH > m.scoreA) winsA++; else winsB++; diffA += (m.scoreH - m.scoreA); }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.scoreH > m.scoreA) winsB++; else winsA++; diffA += (m.scoreA - m.scoreH); }
+            });
+            Object.values(simulatedPicks).forEach(m => {
+                if (m.home === teamA && m.away === teamB) { played++; if(m.winner === teamA) winsA++; else winsB++; }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.winner === teamB) winsB++; else winsA++; }
+            });
+            return { winsA, winsB, played, diffA };
+        }
         function calculateWinOdds(homeTeamName, awayTeamName) {
             let homeTeam = teamsBase.find(t => t.name === homeTeamName);
             let awayTeam = teamsBase.find(t => t.name === awayTeamName);
