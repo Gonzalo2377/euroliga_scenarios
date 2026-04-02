@@ -568,34 +568,7 @@
             { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 26, diff: -250 }
         ];
 
-        function getLogo(teamName) {
-            // Ahora la web buscará las imágenes locales que has subido a tu servidor
-            const logos = {
-                "Fenerbahçe": "fenerbahce.png",
-                "Real Madrid": "real_madrid.png",
-                "Olympiacos": "olympiacos.png",
-                "Valencia Basket": "valencia.png",
-                "Zalgiris Kaunas": "zalgiris.png",
-                "Panathinaikos": "panathinaikos.png",
-                "Hapoel Tel-Aviv": "hapoel.png",
-                "Barcelona": "barcelona.png",
-                "Monaco": "monaco.png",
-                "Crvena Zvezda": "zvezda.png",
-                "Dubai": "dubai.png",
-                "Olimpia Milano": "milano.png",
-                "Maccabi Tel Aviv": "maccabi.png",
-                "Anadolu Efes": "efes.png",
-                "Virtus Bolonia": "virtus.png", 
-                "Partizan": "partizan.png",
-                "Bayern": "bayern.png",
-                "Paris": "paris.png",
-                "Baskonia": "baskonia.png",
-                "Asvel Basket": "asvel.png"
-            };
-
-            // Si encuentra el equipo, devuelve tu imagen. Si falla, carga tu logo general por defecto.
-            return logos[teamName] || "logo.png";
-        }
+        
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
         const rawResultsArray = [
@@ -867,7 +840,7 @@
                 
                 tbodyMain.innerHTML += `<tr>
                     <td class="${rowClass}"><strong>${index + 1}</strong></td>
-                    <td><div class="team-cell"><span>${team.flag}</span><img src="${getLogo(team.name)}" class="team-logo">${team.name}</div></td>
+                    <td><div class="team-cell"><span>${team.flag}</span></div></td>
                     <td>${games}</td><td><strong>${team.wins}</strong></td><td>${team.losses}</td><td>${pct}</td>
                     <td>${getFormHTML(team.name)}</td>
                     <td>${team.diff > 0 ? '+' : ''}${team.diff}</td>
@@ -875,7 +848,7 @@
                     <td style="font-weight:bold; font-family:monospace; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
                 
-                tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${team.name}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
+                tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"></div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
             });
         }
 
@@ -928,7 +901,6 @@
             const ui = currentLang === 'es' ? localUI['es'] : localUI['en'];
 
             let html = `<div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
-                <img src="${getLogo(teamName)}" style="width:60px; height:60px; border-radius:50%;">
                 <div>
                     <h3 style="margin:0; font-size:1.8rem; color:var(--primary);">${teamName} ${team.flag}</h3>
                     <p style="margin:0; font-weight:bold;">${team.initialWins} ${t.w} - ${team.initialLosses} ${t.l}</p>
@@ -1028,7 +1000,7 @@
                 let asterisco = stats.played < 2 ? '*' : ''; 
                 
                 html += `<div class="rival-row">
-                    <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${rival.name}</div>
+                    <div class="team-cell"><strong>${rival.initialWins}V</strong></div>
                     <div>H2H: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280; font-size:0.9rem;">(${diffStr}${asterisco})</span></div>
                 </div>`;
             });
@@ -1073,7 +1045,7 @@
                 tbody.innerHTML = "";
                 sortedTeams.forEach(team => {
                     let maxVal = Math.max(...tRes[team].positions); 
-                    let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
+                    let tr = `<tr><td style="text-align:left;"><div class="team-cell"><strong>${getTeamAbrev(team)}</strong></div></td>`;
                     for(let i=0; i<20; i++) {
                         let pct = Math.round((tRes[team].positions[i] / iterations) * 100);
                         let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0);
@@ -1167,12 +1139,12 @@
                     let html = `<div class="matrix-container"><h3>${t.tied_at} ${wins} ${t.victories}</h3><table><tr><th>${t.team}</th>`;
                     
                     // Cabeceras ordenadas
-                    sortedTiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.75rem; color:#9ca3af; margin-right:4px;">${te.flag}</span> <img src="${getLogo(te.name)}" class="team-logo" style="width:20px;height:20px;margin-right:2px;"> <span style="font-size:0.8rem;">${te.id}</span></div></th>`; });
+                    sortedTiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.75rem; color:#9ca3af; margin-right:4px;">${te.flag}</span></div></th>`; });
                     html += `<th class="total-h2h-col">${t.total_vd}</th></tr>`;
                     
                     // Filas ordenadas
                     sortedTiedTeams.forEach(tRow => {
-                        html += `<tr><td><div class="team-cell"><span style="font-size:0.8rem; color:#9ca3af;">${tRow.flag}</span> <img src="${getLogo(tRow.name)}" class="team-logo"> <strong>${tRow.name}</strong></div></td>`;
+                        html += `<tr><td><div class="team-cell"><span style="font-size:0.8rem; color:#9ca3af;">${tRow.flag}</span></div></td>`;
                         let totalWins = 0, totalLosses = 0;
                         sortedTiedTeams.forEach(tCol => {
                             if(tRow.id === tCol.id) html += `<td style="background:#e5e7eb;">-</td>`;
