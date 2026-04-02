@@ -14,6 +14,7 @@
     <meta property="og:title" content="Calculadora EuroLeague Ultimate 25/26">
     <meta property="og:description" content="Simula el final de la Euroliga, descubre desempates y mira las probabilidades de Play-In y Top 6 con el Oráculo.">
     <meta property="og:image" content="https://euroleaguecalculator.online/portada.png">
+
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://euroleaguecalculator.online/">
     <meta name="twitter:title" content="Calculadora EuroLeague Ultimate 25/26">
@@ -568,7 +569,34 @@
             { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 26, diff: -250 }
         ];
 
-        
+        function getLogo(teamName) {
+            // Ahora la web buscará las imágenes locales que has subido a tu servidor
+            const logos = {
+                "Fenerbahçe": "fenerbahce.png",
+                "Real Madrid": "real_madrid.png",
+                "Olympiacos": "olympiacos.png",
+                "Valencia Basket": "valencia.png",
+                "Zalgiris Kaunas": "zalgiris.png",
+                "Panathinaikos": "panathinaikos.png",
+                "Hapoel Tel-Aviv": "hapoel.png",
+                "Barcelona": "barcelona.png",
+                "Monaco": "monaco.png",
+                "Crvena Zvezda": "zvezda.png",
+                "Dubai": "dubai.png",
+                "Olimpia Milano": "milano.png",
+                "Maccabi Tel Aviv": "maccabi.png",
+                "Anadolu Efes": "efes.png",
+                "Virtus Bolonia": "virtus.png", 
+                "Partizan": "partizan.png",
+                "Bayern": "bayern.png",
+                "Paris": "paris.png",
+                "Baskonia": "baskonia.png",
+                "Asvel Basket": "asvel.png"
+            };
+
+            // Si encuentra el equipo, devuelve tu imagen. Si falla, carga tu logo general por defecto.
+            return logos[teamName] || "logo.png";
+        }
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
         const rawResultsArray = [
@@ -840,7 +868,7 @@
                 
                 tbodyMain.innerHTML += `<tr>
                     <td class="${rowClass}"><strong>${index + 1}</strong></td>
-                    <td><div class="team-cell"><span style="margin-right:6px; font-size:1.1em;">${team.flag}</span> <strong>${team.name}</strong></div></td>
+                    <td><div class="team-cell"><span>${team.flag}</span><img src="${getLogo(team.name)}" class="team-logo">${team.name}</div></td>
                     <td>${games}</td><td><strong>${team.wins}</strong></td><td>${team.losses}</td><td>${pct}</td>
                     <td>${getFormHTML(team.name)}</td>
                     <td>${team.diff > 0 ? '+' : ''}${team.diff}</td>
@@ -848,11 +876,7 @@
                     <td style="font-weight:bold; font-family:monospace; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
                 
-                tbodySim.innerHTML += `<tr>
-                    <td class="${rowClass}"><strong>${index + 1}</strong></td>
-                    <td><div class="team-cell"><span style="margin-right:6px; font-size:1.1em;">${team.flag}</span> <strong>${team.name}</strong></div></td>
-                    <td><strong>${team.wins}</strong></td><td>${team.losses}</td>
-                </tr>`;
+                tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${team.name}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
             });
         }
 
@@ -861,8 +885,8 @@
             schedule.forEach(j => {
                 j.games.forEach(g => {
                     if(!g.played) {
-                        if (g.home === teamName) html += `<span class="game-badge badge-home" style="margin-right:4px;">vs ${g.away}</span>`;
-                        if (g.away === teamName) html += `<span class="game-badge badge-away" style="margin-right:4px;">@ ${g.home}</span>`;
+                        if (g.home === teamName) html += `<span class="game-badge badge-home">vs ${getTeamAbrev(g.away)}</span>`;
+                        if (g.away === teamName) html += `<span class="game-badge badge-away">@ ${getTeamAbrev(g.home)}</span>`;
                     }
                 });
             });
@@ -905,6 +929,7 @@
             const ui = currentLang === 'es' ? localUI['es'] : localUI['en'];
 
             let html = `<div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
+                <img src="${getLogo(teamName)}" style="width:60px; height:60px; border-radius:50%;">
                 <div>
                     <h3 style="margin:0; font-size:1.8rem; color:var(--primary);">${teamName} ${team.flag}</h3>
                     <p style="margin:0; font-weight:bold;">${team.initialWins} ${t.w} - ${team.initialLosses} ${t.l}</p>
@@ -1004,10 +1029,12 @@
                 let asterisco = stats.played < 2 ? '*' : ''; 
                 
                 html += `<div class="rival-row">
-                    <div class="team-cell"><strong>${rival.initialWins}V</strong> <span style="margin-left:8px;">${rival.flag} ${rival.name}</span></div>
+                    <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${rival.name}</div>
                     <div>H2H: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280; font-size:0.9rem;">(${diffStr}${asterisco})</span></div>
                 </div>`;
             });
+            dashboard.innerHTML = html; dashboard.style.display = "block";
+        }
 
         function runProbabilities() {
             document.getElementById('prob-loading').style.display = 'block';
@@ -1047,8 +1074,7 @@
                 tbody.innerHTML = "";
                 sortedTeams.forEach(team => {
                     let maxVal = Math.max(...tRes[team].positions); 
-                    let teamData = teamsBase.find(t => t.name === team); // Buscamos los datos para sacar la bandera
-                    let tr = `<tr><td style="text-align:left;"><div class="team-cell"><span style="margin-right:6px;">${teamData.flag}</span> <strong>${team}</strong></div></td>`;
+                    let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
                     for(let i=0; i<20; i++) {
                         let pct = Math.round((tRes[team].positions[i] / iterations) * 100);
                         let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0);
@@ -1142,12 +1168,12 @@
                     let html = `<div class="matrix-container"><h3>${t.tied_at} ${wins} ${t.victories}</h3><table><tr><th>${t.team}</th>`;
                     
                     // Cabeceras ordenadas
-                    sortedTiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.85rem; margin-right:4px;">${te.flag}</span> ${getTeamAbrev(te.name)}</div></th>`; });
+                    sortedTiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.75rem; color:#9ca3af; margin-right:4px;">${te.flag}</span> <img src="${getLogo(te.name)}" class="team-logo" style="width:20px;height:20px;margin-right:2px;"> <span style="font-size:0.8rem;">${te.id}</span></div></th>`; });
                     html += `<th class="total-h2h-col">${t.total_vd}</th></tr>`;
                     
                     // Filas ordenadas
                     sortedTiedTeams.forEach(tRow => {
-                        html += `<tr><td><div class="team-cell"><span style="font-size:0.9rem; margin-right:6px;">${tRow.flag}</span> <strong>${tRow.name}</strong></div></td>`;
+                        html += `<tr><td><div class="team-cell"><span style="font-size:0.8rem; color:#9ca3af;">${tRow.flag}</span> <img src="${getLogo(tRow.name)}" class="team-logo"> <strong>${tRow.name}</strong></div></td>`;
                         let totalWins = 0, totalLosses = 0;
                         sortedTiedTeams.forEach(tCol => {
                             if(tRow.id === tCol.id) html += `<td style="background:#e5e7eb;">-</td>`;
@@ -1335,30 +1361,12 @@
         initFilters();
         updateUI();
     </script>
-    <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; line-height: 1.6; color: #374151;">
-    
-    <h2 style="color: #1f2937; margin-bottom: 20px; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px;">
-        ¿Cómo funciona la Calculadora de la EuroLeague?
-    </h2>
+    <div style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px; color: #374151; font-size: 0.95rem; line-height: 1.6; max-width: 1200px; margin-left: auto; margin-right: auto;">
+        <h3 style="color: #1f2937; border-bottom: 2px solid #d1d5db; padding-bottom: 5px;">¿Cómo funciona la Calculadora de la EuroLeague?</h3>
+        <p>Nuestra <strong>Calculadora y Simulador de la EuroLeague</strong> es una herramienta matemática avanzada diseñada para predecir los escenarios de Playoffs y Play-In. Utilizando el historial de enfrentamientos directos (H2H), reglas oficiales de desempate y estadísticas de la temporada actual, generamos las clasificaciones en tiempo real.</p>
+        <p>El motor predictivo incluye un modelo de simulación <strong>Monte Carlo</strong>. Al ejecutar 2.000 simulaciones de la temporada regular, el algoritmo procesa el estado de forma de los equipos (últimos 5 partidos), el factor cancha local y el porcentaje de victorias ponderado mediante la fórmula Log5. Esto nos permite ofrecer probabilidades estadísticas precisas sobre qué equipos alcanzarán el codiciado Top 6, quiénes caerán al Play-In y quiénes quedarán eliminados.</p>
+    </div>
 
-    <p style="margin-bottom: 15px;">
-        Nuestra <strong>Calculadora y Simulador de la EuroLeague</strong> es una herramienta matemática avanzada diseñada para predecir los escenarios de Playoffs y Play-In. Utilizando el historial de enfrentamientos directos (H2H), reglas oficiales de desempate y estadísticas de la temporada actual, generamos las clasificaciones en tiempo real.
-    </p>
-
-    <p style="margin-bottom: 15px;">
-        <strong>El formato Play-In:</strong> La competición ha adoptado este emocionante formato donde los equipos del 1º al 6º puesto entran directamente a Playoffs, mientras que del 7º al 10º juegan un torneo corto para asegurar las últimas dos plazas. Nuestra calculadora marca visualmente estos cortes para que sepas qué necesita exactamente cada equipo para evitar la eliminación.
-    </p>
-
-    <p>
-        <strong>Estadísticas Avanzadas:</strong> El motor predictivo incluye un modelo de simulación <strong>Monte Carlo</strong>. Al ejecutar 2.000 simulaciones, el algoritmo procesa el estado de forma (últimos 5 partidos), el factor cancha y la probabilidad de victoria mediante la fórmula Log5. Además, utilizamos el <strong>Net Rating</strong> (Diferencia Media de Puntos) para evaluar la eficiencia real, ofreciendo predicciones estadísticas precisas sobre quién alcanzará el ansiado Top 6. 
-    </p>
-
-    <p>
-        <strong>AVISO LEGAL:<strong> Esta web es una plataforma puramente estadística y de entretenimiento. <strong>NO<strong> es una casa de apuestas, <strong>NO<strong> ofrece cuotas económicas y <strong>NO<strong> permite realizar ningún tipo de juego de azar o apuestas deportivas.
-    </p>
-
-</div>
-    
     <footer style="text-align:center; padding:20px; margin-top:40px; border-top:1px solid #e5e7eb; font-size:0.85rem; color:#6b7280;">
         <p>© 2026 EuroLeague Ultimate Calculator. Todos los derechos reservados.</p>
         <p>
