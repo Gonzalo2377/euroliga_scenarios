@@ -1136,6 +1136,7 @@
 
         function renderMatrices() {
             const container = document.getElementById("matrices-container");
+            if(!container) return;
             const t = i18n[currentLang] || i18n['es'];
             container.innerHTML = "";
             
@@ -1149,47 +1150,68 @@
                 if(tiedTeams.length > 1) {
                     hasTies = true;
                     
-                    // 1. Calcular mini-liga y ORDENAR por Total V-D
+                    // 1. Calcular mini-liga y ORDENAR por Total V-D y luego por +/-
                     let miniLeague = tiedTeams.map(tRow => {
-                        let totalW = 0, totalL = 0;
+                        let totalW = 0, totalL = 0, totalDiff = 0;
                         tiedTeams.forEach(tCol => {
                             if(tRow.id !== tCol.id) {
                                 let s = calculateH2HStats(tRow.name, tCol.name);
-                                totalW += s.winsA; totalL += s.winsB;
+                                totalW += s.winsA; 
+                                totalL += s.winsB; 
+                                totalDiff += s.diffA;
                             }
                         });
-                        return { team: tRow, w: totalW, l: totalL };
+                        return { team: tRow, w: totalW, l: totalL, diff: totalDiff };
                     });
                     
-                    // Ordenar de más victorias a menos
-                    miniLeague.sort((a, b) => b.w - a.w); 
+                    // Magia aquí: Ordenar de más victorias a menos y, si empatan, por el +/-
+                    miniLeague.sort((a, b) => b.w - a.w || b.diff - a.diff); 
                     let sortedTiedTeams = miniLeague.map(m => m.team);
 
-                    let html = `<div class="matrix-container"><h3>${t.tied_at} ${wins} ${t.victories}</h3><table><tr><th>${t.team}</th>`;
+                    let html = `<div class="matrix-container"><h3>${t.tied_at || 'Empate a'} ${wins} ${t.victories || 'victorias'}</h3><table><tr><th>${t.team || 'Equipo'}</th>`;
                     
                     // Cabeceras ordenadas
-                    sortedTiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.75rem; color:#9ca3af; margin-right:4px;">${te.flag}</span> <img src="${getLogo(te.name)}" class="team-logo" style="width:20px;height:20px;margin-right:2px;"> <span style="font-size:0.8rem;">${te.id}</span></div></th>`; });
-                    html += `<th class="total-h2h-col">${t.total_vd}</th></tr>`;
+                    sortedTiedTeams.forEach(te => { 
+                        html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.85rem; color:#9ca3af;">${getTeamAbrev(te.name)}</span></div></th>`; 
+                    });
+                    
+                    // Añadimos la nueva cabecera +/- al final
+                    html += `<th class="total-h2h-col">${t.total_vd || 'V/D'}</th><th class="total-h2h-col">+/-</th></tr>`;
                     
                     // Filas ordenadas
                     sortedTiedTeams.forEach(tRow => {
-                        html += `<tr><td><div class="team-cell"><span style="font-size:0.8rem; color:#9ca3af;">${tRow.flag}</span> <img src="${getLogo(tRow.name)}" class="team-logo"> <strong>${tRow.name}</strong></div></td>`;
-                        let totalWins = 0, totalLosses = 0;
+                        // Detectamos si usas la versión con logos o la de banderas para no romper nada
+                        let logoHTML = typeof getLogo === 'function' 
+                            ? `<img src="${getLogo(tRow.name)}" width="20" style="margin-right:5px;">` 
+                            : `<span style="margin-right:5px;">${tRow.flag || ''}</span>`;
+                            
+                        html += `<tr><td><div class="team-cell">${logoHTML} <strong>${tRow.name}</strong></div></td>`;
+                        
+                        let totalWins = 0, totalLosses = 0, totalDiff = 0;
                         sortedTiedTeams.forEach(tCol => {
                             if(tRow.id === tCol.id) html += `<td style="background:#e5e7eb;">-</td>`;
                             else {
                                 let stats = calculateH2HStats(tRow.name, tCol.name);
-                                totalWins += stats.winsA; totalLosses += stats.winsB;
+                                totalWins += stats.winsA; 
+                                totalLosses += stats.winsB; 
+                                totalDiff += stats.diffA; // Sumamos el average directo
+                                
                                 let hClass = stats.winsA > stats.winsB ? "h2h-win" : (stats.winsB > stats.winsA ? "h2h-loss" : "h2h-tie");
                                 html += `<td class="h2h-cell"><span class="${hClass}">${stats.winsA}-${stats.winsB}</span></td>`;
                             }
                         });
-                        html += `<td class="total-h2h-col">${totalWins} - ${totalLosses}</td></tr>`;
+                        
+                        // Calculamos la cadena de texto para el +/- (poniendo un '+' si es positivo)
+                        let diffColor = totalDiff > 0 ? "var(--win, #10b981)" : (totalDiff < 0 ? "var(--loss, #ef4444)" : "inherit");
+                        let diffStr = totalDiff > 0 ? `+${totalDiff}` : totalDiff;
+                        
+                        // Imprimimos la fila con la columna extra de +/-
+                        html += `<td class="total-h2h-col">${totalWins} - ${totalLosses}</td><td class="total-h2h-col" style="font-weight:bold; color:${diffColor};">${diffStr}</td></tr>`;
                     });
                     html += `</table></div>`; container.innerHTML += html;
                 }
             });
-            if(!hasTies) container.innerHTML = `<p>${t.no_ties}</p>`;
+            if(!hasTies) container.innerHTML = `<p>${t.no_ties || 'No hay empates'}</p>`;
         }
 
         function renderResultados() {
