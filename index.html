@@ -840,7 +840,7 @@
                 
                 tbodyMain.innerHTML += `<tr>
                     <td class="${rowClass}"><strong>${index + 1}</strong></td>
-                    <td><div class="team-cell"><span>${team.flag}</span></div></td>
+                    <td><div class="team-cell"><span style="margin-right:6px; font-size:1.1em;">${team.flag}</span> <strong>${team.name}</strong></div></td>
                     <td>${games}</td><td><strong>${team.wins}</strong></td><td>${team.losses}</td><td>${pct}</td>
                     <td>${getFormHTML(team.name)}</td>
                     <td>${team.diff > 0 ? '+' : ''}${team.diff}</td>
@@ -848,7 +848,11 @@
                     <td style="font-weight:bold; font-family:monospace; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
                 
-                tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"></div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
+                tbodySim.innerHTML += `<tr>
+                    <td class="${rowClass}"><strong>${index + 1}</strong></td>
+                    <td><div class="team-cell"><span style="margin-right:6px; font-size:1.1em;">${team.flag}</span> <strong>${team.name}</strong></div></td>
+                    <td><strong>${team.wins}</strong></td><td>${team.losses}</td>
+                </tr>`;
             });
         }
 
@@ -857,8 +861,8 @@
             schedule.forEach(j => {
                 j.games.forEach(g => {
                     if(!g.played) {
-                        if (g.home === teamName) html += `<span class="game-badge badge-home">vs ${getTeamAbrev(g.away)}</span>`;
-                        if (g.away === teamName) html += `<span class="game-badge badge-away">@ ${getTeamAbrev(g.home)}</span>`;
+                        if (g.home === teamName) html += `<span class="game-badge badge-home" style="margin-right:4px;">vs ${g.away}</span>`;
+                        if (g.away === teamName) html += `<span class="game-badge badge-away" style="margin-right:4px;">@ ${g.home}</span>`;
                     }
                 });
             });
@@ -1000,12 +1004,10 @@
                 let asterisco = stats.played < 2 ? '*' : ''; 
                 
                 html += `<div class="rival-row">
-                    <div class="team-cell"><strong>${rival.initialWins}V</strong></div>
+                    <div class="team-cell"><strong>${rival.initialWins}V</strong> <span style="margin-left:8px;">${rival.flag} ${rival.name}</span></div>
                     <div>H2H: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280; font-size:0.9rem;">(${diffStr}${asterisco})</span></div>
                 </div>`;
             });
-            dashboard.innerHTML = html; dashboard.style.display = "block";
-        }
 
         function runProbabilities() {
             document.getElementById('prob-loading').style.display = 'block';
@@ -1045,7 +1047,8 @@
                 tbody.innerHTML = "";
                 sortedTeams.forEach(team => {
                     let maxVal = Math.max(...tRes[team].positions); 
-                    let tr = `<tr><td style="text-align:left;"><div class="team-cell"><strong>${getTeamAbrev(team)}</strong></div></td>`;
+                    let teamData = teamsBase.find(t => t.name === team); // Buscamos los datos para sacar la bandera
+                    let tr = `<tr><td style="text-align:left;"><div class="team-cell"><span style="margin-right:6px;">${teamData.flag}</span> <strong>${team}</strong></div></td>`;
                     for(let i=0; i<20; i++) {
                         let pct = Math.round((tRes[team].positions[i] / iterations) * 100);
                         let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0);
@@ -1139,12 +1142,12 @@
                     let html = `<div class="matrix-container"><h3>${t.tied_at} ${wins} ${t.victories}</h3><table><tr><th>${t.team}</th>`;
                     
                     // Cabeceras ordenadas
-                    sortedTiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.75rem; color:#9ca3af; margin-right:4px;">${te.flag}</span></div></th>`; });
+                    sortedTiedTeams.forEach(te => { html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.85rem; margin-right:4px;">${te.flag}</span> ${getTeamAbrev(te.name)}</div></th>`; });
                     html += `<th class="total-h2h-col">${t.total_vd}</th></tr>`;
                     
                     // Filas ordenadas
                     sortedTiedTeams.forEach(tRow => {
-                        html += `<tr><td><div class="team-cell"><span style="font-size:0.8rem; color:#9ca3af;">${tRow.flag}</span></div></td>`;
+                        html += `<tr><td><div class="team-cell"><span style="font-size:0.9rem; margin-right:6px;">${tRow.flag}</span> <strong>${tRow.name}</strong></div></td>`;
                         let totalWins = 0, totalLosses = 0;
                         sortedTiedTeams.forEach(tCol => {
                             if(tRow.id === tCol.id) html += `<td style="background:#e5e7eb;">-</td>`;
