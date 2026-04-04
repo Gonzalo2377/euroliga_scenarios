@@ -919,7 +919,7 @@
                     <td>${getFormHTML(team.name)}</td>
                     <td>${team.diff > 0 ? '+' : ''}${team.diff}</td>
                     <td>${getNextOpponentsHTML(team.name)}</td>
-                    <td style="font-weight:bold; color:#4b5563;">${getSOS(teamName)}</td>
+                    <td style="font-weight:bold; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
                 
                 tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${team.name}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
@@ -1485,15 +1485,13 @@
             
             document.getElementById(tabName).style.display = "block";
             
-            // --- NUEVO: ENVIAR EVENTO A GOOGLE ANALYTICS ---
             if (typeof gtag === 'function') {
                 gtag('event', 'screen_view', {
                     'screen_name': tabName,
                     'page_title': document.title
                 });
             }
-            // ----------------------------------------------
-
+        
             if (evt) {
                 evt.currentTarget.classList.add("active");
             } else {
