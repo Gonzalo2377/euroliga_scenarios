@@ -1485,6 +1485,15 @@
             
             document.getElementById(tabName).style.display = "block";
             
+            // --- NUEVO: ENVIAR EVENTO A GOOGLE ANALYTICS ---
+            if (typeof gtag === 'function') {
+                gtag('event', 'screen_view', {
+                    'screen_name': tabName,
+                    'page_title': document.title
+                });
+            }
+            // ----------------------------------------------
+
             if (evt) {
                 evt.currentTarget.classList.add("active");
             } else {
