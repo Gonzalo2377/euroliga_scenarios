@@ -750,12 +750,24 @@
             pHead.innerHTML = `<th class="t-team" style="text-align:left;">${t.team}</th>`;
             for(let i=1; i<=20; i++) pHead.innerHTML += `<th>${i}</th>`;
 
-            renderStandings();
-            renderMatches();
-            renderMatrices();
-            renderResultados();
-            renderAnalysis();
-            if (document.getElementById('select-myteam').value) renderMyTeam();
+            // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
+            setTimeout(() => {
+                renderStandings();
+            }, 0);
+
+            setTimeout(() => {
+                renderMatches();
+            }, 0);
+
+            setTimeout(() => {
+                renderMatrices();
+                renderResultados();
+            }, 0);
+
+            setTimeout(() => {
+                renderAnalysis();
+                if (document.getElementById('select-myteam').value) renderMyTeam();
+            }, 0);
         }
 
         function getFormHTML(teamName) {
