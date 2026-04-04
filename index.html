@@ -326,6 +326,7 @@
             <button class="lang-btn" onclick="changeLang('gr')" title="Ελληνικά">🇬🇷</button>
             <button class="lang-btn" onclick="changeLang('sr')" title="Srpski">🇷🇸</button>
             <button class="lang-btn" onclick="changeLang('lt')" title="Lietuvių">🇱🇹</button>
+            <button class="lang-btn" onclick="changeLang('he')" title="עברית">🇮🇱</button>
         </div>
     </header>
 
@@ -545,6 +546,22 @@
         sc_needed: "Kelias link tikslo", sc_for_top6: "Užsitikrinti Top 6:", sc_for_top10: "Užsitikrinti Play-In:",
         postponed: "Atidėtos Rungtynės", analysis_title: "Išplėstinė Analizė", net_rating_label: "Grynasis Reitingas (Vid. Skirtumas)",
         all_games: "Visos rungtynės", last_5: "Paskutinės 5", last_10: "Paskutinės 10", only_home: "Tik namuose", only_away: "Tik išvykoje"
+    },
+    he: {
+        title: "🏆 מחשבון יורוליג 25/26",
+        standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח",
+        official_standings: "טבלה רשמית", live_standings: "טבלה בזמן אמת", sim_desc: "בחר מנצחות כדי לעדכן את הטבלה.",
+        team: "קבוצה", w: "נ", l: "ה", form: "כושר", diff_pct: "SOS", schedule: "לוח משחקים", round: "מחזור", score: "תוצאה",
+        home: "בית", away: "חוץ", ties_desc: "בתים מחושבים אוטומטית לפי הסימולציות שלך.",
+        all_rounds: "כל המחזורים", all_teams: "כל הקבוצות", final_res: "תוצאת סיום", btn_home: "בית", btn_away: "חוץ",
+        tied_at: "שוויון ב", victories: "ניצחונות", total_vd: "סה\"כ נ-ה", no_ties: "אין שוויון כרגע.",
+        prob_desc: "הסימולטור מריץ 2,000 תרחישי סיום אקראיים ומחשב % מדויק לכל מיקום.",
+        run_prob: "🎲 הרץ 2,000 סימולציות", computing: "מחשב עתידים מקבילים... ⏳",
+        select_team: "-- בחר את הקבוצה שלך --", next_games: "משחקים הבאים", direct_rivals: "יריבות ישירות (שוויון)",
+        sc_next: "משחק המפתח הבא", sc_win_next: "אם ינצחו את {opp}:", sc_lose_next: "אם יפסידו ל-{opp}:",
+        sc_needed: "הדרך למטרה", sc_for_top6: "להבטחת טופ 6:", sc_for_top10: "להבטחת פליי-אין:",
+        postponed: "משחקים דחויים", analysis_title: "ניתוח מתקדם", net_rating_label: "מדד נט (הפרש ממוצע)",
+        all_games: "כל המשחקים", last_5: "5 אחרונים", last_10: "10 אחרונים", only_home: "רק בבית", only_away: "רק בחוץ"
     }
 };
 
@@ -1063,6 +1080,22 @@
                     "Maccabi Tel Aviv": "<ul><li><strong>Pranašumas:</strong> Atidėtos rungtynės (liko 4 mačai).</li><li><strong>Top 10:</strong> Kontroliuoja savo likimą. Su 3 pergalėmis išstums Dubajų arba „Crvena Zvezda“.</li></ul>",
                     "Olimpia Milano": "<ul><li><strong>Top 10:</strong> Ant prarajos ribos (11 vieta). Privalo laimėti viską (20P) ir melstis dėl Dubajaus arba Maccabi nesėkmių.</li></ul>",
                     "default": `<ul><li><strong>Atkrintamosios/Play-In:</strong> ${ui.eliminated}</li></ul>`
+                },
+                he: {
+                    "Real Madrid": "<ul><li><strong>טופ 1:</strong> שולטים בגורלם! ניצחון ב-3 המשחקים הנותרים (כולל על פנר ואולימפיאקוס) יבטיח את המקום הראשון.</li><li><strong>טופ 4 (יתרון ביתיות):</strong> מובטח עם 2 ניצחונות.</li><li><strong>טופ 6:</strong> ✅ כמעט מובטח לחלוטין.</li></ul>",
+                    "Fenerbahçe": "<ul><li><strong>טופ 1:</strong> מובילים כרגע. 3 ניצחונות (26 נ') יבטיחו את הפסגה.</li><li><strong>טופ 4:</strong> ניצחון אחד נוסף יבטיח ביתיות.</li><li><strong>סכנה:</strong> משחק חוץ קריטי מול ריאל מדריד במחזור 37.</li></ul>",
+                    "Olympiacos": "<ul><li><strong>טופ 1:</strong> שוויון בצמרת. צריכים לנצח את כל ה-3 ולשמור על היתרון מול פנר.</li><li><strong>טופ 4:</strong> מרחק נגיעה.</li><li><strong>סכנה:</strong> מארחים את ריאל מדריד במחזור הבא, משחק עונה.</li></ul>",
+                    "Valencia Basket": "<ul><li><strong>טופ 4:</strong> רחוקים 2 ניצחונות מהבטחה מתמטית.</li><li><strong>טופ 1:</strong> צריכים לנצח את הכל (25 נ') ולקוות לקריסה של השלישייה המובילה.</li><li><strong>טופ 6:</strong> ניצחון אחד מבטיח פלייאוף ישיר.</li></ul>",
+                    "Zalgiris Kaunas": "<ul><li><strong>טופ 6:</strong> במרחק צעד אחד. 2 ניצחונות וימנעו מהפליי-אין.</li><li><strong>טופ 4:</strong> צריכים לנצח הכל (24 נ') ולקוות למעידה של ולנסיה.</li></ul>",
+                    "Hapoel Tel-Aviv": "<ul><li><strong>היתרון שלנו:</strong> נותרו 4 משחקים! יש מרווח טעות.</li><li><strong>טופ 6:</strong> 2 ניצחונות כנראה יבטיחו פלייאוף ישיר.</li><li><strong>האתגר:</strong> לוח משחקים אכזרי עד הסיום (מכבי, פנר, אולימפיאקוס, מונאקו).</li></ul>",
+                    "Panathinaikos": "<ul><li><strong>טופ 6:</strong> מאבק עיקש. המשחק הבא מול בארסה הוא גמר על הימנעות מפליי-אין.</li><li><strong>טופ 10:</strong> ✅ פליי-אין מובטח.</li></ul>",
+                    "Barcelona": "<ul><li><strong>טופ 6:</strong> בסכנה. הפסד לפאו במחזור הבא עלול להרוס את תקוות הפלייאוף הישיר.</li><li><strong>טופ 10:</strong> ✅ פליי-אין מובטח.</li></ul>",
+                    "Monaco": "<ul><li><strong>טופ 10:</strong> כמעט סגור. ניצחון אחד נוסף מבטיח פליי-אין.</li><li><strong>טופ 6:</strong> משימה כמעט בלתי אפשרית.</li></ul>",
+                    "Crvena Zvezda": "<ul><li><strong>טופ 10:</strong> ניצחון אחד מתוך ה-3 שנותרו מבטיח מקום בפליי-אין.</li></ul>",
+                    "Dubai": "<ul><li><strong>טופ 10 (הגבול):</strong> מחזיקים כרגע בכרטיס האחרון לפליי-אין. צריכים 2 ניצחונות כדי לא להיות תלויים במילאנו.</li></ul>",
+                    "Maccabi Tel Aviv": "<ul><li><strong>היתרון שלנו:</strong> משחק חסר (4 משחקים נותרו).</li><li><strong>טופ 10:</strong> תלויים רק בעצמנו. 3 ניצחונות יגנבו את המקום מדובאי או הכוכב האדום.</li></ul>",
+                    "Olimpia Milano": "<ul><li><strong>טופ 10:</strong> על סף תהום (מקום 11). חייבים לנצח את הכל (20 נ') ולהתפלל לקריסה של דובאי או מכבי.</li></ul>",
+                    "default": `<ul><li><strong>פלייאוף/פליי-אין:</strong> ${ui.eliminated || "הודחה"}</li></ul>`
                 }
             };
             
