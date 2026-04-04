@@ -932,33 +932,20 @@
             const t = i18n[currentLang] || i18n['es'];
             const team = teamsBase.find(tb => tb.name === teamName);
             
-            // Mini-diccionario para los textos de la interfaz que estaban en español
+            // Mini-diccionario UI ampliado a todos los idiomas
             const localUI = {
-                es: {
-                    mathOpts: "🎯 Opciones Matemáticas y Objetivos",
-                    nextKey: "🚀 Próximo partido clave vs",
-                    ifWins: "✅ Si gana:",
-                    ifLoses: "❌ Si pierde:",
-                    recentForm: "Racha Reciente",
-                    h2hWin: "* Gana el desempate ganando o perdiendo por",
-                    h2hLose: "* Necesita ganar por al menos",
-                    pts: "puntos",
-                    eliminated: "❌ Matemáticamente eliminado. Pensando en la próxima temporada."
-                },
-                en: {
-                    mathOpts: "🎯 Mathematical Options & Goals",
-                    nextKey: "🚀 Next key matchup vs",
-                    ifWins: "✅ If they win:",
-                    ifLoses: "❌ If they lose:",
-                    recentForm: "Recent Form",
-                    h2hWin: "* Wins tiebreaker by winning or losing by",
-                    h2hLose: "* Needs to win by at least",
-                    pts: "points",
-                    eliminated: "❌ Mathematically eliminated. Playing for pride."
-                }
+                es: { mathOpts: "🎯 Opciones Matemáticas y Objetivos", nextKey: "🚀 Próximo partido clave vs", ifWins: "✅ Si gana:", ifLoses: "❌ Si pierde:", recentForm: "Racha Reciente", h2hWin: "* Gana el desempate ganando o perdiendo por", h2hLose: "* Necesita ganar por al menos", pts: "puntos", eliminated: "❌ Matemáticamente eliminado. Pensando en la próxima temporada." },
+                en: { mathOpts: "🎯 Mathematical Options & Goals", nextKey: "🚀 Next key matchup vs", ifWins: "✅ If they win:", ifLoses: "❌ If they lose:", recentForm: "Recent Form", h2hWin: "* Wins tiebreaker by winning or losing by", h2hLose: "* Needs to win by at least", pts: "points", eliminated: "❌ Mathematically eliminated. Playing for pride." },
+                fr: { mathOpts: "🎯 Options Mathématiques et Objectifs", nextKey: "🚀 Prochain match clé vs", ifWins: "✅ S'ils gagnent :", ifLoses: "❌ S'ils perdent :", recentForm: "Forme Récente", h2hWin: "* Gagne le point-average même en perdant de", h2hLose: "* Doit gagner par au moins", pts: "points", eliminated: "❌ Mathématiquement éliminé. Joue pour l'honneur." },
+                tr: { mathOpts: "🎯 Matematiksel Seçenekler ve Hedefler", nextKey: "🚀 Sıradaki kritik maç vs", ifWins: "✅ Kazanırsa:", ifLoses: "❌ Kaybederse:", recentForm: "Son Form", h2hWin: "* İkili averajı şu farkla kazanır veya kaybeder:", h2hLose: "* En az şu farkla kazanmalı:", pts: "sayı", eliminated: "❌ Matematiksel olarak elendi. Gelecek sezonu düşünüyor." },
+                gr: { mathOpts: "🎯 Μαθηματικές Επιλογές & Στόχοι", nextKey: "🚀 Επόμενο ματς-κλειδί vs", ifWins: "✅ Αν νικήσει:", ifLoses: "❌ Αν χάσει:", recentForm: "Πρόσφατη Φόρμα", h2hWin: "* Κερδίζει την ισοβαθμία ακόμα και αν χάσει με", h2hLose: "* Πρέπει να νικήσει με τουλάχιστον", pts: "πόντους", eliminated: "❌ Έχει αποκλειστεί μαθηματικά. Παίζει για την τιμή του." },
+                sr: { mathOpts: "🎯 Matematičke Opcije i Ciljevi", nextKey: "🚀 Sledeći ključni meč vs", ifWins: "✅ Ako pobedi:", ifLoses: "❌ Ako izgubi:", recentForm: "Trenutna Forma", h2hWin: "* Osvaja tajbrejker čak i porazom do", h2hLose: "* Mora da pobedi sa najmanje", pts: "poena", eliminated: "❌ Matematički eliminisan. Igra za ponos." },
+                lt: { mathOpts: "🎯 Matematiniai Scenarijai ir Tikslai", nextKey: "🚀 Kitas svarbus mačas vs", ifWins: "✅ Jei laimi:", ifLoses: "❌ Jei pralaimi:", recentForm: "Pastaroji Forma", h2hWin: "* Laimi tarpusavio pranašumą net ir pralaimėjus", h2hLose: "* Turi laimėti bent", pts: "taškų", eliminated: "❌ Matematiškai eliminuota. Žaidžia dėl garbės." },
+                he: { mathOpts: "🎯 אפשרויות מתמטיות ויעדים", nextKey: "🚀 משחק מפתח הבא מול", ifWins: "✅ אם ינצחו:", ifLoses: "❌ אם יפסידו:", recentForm: "כושר נוכחי", h2hWin: "* מנצח בשובר השוויון גם בהפסד של עד", h2hLose: "* חייב לנצח בלפחות", pts: "נקודות", eliminated: "❌ הודחה מתמטית. משחקת על הכבוד." }
             };
-            // Usamos inglés por defecto si no es español (cubre fr, tr, gr, etc. para evitar español)
-            const ui = currentLang === 'es' ? localUI['es'] : localUI['en'];
+            
+            // Ya no forzamos el inglés, coge el idioma actual real
+            const ui = localUI[currentLang] || localUI['en'];
 
             let html = `<div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
                 <img src="${getLogo(teamName)}" style="width:60px; height:60px; border-radius:50%;">
@@ -1099,8 +1086,7 @@
                 }
             };
             
-            // Replicamos el bloque en para el resto de idiomas para que no salga español a los turcos/griegos/etc.
-            scenariosLang.fr = scenariosLang.en; scenariosLang.tr = scenariosLang.en; scenariosLang.gr = scenariosLang.en; scenariosLang.sr = scenariosLang.en; scenariosLang.lt = scenariosLang.en;
+            // ¡HE BORRADO LA LÍNEA QUE ROMPÍA LOS IDIOMAS AQUÍ!
 
             let currentScenarios = scenariosLang[currentLang] || scenariosLang['en'];
             let scenarioText = currentScenarios[teamName] || currentScenarios['default'];
