@@ -919,7 +919,7 @@
                     <td>${getFormHTML(team.name)}</td>
                     <td>${team.diff > 0 ? '+' : ''}${team.diff}</td>
                     <td>${getNextOpponentsHTML(team.name)}</td>
-                    <td style="font-weight:bold; font-family:monospace; color:#4b5563;">${getSOS(team.name)}</td>
+                    <td style="font-weight:bold; color:#4b5563;">${getSOS(teamName)}</td>
                 </tr>`;
                 
                 tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${team.name}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
