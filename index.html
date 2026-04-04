@@ -565,9 +565,22 @@
         all_games: "כל המשחקים", last_5: "5 אחרונים", last_10: "10 אחרונים", only_home: "רק בבית", only_away: "רק בחוץ"
     }
 };
-
+        // 1. Miramos si la URL fuerza un idioma 
+        const urlParams = new URLSearchParams(window.location.search);
+        const langParam = urlParams.get('lang');
+        
+        // 2. Miramos si el usuario ya tenía un idioma guardado de antes
         let savedLang = localStorage.getItem('euroLang');
-        let currentLang = (savedLang && i18n[savedLang]) ? savedLang : 'es';
+        
+        // 3. Decidimos qué idioma usar (Prioridad: URL > Guardado > Español)
+        let currentLang = 'es'; // Por defecto
+        if (langParam && i18n[langParam]) {
+            currentLang = langParam;
+            localStorage.setItem('euroLang', currentLang); // Guardamos el idioma del enlace para su próxima visita
+        } else if (savedLang && i18n[savedLang]) {
+            currentLang = savedLang;
+        }
+        
 
         const analysisData = {
             es: [
