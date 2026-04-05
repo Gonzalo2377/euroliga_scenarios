@@ -566,11 +566,11 @@
         postponed: "משחקים דחויים", analysis_title: "ניתוח מתקדם", net_rating_label: "מדד נט (הפרש ממוצע)",
         all_games: "כל המשחקים", last_5: "5 אחרונים", last_10: "10 אחרונים", only_home: "רק בבית", only_away: "רק בחוץ",
         "Olympiacos": "אולימפיאקוס",
-        "Fenerbahce": "פנרבחצ'ה",
+        "Fenerbahçe": "פנרבחצ'ה",
         "Real Madrid": "ריאל מדריד",
-        "Valencia": "ולנסיה",
-        "Hapoel Tel Aviv": "הפועל תל אביב",
-        "Zalgiris": "ז'לגיריס",
+        "Valencia Basket": "ולנסיה",
+        "Hapoel Tel-Aviv": "הפועל תל אביב",
+        "Zalgiris Kaunas": "ז'לגיריס",
         "Panathinaikos": "פנאתינייקוס",
         "Barcelona": "ברצלונה",
         "Crvena Zvezda": "הכוכב האדום",
@@ -587,6 +587,7 @@
         "Asvel Basket": "וילרבאן"
     }
 };
+
         // 1. Miramos si la URL fuerza un idioma 
         const urlParams = new URLSearchParams(window.location.search);
         const langParam = urlParams.get('lang');
@@ -602,20 +603,11 @@
         } else if (savedLang && i18n[savedLang]) {
             currentLang = savedLang;
         }
-        
 
-        const analysisData = {
-            es: [
-                { title: "🍿 Atasco monumental", desc: "La zona de acceso directo a Playoffs está que echa chispas. Las victorias de Barça, Panathinaikos y Zalgiris provocan un triple empate." },
-                { title: "👑 El Real Madrid de Scariolo", desc: "Con 22 victorias, los de Scariolo dan un paso de gigante para asegurar el factor cancha entre los 4 primeros." },
-                { title: "🔥 Locura en Vitoria", desc: "Baskonia se impone al Hapoel en un tiroteo tremendo (118-109). Máxima emoción." }
-            ],
-            en: [
-                { title: "🍿 Huge Jam", desc: "The Playoff race is on fire. Wins by Barça, Panathinaikos, and Zalgiris create a massive tie in the standings." },
-                { title: "👑 Scariolo's Real Madrid", desc: "With 22 wins, Scariolo's team takes a huge step toward clinching home-court advantage in the Top 4." },
-                { title: "🔥 Vitoria Madness", desc: "Baskonia beats Hapoel in a high-scoring shootout (118-109). Pure excitement." }
-            ]
-        };
+        // --- Helper para nombres de equipos en caso de usar idiomas no-latinos como Hebreo ---
+        function tName(name) {
+            return (i18n[currentLang] && i18n[currentLang][name]) ? i18n[currentLang][name] : name;
+        }
 
         const teamsBase = [
             { id: "FEN", name: "Fenerbahçe", flag: "🇹🇷", initialWins: 23, initialLosses: 12, diff: 68 },
@@ -727,6 +719,9 @@
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             let btn = document.querySelector(`[onclick="changeLang('${lang}')"]`);
             if (btn) btn.classList.add('active');
+            
+            // Refrescar dropdown para traducir el listado de jornadas si cambiamos el idioma on-the-fly
+            initFilters();
             updateUI();
         }
 
@@ -768,26 +763,18 @@
             document.querySelectorAll('.t-away').forEach(el => el.textContent = t.away);
 
             let pHead = document.getElementById("prob-head-row");
-            pHead.innerHTML = `<th class="t-team" style="text-align:left;">${t.team}</th>`;
-            for(let i=1; i<=20; i++) pHead.innerHTML += `<th>${i}</th>`;
+            if(pHead) {
+                pHead.innerHTML = `<th class="t-team" style="text-align:left;">${t.team}</th>`;
+                for(let i=1; i<=20; i++) pHead.innerHTML += `<th>${i}</th>`;
+            }
 
             // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
-            setTimeout(() => {
-                renderStandings();
-            }, 0);
-
-            setTimeout(() => {
-                renderMatches();
-            }, 0);
-
-            setTimeout(() => {
-                renderMatrices();
-                renderResultados();
-            }, 0);
-
+            setTimeout(() => { renderStandings(); }, 0);
+            setTimeout(() => { renderMatches(); }, 0);
+            setTimeout(() => { renderMatrices(); renderResultados(); }, 0);
             setTimeout(() => {
                 renderAnalysis();
-                if (document.getElementById('select-myteam').value) renderMyTeam();
+                if (document.getElementById('select-myteam')?.value) renderMyTeam();
             }, 0);
         }
 
@@ -829,6 +816,7 @@
             });
             return currentTeams;
         }
+
         function calculateH2HStats(teamA, teamB) {
             let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
             pastMatches.forEach(m => {
@@ -841,24 +829,21 @@
             });
             return { winsA, winsB, played, diffA };
         }
+
         function calculateWinOdds(homeTeamName, awayTeamName) {
             let homeTeam = teamsBase.find(t => t.name === homeTeamName);
             let awayTeam = teamsBase.find(t => t.name === awayTeamName);
             
-            // --- 🛡️ ESCUDO SALVAVIDAS ---
-            // Si el nombre del calendario no coincide 100% con la base de datos, evitamos que la web explote
             if (!homeTeam || !awayTeam) {
                 console.warn("🚨 Revisa este nombre en tu base de datos o calendario:", homeTeamName, "vs", awayTeamName);
                 return { home: 50, away: 50, homeDecimal: 0.5 };
             }
             
-            // 1. Porcentaje base de victorias
             let hGames = homeTeam.initialWins + homeTeam.initialLosses;
             let aGames = awayTeam.initialWins + awayTeam.initialLosses;
             let hPct = hGames > 0 ? (homeTeam.initialWins / hGames) : 0.5;
             let aPct = aGames > 0 ? (awayTeam.initialWins / aGames) : 0.5;
             
-            // 2. Racha reciente (0 a 1)
             function getForm(tName) {
                 let m = pastMatches.filter(x => x.home === tName || x.away === tName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
                 if (!m.length) return 0.5;
@@ -866,20 +851,15 @@
                 return w / m.length; 
             }
             
-            // 3. Poder Real (80% temporada, 20% racha)
             let hPower = (hPct * 0.8) + (getForm(homeTeamName) * 0.2);
             let aPower = (aPct * 0.8) + (getForm(awayTeamName) * 0.2);
 
             hPower = Math.max(0.05, Math.min(0.95, hPower));
             aPower = Math.max(0.05, Math.min(0.95, aPower));
             
-            // 4. Factor Cancha (+7% al local)
             hPower = Math.min(0.95, hPower + 0.07); 
-
-            // 5. Fórmula Log5 Avanzada
             let probHome = (hPower * (1 - aPower)) / ((hPower * (1 - aPower)) + (aPower * (1 - hPower)));
             
-            // 6. FACTOR PARTIDO DE IDA (H2H)
             let h2h = calculateH2HStats(homeTeamName, awayTeamName);
             if (h2h.played > 0) {
                 if (h2h.winsA > h2h.winsB) {
@@ -889,14 +869,13 @@
                 }
             }
 
-            // Límite matemático
             probHome = Math.max(0.01, Math.min(0.99, probHome));
-            
             let homeInt = Math.round(probHome * 100);
             return { home: homeInt, away: 100 - homeInt, homeDecimal: probHome };
         }
+
         function sortTeamsWithH2H(teamsArray) {
-            teamsArray.sort((a, b) => b.wins - a.wins); // 1º Victorias totales
+            teamsArray.sort((a, b) => b.wins - a.wins);
 
             let finalSorted = [];
             let index = 0;
@@ -922,7 +901,6 @@
                             }
                         });
                     });
-                    // 2º Victorias H2H -> 3º +/- del H2H -> 4º +/- General
                     tiedGroup.sort((a, b) => b.h2hWins - a.h2hWins || b.h2hDiff - a.h2hDiff || b.diff - a.diff);
                 }
                 
@@ -939,6 +917,8 @@
             
             const tbodyMain = document.getElementById("standings-body");
             const tbodySim = document.getElementById("sim-standings-body");
+            if (!tbodyMain || !tbodySim) return;
+
             tbodyMain.innerHTML = ""; tbodySim.innerHTML = "";
             
             teams.forEach((team, index) => {
@@ -948,7 +928,7 @@
                 
                 tbodyMain.innerHTML += `<tr>
                     <td class="${rowClass}"><strong>${index + 1}</strong></td>
-                    <td><div class="team-cell"><span>${team.flag}</span><img src="${getLogo(team.name)}" class="team-logo">${team.name}</div></td>
+                    <td><div class="team-cell"><span>${team.flag}</span><img src="${getLogo(team.name)}" class="team-logo">${tName(team.name)}</div></td>
                     <td>${games}</td><td><strong>${team.wins}</strong></td><td>${team.losses}</td><td>${pct}</td>
                     <td>${getFormHTML(team.name)}</td>
                     <td>${team.diff > 0 ? '+' : ''}${team.diff}</td>
@@ -956,7 +936,7 @@
                     <td style="font-weight:bold; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
                 
-                tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${team.name}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
+                tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${tName(team.name)}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
             });
         }
 
@@ -974,13 +954,14 @@
         }
 
         function renderMyTeam() {
-            const teamName = document.getElementById("select-myteam").value;
+            const teamName = document.getElementById("select-myteam")?.value;
             if(!teamName) return;
             const dashboard = document.getElementById("myteam-dashboard");
+            if(!dashboard) return;
+
             const t = i18n[currentLang] || i18n['es'];
             const team = teamsBase.find(tb => tb.name === teamName);
             
-            // Mini-diccionario UI ampliado a todos los idiomas
             const localUI = {
                 es: { mathOpts: "🎯 Opciones Matemáticas y Objetivos", nextKey: "🚀 Próximo partido clave vs", ifWins: "✅ Si gana:", ifLoses: "❌ Si pierde:", recentForm: "Racha Reciente", h2hWin: "* Gana el desempate ganando o perdiendo por", h2hLose: "* Necesita ganar por al menos", pts: "puntos", eliminated: "❌ Matemáticamente eliminado. Pensando en la próxima temporada." },
                 en: { mathOpts: "🎯 Mathematical Options & Goals", nextKey: "🚀 Next key matchup vs", ifWins: "✅ If they win:", ifLoses: "❌ If they lose:", recentForm: "Recent Form", h2hWin: "* Wins tiebreaker by winning or losing by", h2hLose: "* Needs to win by at least", pts: "points", eliminated: "❌ Mathematically eliminated. Playing for pride." },
@@ -992,13 +973,12 @@
                 he: { mathOpts: "🎯 אפשרויות מתמטיות ויעדים", nextKey: "🚀 משחק מפתח הבא מול", ifWins: "✅ אם ינצחו:", ifLoses: "❌ אם יפסידו:", recentForm: "כושר נוכחי", h2hWin: "* מנצח בשובר השוויון גם בהפסד של עד", h2hLose: "* חייב לנצח בלפחות", pts: "נקודות", eliminated: "❌ הודחה מתמטית. משחקת על הכבוד." }
             };
             
-            // Ya no forzamos el inglés, coge el idioma actual real
             const ui = localUI[currentLang] || localUI['en'];
 
             let html = `<div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px;">
                 <img src="${getLogo(teamName)}" style="width:60px; height:60px; border-radius:50%;">
                 <div>
-                    <h3 style="margin:0; font-size:1.8rem; color:var(--primary);">${teamName} ${team.flag}</h3>
+                    <h3 style="margin:0; font-size:1.8rem; color:var(--primary);">${tName(teamName)} ${team.flag}</h3>
                     <p style="margin:0; font-weight:bold;">${team.initialWins} ${t.w} - ${team.initialLosses} ${t.l}</p>
                 </div>
             </div>`;
@@ -1134,8 +1114,6 @@
                 }
             };
             
-            // ¡HE BORRADO LA LÍNEA QUE ROMPÍA LOS IDIOMAS AQUÍ!
-
             let currentScenarios = scenariosLang[currentLang] || scenariosLang['en'];
             let scenarioText = currentScenarios[teamName] || currentScenarios['default'];
 
@@ -1146,7 +1124,6 @@
                 </div>
             `;
 
-            // --- CAJA AMARILLA: H2H Y CONDICIONES (PARTIDO A PARTIDO) ---
             let nextGame = null;
             schedule.forEach(j => j.games.forEach(g => { if(!nextGame && !g.played && (g.home === teamName || g.away === teamName)) nextGame = g; }));
             let opponent = nextGame ? (nextGame.home === teamName ? nextGame.away : nextGame.home) : "?";
@@ -1156,7 +1133,7 @@
                 let stats = calculateH2HStats(teamName, opponent);
                 let diffStr = stats.diffA > 0 ? `+${stats.diffA}` : stats.diffA;
                 
-                h2hInfo = `<div style="margin-bottom:10px; font-size:1rem;">H2H vs ${opponent}: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280;">(${diffStr})</span></div>`;
+                h2hInfo = `<div style="margin-bottom:10px; font-size:1rem;">H2H vs ${tName(opponent)}: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280;">(${diffStr})</span></div>`;
                 
                 if (stats.played === 1) {
                     if (stats.diffA > 0) {
@@ -1169,7 +1146,7 @@
 
             html += `
                 <div class="scenario-box" style="background:#fffbeb; border-color:#fde68a;">
-                    <h4 style="margin-top:0;">${ui.nextKey} ${opponent}</h4>
+                    <h4 style="margin-top:0;">${ui.nextKey} ${tName(opponent)}</h4>
                     ${h2hInfo}
                     <hr style="border:0; border-top:1px solid #fde68a; margin:10px 0;">
                     <div class="scenario-item">${ui.ifWins} <span style="color:var(--win); font-weight:bold;">${team.initialWins+1}V</span></div>
@@ -1177,7 +1154,6 @@
                 </div>
             `;
 
-            // --- BLOQUE FINAL: RACHA, PRÓXIMOS PARTIDOS Y RIVALES DIRECTOS ---
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${ui.recentForm}</h4><div style="margin-bottom:20px;">${getFormHTML(teamName)}</div>`;
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.next_games}</h4><div style="margin-bottom:20px; font-size: 1.1rem;">${getNextOpponentsHTML(teamName).replace('class="schedule-cell"', 'style="display:flex; gap:10px; flex-wrap:wrap;"')}</div>`;
             html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.direct_rivals}</h4>`;
@@ -1189,7 +1165,7 @@
                 let asterisco = stats.played < 2 ? '*' : ''; 
                 
                 html += `<div class="rival-row">
-                    <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${rival.name}</div>
+                    <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${tName(rival.name)}</div>
                     <div>H2H: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280; font-size:0.9rem;">(${diffStr}${asterisco})</span></div>
                 </div>`;
             });
@@ -1206,7 +1182,6 @@
                 let tRes = {};
                 teamsBase.forEach(t => { tRes[t.name] = { positions: Array(20).fill(0), avg: 0 }; });
 
-                // PRE-CALCULAMOS las probabilidades de los partidos pendientes para no saturar el navegador
                 let unplayed = [];
                 schedule.forEach(j => j.games.forEach(g => { 
                     if(!g.played) {
@@ -1219,7 +1194,6 @@
                     let tempStd = JSON.parse(JSON.stringify(teamsBase));
                     
                     unplayed.forEach(g => {
-                        // LA MAGIA ESTÁ AQUÍ: Ahora tiramos el dado usando el % real del equipo local
                         let hWins = Math.random() < g.homeWinProb; 
                         tempStd.find(t => t.name === (hWins ? g.home : g.away)).initialWins++;
                         tempStd.find(t => t.name === (hWins ? g.away : g.home)).initialLosses++;
@@ -1231,19 +1205,22 @@
 
                 let sortedTeams = Object.keys(tRes).sort((a,b) => tRes[a].avg - tRes[b].avg);
                 const tbody = document.getElementById("prob-body");
-                tbody.innerHTML = "";
-                sortedTeams.forEach(team => {
-                    let maxVal = Math.max(...tRes[team].positions); 
-                    let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
-                    for(let i=0; i<20; i++) {
-                        let pct = Math.round((tRes[team].positions[i] / iterations) * 100);
-                        let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0);
-                        let bgClass = i < 6 ? 'bg-t6' : (i < 10 ? 'bg-pi' : 'bg-out');
-                        let style = isMax ? 'font-weight:bold; color:var(--dark); font-size:1.05rem; text-decoration:underline;' : (pct === 0 ? 'color:#ccc;' : '');
-                        tr += `<td class="${bgClass}" style="${style}">${pct === 0 ? '-' : pct+'%'}</td>`;
-                    }
-                    tr += "</tr>"; tbody.innerHTML += tr;
-                });
+                if(tbody) {
+                    tbody.innerHTML = "";
+                    sortedTeams.forEach(team => {
+                        let maxVal = Math.max(...tRes[team].positions); 
+                        let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
+                        for(let i=0; i<20; i++) {
+                            let pct = Math.round((tRes[team].positions[i] / iterations) * 100);
+                            let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0);
+                            let bgClass = i < 6 ? 'bg-t6' : (i < 10 ? 'bg-pi' : 'bg-out');
+                            let style = isMax ? 'font-weight:bold; color:var(--dark); font-size:1.05rem; text-decoration:underline;' : (pct === 0 ? 'color:#ccc;' : '');
+                            tr += `<td class="${bgClass}" style="${style}">${pct === 0 ? '-' : pct+'%'}</td>`;
+                        }
+                        tr += "</tr>"; tbody.innerHTML += tr;
+                    });
+                }
+                
                 document.getElementById('prob-loading').style.display = 'none';
                 document.getElementById('btn-run-prob').innerText = i18n[currentLang].run_prob;
                 document.getElementById('prob-results').style.display = 'block';
@@ -1252,6 +1229,7 @@
 
         function renderMatches() {
             const container = document.getElementById("matches-container");
+            if(!container) return;
             const t = i18n[currentLang] || i18n['es'];
             container.innerHTML = "";
             schedule.forEach(jornada => {
@@ -1266,22 +1244,20 @@
                 jornada.games.forEach(match => {
                     if (match.played) {
                         jGames += `<div class="match-card" style="flex-direction:row; padding:10px; gap:5px; align-items:center;">
-                            <div style="flex:1; text-align:right; font-size:0.9rem;">${match.home}</div>
+                            <div style="flex:1; text-align:right; font-size:0.9rem;">${tName(match.home)}</div>
                             <div style="color:var(--primary); font-weight:bold; white-space:nowrap; padding:0 5px;">${match.scoreH} - ${match.scoreA}</div>
-                            <div style="flex:1; text-align:left; font-size:0.9rem;">${match.away}</div>
+                            <div style="flex:1; text-align:left; font-size:0.9rem;">${tName(match.away)}</div>
                         </div>`;
                     } else {
-                        // CALCULAMOS LAS PROBABILIDADES AQUÍ
                         let odds = calculateWinOdds(match.home, match.away);
                         
                         let selH = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.home ? 'selected' : '';
                         let selA = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.away ? 'selected' : '';
                         
-                        // Añadimos el % al texto del botón
                         jGames += `<div class="match-card" style="flex-direction:row; padding:5px; gap:5px; align-items:stretch;">
-                            <button class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${match.home}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.home}%</span></button>
+                            <button class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.home)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.home}%</span></button>
                             <div style="display:flex; align-items:center; font-weight:bold; color:#9ca3af; font-size:0.8rem; padding:0 2px;">vs</div>
-                            <button class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${match.away}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.away}%</span></button>
+                            <button class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.away)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.away}%</span></button>
                         </div>`;
                     }
                 });
@@ -1310,7 +1286,6 @@
                 if(tiedTeams.length > 1) {
                     hasTies = true;
                     
-                    // 1. Calcular mini-liga y ORDENAR por Total V-D y luego por +/-
                     let miniLeague = tiedTeams.map(tRow => {
                         let totalW = 0, totalL = 0, totalDiff = 0;
                         tiedTeams.forEach(tCol => {
@@ -1324,28 +1299,23 @@
                         return { team: tRow, w: totalW, l: totalL, diff: totalDiff };
                     });
                     
-                    // Magia aquí: Ordenar de más victorias a menos y, si empatan, por el +/-
                     miniLeague.sort((a, b) => b.w - a.w || b.diff - a.diff); 
                     let sortedTiedTeams = miniLeague.map(m => m.team);
 
                     let html = `<div class="matrix-container"><h3>${t.tied_at || 'Empate a'} ${wins} ${t.victories || 'victorias'}</h3><table><tr><th>${t.team || 'Equipo'}</th>`;
                     
-                    // Cabeceras ordenadas
                     sortedTiedTeams.forEach(te => { 
                         html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.85rem; color:#9ca3af;">${getTeamAbrev(te.name)}</span></div></th>`; 
                     });
                     
-                    // Añadimos la nueva cabecera +/- al final
                     html += `<th class="total-h2h-col">${t.total_vd || 'V/D'}</th><th class="total-h2h-col">+/-</th></tr>`;
                     
-                    // Filas ordenadas
                     sortedTiedTeams.forEach(tRow => {
-                        // Detectamos si usas la versión con logos o la de banderas para no romper nada
                         let logoHTML = typeof getLogo === 'function' 
                             ? `<img src="${getLogo(tRow.name)}" width="20" style="margin-right:5px;">` 
                             : `<span style="margin-right:5px;">${tRow.flag || ''}</span>`;
                             
-                        html += `<tr><td><div class="team-cell">${logoHTML} <strong>${tRow.name}</strong></div></td>`;
+                        html += `<tr><td><div class="team-cell">${logoHTML} <strong>${tName(tRow.name)}</strong></div></td>`;
                         
                         let totalWins = 0, totalLosses = 0, totalDiff = 0;
                         sortedTiedTeams.forEach(tCol => {
@@ -1354,36 +1324,35 @@
                                 let stats = calculateH2HStats(tRow.name, tCol.name);
                                 totalWins += stats.winsA; 
                                 totalLosses += stats.winsB; 
-                                totalDiff += stats.diffA; // Sumamos el average directo
+                                totalDiff += stats.diffA; 
                                 
                                 let hClass = stats.winsA > stats.winsB ? "h2h-win" : (stats.winsB > stats.winsA ? "h2h-loss" : "h2h-tie");
                                 html += `<td class="h2h-cell"><span class="${hClass}">${stats.winsA}-${stats.winsB}</span></td>`;
                             }
                         });
                         
-                        // Calculamos la cadena de texto para el +/- (poniendo un '+' si es positivo)
                         let diffColor = totalDiff > 0 ? "var(--win, #10b981)" : (totalDiff < 0 ? "var(--loss, #ef4444)" : "inherit");
                         let diffStr = totalDiff > 0 ? `+${totalDiff}` : totalDiff;
                         
-                        // Imprimimos la fila con la columna extra de +/-
                         html += `<td class="total-h2h-col">${totalWins} - ${totalLosses}</td><td class="total-h2h-col" style="font-weight:bold; color:${diffColor};">${diffStr}</td></tr>`;
                     });
                     html += `</table></div>`; container.innerHTML += html;
                 }
             });
-            if(!hasTies) container.innerHTML = `<p>${t.no_ties || 'No hay empates'}</p>`;
+            if(!hasTies) container.innerHTML = `<p>${t.no_ties || 'No hay empates actuales.'}</p>`;
         }
 
         function renderResultados() {
             const tbody = document.getElementById("resultados-body");
+            if(!tbody) return;
             const t = i18n[currentLang] || i18n['es'];
             tbody.innerHTML = "";
-            let valJ = document.getElementById("filter-jornada").value;
-            let valE = document.getElementById("filter-equipo").value;
+            let valJ = document.getElementById("filter-jornada")?.value || "ALL";
+            let valE = document.getElementById("filter-equipo")?.value || "ALL";
             let filtrados = pastMatches.filter(m => (valJ === "ALL" || m.jornada.toString() === valJ) && (valE === "ALL" || m.home === valE || m.away === valE));
             filtrados.forEach(m => {
                 let winnerHome = m.scoreH > m.scoreA;
-                tbody.innerHTML += `<tr><td>${t.round} ${m.jornada}</td><td style="${winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${m.home}</td><td style="font-weight:bold; background:#f3f4f6;">${m.scoreH} - ${m.scoreA}</td><td style="${!winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${m.away}</td></tr>`;
+                tbody.innerHTML += `<tr><td>${t.round} ${m.jornada}</td><td style="${winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${tName(m.home)}</td><td style="font-weight:bold; background:#f3f4f6;">${m.scoreH} - ${m.scoreA}</td><td style="${!winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${tName(m.away)}</td></tr>`;
             });
         }
 
@@ -1400,7 +1369,7 @@
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                     <p style="margin:0; color: var(--text); flex: 1; min-width: 250px;">
-                        Compara el rendimiento real. El <strong>Net Rating</strong> mide la eficiencia ofensiva y defensiva.
+                        El <strong>Net Rating</strong> mide la eficiencia ofensiva y defensiva combinada.
                     </p>
                     
                     <select id="netRatingFilter" onchange="drawNetRatingChart()" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #d1d5db; background: white; cursor: pointer; font-weight: bold; color: var(--primary);">
@@ -1419,7 +1388,8 @@
             
             setTimeout(drawNetRatingChart, 100); 
         }
-        let netChartInstance = null; // Guardamos el gráfico para que no se duplique al cambiar de idioma
+        
+        let netChartInstance = null;
 
         function drawNetRatingChart() {
             const ctx = document.getElementById('netRatingChart');
@@ -1431,20 +1401,16 @@
             let stats = {};
             teamsBase.forEach(t => { stats[t.name] = { played: 0, pf: 0, pa: 0 }; });
 
-            // 1. Filtrar partidos según la opción elegida
             teamsBase.forEach(team => {
                 let teamMatches = pastMatches.filter(m => m.home === team.name || m.away === team.name)
-                                             .sort((a,b) => b.jornada - a.jornada); // De más reciente a más viejo
+                                             .sort((a,b) => b.jornada - a.jornada);
 
-                // Aplicar filtros de Local/Visitante
                 if (filterValue === 'home') teamMatches = teamMatches.filter(m => m.home === team.name);
                 if (filterValue === 'away') teamMatches = teamMatches.filter(m => m.away === team.name);
                 
-                // Aplicar filtros de racha (L5, L10)
                 if (filterValue === 'L5') teamMatches = teamMatches.slice(0, 5);
                 if (filterValue === 'L10') teamMatches = teamMatches.slice(0, 10);
 
-                // Calcular totales para este equipo tras el filtro
                 teamMatches.forEach(m => {
                     stats[team.name].played++;
                     if (m.home === team.name) {
@@ -1457,22 +1423,23 @@
                 });
             });
 
-            // 2. Preparar datos para el gráfico
             let chartData = teamsBase.map(team => {
                 let s = stats[team.name];
                 let netRating = s.played > 0 ? ((s.pf - s.pa) / s.played).toFixed(2) : 0;
-                return { name: team.name, net: parseFloat(netRating) };
+                return { name: tName(team.name), net: parseFloat(netRating) };
             }).sort((a, b) => b.net - a.net);
 
             if(netChartInstance) netChartInstance.destroy();
 
-            // 3. Dibujar con textos traducidos
+            // Evitamos error si no está definida la librería de Chart.js
+            if(typeof Chart === "undefined") return;
+
             netChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: chartData.map(d => d.name),
                     datasets: [{
-                        label: t.net_rating_label, // <--- Título traducido
+                        label: t.net_rating_label,
                         data: chartData.map(d => d.net),
                         backgroundColor: chartData.map(d => d.net > 0 ? 'rgba(16, 185, 129, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
                         borderColor: chartData.map(d => d.net > 0 ? 'rgb(16, 185, 129)' : 'rgb(239, 68, 68)'),
@@ -1499,17 +1466,29 @@
                 }
             });
         }
+        
         function initFilters() {
             let jSelect = document.getElementById("filter-jornada");
             let eSelect = document.getElementById("filter-equipo");
             let mtSelect = document.getElementById("select-myteam");
             
-            [...new Set(pastMatches.map(m => m.jornada))].sort((a,b)=>b-a).forEach(j => { jSelect.innerHTML += `<option value="${j}">Round ${j}</option>`; });
+            if(!jSelect || !eSelect || !mtSelect) return;
             
-            let eqCopy = [...teamsBase].sort((a,b) => a.name.localeCompare(b.name));
-            eqCopy.forEach(t => { 
-                eSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`; 
-                mtSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+            const t = i18n[currentLang] || i18n['es'];
+
+            // Limpiamos todo menos el elemento por defecto "Todas/os"
+            jSelect.innerHTML = `<option value="ALL">${t.all_rounds}</option>`;
+            eSelect.innerHTML = `<option value="ALL">${t.all_teams}</option>`;
+            mtSelect.innerHTML = `<option value="">${t.select_team}</option>`;
+            
+            [...new Set(pastMatches.map(m => m.jornada))].sort((a,b)=>b-a).forEach(j => { 
+                jSelect.innerHTML += `<option value="${j}">${t.round} ${j}</option>`; 
+            });
+            
+            let eqCopy = [...teamsBase].sort((a,b) => tName(a.name).localeCompare(tName(b.name)));
+            eqCopy.forEach(team => { 
+                eSelect.innerHTML += `<option value="${team.name}">${tName(team.name)}</option>`; 
+                mtSelect.innerHTML += `<option value="${team.name}">${tName(team.name)}</option>`;
             });
         }
 
@@ -1517,7 +1496,8 @@
             document.querySelectorAll(".tab-content").forEach(tab => tab.style.display = "none");
             document.querySelectorAll(".tab-link").forEach(link => link.classList.remove("active"));
             
-            document.getElementById(tabName).style.display = "block";
+            let tab = document.getElementById(tabName);
+            if(tab) tab.style.display = "block";
             
             if (typeof gtag === 'function') {
                 gtag('event', 'screen_view', {
@@ -1541,6 +1521,9 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            initFilters();
+            updateUI(); // Forzamos una carga inicial para aplicar idioma default
+            
             let hash = window.location.hash.substring(1); 
             if (hash && document.getElementById(hash)) {
                 openTab(null, hash);
