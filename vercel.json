@@ -1,0 +1,17 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' https://site.sport5.co.il https://www.sport5.co.il"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "ALLOW-FROM https://site.sport5.co.il"
+        }
+      ]
+    }
+  ]
+}
