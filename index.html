@@ -314,19 +314,29 @@
             #myteam-dashboard > div:first-child { flex-direction: column; text-align: center; }
         }
         .bracket-wrapper { overflow-x: auto; padding: 20px 0; }
-        .bracket-container { display: flex; justify-content: center; align-items: center; gap: 40px; min-width: 800px; padding: 30px; background: #1a1a1a; border-radius: 12px; color: white; }
-        .bracket-col { display: flex; flex-direction: column; justify-content: space-around; gap: 30px; }
-        .matchup { background: #333; border-radius: 6px; width: 220px; border: 1px solid #555; box-shadow: 0 6px 12px rgba(0,0,0,0.4); position: relative; }
-        .matchup-header { background: #222; font-size: 0.7rem; text-align: center; padding: 6px; border-top-left-radius: 6px; border-top-right-radius: 6px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #555; }
-        .matchup-team { display: flex; justify-content: space-between; align-items: center; padding: 10px; font-size: 0.95rem; }
+        .bracket-container { display: flex; justify-content: flex-start; align-items: flex-start; gap: 40px; min-width: 1000px; padding: 30px; background: #1a1a1a; border-radius: 12px; color: white; }
+        .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 240px; }
+        .matchup { background: #333; border-radius: 6px; border: 1px solid #555; box-shadow: 0 4px 10px rgba(0,0,0,0.5); overflow: hidden; transition: transform 0.2s; }
+        .matchup:hover { border-color: #888; }
+        .matchup-header { background: #222; font-size: 0.75rem; text-align: center; padding: 6px; color: #aaa; text-transform: uppercase; border-bottom: 1px solid #555; font-weight: bold; }
+        .matchup-team { display: flex; align-items: center; padding: 10px; font-size: 0.95rem; cursor: pointer; transition: background 0.2s, opacity 0.2s; border-left: 4px solid transparent; }
         .matchup-team:not(:last-child) { border-bottom: 1px solid #444; }
-        .seed-badge { font-size: 0.75rem; font-weight: bold; color: #111; background: #ddd; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
-        .team-name-bracket { font-weight: bold; flex: 1; text-align: left; margin-left: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .bracket-logo { width: 24px; height: 24px; border-radius: 50%; background: white; }
-        .playin-label { text-align: center; color: #3b82f6; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
-        .playoffs-label { text-align: center; color: white; font-weight: bold; font-size: 1.5rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
-        .bracket-note { height: 40px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 0.8rem; font-style: italic; border-left: 2px dashed #555; margin-left: 110px; }
-    </style>
+        .matchup-team:hover:not(.disabled) { background: #444; }
+        .matchup-team.winner { background: #1f2937; border-left: 4px solid var(--win); font-weight: bold; }
+        .matchup-team.loser { opacity: 0.4; filter: grayscale(1); }
+        .matchup-team.disabled { cursor: not-allowed; opacity: 0.5; }
+        .seed-badge { font-size: 0.7rem; font-weight: bold; color: #111; background: #ddd; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 3px; margin-right: 10px; }
+        .team-name-bracket { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bracket-logo { width: 24px; height: 24px; border-radius: 50%; background: white; margin-right: 10px; }
+        .bracket-label { text-align: center; color: var(--primary); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .bracket-note { font-size: 0.75rem; color: #888; text-align: center; font-style: italic; margin: -10px 0; }
+        
+        .champion-box { text-align: center; background: linear-gradient(135deg, #ea580c, #9a3412); border-radius: 8px; padding: 25px 10px; box-shadow: 0 0 20px rgba(234, 88, 12, 0.4); margin-top: 20px; animation: pulse 2s infinite; border: 2px solid #fb923c; }
+        .champion-box img { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; margin-bottom: 15px; background: white; }
+        .champion-box h3 { margin: 0; color: white; font-size: 1.6rem; text-transform: uppercase; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .disabled-champ { background: #333; border: 2px dashed #555; color: #666; padding: 25px 10px; border-radius: 8px; text-align: center; margin-top: 20px; font-weight: bold; }
+        
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234,88,12,0.7); } 70% { box-shadow: 0 0 0 15px rgba(234,88,12,0); } 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0); } }
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -431,7 +441,14 @@
 
         <div id="bracket" class="tab-content">
             <h2 id="title-bracket" style="text-align: center;">Playoffs & Play-In Bracket</h2>
-            <p id="bracket-desc" style="text-align: center; color: #6b7280; margin-bottom: 20px;">Cuadro generado automáticamente según tu simulación o clasificación actual.</p>
+            <p id="bracket-desc" style="text-align: center; color: #6b7280; margin-bottom: 10px;">Haz clic en los equipos para simular tu camino hacia el campeonato.</p>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button onclick="resetBracket()" style="background: var(--dark); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                    🔄 Limpiar Bracket
+                </button>
+            </div>
+
             <div class="bracket-wrapper">
                 <div class="bracket-container" id="bracket-ui">
                     </div>
@@ -1305,79 +1322,141 @@
             }
             return finalSorted;
         }
+        let bracketState = {};
+
+        function resetBracket() {
+            bracketState = {};
+            renderBracket();
+        }
+
+        function advanceBracket(matchupId, winnerName, loserName) {
+            if (!winnerName) return; // Si hace clic en un hueco vacío o "TBD"
+            if (bracketState[matchupId] === winnerName) return; // Ya estaba seleccionado, no hacemos nada
+
+            bracketState[matchupId] = winnerName;
+
+            // Rutas de reseteo en cascada: Si cambias de opinión, se borra todo el "futuro" de esa rama
+            const resetPaths = {
+                'pi1': ['pi3', 'qf4', 'qf1', 'sf1', 'sf2', 'final'], 
+                'pi2': ['pi3', 'qf1', 'sf1', 'final'],
+                'pi3': ['qf1', 'sf1', 'final'],
+                'qf1': ['sf1', 'final'],
+                'qf2': ['sf1', 'final'],
+                'qf3': ['sf2', 'final'],
+                'qf4': ['sf2', 'final'],
+                'sf1': ['final'],
+                'sf2': ['final']
+            };
+
+            // Regla especial del Play-In 7vs8: El perdedor tiene otra vida en el pi3
+            if (matchupId === 'pi1') bracketState.pi1Loser = loserName;
+
+            if (resetPaths[matchupId]) {
+                resetPaths[matchupId].forEach(node => delete bracketState[node]);
+            }
+
+            renderBracket();
+        }
+
         function renderBracket() {
             const container = document.getElementById("bracket-ui");
             if (!container) return;
 
-            // Cogemos la clasificación actualizada (oficial o simulada)
-            let sortedTeams = sortTeamsWithH2H(getLiveTeams());
+            let st = sortTeamsWithH2H(getLiveTeams());
+            const getT = (name) => st.find(x => x.name === name);
+            const tBase = (seed) => st[seed - 1]; 
+
+            // Textos traducidos dinámicamente
+            const isHe = currentLang === 'he';
+            const txtPI = isHe ? "פליי-אין" : "PLAY-IN";
+            const txtQF = isHe ? "רבע גמר" : "QUARTERFINALS";
+            const txtF4 = isHe ? "פיינל פור" : "FINAL FOUR";
+            const txtFIN = isHe ? "הגמר" : "CHAMPIONSHIP";
+            const txtTBD = isHe ? "טרם נקבע" : "TBD";
+            const txtChamp = isHe ? "אלופה" : "CHAMPION";
+            const txtLoser = isHe ? "המפסידה יורדת לכאן" : "Loser plays here";
+
+            // Asignación de participantes según el avance de la simulación
+            let p_pi1_A = tBase(7), p_pi1_B = tBase(8);
+            let p_pi2_A = tBase(9), p_pi2_B = tBase(10);
+            let p_pi3_A = bracketState.pi1Loser ? getT(bracketState.pi1Loser) : null;
+            let p_pi3_B = bracketState.pi2 ? getT(bracketState.pi2) : null;
             
-            // Función auxiliar para dibujar a cada equipo
-            const getTeamHtml = (seed) => {
-                if(seed > sortedTeams.length) return `<div class="matchup-team"><span class="seed-badge">${seed}</span><span class="team-name-bracket" style="color:#666;">TBD</span></div>`;
-                let t = sortedTeams[seed - 1];
-                return `<div class="matchup-team"><span class="seed-badge">${seed}</span><img src="${getLogo(t.name)}" class="bracket-logo"><span class="team-name-bracket">${tName(t.name)}</span></div>`;
-            };
+            let p_qf1_A = tBase(1), p_qf1_B = bracketState.pi3 ? getT(bracketState.pi3) : null;
+            let p_qf2_A = tBase(4), p_qf2_B = tBase(5);
+            let p_qf3_A = tBase(3), p_qf3_B = tBase(6);
+            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null;
+
+            let p_sf1_A = bracketState.qf1 ? getT(bracketState.qf1) : null;
+            let p_sf1_B = bracketState.qf2 ? getT(bracketState.qf2) : null;
+            let p_sf2_A = bracketState.qf3 ? getT(bracketState.qf3) : null;
+            let p_sf2_B = bracketState.qf4 ? getT(bracketState.qf4) : null;
+
+            let p_fin_A = bracketState.sf1 ? getT(bracketState.sf1) : null;
+            let p_fin_B = bracketState.sf2 ? getT(bracketState.sf2) : null;
             
-            const getTbdHtml = (text, seedText) => {
-                return `<div class="matchup-team"><span class="seed-badge">${seedText}</span><span class="team-name-bracket" style="color:#888; font-style:italic; font-size: 0.8rem;">${text}</span></div>`;
+            let champion = bracketState.final ? getT(bracketState.final) : null;
+
+            // Creador de cajas de partidos
+            const buildMatchup = (id, title, teamA, teamB, seedA, seedB) => {
+                let winner = bracketState[id];
+                
+                const buildTeam = (teamObj, seedNum) => {
+                    if (!teamObj) return `<div class="matchup-team disabled"><span class="seed-badge">${seedNum}</span> <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span></div>`;
+                    
+                    let isWin = winner === teamObj.name;
+                    let isLoser = winner && winner !== teamObj.name;
+                    let opponentObj = teamObj === teamA ? teamB : teamA;
+                    let opponentName = opponentObj ? opponentObj.name : '';
+                    
+                    return `<div class="matchup-team ${isWin ? 'winner' : ''} ${isLoser ? 'loser' : ''}" onclick="advanceBracket('${id}', '${teamObj.name}', '${opponentName}')">
+                                <span class="seed-badge">${seedNum}</span>
+                                <img src="${getLogo(teamObj.name)}" class="bracket-logo">
+                                <span class="team-name-bracket">${tName(teamObj.name)}</span>
+                            </div>`;
+                };
+
+                return `<div class="matchup"><div class="matchup-header">${title}</div>${buildTeam(teamA, seedA)}${buildTeam(teamB, seedB)}</div>`;
             };
 
-            // Idiomas rápidos
-            const isHebrew = currentLang === 'he';
-            const piText = isHebrew ? "פליי-אין" : "PLAY-IN";
-            const poText = isHebrew ? "פלייאוף" : "PLAYOFFS";
-            const qfText = isHebrew ? "רבע גמר" : "Quarterfinals";
-            const loserText = isHebrew ? "המפסידה תשחק מול המנצחת 9/10" : "Loser plays Winner 9/10";
-            const win78Text = isHebrew ? "מנצחת 7/8" : "Winner 7th/8th";
-            const win910Text = isHebrew ? "מנצחת פליי-אין" : "Play-In Winner";
-
-            // Dibujamos el HTML
             container.innerHTML = `
                 <div class="bracket-col">
-                    <div class="playin-label">${piText}</div>
-                    
-                    <div class="matchup">
-                        <div class="matchup-header">7th vs 8th Seed</div>
-                        ${getTeamHtml(7)}
-                        ${getTeamHtml(8)}
-                    </div>
-                    
-                    <div class="bracket-note">${loserText}</div>
-                    
-                    <div class="matchup">
-                        <div class="matchup-header">9th vs 10th Seed</div>
-                        ${getTeamHtml(9)}
-                        ${getTeamHtml(10)}
-                    </div>
+                    <div class="bracket-label">${txtPI}</div>
+                    ${buildMatchup('pi1', '7th vs 8th (Winner = 7th Seed)', p_pi1_A, p_pi1_B, 7, 8)}
+                    <div class="bracket-note">↓ ${txtLoser} ↓</div>
+                    ${buildMatchup('pi3', '8th Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
+                    <div style="height: 15px;"></div>
+                    ${buildMatchup('pi2', '9th vs 10th (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
+                </div>
+                
+                <div class="bracket-col">
+                    <div class="bracket-label">${txtQF}</div>
+                    ${buildMatchup('qf1', 'QF 1 (1st vs 8th)', p_qf1_A, p_qf1_B, 1, 8)}
+                    ${buildMatchup('qf2', 'QF 2 (4th vs 5th)', p_qf2_A, p_qf2_B, 4, 5)}
+                    <div style="height: 35px;"></div>
+                    ${buildMatchup('qf3', 'QF 3 (3rd vs 6th)', p_qf3_A, p_qf3_B, 3, 6)}
+                    ${buildMatchup('qf4', 'QF 4 (2nd vs 7th)', p_qf4_A, p_qf4_B, 2, 7)}
                 </div>
 
                 <div class="bracket-col">
-                    <div class="playoffs-label">${poText}</div>
+                    <div class="bracket-label">${txtF4}</div>
+                    <div style="height: 45px;"></div>
+                    ${buildMatchup('sf1', 'Semifinal 1', p_sf1_A, p_sf1_B, '-', '-')}
+                    <div style="height: 140px;"></div>
+                    ${buildMatchup('sf2', 'Semifinal 2', p_sf2_A, p_sf2_B, '-', '-')}
+                </div>
+
+                <div class="bracket-col" style="justify-content: center;">
+                    <div class="bracket-label">${txtFIN}</div>
+                    ${buildMatchup('final', txtFIN, p_fin_A, p_fin_B, '-', '-')}
                     
-                    <div class="matchup" style="border-color: var(--primary);">
-                        <div class="matchup-header">${qfText}</div>
-                        ${getTeamHtml(1)}
-                        ${getTbdHtml(win910Text, '8')}
-                    </div>
-                    
-                    <div class="matchup" style="border-color: var(--primary);">
-                        <div class="matchup-header">${qfText}</div>
-                        ${getTeamHtml(4)}
-                        ${getTeamHtml(5)}
-                    </div>
-                    
-                    <div class="matchup" style="border-color: var(--primary);">
-                        <div class="matchup-header">${qfText}</div>
-                        ${getTeamHtml(3)}
-                        ${getTeamHtml(6)}
-                    </div>
-                    
-                    <div class="matchup" style="border-color: var(--primary);">
-                        <div class="matchup-header">${qfText}</div>
-                        ${getTeamHtml(2)}
-                        ${getTbdHtml(win78Text, '7')}
-                    </div>
+                    ${champion ? `
+                        <div class="champion-box">
+                            <div style="font-size:0.8rem; opacity:0.9; margin-bottom:5px; font-weight:bold;">🏆 ${txtChamp} 🏆</div>
+                            <img src="${getLogo(champion.name)}">
+                            <h3>${tName(champion.name)}</h3>
+                        </div>
+                    ` : `<div class="disabled-champ">🏆<br>${txtTBD}</div>`}
                 </div>
             `;
         }
