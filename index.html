@@ -358,13 +358,13 @@
 
     <nav>
         <button class="tab-link active" onclick="openTab(event, 'clasificacion')" id="tab-standings">📊 Clasificación</button>
+        <button class="tab-link" onclick="openTab(event, 'simulador')" id="tab-simulator">🎮 Simulador</button>
+        <button class="tab-link" onclick="openTab(event, 'bracket')" id="tab-bracket">🏆 Bracket</button> 
         <button class="tab-link" onclick="openTab(event, 'miequipo')" id="tab-myteam">🎯 Mi Equipo</button>
         <button class="tab-link" onclick="openTab(event, 'probabilidades')" id="tab-prob">🎲 Probabilidades</button>
-        <button class="tab-link" onclick="openTab(event, 'simulador')" id="tab-simulator">🎮 Simulador</button>
         <button class="tab-link" onclick="openTab(event, 'desempates')" id="tab-ties">⚔️ Desempates</button>
-        <button class="tab-link" onclick="openTab(event, 'bracket')" id="tab-bracket">🏆 Bracket</button> 
+        <button class="tab-link" onclick="openTab(event, 'analisis')" id="tab-news">📰 Análisis</button>
         <button class="tab-link" onclick="openTab(event, 'resultados')" id="tab-results">🏀 Resultados</button>
-        <button class="tab-link" onclick="openTab(event, 'analisis')" id="tab-news">📰 Analisis</button>
     </nav>
 
     <div class="container">
@@ -477,11 +477,12 @@
     </div>
 
     <script>
-        const i18n = {
+        avaScript
+const i18n = {
     es: {
-        title: "🏆 Calculadora EuroLeague Ultimate 25/26",
-        standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Análisis", bracket: "🏆 Bracket",
-        bracket_title: "Playoffs & Play-In Bracket", bracket_desc: "Cuadro generado automáticamente según tu simulación o clasificación actual.",
+        title: "🏆 Calculadora EuroLeague Ultimate 25/26", standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Análisis", bracket: "🏆 Bracket",
+        bracket_title: "Playoffs & Play-In Bracket", bracket_desc: "Haz clic en los equipos para simular tu camino hacia el campeonato.",
+        playin: "PLAY-IN", quarterfinals: "CUARTOS DE FINAL", finalfour: "FINAL FOUR", championship: "CAMPEONATO", tbd: "Por decidir", champion: "CAMPEÓN", loser_drops: "El perdedor cae aquí",
         official_standings: "Clasificación Oficial", live_standings: "Clasificación en Vivo", sim_desc: "Selecciona los ganadores para actualizar la tabla.",
         team: "Equipo", w: "V", l: "D", form: "Racha", diff_pct: "SOS", schedule: "Calendario", round: "Jornada", score: "Resultado",
         home: "Local", away: "Visitante", ties_desc: "Grupos calculados automáticamente según tus simulaciones.",
@@ -496,9 +497,9 @@
         all_games: "Todos los partidos", last_5: "Últimos 5", last_10: "Últimos 10", only_home: "Solo en casa", only_away: "Solo fuera"
     },
     en: {
-        title: "🏆 EuroLeague Ultimate Calculator 25/26",
-        standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis", bracket: "🏆 Bracket",
-        bracket_title: "Playoffs & Play-In Bracket", bracket_desc: "Bracket generated automatically based on your simulation or current standings.",
+        title: "🏆 EuroLeague Ultimate Calculator 25/26", standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis", bracket: "🏆 Bracket",
+        bracket_title: "Playoffs & Play-In Bracket", bracket_desc: "Click on the teams to simulate your path to the championship.",
+        playin: "PLAY-IN", quarterfinals: "QUARTERFINALS", finalfour: "FINAL FOUR", championship: "CHAMPIONSHIP", tbd: "TBD", champion: "CHAMPION", loser_drops: "Loser plays here",
         official_standings: "Official Standings", live_standings: "Live Standings", sim_desc: "Select winners to update the table.",
         team: "Team", w: "W", l: "L", form: "Form", diff_pct: "SOS", schedule: "Schedule", round: "Round", score: "Score",
         home: "Home", away: "Away", ties_desc: "Groups automatically calculated based on your simulations.",
@@ -513,9 +514,9 @@
         all_games: "All games", last_5: "Last 5", last_10: "Last 10", only_home: "Home only", only_away: "Away only"
     },
     fr: {
-        title: "🏆 Calculatrice EuroLeague Ultimate 25/26",
-        standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
-        bracket_title: "Tableau des Playoffs & Play-In", bracket_desc: "Tableau généré automatiquement selon votre simulation ou le classement actuel.",
+        title: "🏆 Calculatrice EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
+        bracket_title: "Tableau des Playoffs & Play-In", bracket_desc: "Cliquez sur les équipes pour simuler le chemin vers le titre.",
+        playin: "PLAY-IN", quarterfinals: "QUARTS DE FINALE", finalfour: "FINAL FOUR", championship: "CHAMPIONNAT", tbd: "À dét.", champion: "CHAMPION", loser_drops: "Le perdant joue ici",
         official_standings: "Classement Officiel", live_standings: "Classement en Direct", sim_desc: "Sélectionnez les vainqueurs pour mettre à jour.",
         team: "Équipe", w: "V", l: "D", form: "Forme", diff_pct: "SOS", schedule: "Calendrier", round: "Journée", score: "Score",
         home: "Domicile", away: "Extérieur", ties_desc: "Groupes calculés automatiquement selon vos simulations.",
@@ -530,9 +531,9 @@
         all_games: "Tous les matchs", last_5: "Les 5 derniers", last_10: "Les 10 derniers", only_home: "À domicile", only_away: "À l'extérieur"
     },
     tr: {
-        title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26",
-        standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz", bracket: "🏆 Eşleşmeler",
-        bracket_title: "Playoff ve Play-In Eşleşmeleri", bracket_desc: "Simülasyonunuza veya mevcut puana göre otomatik oluşturulan tablo.",
+        title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26", standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz", bracket: "🏆 Eşleşmeler",
+        bracket_title: "Playoff ve Play-In Eşleşmeleri", bracket_desc: "Şampiyonluğa giden yolu simüle etmek için takımlara tıklayın.",
+        playin: "PLAY-IN", quarterfinals: "ÇEYREK FİNAL", finalfour: "DÖRT'LÜ FİNAL", championship: "ŞAMPİYONLUK", tbd: "Belirsiz", champion: "ŞAMPİYON", loser_drops: "Kaybeden buraya düşer",
         official_standings: "Resmi Puan Durumu", live_standings: "Canlı Puan Durumu", sim_desc: "Tabloyu güncellemek için kazananları seç.",
         team: "Takım", w: "G", l: "M", form: "Form", diff_pct: "SOS", schedule: "Fikstür", round: "Hafta", score: "Skor",
         home: "Ev", away: "Deplasman", ties_desc: "Simülasyonlarına göre otomatik hesaplanan gruplar.",
@@ -547,9 +548,9 @@
         all_games: "Tüm maçlar", last_5: "Son 5", last_10: "Son 10", only_home: "Sadece içeride", only_away: "Sadece deplasmanda"
     },
     gr: {
-        title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26",
-        standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
-        bracket_title: "Ταμπλό Playoffs & Play-In", bracket_desc: "Το ταμπλό δημιουργείται αυτόματα βάσει της προσομοίωσής σας ή της τρέχουσας βαθμολογίας.",
+        title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26", standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
+        bracket_title: "Ταμπλό Playoffs & Play-In", bracket_desc: "Κάντε κλικ στις ομάδες για να προσομοιώσετε την πορεία προς τον τίτλο.",
+        playin: "PLAY-IN", quarterfinals: "ΠΡΟΗΜΙΤΕΛΙΚΑ", finalfour: "FINAL FOUR", championship: "ΤΕΛΙΚΟΣ", tbd: "Εκκρεμεί", champion: "ΠΡΩΤΑΘΛΗΤΗΣ", loser_drops: "Ο ηττημένος παίζει εδώ",
         official_standings: "Επίσημη Βαθμολογία", live_standings: "Ζωντανή Βαθμολογία", sim_desc: "Επίλεξε νικητές για ενημέρωση.",
         team: "Ομάδα", w: "Ν", l: "Η", form: "Φόρμα", diff_pct: "SOS", schedule: "Πρόγραμμα", round: "Αγωνιστική", score: "Σκορ",
         home: "Γηπεδούχος", away: "Φιλοξενούμενος", ties_desc: "Ομάδες που υπολογίζονται αυτόματα βάσει προσομοιώσεων.",
@@ -564,9 +565,9 @@
         all_games: "Όλα τα ματς", last_5: "Τελευταία 5", last_10: "Τελευταία 10", only_home: "Μόνο εντός", only_away: "Μόνο εκτός"
     },
     sr: {
-        title: "🏆 Evroliga Ultimate Kalkulator 25/26",
-        standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza", bracket: "🏆 Kostur",
-        bracket_title: "Plej-of i Plej-in Kostur", bracket_desc: "Kostur se generiše automatski na osnovu vaše simulacije ili trenutne tabele.",
+        title: "🏆 Evroliga Ultimate Kalkulator 25/26", standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza", bracket: "🏆 Kostur",
+        bracket_title: "Plej-of i Plej-in Kostur", bracket_desc: "Kliknite na timove da simulirate put do titule.",
+        playin: "PLEJ-IN", quarterfinals: "ČETVRTFINALE", finalfour: "FAJNAL FOR", championship: "FINALE", tbd: "TBD", champion: "ŠAMPION", loser_drops: "Poraženi igra ovde",
         official_standings: "Zvanična Tabela", live_standings: "Tabela Uživo", sim_desc: "Izaberi pobednike za ažuriranje tabele.",
         team: "Tim", w: "P", l: "I", form: "Forma", diff_pct: "SOS", schedule: "Raspored", round: "Kolo", score: "Rezultat",
         home: "Domaćin", away: "Gost", ties_desc: "Grupe se automatski računaju prema tvojim simulacijama.",
@@ -581,9 +582,9 @@
         all_games: "Sve utakmice", last_5: "Poslednjih 5", last_10: "Poslednjih 10", only_home: "Samo kod kuće", only_away: "Samo u gostima"
     },
     lt: {
-        title: "🏆 Eurolygos Ultimate Skaičiuoklė 25/26",
-        standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė", bracket: "🏆 Medis",
-        bracket_title: "Atkrintamųjų ir Įkrintamųjų Medis", bracket_desc: "Medis sugeneruojamas automatiškai pagal jūsų simuliaciją arba dabartinę lentelę.",
+        title: "🏆 Eurolygos Ultimate Skaičiuoklė 25/26", standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė", bracket: "🏆 Medis",
+        bracket_title: "Atkrintamųjų ir Įkrintamųjų Medis", bracket_desc: "Paspauskite ant komandų, kad simuliuotumėte kelią link titulo.",
+        playin: "ĮKRINTAMOSIOS", quarterfinals: "KETVIRTFINALIS", finalfour: "FINALO KETVERTAS", championship: "FINALAS", tbd: "Nenustatyta", champion: "ČEMPIONAS", loser_drops: "Pralaimėtojas žaidžia čia",
         official_standings: "Oficiali Lentelė", live_standings: "Gyva Lentelė", sim_desc: "Pasirink nugalėtojus, kad atnaujintum lentelę.",
         team: "Komanda", w: "P", l: "P", form: "Forma", diff_pct: "SOS", schedule: "Tvarkaraštis", round: "Turas", score: "Rezultatas",
         home: "Namuose", away: "Išvykoje", ties_desc: "Grupės skaičiuojamos automatiškai pagal tavo simuliacijas.",
@@ -598,9 +599,9 @@
         all_games: "Visos rungtynės", last_5: "Paskutinės 5", last_10: "Paskutinės 10", only_home: "Tik namuose", only_away: "Tik išvykoje"
     },
     he: {
-        title: "🏆 מחשבון יורוליג 25/26",
-        standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
-        bracket_title: "בראקט פלייאוף ופליי-אין", bracket_desc: "התרשים נוצר אוטומטית על סמך הסימולציה שלך או הדירוג הנוכחי.",
+        title: "🏆 מחשבון יורוליג 25/26", standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
+        bracket_title: "בראקט פלייאוף ופליי-אין", bracket_desc: "לחץ על הקבוצות כדי לדמות את הדרך לאליפות.",
+        playin: "פליי-אין", quarterfinals: "רבע גמר", finalfour: "פיינל פור", championship: "הגמר", tbd: "טרם נקבע", champion: "אלופה", loser_drops: "המפסידה יורדת לכאן",
         official_standings: "טבלה רשמית", live_standings: "טבלה בזמן אמת", sim_desc: "בחר מנצחות כדי לעדכן את הטבלה למטה",
         team: "קבוצה", w: "נ", l: "ה", form: "כושר", diff_pct: "SOS", schedule: "לוח משחקים", round: "מחזור", score: "תוצאה",
         home: "בית", away: "חוץ", ties_desc: "בתים מחושבים אוטומטית לפי הסימולציות שלך.",
@@ -613,26 +614,10 @@
         sc_needed: "הדרך למטרה", sc_for_top6: "להבטחת טופ 6:", sc_for_top10: "להבטחת פליי-אין:",
         postponed: "משחקים דחויים", analysis_title: "ניתוח מתקדם", net_rating_label: "מדד נט (הפרש ממוצע)",
         all_games: "כל המשחקים", last_5: "5 אחרונים", last_10: "10 אחרונים", only_home: "רק בבית", only_away: "רק בחוץ",
-        "Olympiacos": "אולימפיאקוס",
-        "Fenerbahçe": "פנרבחצ'ה",
-        "Real Madrid": "ריאל מדריד",
-        "Valencia Basket": "ולנסיה",
-        "Hapoel Tel-Aviv": "הפועל תל אביב",
-        "Zalgiris Kaunas": "ז'לגיריס",
-        "Panathinaikos": "פנאתינייקוס",
-        "Barcelona": "ברצלונה",
-        "Crvena Zvezda": "הכוכב האדום",
-        "Monaco": "מונאקו",
-        "Maccabi Tel Aviv": "מכבי תל אביב",
-        "Dubai": "דובאי",
-        "Olimpia Milano": "מילאנו",
-        "Partizan": "פרטיזן",
-        "Bayern": "באיירן מינכן",
-        "Paris": "פריז",
-        "Virtus Bolonia": "וירטוס",
-        "Baskonia": "באסקוניה",
-        "Anadolu Efes": "אנדולו אפס",
-        "Asvel Basket": "וילרבאן"
+        "Olympiacos": "אולימפיאקוס", "Fenerbahçe": "פנרבחצ'ה", "Real Madrid": "ריאל מדריד", "Valencia Basket": "ולנסיה", "Hapoel Tel-Aviv": "הפועל תל אביב",
+        "Zalgiris Kaunas": "ז'לגיריס", "Panathinaikos": "פנאתינייקוס", "Barcelona": "ברצלונה", "Crvena Zvezda": "הכוכב האדום", "Monaco": "מונאקו",
+        "Maccabi Tel Aviv": "מכבי תל אביב", "Dubai": "דובאי", "Olimpia Milano": "מילאנו", "Partizan": "פרטיזן", "Bayern": "באיירן מינכן",
+        "Paris": "פריז", "Virtus Bolonia": "וירטוס", "Baskonia": "באסקוניה", "Anadolu Efes": "אנדולו אפס", "Asvel Basket": "וילרבאן"
     }
 };
         // 1. Miramos si la URL fuerza un idioma 
@@ -1366,15 +1351,15 @@
             const getT = (name) => st.find(x => x.name === name);
             const tBase = (seed) => st[seed - 1]; 
 
-            // Textos traducidos dinámicamente
-            const isHe = currentLang === 'he';
-            const txtPI = isHe ? "פליי-אין" : "PLAY-IN";
-            const txtQF = isHe ? "רבע גמר" : "QUARTERFINALS";
-            const txtF4 = isHe ? "פיינל פור" : "FINAL FOUR";
-            const txtFIN = isHe ? "הגמר" : "CHAMPIONSHIP";
-            const txtTBD = isHe ? "טרם נקבע" : "TBD";
-            const txtChamp = isHe ? "אלופה" : "CHAMPION";
-            const txtLoser = isHe ? "המפסידה יורדת לכאן" : "Loser plays here";
+            // Textos traducidos dinámicamente desde el diccionario i18n
+            const t = i18n[currentLang] || i18n['es'];
+            const txtPI = t.playin || "PLAY-IN";
+            const txtQF = t.quarterfinals || "QUARTERFINALS";
+            const txtF4 = t.finalfour || "FINAL FOUR";
+            const txtFIN = t.championship || "CHAMPIONSHIP";
+            const txtTBD = t.tbd || "TBD";
+            const txtChamp = t.champion || "CHAMPION";
+            const txtLoser = t.loser_drops || "Loser plays here";
 
             // Asignación de participantes según el avance de la simulación
             let p_pi1_A = tBase(7), p_pi1_B = tBase(8);
