@@ -313,6 +313,19 @@
             .game-badge { padding: 2px 3px; font-size: 0.65rem; margin-right: 1px; }
             #myteam-dashboard > div:first-child { flex-direction: column; text-align: center; }
         }
+        .bracket-wrapper { overflow-x: auto; padding: 20px 0; }
+        .bracket-container { display: flex; justify-content: center; align-items: center; gap: 40px; min-width: 800px; padding: 30px; background: #1a1a1a; border-radius: 12px; color: white; }
+        .bracket-col { display: flex; flex-direction: column; justify-content: space-around; gap: 30px; }
+        .matchup { background: #333; border-radius: 6px; width: 220px; border: 1px solid #555; box-shadow: 0 6px 12px rgba(0,0,0,0.4); position: relative; }
+        .matchup-header { background: #222; font-size: 0.7rem; text-align: center; padding: 6px; border-top-left-radius: 6px; border-top-right-radius: 6px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #555; }
+        .matchup-team { display: flex; justify-content: space-between; align-items: center; padding: 10px; font-size: 0.95rem; }
+        .matchup-team:not(:last-child) { border-bottom: 1px solid #444; }
+        .seed-badge { font-size: 0.75rem; font-weight: bold; color: #111; background: #ddd; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 3px; }
+        .team-name-bracket { font-weight: bold; flex: 1; text-align: left; margin-left: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bracket-logo { width: 24px; height: 24px; border-radius: 50%; background: white; }
+        .playin-label { text-align: center; color: #3b82f6; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        .playoffs-label { text-align: center; color: white; font-weight: bold; font-size: 1.5rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        .bracket-note { height: 40px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 0.8rem; font-style: italic; border-left: 2px dashed #555; margin-left: 110px; }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -339,6 +352,7 @@
         <button class="tab-link" onclick="openTab(event, 'probabilidades')" id="tab-prob">🎲 Probabilidades</button>
         <button class="tab-link" onclick="openTab(event, 'simulador')" id="tab-simulator">🎮 Simulador</button>
         <button class="tab-link" onclick="openTab(event, 'desempates')" id="tab-ties">⚔️ Desempates</button>
+        <button class="tab-link" onclick="openTab(event, 'bracket')" id="tab-bracket">🏆 Bracket</button> 
         <button class="tab-link" onclick="openTab(event, 'resultados')" id="tab-results">🏀 Resultados</button>
         <button class="tab-link" onclick="openTab(event, 'analisis')" id="tab-news">📰 Analisis</button>
     </nav>
@@ -415,6 +429,15 @@
             <div id="matrices-container" class="table-responsive"></div>
         </div>
 
+        <div id="bracket" class="tab-content">
+            <h2 id="title-bracket" style="text-align: center;">Playoffs & Play-In Bracket</h2>
+            <p id="bracket-desc" style="text-align: center; color: #6b7280; margin-bottom: 20px;">Cuadro generado automáticamente según tu simulación o clasificación actual.</p>
+            <div class="bracket-wrapper">
+                <div class="bracket-container" id="bracket-ui">
+                    </div>
+            </div>
+        </div>
+
         <div id="resultados" class="tab-content">
             <h2 id="title-results">Resultados Históricos</h2>
             <div class="filters">
@@ -440,7 +463,8 @@
         const i18n = {
     es: {
         title: "🏆 Calculadora EuroLeague Ultimate 25/26",
-        standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Análisis",
+        standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Análisis", bracket: "🏆 Bracket",
+        bracket_title: "Playoffs & Play-In Bracket", bracket_desc: "Cuadro generado automáticamente según tu simulación o clasificación actual.",
         official_standings: "Clasificación Oficial", live_standings: "Clasificación en Vivo", sim_desc: "Selecciona los ganadores para actualizar la tabla.",
         team: "Equipo", w: "V", l: "D", form: "Racha", diff_pct: "SOS", schedule: "Calendario", round: "Jornada", score: "Resultado",
         home: "Local", away: "Visitante", ties_desc: "Grupos calculados automáticamente según tus simulaciones.",
@@ -456,7 +480,8 @@
     },
     en: {
         title: "🏆 EuroLeague Ultimate Calculator 25/26",
-        standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis",
+        standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis", bracket: "🏆 Bracket",
+        bracket_title: "Playoffs & Play-In Bracket", bracket_desc: "Bracket generated automatically based on your simulation or current standings.",
         official_standings: "Official Standings", live_standings: "Live Standings", sim_desc: "Select winners to update the table.",
         team: "Team", w: "W", l: "L", form: "Form", diff_pct: "SOS", schedule: "Schedule", round: "Round", score: "Score",
         home: "Home", away: "Away", ties_desc: "Groups automatically calculated based on your simulations.",
@@ -472,7 +497,8 @@
     },
     fr: {
         title: "🏆 Calculatrice EuroLeague Ultimate 25/26",
-        standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse",
+        standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
+        bracket_title: "Tableau des Playoffs & Play-In", bracket_desc: "Tableau généré automatiquement selon votre simulation ou le classement actuel.",
         official_standings: "Classement Officiel", live_standings: "Classement en Direct", sim_desc: "Sélectionnez les vainqueurs pour mettre à jour.",
         team: "Équipe", w: "V", l: "D", form: "Forme", diff_pct: "SOS", schedule: "Calendrier", round: "Journée", score: "Score",
         home: "Domicile", away: "Extérieur", ties_desc: "Groupes calculés automatiquement selon vos simulations.",
@@ -488,7 +514,8 @@
     },
     tr: {
         title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26",
-        standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz",
+        standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz", bracket: "🏆 Eşleşmeler",
+        bracket_title: "Playoff ve Play-In Eşleşmeleri", bracket_desc: "Simülasyonunuza veya mevcut puana göre otomatik oluşturulan tablo.",
         official_standings: "Resmi Puan Durumu", live_standings: "Canlı Puan Durumu", sim_desc: "Tabloyu güncellemek için kazananları seç.",
         team: "Takım", w: "G", l: "M", form: "Form", diff_pct: "SOS", schedule: "Fikstür", round: "Hafta", score: "Skor",
         home: "Ev", away: "Deplasman", ties_desc: "Simülasyonlarına göre otomatik hesaplanan gruplar.",
@@ -504,7 +531,8 @@
     },
     gr: {
         title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26",
-        standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση",
+        standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
+        bracket_title: "Ταμπλό Playoffs & Play-In", bracket_desc: "Το ταμπλό δημιουργείται αυτόματα βάσει της προσομοίωσής σας ή της τρέχουσας βαθμολογίας.",
         official_standings: "Επίσημη Βαθμολογία", live_standings: "Ζωντανή Βαθμολογία", sim_desc: "Επίλεξε νικητές για ενημέρωση.",
         team: "Ομάδα", w: "Ν", l: "Η", form: "Φόρμα", diff_pct: "SOS", schedule: "Πρόγραμμα", round: "Αγωνιστική", score: "Σκορ",
         home: "Γηπεδούχος", away: "Φιλοξενούμενος", ties_desc: "Ομάδες που υπολογίζονται αυτόματα βάσει προσομοιώσεων.",
@@ -520,7 +548,8 @@
     },
     sr: {
         title: "🏆 Evroliga Ultimate Kalkulator 25/26",
-        standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza",
+        standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza", bracket: "🏆 Kostur",
+        bracket_title: "Plej-of i Plej-in Kostur", bracket_desc: "Kostur se generiše automatski na osnovu vaše simulacije ili trenutne tabele.",
         official_standings: "Zvanična Tabela", live_standings: "Tabela Uživo", sim_desc: "Izaberi pobednike za ažuriranje tabele.",
         team: "Tim", w: "P", l: "I", form: "Forma", diff_pct: "SOS", schedule: "Raspored", round: "Kolo", score: "Rezultat",
         home: "Domaćin", away: "Gost", ties_desc: "Grupe se automatski računaju prema tvojim simulacijama.",
@@ -536,7 +565,8 @@
     },
     lt: {
         title: "🏆 Eurolygos Ultimate Skaičiuoklė 25/26",
-        standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė",
+        standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė", bracket: "🏆 Medis",
+        bracket_title: "Atkrintamųjų ir Įkrintamųjų Medis", bracket_desc: "Medis sugeneruojamas automatiškai pagal jūsų simuliaciją arba dabartinę lentelę.",
         official_standings: "Oficiali Lentelė", live_standings: "Gyva Lentelė", sim_desc: "Pasirink nugalėtojus, kad atnaujintum lentelę.",
         team: "Komanda", w: "P", l: "P", form: "Forma", diff_pct: "SOS", schedule: "Tvarkaraštis", round: "Turas", score: "Rezultatas",
         home: "Namuose", away: "Išvykoje", ties_desc: "Grupės skaičiuojamos automatiškai pagal tavo simuliacijas.",
@@ -552,7 +582,8 @@
     },
     he: {
         title: "🏆 מחשבון יורוליג 25/26",
-        standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח",
+        standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
+        bracket_title: "בראקט פלייאוף ופליי-אין", bracket_desc: "התרשים נוצר אוטומטית על סמך הסימולציה שלך או הדירוג הנוכחי.",
         official_standings: "טבלה רשמית", live_standings: "טבלה בזמן אמת", sim_desc: "בחר מנצחות כדי לעדכן את הטבלה למטה",
         team: "קבוצה", w: "נ", l: "ה", form: "כושר", diff_pct: "SOS", schedule: "לוח משחקים", round: "מחזור", score: "תוצאה",
         home: "בית", away: "חוץ", ties_desc: "בתים מחושבים אוטומטית לפי הסימולציות שלך.",
@@ -587,7 +618,6 @@
         "Asvel Basket": "וילרבאן"
     }
 };
-
         // 1. Miramos si la URL fuerza un idioma 
         const urlParams = new URLSearchParams(window.location.search);
         const langParam = urlParams.get('lang');
@@ -1051,19 +1081,54 @@
             document.getElementById('tab-ties').textContent = t.ties;
             document.getElementById('tab-results').textContent = t.results;
             document.getElementById('tab-news').textContent = t.news;
+
+            // --- NUEVO: Textos del Menú y Títulos del Bracket ---
+            let tabBracket = document.getElementById('tab-bracket');
+            if (tabBracket) tabBracket.textContent = t.bracket || "🏆 Bracket";
             
-            document.getElementById('title-standings').textContent = t.official_standings;
-            document.getElementById('title-myteam').textContent = t.my_team;
-            document.getElementById('title-prob').textContent = t.prob;
-            document.getElementById('prob-desc').textContent = t.prob_desc;
-            document.getElementById('btn-run-prob').textContent = t.run_prob;
-            document.getElementById('title-simulator').textContent = t.simulator;
-            document.getElementById('sim-desc').textContent = t.sim_desc;
-            document.getElementById('title-live').textContent = t.live_standings;
-            document.getElementById('title-ties').textContent = t.ties;
-            document.getElementById('ties-desc').textContent = t.ties_desc;
-            document.getElementById('title-results').textContent = t.results;
-            document.getElementById('title-news').textContent = t.news;
+            let bTitle = document.getElementById('title-bracket'); 
+            if (bTitle) bTitle.textContent = t.bracket_title || "Playoffs & Play-In Bracket";
+            
+            let bDesc = document.getElementById('bracket-desc'); 
+            if (bDesc) bDesc.textContent = t.bracket_desc || "Cuadro generado automáticamente según tu simulación o clasificación actual.";
+            // ----------------------------------------------------
+            
+            // Cuidado con los IDs que podrían no existir si el usuario no ha puesto los filtros aún
+            let titleStandings = document.getElementById('title-standings');
+            if (titleStandings) titleStandings.textContent = t.official_standings;
+            
+            let titleMyteam = document.getElementById('title-myteam');
+            if (titleMyteam) titleMyteam.textContent = t.my_team;
+            
+            let titleProb = document.getElementById('title-prob');
+            if (titleProb) titleProb.textContent = t.prob;
+            
+            let probDesc = document.getElementById('prob-desc');
+            if (probDesc) probDesc.textContent = t.prob_desc;
+            
+            let btnRunProb = document.getElementById('btn-run-prob');
+            if (btnRunProb) btnRunProb.textContent = t.run_prob;
+            
+            let titleSimulator = document.getElementById('title-simulator');
+            if (titleSimulator) titleSimulator.textContent = t.simulator;
+            
+            let simDesc = document.getElementById('sim-desc');
+            if (simDesc) simDesc.textContent = t.sim_desc;
+            
+            let titleLive = document.getElementById('title-live');
+            if (titleLive) titleLive.textContent = t.live_standings;
+            
+            let titleTies = document.getElementById('title-ties');
+            if (titleTies) titleTies.textContent = t.ties;
+            
+            let tiesDesc = document.getElementById('ties-desc');
+            if (tiesDesc) tiesDesc.textContent = t.ties_desc;
+            
+            let titleResults = document.getElementById('title-results');
+            if (titleResults) titleResults.textContent = t.results;
+            
+            let titleNews = document.getElementById('title-news');
+            if (titleNews) titleNews.textContent = t.news;
             
             document.querySelectorAll('.t-team').forEach(el => el.textContent = t.team);
             document.querySelectorAll('.t-w').forEach(el => el.textContent = t.w);
@@ -1082,7 +1147,8 @@
             }
 
             // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
-            setTimeout(() => { renderStandings(); }, 0);
+            // AÑADIDO: renderBracket() para que se actualice junto a la clasificación
+            setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
             setTimeout(() => { renderMatrices(); renderResultados(); }, 0);
             setTimeout(() => {
@@ -1238,6 +1304,82 @@
                 finalSorted.push(...tiedGroup);
             }
             return finalSorted;
+        }
+        function renderBracket() {
+            const container = document.getElementById("bracket-ui");
+            if (!container) return;
+
+            // Cogemos la clasificación actualizada (oficial o simulada)
+            let sortedTeams = sortTeamsWithH2H(getLiveTeams());
+            
+            // Función auxiliar para dibujar a cada equipo
+            const getTeamHtml = (seed) => {
+                if(seed > sortedTeams.length) return `<div class="matchup-team"><span class="seed-badge">${seed}</span><span class="team-name-bracket" style="color:#666;">TBD</span></div>`;
+                let t = sortedTeams[seed - 1];
+                return `<div class="matchup-team"><span class="seed-badge">${seed}</span><img src="${getLogo(t.name)}" class="bracket-logo"><span class="team-name-bracket">${tName(t.name)}</span></div>`;
+            };
+            
+            const getTbdHtml = (text, seedText) => {
+                return `<div class="matchup-team"><span class="seed-badge">${seedText}</span><span class="team-name-bracket" style="color:#888; font-style:italic; font-size: 0.8rem;">${text}</span></div>`;
+            };
+
+            // Idiomas rápidos
+            const isHebrew = currentLang === 'he';
+            const piText = isHebrew ? "פליי-אין" : "PLAY-IN";
+            const poText = isHebrew ? "פלייאוף" : "PLAYOFFS";
+            const qfText = isHebrew ? "רבע גמר" : "Quarterfinals";
+            const loserText = isHebrew ? "המפסידה תשחק מול המנצחת 9/10" : "Loser plays Winner 9/10";
+            const win78Text = isHebrew ? "מנצחת 7/8" : "Winner 7th/8th";
+            const win910Text = isHebrew ? "מנצחת פליי-אין" : "Play-In Winner";
+
+            // Dibujamos el HTML
+            container.innerHTML = `
+                <div class="bracket-col">
+                    <div class="playin-label">${piText}</div>
+                    
+                    <div class="matchup">
+                        <div class="matchup-header">7th vs 8th Seed</div>
+                        ${getTeamHtml(7)}
+                        ${getTeamHtml(8)}
+                    </div>
+                    
+                    <div class="bracket-note">${loserText}</div>
+                    
+                    <div class="matchup">
+                        <div class="matchup-header">9th vs 10th Seed</div>
+                        ${getTeamHtml(9)}
+                        ${getTeamHtml(10)}
+                    </div>
+                </div>
+
+                <div class="bracket-col">
+                    <div class="playoffs-label">${poText}</div>
+                    
+                    <div class="matchup" style="border-color: var(--primary);">
+                        <div class="matchup-header">${qfText}</div>
+                        ${getTeamHtml(1)}
+                        ${getTbdHtml(win910Text, '8')}
+                    </div>
+                    
+                    <div class="matchup" style="border-color: var(--primary);">
+                        <div class="matchup-header">${qfText}</div>
+                        ${getTeamHtml(4)}
+                        ${getTeamHtml(5)}
+                    </div>
+                    
+                    <div class="matchup" style="border-color: var(--primary);">
+                        <div class="matchup-header">${qfText}</div>
+                        ${getTeamHtml(3)}
+                        ${getTeamHtml(6)}
+                    </div>
+                    
+                    <div class="matchup" style="border-color: var(--primary);">
+                        <div class="matchup-header">${qfText}</div>
+                        ${getTeamHtml(2)}
+                        ${getTbdHtml(win78Text, '7')}
+                    </div>
+                </div>
+            `;
         }
 
         function renderStandings() {
