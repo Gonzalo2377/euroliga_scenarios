@@ -1096,6 +1096,29 @@ const i18n = {
             document.getElementById('tab-results').textContent = t.results;
             document.getElementById('tab-news').textContent = t.news;
 
+            let footerMeth = document.getElementById('footer-methodology');
+            if (footerMeth) {
+                if (currentLang === 'he') {
+                    // Formato para Hebreo (de derecha a izquierda)
+                    footerMeth.style.direction = 'rtl';
+                    footerMeth.style.textAlign = 'right';
+                    footerMeth.innerHTML = `
+                        <h3 style="color: #1f2937; border-bottom: 2px solid #d1d5db; padding-bottom: 5px;">איך עובד הסימולטור?</h3>
+                        <p>הסימולטור שלנו הוא כלי מתמטי מתקדם שנועד לחזות תרחישים בפלייאוף ובפליי-אין היורוליג. אנחנו מבצעים שימוש בהיסטוריית המפגשים הישירים בין הקבוצות, חוקי שוברי השוויון של הליגה והסטטיסטיקות מהעונה הנוכחית, כאשר הטבלה נוצרת בזמן אמת ובהתאם לתוצאות שאתם חוזים.</p>
+                        <p>מנוע החיזוי והסיכויים בכל אחד מהמשחקים עובד על ידי הרצת 2,000 סימולציות של העונה הסדירה, האלגוריתם מנתח את הכושר של הקבוצות ב-5 המשחקים האחרונים, יתרון הביתיות ומאזני הקבוצות. כך אנו יכולים לספק הסתברויות סטטיסטיות מדויקות לגבי אילו קבוצות יבטיחו את המקום בטופ 6, מי יגיעו לפליי-אין, ומי יודחו.</p>
+                    `;
+                } else {
+                    // Formato Global en Inglés (de izquierda a derecha)
+                    footerMeth.style.direction = 'ltr';
+                    footerMeth.style.textAlign = 'left';
+                    footerMeth.innerHTML = `
+                        <h3 style="color: #1f2937; border-bottom: 2px solid #d1d5db; padding-bottom: 5px;">How does the EuroLeague Calculator work?</h3>
+                        <p>Our <strong>EuroLeague Calculator and Simulator</strong> is an advanced mathematical tool designed to predict Playoff and Play-In scenarios. By using the head-to-head (H2H) history, official tiebreaker rules, and current season statistics, we generate real-time standings.</p>
+                        <p>The predictive engine includes a <strong>Monte Carlo</strong> simulation model. By running 2,000 simulations of the regular season, the algorithm processes the teams' form (last 5 games), home-court advantage, and weighted win percentages using the Log5 formula. This allows us to provide accurate statistical probabilities on which teams will clinch the coveted Top 6, who will fall into the Play-In, and who will be eliminated.</p>
+                    `;
+                }
+            }
+
             // --- NUEVO: Textos del Menú y Títulos del Bracket ---
             let tabBracket = document.getElementById('tab-bracket');
             if (tabBracket) tabBracket.textContent = t.bracket || "🏆 Bracket";
@@ -2118,11 +2141,8 @@ const i18n = {
 
        
     </script>
-    <div style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px; color: #374151; font-size: 0.95rem; line-height: 1.6; max-width: 1200px; margin-left: auto; margin-right: auto;">
-        <h3 style="color: #1f2937; border-bottom: 2px solid #d1d5db; padding-bottom: 5px;">How does the EuroLeague Calculator work?</h3>
-        <p>Our <strong>EuroLeague Calculator and Simulator</strong> is an advanced mathematical tool designed to predict Playoff and Play-In scenarios. By using the head-to-head (H2H) history, official tiebreaker rules, and current season statistics, we generate real-time standings.</p>
-        <p>The predictive engine includes a <strong>Monte Carlo</strong> simulation model. By running 2,000 simulations of the regular season, the algorithm processes the teams' form (last 5 games), home-court advantage, and weighted win percentages using the Log5 formula. This allows us to provide accurate statistical probabilities on which teams will clinch the coveted Top 6, who will fall into the Play-In, and who will be eliminated.</p>
-    </div>
+    <div id="footer-methodology" style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px; color: #374151; font-size: 0.95rem; line-height: 1.6; max-width: 1200px; margin-left: auto; margin-right: auto; transition: all 0.3s;">
+        </div>
 
     <footer style="text-align:center; padding:20px; margin-top:40px; border-top:1px solid #e5e7eb; font-size:0.85rem; color:#6b7280;">
         <p>© 2026 EuroLeague Ultimate Calculator. All rights reserved.</p>
