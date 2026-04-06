@@ -419,6 +419,11 @@
                 <div class="sim-matches">
                     <h2 id="title-simulator">Simulador de Jornadas</h2>
                     <p id="sim-desc">Selecciona los ganadores.</p>
+                    <div style="margin-bottom: 20px;">
+                        <button onclick="resetSim()" id="btn-reset-sim" style="background: var(--dark); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                            🔄 Limpiar Simulador
+                        </button>
+                    </div>
                     <div id="matches-container"></div>
                 </div>
                 <div class="sim-standings">
@@ -493,7 +498,8 @@ const i18n = {
         sc_next: "Próximo partido clave", sc_win_next: "Si gana a {opp}:", sc_lose_next: "Si pierde contra {opp}:",
         sc_needed: "Ruta al objetivo", sc_for_top6: "Para asegurar Top 6:", sc_for_top10: "Para asegurar Play-In:",
         postponed: "Partidos Aplazados", analysis_title: "Análisis Avanzado", net_rating_label: "Net Rating (Dif. Media de Puntos)",
-        all_games: "Todos los partidos", last_5: "Últimos 5", last_10: "Últimos 10", only_home: "Solo en casa", only_away: "Solo fuera"
+        all_games: "Todos los partidos", last_5: "Últimos 5", last_10: "Últimos 10", only_home: "Solo en casa", only_away: "Solo fuera",
+        reset_sim: "🔄 Limpiar Simulador", reset_bracket: "🔄 Limpiar Bracket"
     },
     en: {
         title: "🏆 EuroLeague Ultimate Calculator 25/26", standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis", bracket: "🏆 Bracket",
@@ -510,7 +516,8 @@ const i18n = {
         sc_next: "Next key game", sc_win_next: "If they win vs {opp}:", sc_lose_next: "If they lose vs {opp}:",
         sc_needed: "Path to goal", sc_for_top6: "To secure Top 6:", sc_for_top10: "To secure Play-In:",
         postponed: "Postponed Games", analysis_title: "Advanced Analysis", net_rating_label: "Net Rating (Avg Point Diff)",
-        all_games: "All games", last_5: "Last 5", last_10: "Last 10", only_home: "Home only", only_away: "Away only"
+        all_games: "All games", last_5: "Last 5", last_10: "Last 10", only_home: "Home only", only_away: "Away only",
+        reset_sim: "🔄 Clear Simulator", reset_bracket: "🔄 Clear Bracket"
     },
     fr: {
         title: "🏆 Calculatrice EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
@@ -527,7 +534,8 @@ const i18n = {
         sc_next: "Prochain match clé", sc_win_next: "S'ils gagnent vs {opp} :", sc_lose_next: "S'ils perdent vs {opp} :",
         sc_needed: "Chemin vers l'objectif", sc_for_top6: "Pour assurer le Top 6 :", sc_for_top10: "Pour assurer le Play-In :",
         postponed: "Matchs Reportés", analysis_title: "Analyse Avancée", net_rating_label: "Net Rating (Diff Moyenne)",
-        all_games: "Tous les matchs", last_5: "Les 5 derniers", last_10: "Les 10 derniers", only_home: "À domicile", only_away: "À l'extérieur"
+        all_games: "Tous les matchs", last_5: "Les 5 derniers", last_10: "Les 10 derniers", only_home: "À domicile", only_away: "À l'extérieur",
+        reset_sim: "🔄 Effacer le simulateur", reset_bracket: "🔄 Effacer le tableau"
     },
     tr: {
         title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26", standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz", bracket: "🏆 Eşleşmeler",
@@ -544,7 +552,8 @@ const i18n = {
         sc_next: "Sıradaki kritik maç", sc_win_next: "{opp} karşısında kazanırsa:", sc_lose_next: "{opp} karşısında kaybederse:",
         sc_needed: "Hedefe giden yol", sc_for_top6: "Top 6'yı garantilemek için:", sc_for_top10: "Play-In garantilemek için:",
         postponed: "Ertelenen Maçlar", analysis_title: "Gelişmiş Analiz", net_rating_label: "Net Reyting (Ort. Fark)",
-        all_games: "Tüm maçlar", last_5: "Son 5", last_10: "Son 10", only_home: "Sadece içeride", only_away: "Sadece deplasmanda"
+        all_games: "Tüm maçlar", last_5: "Son 5", last_10: "Son 10", only_home: "Sadece içeride", only_away: "Sadece deplasmanda",
+        reset_sim: "🔄 Simülatörü Temizle", reset_bracket: "🔄 Eşleşmeleri Temizle"
     },
     gr: {
         title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26", standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
@@ -561,7 +570,8 @@ const i18n = {
         sc_next: "Επόμενο ματς-κλειδί", sc_win_next: "Αν νικήσει {opp}:", sc_lose_next: "Αν χάσει από {opp}:",
         sc_needed: "Δρόμος για τον στόχο", sc_for_top6: "Για κλείδωμα 6άδας:", sc_for_top10: "Για κλείδωμα Play-In:",
         postponed: "Αναβληθέντα", analysis_title: "Προηγμένη Ανάλυση", net_rating_label: "Net Rating (Μέση Διαφ. Πόντων)",
-        all_games: "Όλα τα ματς", last_5: "Τελευταία 5", last_10: "Τελευταία 10", only_home: "Μόνο εντός", only_away: "Μόνο εκτός"
+        all_games: "Όλα τα ματς", last_5: "Τελευταία 5", last_10: "Τελευταία 10", only_home: "Μόνο εντός", only_away: "Μόνο εκτός",
+        reset_sim: "🔄 Καθαρισμός Προσομοιωτή", reset_bracket: "🔄 Καθαρισμός Ταμπλό"
     },
     sr: {
         title: "🏆 Evroliga Ultimate Kalkulator 25/26", standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza", bracket: "🏆 Kostur",
@@ -578,7 +588,8 @@ const i18n = {
         sc_next: "Sledeći ključni meč", sc_win_next: "Ako pobedi {opp}:", sc_lose_next: "Ako izgubi od {opp}:",
         sc_needed: "Put do cilja", sc_for_top6: "Za siguran Top 6:", sc_for_top10: "Za siguran Play-In:",
         postponed: "Odložene Utakmice", analysis_title: "Napredna Analiza", net_rating_label: "Net Rejting (Pros. Razlika)",
-        all_games: "Sve utakmice", last_5: "Poslednjih 5", last_10: "Poslednjih 10", only_home: "Samo kod kuće", only_away: "Samo u gostima"
+        all_games: "Sve utakmice", last_5: "Poslednjih 5", last_10: "Poslednjih 10", only_home: "Samo kod kuće", only_away: "Samo u gostima",
+        reset_sim: "🔄 Očisti simulator", reset_bracket: "🔄 Očisti kostur"
     },
     lt: {
         title: "🏆 Eurolygos Ultimate Skaičiuoklė 25/26", standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė", bracket: "🏆 Medis",
@@ -595,7 +606,8 @@ const i18n = {
         sc_next: "Kitas svarbus mačas", sc_win_next: "Jei laimi prieš {opp}:", sc_lose_next: "Jei pralaimi prieš {opp}:",
         sc_needed: "Kelias link tikslo", sc_for_top6: "Užsitikrinti Top 6:", sc_for_top10: "Užsitikrinti Play-In:",
         postponed: "Atidėtos Rungtynės", analysis_title: "Išplėstinė Analizė", net_rating_label: "Grynasis Reitingas (Vid. Skirtumas)",
-        all_games: "Visos rungtynės", last_5: "Paskutinės 5", last_10: "Paskutinės 10", only_home: "Tik namuose", only_away: "Tik išvykoje"
+        all_games: "Visos rungtynės", last_5: "Paskutinės 5", last_10: "Paskutinės 10", only_home: "Tik namuose", only_away: "Tik išvykoje",
+        reset_sim: "🔄 Išvalyti simuliatorių", reset_bracket: "🔄 Išvalyti medį"
     },
     he: {
         title: "🏆 מחשבון יורוליג 25/26", standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
@@ -613,6 +625,7 @@ const i18n = {
         sc_needed: "הדרך למטרה", sc_for_top6: "להבטחת טופ 6:", sc_for_top10: "להבטחת פליי-אין:",
         postponed: "משחקים דחויים", analysis_title: "ניתוח מתקדם", net_rating_label: "מדד נט (הפרש ממוצע)",
         all_games: "כל המשחקים", last_5: "5 אחרונים", last_10: "10 אחרונים", only_home: "רק בבית", only_away: "רק בחוץ",
+        reset_sim: "נקה סימולטור 🔄", reset_bracket: "נקה בראקט 🔄",
         "Olympiacos": "אולימפיאקוס", "Fenerbahçe": "פנרבחצ'ה", "Real Madrid": "ריאל מדריד", "Valencia Basket": "ולנסיה", "Hapoel Tel-Aviv": "הפועל תל אביב",
         "Zalgiris Kaunas": "ז'לגיריס", "Panathinaikos": "פנאתינייקוס", "Barcelona": "ברצלונה", "Crvena Zvezda": "הכוכב האדום", "Monaco": "מונאקו",
         "Maccabi Tel Aviv": "מכבי תל אביב", "Dubai": "דובאי", "Olimpia Milano": "מילאנו", "Partizan": "פרטיזן", "Bayern": "באיירן מינכן",
@@ -1097,6 +1110,12 @@ const i18n = {
             // Cuidado con los IDs que podrían no existir si el usuario no ha puesto los filtros aún
             let titleStandings = document.getElementById('title-standings');
             if (titleStandings) titleStandings.textContent = t.official_standings;
+
+            let btnResetSim = document.getElementById('btn-reset-sim');
+            if (btnResetSim) btnResetSim.textContent = t.reset_sim || "🔄 Limpiar Simulador";
+
+            let btnResetBracket = document.querySelector('#bracket button'); // o si le pones id='btn-reset-bracket' al botón en HTML
+            if (btnResetBracket) btnResetBracket.textContent = t.reset_bracket || "🔄 Limpiar Bracket";
             
             let titleMyteam = document.getElementById('title-myteam');
             if (titleMyteam) titleMyteam.textContent = t.my_team;
