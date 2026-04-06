@@ -1791,9 +1791,9 @@ const i18n = {
                         let selA = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.away ? 'selected' : '';
                         
                         jGames += `<div class="match-card" style="flex-direction:row; padding:5px; gap:5px; align-items:stretch;">
-                            <button class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.home)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.home}%</span></button>
+                            <button id="btn-home-${match.id}" class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.home)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.home}%</span></button>
                             <div style="display:flex; align-items:center; font-weight:bold; color:#9ca3af; font-size:0.8rem; padding:0 2px;">vs</div>
-                            <button class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.away)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.away}%</span></button>
+                            <button id="btn-away-${match.id}" class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.away)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.away}%</span></button>
                         </div>`;
                     }
                 });
@@ -1802,8 +1802,24 @@ const i18n = {
         }
 
         function pickWinner(matchId, homeName, awayName, side) {
+            // Guardamos la elección
             simulatedPicks[matchId] = { home: homeName, away: awayName, winner: side === 'home' ? homeName : awayName };
-            updateUI();
+            
+            // 1. Cambiamos el color de los botones DIRECTAMENTE (0 milisegundos de retraso)
+            let btnHome = document.getElementById(`btn-home-${matchId}`);
+            let btnAway = document.getElementById(`btn-away-${matchId}`);
+            if(btnHome && btnAway) {
+                btnHome.classList.remove('selected');
+                btnAway.classList.remove('selected');
+                if (side === 'home') btnHome.classList.add('selected');
+                else btnAway.classList.add('selected');
+            }
+            
+            // 2. Actualizamos de fondo solo las tablas que importan, no la web entera
+            renderStandings();
+            if(typeof renderBracket === 'function') renderBracket();
+            renderMatrices();
+            if (document.getElementById('select-myteam')?.value) renderMyTeam();
         }
 
         function renderMatrices() {
