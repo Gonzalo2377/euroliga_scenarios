@@ -1331,6 +1331,21 @@ const i18n = {
             bracketState = {};
             renderBracket();
         }
+        function resetSim() {
+            // 1. Borramos todas las selecciones de la memoria (esto pone el simulador a 0)
+            simulatedPicks = {}; 
+            
+            // 2. Volvemos a dibujar los partidos para que TODOS los botones se pongan en blanco
+            renderMatches();     
+            
+            // 3. Repintamos la tabla (al estar la memoria a 0, las victorias/derrotas vuelven a la normalidad)
+            renderStandings();   
+            
+            // 4. Actualizamos el bracket, los desempates y la pestaña de Mi Equipo
+            if(typeof renderBracket === 'function') renderBracket(); 
+            renderMatrices();    
+            if (document.getElementById('select-myteam')?.value) renderMyTeam(); 
+        }
 
         function advanceBracket(matchupId, winnerName, loserName) {
             if (!winnerName) return; // Si hace clic en un hueco vacío o "TBD"
