@@ -2148,8 +2148,62 @@ const i18n = {
                 window.location.hash = '#' + tabName;
             }
         }
+        function autoUpdateData() {
+            // 1. Ponemos a 0 los contadores base de todos los equipos
+            teamsBase.forEach(team => {
+                team.initialWins = 0;
+                team.initialLosses = 0;
+                team.diff = 0;
+            });
+
+            // 2. Usamos pastMatches (que lee tu rawResultsArray) para sumar las victorias y el +/-
+            pastMatches.forEach(m => {
+                let homeTeam = teamsBase.find(t => t.name === m.home);
+                let awayTeam = teamsBase.find(t => t.name === m.away);
+
+                if (homeTeam && awayTeam) {
+                    // Sumar victorias/derrotas
+                    if (m.scoreH > m.scoreA) {
+                        homeTeam.initialWins++;
+                        awayTeam.initialLosses++;
+                    } else {
+                        awayTeam.initialWins++;
+                        homeTeam.initialLosses++;
+                    }
+
+                    // Sumar el average (Norma Euroliga: los partidos decididos en Prórroga (OT) suman 0 de diferencia)
+                    let margin = m.isOT ? 0 : Math.abs(m.scoreH - m.scoreA);
+                    if (m.scoreH > m.scoreA) {
+                        homeTeam.diff += margin;
+                        awayTeam.diff -= margin;
+                    } else {
+                        homeTeam.diff -= margin;
+                        awayTeam.diff += margin;
+                    }
+                }
+            });
+
+            // 3. Cruzamos los datos con el Calendario (Simulator) para tachar los jugados
+            schedule.forEach(jornada => {
+                jornada.games.forEach(g => {
+                    // Buscamos si este partido exacto ya está guardado en los resultados
+                    let playedMatch = pastMatches.find(m => m.home === g.home && m.away === g.away);
+                    
+                    if (playedMatch) {
+                        g.played = true; // Lo oculta del simulador interactivo
+                        g.scoreH = playedMatch.scoreH;
+                        g.scoreA = playedMatch.scoreA;
+                    } else {
+                        g.played = false; // Lo deja como botón clickeable
+                    }
+                });
+            });
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Ejecutamos la automatización antes de pintar nada
+            autoUpdateData(); 
+            
             initFilters();
             updateUI(); // Forzamos una carga inicial para aplicar idioma default
             
