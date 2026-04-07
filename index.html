@@ -340,6 +340,116 @@
         .disabled-champ { background: #333; border: 2px dashed #555; color: #666; padding: 25px 10px; border-radius: 8px; text-align: center; margin-top: 20px; font-weight: bold; }
         
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234,88,12,0.7); } 70% { box-shadow: 0 0 0 15px rgba(234,88,12,0); } 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0); } }
+        details.round-accordion {
+            background: #1e1e1e; /* Color oscuro de fondo */
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            }
+
+        details.round-accordion summary {
+            padding: 15px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            background: #2a2a2a;
+            color: #ffffff;
+            list-style: none; /* Oculta la flecha por defecto */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        details.round-accordion summary::-webkit-details-marker {
+            display: none; /* Oculta la flecha en Safari/Chrome antiguos */
+        }
+
+        /* Flechita personalizada */
+        details.round-accordion summary::after {
+            content: '▼';
+            font-size: 14px;
+            color: #ff5722; /* Color naranja o el de tu tema */
+            transition: transform 0.2s ease;
+        }
+
+        details[open].round-accordion summary::after {
+            content: '▲';
+        }
+
+        .round-matches-container {
+            padding: 15px;
+            background: #1a1a1a;
+        }
+
+        /* =========================================
+        MODO MÓVIL (Ventana emergente y Botón flotante)
+        ========================================= */
+        .fab-standings {
+            display: none; /* Oculto en ordenador */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ff5722; /* Naranja llamativo */
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 1000;
+            cursor: pointer;
+            border: none;
+        }
+
+        .close-standings {
+            display: none; /* Oculto en ordenador */
+        }
+
+        @media (max-width: 768px) {
+            /* Mostrar botón flotante */
+            .fab-standings {
+                display: block;
+            }
+
+            /* Convertir la columna de clasificación en un panel emergente */
+            .standings-panel {
+                position: fixed;
+                bottom: -120%; /* Oculto abajo del todo por defecto */
+                left: 0;
+                width: 100%;
+                height: 85vh; /* Ocupa el 85% de la pantalla */
+                background: #121212;
+                z-index: 1001;
+                transition: bottom 0.3s ease-in-out;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+                overflow-y: auto;
+                padding: 15px;
+                padding-bottom: 80px;
+            }
+
+            /* Clase que añadiremos con JS para mostrar el panel */
+            .standings-panel.active {
+                bottom: 0;
+            }
+
+            /* Botón para cerrar el panel emergente */
+            .close-standings {
+                display: block;
+                width: 100%;
+                text-align: center;
+                background: #333;
+                color: white;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                font-weight: bold;
+                cursor: pointer;
+                text-transform: uppercase;
+            }
+        }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -484,6 +594,9 @@
         </div>
 
     </div>
+    <div id="close-standings-btn" class="close-standings">⬇ Cerrar Clasificación ⬇</div>
+
+    <button id="fab-standings" class="fab-standings">📊 Ver Clasificación</button>
 
     <script>
 const i18n = {
@@ -1832,43 +1945,61 @@ const i18n = {
             }, 50);
         }
 
-        function renderMatches() {
-            const container = document.getElementById("matches-container");
-            if(!container) return;
-            const t = i18n[currentLang] || i18n['es'];
-            container.innerHTML = "";
-            schedule.forEach(jornada => {
-                
-                let roundTitle = jornada.jornada
-                    .replace('Jornada', t.round)
-                    .replace('Partidos Aplazados', t.postponed);
+        function renderMatches() { // (Usa el nombre de tu función actual)
+            const matchesContainer = document.getElementById('matches-container'); // Tu contenedor de partidos
+            matchesContainer.innerHTML = '';
 
-                let jHeader = `<h3 class="jornada-header">${roundTitle}</h3><div class="match-grid">`;
-                let jGames = "";
+            // Agrupar partidos por jornada
+            const rounds = {};
+            pastMatches.forEach(m => { // O el array que uses
+                if (!rounds[m.jornada]) rounds[m.jornada] = [];
+                rounds[m.jornada].push(m);
+            });
+
+            // Crear el HTML de cada jornada
+            // Ordenamos de mayor a menor (Ej: 36, 35, 34...)
+            Object.keys(rounds).sort((a, b) => b - a).forEach(roundNumber => {
+                // Hacemos que la Jornada 36 (o la que quieras) esté abierta por defecto
+                let isOpen = (roundNumber == 36) ? "open" : ""; 
                 
-                jornada.games.forEach(match => {
-                    if (match.played) {
-                        jGames += `<div class="match-card" style="flex-direction:row; padding:10px; gap:5px; align-items:center;">
-                            <div style="flex:1; text-align:right; font-size:0.9rem;">${tName(match.home)}</div>
-                            <div style="color:var(--primary); font-weight:bold; white-space:nowrap; padding:0 5px;">${match.scoreH} - ${match.scoreA}</div>
-                            <div style="flex:1; text-align:left; font-size:0.9rem;">${tName(match.away)}</div>
-                        </div>`;
-                    } else {
-                        let odds = calculateWinOdds(match.home, match.away);
-                        
-                        let selH = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.home ? 'selected' : '';
-                        let selA = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.away ? 'selected' : '';
-                        
-                        jGames += `<div class="match-card" style="flex-direction:row; padding:5px; gap:5px; align-items:stretch;">
-                            <button id="btn-home-${match.id}" class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.home)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.home}%</span></button>
-                            <div style="display:flex; align-items:center; font-weight:bold; color:#9ca3af; font-size:0.8rem; padding:0 2px;">vs</div>
-                            <button id="btn-away-${match.id}" class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.away)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.away}%</span></button>
-                        </div>`;
-                    }
+                let roundHtml = `<details class="round-accordion" ${isOpen}>
+                                    <summary>Jornada ${roundNumber}</summary>
+                                    <div class="round-matches-container">`;
+                
+                rounds[roundNumber].forEach(match => {
+                    // AQUÍ METES EL HTML DE TU PARTIDO EXACTAMENTE COMO LO TENÍAS ANTES
+                    // Ej: roundHtml += `<div class="match"> ${match.home} vs ${match.away} </div>`;
                 });
-                container.innerHTML += jHeader + jGames + `</div>`;
+
+                roundHtml += `      </div>
+                                </details>`;
+                                
+                matchesContainer.innerHTML += roundHtml;
             });
         }
+
+        // 2. LÓGICA DEL BOTÓN FLOTANTE (Añadir al final de tu archivo JS)
+        document.addEventListener("DOMContentLoaded", function() {
+            const fabBtn = document.getElementById("fab-standings");
+            const closeBtn = document.getElementById("close-standings-btn");
+            
+            // Asegúrate de cambiar 'standings-container' por el ID real del <div> principal de tu tabla
+            const standingsPanel = document.getElementById("standings-container"); 
+            
+            if(fabBtn && standingsPanel) {
+                // Al hacer clic en el botón flotante, aparece la tabla
+                fabBtn.addEventListener("click", () => {
+                    standingsPanel.classList.add("active");
+                    fabBtn.style.display = "none"; // Ocultar botón flotante mientras vemos la tabla
+                });
+
+                // Al hacer clic en cerrar, se baja la tabla
+                closeBtn.addEventListener("click", () => {
+                    standingsPanel.classList.remove("active");
+                    fabBtn.style.display = "block"; // Volver a mostrar botón
+                });
+            }
+        });
 
         function pickWinner(matchId, homeName, awayName, side) {
             // Guardamos la elección
