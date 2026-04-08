@@ -288,7 +288,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Mantiene el texto de la Jornada arriba */
+            justify-content: center;
         }
         .el-game-card:hover {
             background: rgba(255, 255, 255, 0.12);
@@ -301,6 +301,12 @@
             font-size: 10px; color: #9ca3af;
             display: flex; justify-content: space-between;
             margin-bottom: 6px; width: 100%; font-weight: bold; text-transform: uppercase;
+            transition: opacity 0.2s ease, visibility 0.2s ease; /* Animación para ocultarlo */
+        }
+        /* Ocultar JORNADA y FINAL al pasar el ratón */
+        .el-game-card:hover .el-game-status {
+            opacity: 0;
+            visibility: hidden;
         }
         
         /* El resultado normal que desaparece al hacer hover */
@@ -326,12 +332,13 @@
         .el-score-center .win { color: var(--primary); }
         .el-score-divider { font-size: 16px; color: #6b7280; font-weight: normal; }
 
+        /* La tabla de cuartos que aparece DENTRO de la tarjeta */
         .el-quarters-tooltip {
             position: absolute;
-            top: 22px; /* Ajustado para que quede perfectamente centrado en vertical */
+            top: 0; /* Ahora arranca desde arriba del todo */
             left: 0;
             width: 100%;
-            height: calc(100% - 22px);
+            height: 100%; /* Ocupa toda la tarjeta para centrarse perfecto */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -345,12 +352,12 @@
             visibility: visible; 
         }
         
-        /* Estilo limpio, sin cuadrícula de Excel, pero tamaño compacto */
+        /* Estilos de la tabla de cuartos corregidos para máxima visibilidad */
         .q-table { 
-            font-size: 11px; /* Volvemos al tamaño original que encajaba bien */
-            color: white; 
+            font-size: 11px; 
+            color: #ffffff; /* Fuerza el color blanco */
             border-collapse: collapse; 
-            width: 90%; /* Para que respire un pelín por los lados pero no se salga */
+            width: 90%; 
             margin: 0 auto; 
         }
         .q-table th { 
@@ -358,29 +365,30 @@
             color: #9ca3af; 
             font-weight: 700; 
             text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.2); /* Solo línea horizontal divisoria */
+            border-bottom: 1px solid rgba(255,255,255,0.2); 
         }
         .q-table td { 
             padding: 4px 3px; 
             text-align: center; 
-            font-weight: 600;
+            font-weight: 700; /* Números más gruesos para que se lean bien */
+            color: #ffffff !important; /* Blanco puro para los números */
         }
-        /* Línea horizontal muy suave entre el equipo local y el visitante */
         .q-table tr:nth-child(2) td {
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.08); /* Línea divisoria muy sutil */
         }
         
-        /* Ajuste de los logos para que no ensanchen la tabla */
+        /* Ajuste de los logos */
         .q-table th:first-child,
         .q-table td:first-child {
             text-align: left;
             width: 20px;
         }
         .q-table td:first-child img {
-            width: 14px; /* Volvemos al tamaño original de los logos */
+            width: 14px; 
             height: 14px;
             object-fit: contain;
             vertical-align: middle;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.8)); /* Hace que el logo destaque sobre el fondo */
         }
 
         @keyframes el-scroll {
