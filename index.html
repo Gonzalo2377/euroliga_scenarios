@@ -345,15 +345,16 @@
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
             z-index: 10;
-            background: #1f2937; /* FONDO OSCURO SÓLIDO: Garantiza que los números blancos se vean siempre */
-            border-radius: 8px; /* Mantiene los bordes redondeados de la tarjeta */
+            /* MAGIA: Fondo transparente. Así usamos la caja original con sus esquinas y bordes. */
+            background: transparent; 
+            border-radius: 8px;
         }
         .el-game-card:hover .el-quarters-tooltip { 
             opacity: 1; 
             visibility: visible; 
         }
         
-        /* Estilos de la tabla de cuartos: Números más grandes y legibles */
+        /* Estilos de la tabla de cuartos: Números grandes y con sombra */
         .q-table { 
             font-size: 13px; 
             color: #ffffff; 
@@ -367,33 +368,35 @@
             font-size: 11px;
             font-weight: 700; 
             text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.2); 
+           
         }
         .q-table td { 
-            padding: 6px 3px; /* Más espacio vertical para que respiren */
+            padding: 6px 3px; 
             text-align: center; 
-            font-size: 15px !important; /* NÚMEROS MÁS GRANDES */
-            font-weight: 800; /* Números más gruesos */
+            font-size: 15px !important; 
+            font-weight: 800; 
             color: #ffffff !important; 
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.9); /* Sombra fuerte para que resalten sobre cualquier color */
+            /* Esta sombra es la clave para que se lean sobre cualquier fondo/logo */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9); 
         }
         .q-table tr:nth-child(2) td {
             border-bottom: 1px solid rgba(255,255,255,0.08); 
         }
         
-        /* Ajuste de los logos: Más grandes */
+        /* Ajuste de los logos */
         .q-table th:first-child,
         .q-table td:first-child {
             text-align: left;
-            width: 28px;
+            width: 26px;
         }
         .q-table td:first-child img {
-            width: 20px; /* Logos un poco más grandes */
+            width: 20px; 
             height: 20px;
             object-fit: contain;
             vertical-align: middle;
             filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); 
         }
+        
         @keyframes el-scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
