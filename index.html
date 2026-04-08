@@ -1324,13 +1324,17 @@ const i18n = {
             if (!i18n[lang]) return;
             currentLang = lang;
             localStorage.setItem('euroLang', lang);
+            
+            // Cambio visual de la bandera instantáneo
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             let btn = document.querySelector(`[onclick="changeLang('${lang}')"]`);
             if (btn) btn.classList.add('active');
             
-            // Refrescar dropdown para traducir el listado de jornadas si cambiamos el idioma on-the-fly
-            initFilters();
-            updateUI();
+            // Retraso de la recarga del texto pesado
+            setTimeout(() => {
+                initFilters();
+                updateUI();
+            }, 10);
         }
 
         function updateUI() {
@@ -1607,19 +1611,15 @@ const i18n = {
             renderBracket();
         }
         function resetSim() {
-            // 1. Borramos todas las selecciones de la memoria (esto pone el simulador a 0)
             simulatedPicks = {}; 
+            renderMatches(); // Limpia los botones visualmente al instante
             
-            // 2. Volvemos a dibujar los partidos para que TODOS los botones se pongan en blanco
-            renderMatches();     
-            
-            // 3. Repintamos la tabla (al estar la memoria a 0, las victorias/derrotas vuelven a la normalidad)
-            renderStandings();   
-            
-            // 4. Actualizamos el bracket, los desempates y la pestaña de Mi Equipo
-            if(typeof renderBracket === 'function') renderBracket(); 
-            renderMatrices();    
-            if (document.getElementById('select-myteam')?.value) renderMyTeam(); 
+            setTimeout(() => {
+                renderStandings();   
+                if(typeof renderBracket === 'function') renderBracket(); 
+                renderMatrices();    
+                if (document.getElementById('select-myteam')?.value) renderMyTeam(); 
+            }, 10);
         }
 
         function advanceBracket(matchupId, winnerName, loserName) {
@@ -2129,10 +2129,9 @@ const i18n = {
         }
 
         function pickWinner(matchId, homeName, awayName, side) {
-            // Guardamos la elección
             simulatedPicks[matchId] = { home: homeName, away: awayName, winner: side === 'home' ? homeName : awayName };
             
-            // 1. Cambiamos el color de los botones DIRECTAMENTE (0 milisegundos de retraso)
+            // 1. Cambiamos el color de los botones INSTANTÁNEAMENTE (Feedback visual rápido)
             let btnHome = document.getElementById(`btn-home-${matchId}`);
             let btnAway = document.getElementById(`btn-away-${matchId}`);
             if(btnHome && btnAway) {
@@ -2142,11 +2141,13 @@ const i18n = {
                 else btnAway.classList.add('selected');
             }
             
-            // 2. Actualizamos de fondo solo las tablas que importan, no la web entera
-            renderStandings();
-            if(typeof renderBracket === 'function') renderBracket();
-            renderMatrices();
-            if (document.getElementById('select-myteam')?.value) renderMyTeam();
+            // 2. Retrasamos las matemáticas pesadas 10 milisegundos para que el procesador respire y el INP sea perfecto
+            setTimeout(() => {
+                renderStandings();
+                if(typeof renderBracket === 'function') renderBracket();
+                renderMatrices();
+                if (document.getElementById('select-myteam')?.value) renderMyTeam();
+            }, 10);
         }
 
         function renderMatrices() {
@@ -2557,6 +2558,6 @@ const i18n = {
             document.getElementById('cookie-banner').style.display = 'none';
         }
     </script>
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="TheBenchTalk" data-description="Support me on Buy me a coffee!" data-message="Love the calculator? Fuel the developer with a coffee! ⚡☕" data-color="#FF813F" data-position="Right" data-x_margin="18" data-y_margin="18"></script></main>
+    <script defer data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="TheBenchTalk" data-description="Support me on Buy me a coffee!" data-message="Love the calculator? Fuel the developer with a coffee! ⚡☕" data-color="#FF813F" data-position="Right" data-x_margin="18" data-y_margin="18"></script></main>
 </body>
 </html>
