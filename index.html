@@ -248,14 +248,16 @@
             display: flex;
             align-items: center;
             width: 100%;
-            height: 85px;
+            height: 110px; /* Más grande para que no se corte el hover */
             background: linear-gradient(90deg, #111827 0%, #1f2937 100%);
             position: relative;
-            overflow: hidden;
             border-bottom: 3px solid var(--primary);
         }
         .el-ticker-wrap {
-            width: calc(100% - 180px); /* Deja espacio para el botón a la derecha */
+            width: calc(100% - 180px);
+            height: 100%;
+            display: flex;
+            align-items: center;
             overflow: hidden;
             mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
@@ -263,18 +265,20 @@
         .el-ticker-track {
             display: flex;
             gap: 20px;
-            padding: 10px 0;
+            padding: 0 20px;
             animation: el-scroll 50s linear infinite;
             white-space: nowrap;
+            align-items: center;
         }
         .el-ticker-track:hover { animation-play-state: paused; }
+        
         .el-game-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             padding: 8px 15px;
-            min-width: 160px;
-            transition: all 0.3s ease;
+            min-width: 240px; /* Más ancho para el modo horizontal */
+            transition: transform 0.2s ease, background 0.2s ease;
             cursor: default;
             position: relative;
             display: flex;
@@ -283,87 +287,96 @@
         }
         .el-game-card:hover {
             background: rgba(255, 255, 255, 0.12);
-            transform: translateY(-2px);
+            transform: translateY(-3px); /* El pequeño salto */
             border-color: var(--primary);
         }
-        .el-game-status {
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            display: flex;
-            justify-content: space-between;
-        }
-        .el-team-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: white;
-            font-weight: 500;
-            margin-bottom: 2px;
-        }
-        .el-team-row .el-score { font-weight: 800; margin-left: 15px; }
-        .el-score.win { color: var(--primary); }
         
-        /* Hover Tooltip (Cuartos) */
+        /* Barra de estado pequeña arriba */
+        .el-game-status {
+            font-size: 10px; color: #9ca3af;
+            display: flex; justify-content: space-between;
+            margin-bottom: 6px; width: 100%; font-weight: bold; text-transform: uppercase;
+        }
+        
+        /* Diseño Foto 2 (Horizontal) */
+        .el-game-main {
+            display: flex; align-items: center; justify-content: space-between; gap: 15px; width: 100%;
+        }
+        .el-team-col {
+            display: flex; flex-direction: column; align-items: center; gap: 4px; width: 60px;
+        }
+        .el-team-col img { width: 32px; height: 32px; object-fit: contain; }
+        .el-team-name { font-size: 11px; color: #d1d5db; font-weight: bold; }
+        
+        .el-score-center {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 22px; font-weight: 900; color: white;
+        }
+        .el-score-center .win { color: var(--primary); }
+        .el-score-divider { font-size: 16px; color: #6b7280; font-weight: normal; }
+
+        /* Hover Tooltip (Cuartos) - Ahora no se cortará */
         .el-quarters-tooltip {
             position: absolute;
-            bottom: calc(100% + 5px);
+            top: 95%; /* Se despliega por debajo */
             left: 50%;
             transform: translateX(-50%);
             background: #111827;
             border: 1px solid var(--primary);
-            padding: 8px;
+            padding: 6px 10px;
             border-radius: 6px;
-            display: none;
+            margin-top: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
             z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
         }
-        .el-game-card:hover .el-quarters-tooltip { display: block; }
-        .q-table { font-size: 11px; color: white; border-collapse: collapse; }
+        .el-game-card:hover .el-quarters-tooltip { opacity: 1; visibility: visible; }
+        .q-table { font-size: 11px; color: white; border-collapse: collapse; margin: 0 auto; }
         .q-table td { padding: 3px 6px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .q-table th { padding: 3px 6px; color: #9ca3af; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
-        
+
         @keyframes el-scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* Mueve el 50% para que el bucle sea perfecto */
+            100% { transform: translateX(-50%); }
         }
-        
-        /* Contenedor del Botón derecho */
+
+        /* Botón derecho */
         .el-banner-action {
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 180px;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: absolute; right: 0; top: 0; width: 180px; height: 100%;
+            display: flex; justify-content: center; align-items: center;
             background: linear-gradient(270deg, #111827 80%, transparent 100%);
             z-index: 10;
         }
         .el-btn-view {
-            background: var(--white);
-            color: var(--dark);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background: var(--white); color: var(--dark); border: none; padding: 8px 16px;
+            border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         .el-btn-view:hover { transform: scale(1.05); background: var(--light); color: var(--primary); }
-        
-        /* Móviles */
+
         @media (max-width: 768px) {
             .el-ticker-wrap { width: calc(100% - 120px); }
             .el-banner-action { width: 120px; }
             .el-btn-view { font-size: 11px; padding: 6px 12px; }
+            .el-results-banner { height: 100px; }
         }
+
+        /* ---------------- LEYENDA DE CLASIFICACIÓN ---------------- */
+        .standings-legend {
+            background: #fff; border: 1px solid var(--border); border-radius: 8px;
+            padding: 15px 20px; margin-top: 25px; font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .legend-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 10px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; }
+        .color-po { background: var(--win); }
+        .color-pi { background: #f59e0b; }
+        .color-out { background: var(--loss); }
         
         @media (min-width: 992px) {
             .sim-layout { display: flex; gap: 2rem; align-items: flex-start; }
@@ -507,6 +520,11 @@
                     </thead>
                     <tbody id="standings-body"></tbody>
                 </table>
+                <div class="table-responsive">
+                    <table>
+                        </table>
+                </div>
+                <div id="standings-legend-container"></div>
             </div>
         </div>
 
@@ -620,7 +638,8 @@ const i18n = {
         all_games: "Todos los partidos", last_5: "Últimos 5", last_10: "Últimos 10", only_home: "Solo en casa", only_away: "Solo fuera",
         reset_sim: "🔄 Limpiar Simulador", reset_bracket: "🔄 Limpiar Bracket",
         net_rating_desc: "El Net Rating mide la eficiencia ofensiva y defensiva combinada.",
-        view_all_games: "Ver todos los juegos", latest_round: "Última Jornada", final: "Final", q1: "1C", q2: "2C", q3: "3C", q4: "4C", ot: "PR"
+        view_all_games: "Ver todos los juegos", latest_round: "Última Jornada", final: "Final", q1: "1C", q2: "2C", q3: "3C", q4: "4C", ot: "PR",
+        legend_title: "Leyenda de la Clasificación", leg_playoff: "Clasificación directa a Playoffs", leg_playin: "Clasificación a Play-In", leg_out: "Eliminados", leg_sos: "Fuerza del Calendario (dificultad de los rivales restantes)", leg_diff: "Diferencia de puntos (Basket Average)"
     },
     en: {
         title: "🏆 EuroLeague Ultimate Calculator 25/26", standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis", bracket: "🏆 Bracket",
@@ -640,7 +659,8 @@ const i18n = {
         all_games: "All games", last_5: "Last 5", last_10: "Last 10", only_home: "Home only", only_away: "Away only",
         reset_sim: "🔄 Clear Simulator", reset_bracket: "🔄 Clear Bracket",
         net_rating_desc: "Net Rating measures combined offensive and defensive efficiency.",
-        view_all_games: "View all games", latest_round: "Latest Round", final: "Final", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "OT"
+        view_all_games: "View all games", latest_round: "Latest Round", final: "Final", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "OT",
+        legend_title: "Standings Legend", leg_playoff: "Direct Playoff Qualification", leg_playin: "Play-In Qualification", leg_out: "Eliminated", leg_sos: "Strength of Schedule (combined difficulty of remaining opponents)", leg_diff: "Point Differential (Basket Average)"
     },
     fr: {
         title: "🏆 Calculatrice EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
@@ -660,7 +680,8 @@ const i18n = {
         all_games: "Tous les matchs", last_5: "Les 5 derniers", last_10: "Les 10 derniers", only_home: "À domicile", only_away: "À l'extérieur",
         reset_sim: "🔄 Effacer le simulateur", reset_bracket: "🔄 Effacer le tableau",
         net_rating_desc: "Le Net Rating mesure l'efficacité offensive et défensive combinée.",
-        view_all_games: "Voir tous les matchs", latest_round: "Dernière journée", final: "Terminé", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "PR"
+        view_all_games: "Voir tous les matchs", latest_round: "Dernière journée", final: "Terminé", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "PR",
+        legend_title: "Légende du Classement", leg_playoff: "Qualification directe en Playoffs", leg_playin: "Qualification en Play-In", leg_out: "Éliminés", leg_sos: "Force du calendrier (difficulté combinée des adversaires)", leg_diff: "Différence de points (Basket Average)"
     },
     tr: {
         title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26", standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz", bracket: "🏆 Eşleşmeler",
@@ -680,7 +701,8 @@ const i18n = {
         all_games: "Tüm maçlar", last_5: "Son 5", last_10: "Son 10", only_home: "Sadece içeride", only_away: "Sadece deplasmanda",
         reset_sim: "🔄 Simülatörü Temizle", reset_bracket: "🔄 Eşleşmeleri Temizle",
         net_rating_desc: "Net Rating, birleşik hücum ve savunma verimliliğini ölçer.",
-        view_all_games: "Tüm maçları gör", latest_round: "Son Hafta", final: "Bitti", q1: "1Ç", q2: "2Ç", q3: "3Ç", q4: "4Ç", ot: "UZ"
+        view_all_games: "Tüm maçları gör", latest_round: "Son Hafta", final: "Bitti", q1: "1Ç", q2: "2Ç", q3: "3Ç", q4: "4Ç", ot: "UZ",
+        legend_title: "Puan Durumu Lejantı", leg_playoff: "Doğrudan Playoff Katılımı", leg_playin: "Play-In Katılımı", leg_out: "Elendi", leg_sos: "Fikstür Zorluğu (kalan rakiplerin zorluk derecesi)", leg_diff: "Sayı Farkı (Averaj)"
     },
     gr: {
         title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26", standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
@@ -700,7 +722,8 @@ const i18n = {
         all_games: "Όλα τα ματς", last_5: "Τελευταία 5", last_10: "Τελευταία 10", only_home: "Μόνο εντός", only_away: "Μόνο εκτός",
         reset_sim: "🔄 Καθαρισμός Προσομοιωτή", reset_bracket: "🔄 Καθαρισμός Ταμπλό",
         net_rating_desc: "Το Net Rating μετρά τη συνδυασμένη επιθετική και αμυντική αποτελεσματικότητα.",
-        view_all_games: "Όλοι οι αγώνες", latest_round: "Τελευταία", final: "Τελικό", q1: "1ο", q2: "2ο", q3: "3ο", q4: "4ο", ot: "ΠΡ"
+        view_all_games: "Όλοι οι αγώνες", latest_round: "Τελευταία", final: "Τελικό", q1: "1ο", q2: "2ο", q3: "3ο", q4: "4ο", ot: "ΠΡ",
+        legend_title: "Υπόμνημα Βαθμολογίας", leg_playoff: "Απευθείας Πρόκριση στα Playoffs", leg_playin: "Πρόκριση στο Play-In", leg_out: "Αποκλεισμός", leg_sos: "Δυναμικότητα Προγράμματος (δυσκολία εναπομεινάντων αντιπάλων)", leg_diff: "Διαφορά Πόντων (Basket Average)"
     },
     sr: {
         title: "🏆 Evroliga Ultimate Kalkulator 25/26", standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza", bracket: "🏆 Kostur",
@@ -720,7 +743,8 @@ const i18n = {
         all_games: "Sve utakmice", last_5: "Poslednjih 5", last_10: "Poslednjih 10", only_home: "Samo kod kuće", only_away: "Samo u gostima",
         reset_sim: "🔄 Očisti simulator", reset_bracket: "🔄 Očisti kostur",
         net_rating_desc: "Net rejting meri kombinovanu ofanzivnu i defanzivnu efikasnost.",
-        view_all_games: "Sve utakmice", latest_round: "Poslednje Kolo", final: "Kraj", q1: "1Č", q2: "2Č", q3: "3Č", q4: "4Č", ot: "PR"
+        view_all_games: "Sve utakmice", latest_round: "Poslednje Kolo", final: "Kraj", q1: "1Č", q2: "2Č", q3: "3Č", q4: "4Č", ot: "PR",
+        legend_title: "Legenda Tabele", leg_playoff: "Direktan plasman u Plej-of", leg_playin: "Plasman u Plej-in", leg_out: "Eliminisani", leg_sos: "Težina rasporeda (težina preostalih protivnika)", leg_diff: "Koš razlika (Basket Average)"
     },
     lt: {
         title: "🏆 Eurolygos Ultimate Skaičiuoklė 25/26", standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė", bracket: "🏆 Medis",
@@ -740,7 +764,8 @@ const i18n = {
         all_games: "Visos rungtynės", last_5: "Paskutinės 5", last_10: "Paskutinės 10", only_home: "Tik namuose", only_away: "Tik išvykoje",
         reset_sim: "🔄 Išvalyti simuliatorių", reset_bracket: "🔄 Išvalyti medį",
         net_rating_desc: "„Net Rating“ matuoja kombinuotą puolimo ir gynybos efektyvumą.",
-        view_all_games: "Visi mačai", latest_round: "Paskutinis turas", final: "Pabaiga", q1: "1K", q2: "2K", q3: "3K", q4: "4K", ot: "PR"
+        view_all_games: "Visi mačai", latest_round: "Paskutinis turas", final: "Pabaiga", q1: "1K", q2: "2K", q3: "3K", q4: "4K", ot: "PR",
+        legend_title: "Lentelės Paaiškinimai", leg_playoff: "Tiesioginis patekimas į atkrintamąsias", leg_playin: "Patekimas į įkrintamąsias", leg_out: "Eliminuoti", leg_sos: "Tvarkaraščio sunkumas (likusių varžovų pajėgumas)", leg_diff: "Taškų skirtumas (Basket Average)"
     },
     he: {
         title: "🏆 מחשבון יורוליג 25/26", standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
@@ -763,7 +788,8 @@ const i18n = {
         "Zalgiris Kaunas": "ז'לגיריס", "Panathinaikos": "פנאתינייקוס", "Barcelona": "ברצלונה", "Crvena Zvezda": "הכוכב האדום", "Monaco": "מונאקו",
         "Maccabi Tel Aviv": "מכבי תל אביב", "Dubai": "דובאי", "Olimpia Milano": "מילאנו", "Partizan": "פרטיזן", "Bayern": "באיירן מינכן",
         "Paris": "פריז", "Virtus Bolonia": "וירטוס", "Baskonia": "באסקוניה", "Anadolu Efes": "אנדולו אפס", "Asvel Basket": "וילרבאן",
-        view_all_games: "לכל המשחקים", latest_round: "מחזור אחרון", final: "סיום", q1: "רבע 1", q2: "רבע 2", q3: "רבע 3", q4: "רבע 4", ot: "הארכה"
+        view_all_games: "לכל המשחקים", latest_round: "מחזור אחרון", final: "סיום", q1: "רבע 1", q2: "רבע 2", q3: "רבע 3", q4: "רבע 4", ot: "הארכה",
+        legend_title: "מקרא טבלה", leg_playoff: "העפלה ישירה לפלייאוף", leg_playin: "העפלה לפליי-אין", leg_out: "הודחו", leg_sos: "חוזק לוח המשחקים (רמת הקושי של היריבות שנותרו)", leg_diff: "הפרש סלים כללי"
     }
 };
         // 1. Miramos si la URL fuerza un idioma 
@@ -1685,6 +1711,24 @@ const i18n = {
                 
                 tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${tName(team.name)}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
             });
+            const legendContainer = document.getElementById("standings-legend-container");
+            const t = i18n[currentLang] || i18n['es'];
+            if(legendContainer && t.legend_title) {
+                let dir = currentLang === 'he' ? 'rtl' : 'ltr';
+                legendContainer.innerHTML = `
+                    <div class="standings-legend" style="direction: ${dir};">
+                        <h3 style="margin-top:0; margin-bottom:15px; color:var(--dark); border-bottom:2px solid var(--border); padding-bottom:8px;">ℹ️ ${t.legend_title}</h3>
+                        <div class="legend-grid">
+                            <div class="legend-item"><div class="legend-color color-po"></div><span><strong>1º - 6º:</strong> ${t.leg_playoff}</span></div>
+                            <div class="legend-item"><div class="legend-color color-pi"></div><span><strong>7º - 10º:</strong> ${t.leg_playin}</span></div>
+                            <div class="legend-item"><div class="legend-color color-out"></div><span><strong>11º - 20º:</strong> ${t.leg_out}</span></div>
+                        </div>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee; font-size:0.85rem; color:#4b5563;">
+                            <div style="margin-bottom:5px;"><strong>SOS:</strong> ${t.leg_sos}</div>
+                            <div><strong>+/- :</strong> ${t.leg_diff}</div>
+                        </div>
+                    </div>`;
+            }
         }
 
         function getNextOpponentsHTML(teamName) {
@@ -2338,35 +2382,52 @@ const i18n = {
             if(!container) return;
             const t = i18n[currentLang] || i18n['es'];
             
-            // 1. Encontrar la última jornada que tenga resultados
             const lastRound = Math.max(...pastMatches.map(m => m.jornada));
             const latestGames = pastMatches.filter(m => m.jornada === lastRound);
             
             if (latestGames.length === 0) return;
 
-            // 2. Duplicar los partidos para lograr el efecto "marquee" (bucle infinito sin cortes)
+            // Conseguimos la clasificación en tiempo real para poner las posiciones (Ej: VAL (2))
+            let currentStandings = sortTeamsWithH2H(getLiveTeams());
+            const getPos = (teamName) => currentStandings.findIndex(t => t.name === teamName) + 1;
+
             const displayGames = [...latestGames, ...latestGames];
             
             let gamesHTML = displayGames.map(g => {
                 let winH = g.scoreH > g.scoreA ? 'win' : '';
                 let winA = g.scoreA > g.scoreH ? 'win' : '';
+                let posH = getPos(g.home);
+                let posA = getPos(g.away);
                 
-                // Construir la tabla de cuartos si hay datos
                 let qTable = "";
                 if(g.qH && g.qA) {
                     qTable = `<div class="el-quarters-tooltip"><table class="q-table">
                         <tr><th></th><th>${t.q1}</th><th>${t.q2}</th><th>${t.q3}</th><th>${t.q4}</th>${g.isOT ? `<th>${t.ot}</th>` : ''}</tr>
-                        <tr><td><img src="${getLogo(g.home)}" width="14" style="vertical-align:middle; margin-right:4px;"></td>${g.qH.map(q => `<td>${q}</td>`).join('')}</tr>
-                        <tr><td><img src="${getLogo(g.away)}" width="14" style="vertical-align:middle; margin-right:4px;"></td>${g.qA.map(q => `<td>${q}</td>`).join('')}</tr>
+                        <tr><td><img src="${getLogo(g.home)}" width="14" style="vertical-align:middle;"></td>${g.qH.map(q => `<td>${q}</td>`).join('')}</tr>
+                        <tr><td><img src="${getLogo(g.away)}" width="14" style="vertical-align:middle;"></td>${g.qA.map(q => `<td>${q}</td>`).join('')}</tr>
                     </table></div>`;
                 }
 
+                // Diseño Foto 2 Integrado
                 return `
                     <div class="el-game-card">
+                        <div class="el-game-status"><span>${t.round} ${g.jornada}</span><span style="color:var(--primary);">${t.final}</span></div>
+                        <div class="el-game-main">
+                            <div class="el-team-col">
+                                <img src="${getLogo(g.home)}">
+                                <span class="el-team-name">${getTeamAbrev(g.home)} (${posH})</span>
+                            </div>
+                            <div class="el-score-center">
+                                <span class="${winH}">${g.scoreH}</span>
+                                <span class="el-score-divider">-</span>
+                                <span class="${winA}">${g.scoreA}</span>
+                            </div>
+                            <div class="el-team-col">
+                                <img src="${getLogo(g.away)}">
+                                <span class="el-team-name">${getTeamAbrev(g.away)} (${posA})</span>
+                            </div>
+                        </div>
                         ${qTable}
-                        <div class="el-game-status"><span>${t.round} ${g.jornada}</span> <span>${t.final}</span></div>
-                        <div class="el-team-row"><span><img src="${getLogo(g.home)}" width="16" style="vertical-align:middle; margin-right:6px;">${tName(g.home)}</span><span class="el-score ${winH}">${g.scoreH}</span></div>
-                        <div class="el-team-row"><span><img src="${getLogo(g.away)}" width="16" style="vertical-align:middle; margin-right:6px;">${tName(g.away)}</span><span class="el-score ${winA}">${g.scoreA}</span></div>
                     </div>`;
             }).join('');
 
