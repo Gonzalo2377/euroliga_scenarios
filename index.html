@@ -354,13 +354,13 @@
             visibility: visible; 
         }
         
-        /* Estilos de la tabla de cuartos: Números grandes y con sombra */
         .q-table { 
             font-size: 13px; 
             color: #ffffff; 
             border-collapse: collapse; 
             width: 95%; 
             margin: 0 auto; 
+            border: none !important; /* Destruimos el borde general */
         }
         .q-table th { 
             padding: 2px 3px 4px 3px; 
@@ -368,7 +368,7 @@
             font-size: 11px;
             font-weight: 700; 
             text-align: center;
-           
+            border: none !important; /* Destruimos la línea debajo de los títulos */
         }
         .q-table td { 
             padding: 6px 3px; 
@@ -376,11 +376,12 @@
             font-size: 15px !important; 
             font-weight: 800; 
             color: #ffffff !important; 
-            /* Esta sombra es la clave para que se lean sobre cualquier fondo/logo */
             text-shadow: 1px 1px 3px rgba(0,0,0,0.9); 
+            border: none !important; /* Destruimos cualquier línea entre celdas */
         }
+        /* Borramos la línea divisoria que había entre el equipo local y el visitante */
         .q-table tr:nth-child(2) td {
-            border-bottom: 1px solid rgba(255,255,255,0.08); 
+            border: none !important; 
         }
         
         /* Ajuste de los logos */
@@ -388,6 +389,7 @@
         .q-table td:first-child {
             text-align: left;
             width: 26px;
+            border: none !important;
         }
         .q-table td:first-child img {
             width: 20px; 
