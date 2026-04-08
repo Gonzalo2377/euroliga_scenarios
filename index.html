@@ -278,22 +278,27 @@
         .el-ticker-track:hover { animation-play-state: paused; }
         
         .el-game-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08); /* Un pelín más opaco para que parezca una pegatina de cristal */
+            border: 1px solid rgba(255, 255, 255, 0.85) !important; /* LÍNEA BLANCA alrededor de toda la caja */
             border-radius: 8px;
             padding: 8px 15px;
             min-width: 240px; 
-            transition: transform 0.2s ease, background 0.2s ease;
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             cursor: default;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            /* SOMBRA 3D: Crea el efecto de que la caja flota sobre el fondo oscuro */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7), 0px 1px 3px rgba(0, 0, 0, 0.9);
         }
+        
         .el-game-card:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateY(-3px); 
-            border-color: var(--primary);
+            border-color: var(--primary) !important; /* Al pasar el ratón, la línea blanca se vuelve naranja */
+            /* La sombra se hace más grande al "levantar" la caja */
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.9), 0px 2px 4px rgba(0, 0, 0, 1);
         }
         
         /* Barra de estado pequeña arriba */
