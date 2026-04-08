@@ -339,13 +339,12 @@
             width: 100%;
             height: 100%; 
             display: flex;
-            align-items: center;
+            align-items: center; /* Esto hace el centrado vertical */
             justify-content: center;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
             z-index: 10;
-            /* MAGIA: Fondo transparente. Así usamos la caja original con sus esquinas y bordes. */
             background: transparent; 
             border-radius: 8px;
         }
@@ -354,8 +353,8 @@
             visibility: visible; 
         }
         
+        /* Estilos de la tabla de cuartos: BLINDADA CONTRA ESTILOS GLOBALES */
         .q-table { 
-            font-size: 13px; 
             color: #ffffff; 
             border-collapse: collapse; 
             width: 95%; 
@@ -364,7 +363,6 @@
             background: transparent !important;
         }
 
-        /* ESTA ES LA CLAVE: Anulamos el fondo gris global de tu web para las filas pares */
         .q-table tr,
         .q-table tr:nth-child(even),
         .q-table tr:nth-child(odd) {
@@ -372,17 +370,21 @@
             border: none !important;
         }
 
+        /* TÍTULOS (1C, 2C...) - Más grandes, resaltados y con espaciado simétrico */
         .q-table th { 
-            padding: 2px 3px 4px 3px; 
-            color: #9ca3af; 
-            font-size: 11px;
-            font-weight: 700; 
+            padding: 4px 3px; /* Espaciado idéntico arriba y abajo para centrar perfecto */
+            color: #e5e7eb !important; /* Gris muy clarito para que resalte más */
+            font-size: 13px !important; /* Aumentado (antes 11px) */
+            font-weight: 800 !important; /* Más grueso */
             text-align: center;
             border: none !important; 
             background: transparent !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Sombra para máxima lectura */
         }
+
+        /* NÚMEROS DE PUNTOS - Espaciado simétrico */
         .q-table td { 
-            padding: 6px 3px; 
+            padding: 4px 3px; /* Espaciado idéntico arriba y abajo para centrar perfecto */
             text-align: center; 
             font-size: 15px !important; 
             font-weight: 800; 
