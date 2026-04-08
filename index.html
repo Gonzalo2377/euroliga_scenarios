@@ -253,6 +253,11 @@
             position: relative;
             border-bottom: 3px solid var(--primary);
         }
+        .btn-win.selected {
+            background-color: var(--primary) !important;
+            color: var(--white) !important;
+            border-color: var(--primary) !important;
+        }
         .el-ticker-wrap {
             width: calc(100% - 180px);
             height: 100%;
@@ -277,17 +282,17 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             padding: 8px 15px;
-            min-width: 240px; /* Más ancho para el modo horizontal */
+            min-width: 240px; 
             transition: transform 0.2s ease, background 0.2s ease;
             cursor: default;
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Mantiene el texto de la Jornada arriba */
         }
         .el-game-card:hover {
             background: rgba(255, 255, 255, 0.12);
-            transform: translateY(-3px); /* El pequeño salto */
+            transform: translateY(-3px); 
             border-color: var(--primary);
         }
         
@@ -298,10 +303,16 @@
             margin-bottom: 6px; width: 100%; font-weight: bold; text-transform: uppercase;
         }
         
-        /* Diseño Foto 2 (Horizontal) */
+        /* El resultado normal que desaparece al hacer hover */
         .el-game-main {
             display: flex; align-items: center; justify-content: space-between; gap: 15px; width: 100%;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
         }
+        .el-game-card:hover .el-game-main {
+            opacity: 0;
+            visibility: hidden;
+        }
+
         .el-team-col {
             display: flex; flex-direction: column; align-items: center; gap: 4px; width: 60px;
         }
@@ -315,27 +326,29 @@
         .el-score-center .win { color: var(--primary); }
         .el-score-divider { font-size: 16px; color: #6b7280; font-weight: normal; }
 
-        /* Hover Tooltip (Cuartos) - Ahora no se cortará */
+        /* La tabla de cuartos que aparece DENTRO de la tarjeta */
         .el-quarters-tooltip {
             position: absolute;
-            top: 95%; /* Se despliega por debajo */
-            left: 50%;
-            transform: translateX(-50%);
-            background: #111827;
-            border: 1px solid var(--primary);
-            padding: 6px 10px;
-            border-radius: 6px;
-            margin-top: 8px;
+            top: 24px; /* Se sitúa justo debajo del texto "FINAL" */
+            left: 0;
+            width: 100%;
+            height: calc(100% - 24px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.2s;
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 10;
         }
-        .el-game-card:hover .el-quarters-tooltip { opacity: 1; visibility: visible; }
-        .q-table { font-size: 11px; color: white; border-collapse: collapse; margin: 0 auto; }
-        .q-table td { padding: 3px 6px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .q-table th { padding: 3px 6px; color: #9ca3af; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
+        .el-game-card:hover .el-quarters-tooltip { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+        
+        .q-table { font-size: 11px; color: white; border-collapse: collapse; margin: 0 auto; width: 85%; }
+        .q-table td { padding: 3px 4px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .q-table th { padding: 3px 4px; color: #9ca3af; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
 
         @keyframes el-scroll {
             0% { transform: translateX(0); }
