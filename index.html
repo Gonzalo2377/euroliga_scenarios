@@ -1349,6 +1349,8 @@ const i18n = {
             setTimeout(() => {
                 renderAnalysis();
                 if (document.getElementById('select-myteam')?.value) renderMyTeam();
+                // AÑADE ESTA LÍNEA 👇 PARA QUE ARRANQUE EL BANNER
+                renderBanner(); 
             }, 0);
         }
 
@@ -2336,36 +2338,38 @@ const i18n = {
             if(!container) return;
             const t = i18n[currentLang] || i18n['es'];
             
-            // Obtener la última jornada jugada
+            // 1. Encontrar la última jornada que tenga resultados
             const lastRound = Math.max(...pastMatches.map(m => m.jornada));
             const latestGames = pastMatches.filter(m => m.jornada === lastRound);
             
-            // Duplicamos los juegos para el efecto bucle infinito
+            if (latestGames.length === 0) return;
+
+            // 2. Duplicar los partidos para lograr el efecto "marquee" (bucle infinito sin cortes)
             const displayGames = [...latestGames, ...latestGames];
             
             let gamesHTML = displayGames.map(g => {
                 let winH = g.scoreH > g.scoreA ? 'win' : '';
                 let winA = g.scoreA > g.scoreH ? 'win' : '';
                 
-                // Generar tabla de cuartos para el hover
+                // Construir la tabla de cuartos si hay datos
                 let qTable = "";
                 if(g.qH && g.qA) {
                     qTable = `<div class="el-quarters-tooltip"><table class="q-table">
-                        <tr><td></td><td>1</td><td>2</td><td>3</td><td>4</td>${g.isOT ? '<td>OT</td>' : ''}</tr>
-                        <tr><td>${getTeamAbrev(g.home)}</td>${g.qH.map(q => `<td>${q}</td>`).join('')}</tr>
-                        <tr><td>${getTeamAbrev(g.away)}</td>${g.qA.map(q => `<td>${q}</td>`).join('')}</tr>
+                        <tr><th></th><th>${t.q1}</th><th>${t.q2}</th><th>${t.q3}</th><th>${t.q4}</th>${g.isOT ? `<th>${t.ot}</th>` : ''}</tr>
+                        <tr><td><img src="${getLogo(g.home)}" width="14" style="vertical-align:middle; margin-right:4px;"></td>${g.qH.map(q => `<td>${q}</td>`).join('')}</tr>
+                        <tr><td><img src="${getLogo(g.away)}" width="14" style="vertical-align:middle; margin-right:4px;"></td>${g.qA.map(q => `<td>${q}</td>`).join('')}</tr>
                     </table></div>`;
                 }
-        
+
                 return `
                     <div class="el-game-card">
                         ${qTable}
                         <div class="el-game-status"><span>${t.round} ${g.jornada}</span> <span>${t.final}</span></div>
-                        <div class="el-team-row"><span>${tName(g.home)}</span><span class="el-score ${winH}">${g.scoreH}</span></div>
-                        <div class="el-team-row"><span>${tName(g.away)}</span><span class="el-score ${winA}">${g.scoreA}</span></div>
+                        <div class="el-team-row"><span><img src="${getLogo(g.home)}" width="16" style="vertical-align:middle; margin-right:6px;">${tName(g.home)}</span><span class="el-score ${winH}">${g.scoreH}</span></div>
+                        <div class="el-team-row"><span><img src="${getLogo(g.away)}" width="16" style="vertical-align:middle; margin-right:6px;">${tName(g.away)}</span><span class="el-score ${winA}">${g.scoreA}</span></div>
                     </div>`;
             }).join('');
-        
+
             container.innerHTML = `
                 <div class="el-results-banner" style="direction: ltr;">
                     <div class="el-ticker-wrap">
