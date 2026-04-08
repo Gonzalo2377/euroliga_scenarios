@@ -329,7 +329,7 @@
         /* La tabla de cuartos que aparece DENTRO de la tarjeta */
         .el-quarters-tooltip {
             position: absolute;
-            top: 24px; /* Se sitúa justo debajo del texto "FINAL" */
+            top: 24px; /* Se sitúa justo debajo del texto de Jornada */
             left: 0;
             width: 100%;
             height: calc(100% - 24px);
@@ -338,17 +338,56 @@
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
             z-index: 10;
+            padding: 0 10px; /* Respiro lateral */
+            box-sizing: border-box;
         }
         .el-game-card:hover .el-quarters-tooltip { 
             opacity: 1; 
             visibility: visible; 
         }
         
-        .q-table { font-size: 11px; color: white; border-collapse: collapse; margin: 0 auto; width: 85%; }
-        .q-table td { padding: 3px 4px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .q-table th { padding: 3px 4px; color: #9ca3af; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
+        /* Estilo de la tabla sin cuadrícula, modo TV */
+        .q-table { 
+            font-size: 12px; 
+            color: white; 
+            border-collapse: collapse; 
+            width: 100%; 
+            max-width: 220px; 
+            margin: 0 auto; 
+        }
+        .q-table th { 
+            padding: 2px 4px 6px 4px; 
+            color: #9ca3af; 
+            font-weight: 700; 
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.15); /* Solo línea divisoria abajo */
+        }
+        .q-table td { 
+            padding: 6px 4px; 
+            text-align: center; 
+            font-weight: 600;
+        }
+        /* Línea muy suave entre el equipo local y el visitante */
+        .q-table tr:nth-child(2) td {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        /* Ajuste específico para la columna de los logos */
+        .q-table th:first-child,
+        .q-table td:first-child {
+            text-align: left;
+            width: 26px;
+            padding-left: 2px;
+        }
+        .q-table td:first-child img {
+            width: 18px; /* Logos un poco más grandes y definidos */
+            height: 18px;
+            object-fit: contain;
+            vertical-align: middle;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5)); /* Sombrita para que destaquen */
+        }
 
         @keyframes el-scroll {
             0% { transform: translateX(0); }
