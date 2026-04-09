@@ -545,49 +545,6 @@
         .disabled-champ { background: #333; border: 2px dashed #555; color: #666; padding: 25px 10px; border-radius: 8px; text-align: center; margin-top: 20px; font-weight: bold; }
         
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234,88,12,0.7); } 70% { box-shadow: 0 0 0 15px rgba(234,88,12,0); } 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0); } }
-        /* --- MAGIA DEL SLIDER Y LA PERSIANA MÓVIL --- */
-        .floating-btn-sim { display: none; }
-        .drawer-overlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; 
-            height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; 
-        }
-        .drawer-overlay.active { display: block; animation: fadeIn 0.3s; }
-        
-        .slider-container { 
-            margin-top: 12px; padding: 12px; background: #ffffff; 
-            border-radius: 8px; border: 1px solid var(--border); 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); 
-        }
-        .ida-context { 
-            font-size: 0.8rem; color: #4b5563; margin-bottom: 8px; 
-            font-style: italic; text-align: center; 
-        }
-        .slider-row { display: flex; align-items: center; gap: 10px; }
-        .slider-input { flex: 1; accent-color: var(--primary); cursor: pointer; }
-        .slider-val { font-weight: 900; color: var(--primary); width: 45px; text-align: right; font-size: 1.1rem;}
-        
-        /* Adaptación para móviles */
-        @media (max-width: 991px) {
-            .floating-btn-sim {
-                display: flex; align-items: center; justify-content: center;
-                position: fixed; bottom: 20px; right: 20px;
-                background: var(--primary); color: white; border: none; 
-                padding: 15px 25px; border-radius: 50px; font-weight: bold; font-size: 1rem;
-                box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4);
-                z-index: 10001; cursor: pointer; transition: transform 0.2s;
-            }
-            .floating-btn-sim:active { transform: scale(0.95); }
-            
-            .sim-standings {
-                position: fixed !important; top: auto !important; bottom: -100%; left: 0; 
-                width: 100%; max-height: 85vh; background: white; z-index: 10000; 
-                transition: bottom 0.3s ease-in-out;
-                border-top-left-radius: 20px; border-top-right-radius: 20px;
-                padding: 20px 15px; margin: 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.3);
-                box-sizing: border-box; overflow-y: auto;
-            }
-            .sim-standings.abierto { bottom: 0; }
-        }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -672,9 +629,6 @@
         </div>
 
         <div id="simulador" class="tab-content">
-            <button id="btn-toggle-drawer" class="floating-btn-sim"></button>
-            <div id="drawer-overlay" class="drawer-overlay"></div>
-            
             <div class="sim-layout">
                 <div class="sim-matches">
                     <h2 id="title-simulator">Simulador de Jornadas</h2>
@@ -762,8 +716,7 @@ const i18n = {
         reset_sim: "🔄 Limpiar Simulador", reset_bracket: "🔄 Limpiar Bracket",
         net_rating_desc: "El Net Rating mide la eficiencia ofensiva y defensiva combinada.",
         view_all_games: "Ver todos los juegos", latest_round: "Última Jornada", final: "Final", q1: "1C", q2: "2C", q3: "3C", q4: "4C", ot: "PR",
-        legend_title: "Leyenda de la Clasificación", leg_playoff: "Clasificación directa a Playoffs", leg_playin: "Clasificación a Play-In", leg_out: "Eliminados", leg_sos: "Fuerza del Calendario (dificultad de los rivales restantes)", leg_diff: "Diferencia de puntos (Basket Average)",
-        first_leg: "Ida:", not_played: "No jugado", diff_short: "Dif:", view_standings: "📊 Ver Clasificación"
+        legend_title: "Leyenda de la Clasificación", leg_playoff: "Clasificación directa a Playoffs", leg_playin: "Clasificación a Play-In", leg_out: "Eliminados", leg_sos: "Fuerza del Calendario (dificultad de los rivales restantes)", leg_diff: "Diferencia de puntos (Basket Average)"
     },
     en: {
         title: "🏆 EuroLeague Ultimate Calculator 25/26", standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis", bracket: "🏆 Bracket",
@@ -784,8 +737,7 @@ const i18n = {
         reset_sim: "🔄 Clear Simulator", reset_bracket: "🔄 Clear Bracket",
         net_rating_desc: "Net Rating measures combined offensive and defensive efficiency.",
         view_all_games: "View all games", latest_round: "Latest Round", final: "Final", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "OT",
-        legend_title: "Standings Legend", leg_playoff: "Direct Playoff Qualification", leg_playin: "Play-In Qualification", leg_out: "Eliminated", leg_sos: "Strength of Schedule (combined difficulty of remaining opponents)", leg_diff: "Point Differential (Basket Average)",
-        first_leg: "1st Leg:", not_played: "Not played", diff_short: "Diff:", view_standings: "📊 View Standings"
+        legend_title: "Standings Legend", leg_playoff: "Direct Playoff Qualification", leg_playin: "Play-In Qualification", leg_out: "Eliminated", leg_sos: "Strength of Schedule (combined difficulty of remaining opponents)", leg_diff: "Point Differential (Basket Average)"
     },
     fr: {
         title: "🏆 Calculatrice EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
@@ -806,8 +758,7 @@ const i18n = {
         reset_sim: "🔄 Effacer le simulateur", reset_bracket: "🔄 Effacer le tableau",
         net_rating_desc: "Le Net Rating mesure l'efficacité offensive et défensive combinée.",
         view_all_games: "Voir tous les matchs", latest_round: "Dernière journée", final: "Terminé", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "PR",
-        legend_title: "Légende du Classement", leg_playoff: "Qualification directe en Playoffs", leg_playin: "Qualification en Play-In", leg_out: "Éliminés", leg_sos: "Force du calendrier (difficulté combinée des adversaires)", leg_diff: "Différence de points (Basket Average)",
-        first_leg: "Aller :", not_played: "Non joué", diff_short: "Diff :", view_standings: "📊 Voir Classement"
+        legend_title: "Légende du Classement", leg_playoff: "Qualification directe en Playoffs", leg_playin: "Qualification en Play-In", leg_out: "Éliminés", leg_sos: "Force du calendrier (difficulté combinée des adversaires)", leg_diff: "Différence de points (Basket Average)"
     },
     tr: {
         title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26", standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz", bracket: "🏆 Eşleşmeler",
@@ -828,8 +779,7 @@ const i18n = {
         reset_sim: "🔄 Simülatörü Temizle", reset_bracket: "🔄 Eşleşmeleri Temizle",
         net_rating_desc: "Net Rating, birleşik hücum ve savunma verimliliğini ölçer.",
         view_all_games: "Tüm maçları gör", latest_round: "Son Hafta", final: "Bitti", q1: "1Ç", q2: "2Ç", q3: "3Ç", q4: "4Ç", ot: "UZ",
-        legend_title: "Puan Durumu Lejantı", leg_playoff: "Doğrudan Playoff Katılımı", leg_playin: "Play-In Katılımı", leg_out: "Elendi", leg_sos: "Fikstür Zorluğu (kalan rakiplerin zorluk derecesi)", leg_diff: "Sayı Farkı (Averaj)",
-        first_leg: "İlk Maç:", not_played: "Oynanmadı", diff_short: "Fark:", view_standings: "📊 Puan Durumu"
+        legend_title: "Puan Durumu Lejantı", leg_playoff: "Doğrudan Playoff Katılımı", leg_playin: "Play-In Katılımı", leg_out: "Elendi", leg_sos: "Fikstür Zorluğu (kalan rakiplerin zorluk derecesi)", leg_diff: "Sayı Farkı (Averaj)"
     },
     gr: {
         title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26", standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
@@ -850,8 +800,7 @@ const i18n = {
         reset_sim: "🔄 Καθαρισμός Προσομοιωτή", reset_bracket: "🔄 Καθαρισμός Ταμπλό",
         net_rating_desc: "Το Net Rating μετρά τη συνδυασμένη επιθετική και αμυντική αποτελεσματικότητα.",
         view_all_games: "Όλοι οι αγώνες", latest_round: "Τελευταία", final: "Τελικό", q1: "1ο", q2: "2ο", q3: "3ο", q4: "4ο", ot: "ΠΡ",
-        legend_title: "Υπόμνημα Βαθμολογίας", leg_playoff: "Απευθείας Πρόκριση στα Playoffs", leg_playin: "Πρόκριση στο Play-In", leg_out: "Αποκλεισμός", leg_sos: "Δυναμικότητα Προγράμματος (δυσκολία εναπομεινάντων αντιπάλων)", leg_diff: "Διαφορά Πόντων (Basket Average)",
-        first_leg: "1ος Γύρος:", not_played: "Δεν παίχτηκε", diff_short: "Διαφ:", view_standings: "📊 Βαθμολογία"
+        legend_title: "Υπόμνημα Βαθμολογίας", leg_playoff: "Απευθείας Πρόκριση στα Playoffs", leg_playin: "Πρόκριση στο Play-In", leg_out: "Αποκλεισμός", leg_sos: "Δυναμικότητα Προγράμματος (δυσκολία εναπομεινάντων αντιπάλων)", leg_diff: "Διαφορά Πόντων (Basket Average)"
     },
     sr: {
         title: "🏆 Evroliga Ultimate Kalkulator 25/26", standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza", bracket: "🏆 Kostur",
@@ -872,8 +821,7 @@ const i18n = {
         reset_sim: "🔄 Očisti simulator", reset_bracket: "🔄 Očisti kostur",
         net_rating_desc: "Net rejting meri kombinovanu ofanzivnu i defanzivnu efikasnost.",
         view_all_games: "Sve utakmice", latest_round: "Poslednje Kolo", final: "Kraj", q1: "1Č", q2: "2Č", q3: "3Č", q4: "4Č", ot: "PR",
-        legend_title: "Legenda Tabele", leg_playoff: "Direktan plasman u Plej-of", leg_playin: "Plasman u Plej-in", leg_out: "Eliminisani", leg_sos: "Težina rasporeda (težina preostalih protivnika)", leg_diff: "Koš razlika (Basket Average)",
-        first_leg: "Prvi meč:", not_played: "Nije odigrano", diff_short: "Razl:", view_standings: "📊 Vidi Tabelu"
+        legend_title: "Legenda Tabele", leg_playoff: "Direktan plasman u Plej-of", leg_playin: "Plasman u Plej-in", leg_out: "Eliminisani", leg_sos: "Težina rasporeda (težina preostalih protivnika)", leg_diff: "Koš razlika (Basket Average)"
     },
     lt: {
         title: "🏆 Eurolygos Ultimate Skaičiuoklė 25/26", standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė", bracket: "🏆 Medis",
@@ -894,8 +842,7 @@ const i18n = {
         reset_sim: "🔄 Išvalyti simuliatorių", reset_bracket: "🔄 Išvalyti medį",
         net_rating_desc: "„Net Rating“ matuoja kombinuotą puolimo ir gynybos efektyvumą.",
         view_all_games: "Visi mačai", latest_round: "Paskutinis turas", final: "Pabaiga", q1: "1K", q2: "2K", q3: "3K", q4: "4K", ot: "PR",
-        legend_title: "Lentelės Paaiškinimai", leg_playoff: "Tiesioginis patekimas į atkrintamąsias", leg_playin: "Patekimas į įkrintamąsias", leg_out: "Eliminuoti", leg_sos: "Tvarkaraščio sunkumas (likusių varžovų pajėgumas)", leg_diff: "Taškų skirtumas (Basket Average)",
-        first_leg: "1-as mačas:", not_played: "Nežaista", diff_short: "Skirt:", view_standings: "📊 Žiūrėti Lentelę"
+        legend_title: "Lentelės Paaiškinimai", leg_playoff: "Tiesioginis patekimas į atkrintamąsias", leg_playin: "Patekimas į įkrintamąsias", leg_out: "Eliminuoti", leg_sos: "Tvarkaraščio sunkumas (likusių varžovų pajėgumas)", leg_diff: "Taškų skirtumas (Basket Average)"
     },
     he: {
         title: "🏆 מחשבון יורוליג 25/26", standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
@@ -919,8 +866,7 @@ const i18n = {
         "Maccabi Tel Aviv": "מכבי תל אביב", "Dubai": "דובאי", "Olimpia Milano": "מילאנו", "Partizan": "פרטיזן", "Bayern": "באיירן מינכן",
         "Paris": "פריז", "Virtus Bolonia": "וירטוס", "Baskonia": "באסקוניה", "Anadolu Efes": "אנדולו אפס", "Asvel Basket": "וילרבאן",
         view_all_games: "לכל המשחקים", latest_round: "מחזור אחרון", final: "סיום", q1: "רבע 1", q2: "רבע 2", q3: "רבע 3", q4: "רבע 4", ot: "הארכה",
-        legend_title: "מקרא טבלה", leg_playoff: "העפלה ישירה לפלייאוף", leg_playin: "העפלה לפליי-אין", leg_out: "הודחו", leg_sos: "חוזק לוח המשחקים (רמת הקושי של היריבות שנותרו)", leg_diff: "הפרש סלים כללי",
-        first_leg: "משחק ראשון:", not_played: "לא שוחק", diff_short: "הפרש:", view_standings: "📊 צפה בטבלה"
+        legend_title: "מקרא טבלה", leg_playoff: "העפלה ישירה לפלייאוף", leg_playin: "העפלה לפליי-אין", leg_out: "הודחו", leg_sos: "חוזק לוח המשחקים (רמת הקושי של היריבות שנותרו)", leg_diff: "הפרש סלים כללי"
     }
 };
         // 1. Miramos si la URL fuerza un idioma 
@@ -995,11 +941,6 @@ const i18n = {
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
         const rawResultsArray = [
-            "37|Hapoel Tel-Aviv|Olympiacos|85|89||18,30,19,18|22,29,22,16",
-            "37|Fenerbahçe|Real Madrid|69|74||21,13,24,11|19,21,14,20",
-            "37|Olimpia Milano|Bayern|84|94||20,14,21,29|20,32,22,20",
-            "37|Valencia Basket|Panathinaikos|102|84||27,29,26,20|23,24,22,15",
-            "37|Paris|Maccabi Tel Aviv|113|80||41,20,32,20|24,14,20,22",
             "36|Anadolu Efes|Partizan|79|72|OT|15,9,19,22,14|13,23,14,15,7",
             "36|Monaco|Asvel Basket|81|76||22,24,18,17|21,15,18,22",
             "36|Hapoel Tel-Aviv|Fenerbahçe|95|80||25,26,24,20|17,21,18,24",
@@ -1457,9 +1398,6 @@ const i18n = {
             let btnResetSim = document.getElementById('btn-reset-sim');
             if (btnResetSim) btnResetSim.textContent = t.reset_sim || "🔄 Limpiar Simulador";
 
-            let btnDrawer = document.getElementById('btn-toggle-drawer');
-            if (btnDrawer) btnDrawer.textContent = t.view_standings || "📊 Ver Clasificación";
-
             let btnResetBracket = document.querySelector('#bracket button'); // o si le pones id='btn-reset-bracket' al botón en HTML
             if (btnResetBracket) btnResetBracket.textContent = t.reset_bracket || "🔄 Limpiar Bracket";
             
@@ -1571,30 +1509,25 @@ const i18n = {
                 if (m.home === teamA && m.away === teamB) { 
                     played++; 
                     if(m.scoreH > m.scoreA) winsA++; else winsB++; 
+                    
+                    // NORMA EUROLEAGUE: Si hay prórroga, el margen es 0
                     let margin = m.isOT ? 0 : (m.scoreH - m.scoreA);
                     diffA += margin; 
                 }
                 if (m.home === teamB && m.away === teamA) { 
                     played++; 
                     if(m.scoreH > m.scoreA) winsB++; else winsA++; 
+                    
+                    // NORMA EUROLEAGUE: Si hay prórroga, el margen es 0
                     let margin = m.isOT ? 0 : (m.scoreA - m.scoreH);
                     diffA += margin; 
                 }
             });
         
-            // NUEVO: Leemos la diferencia de puntos del slider
+            // Mantener la lógica de los partidos simulados (Simulator)
             Object.values(simulatedPicks).forEach(m => {
-                let margin = m.diff || 1; // Si no tocan el slider, gana de 1 por defecto
-                if (m.home === teamA && m.away === teamB) { 
-                    played++; 
-                    if(m.winner === teamA) { winsA++; diffA += margin; } 
-                    else { winsB++; diffA -= margin; }
-                }
-                if (m.home === teamB && m.away === teamA) { 
-                    played++; 
-                    if(m.winner === teamB) { winsB++; diffA -= margin; } 
-                    else { winsA++; diffA += margin; }
-                }
+                if (m.home === teamA && m.away === teamB) { played++; if(m.winner === teamA) winsA++; else winsB++; }
+                if (m.home === teamB && m.away === teamA) { played++; if(m.winner === teamB) winsB++; else winsA++; }
             });
         
             return { winsA, winsB, played, diffA };
@@ -2185,44 +2118,28 @@ const i18n = {
                 let jGames = "";
                 
                 jornada.games.forEach(match => {
+                    // 3. SOLO pintamos los botones de los partidos que NO se han jugado
                     if (!match.played) {
                         let odds = calculateWinOdds(match.home, match.away);
                         
                         let selH = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.home ? 'selected' : '';
                         let selA = simulatedPicks[match.id] && simulatedPicks[match.id].winner === match.away ? 'selected' : '';
                         
-                        // Buscamos cómo quedaron en la ida
-                        let idaMatch = pastMatches.find(m => (m.home === match.home && m.away === match.away) || (m.home === match.away && m.away === match.home));
-                        let idaText = idaMatch ? `${getTeamAbrev(idaMatch.home)} ${idaMatch.scoreH} - ${idaMatch.scoreA} ${getTeamAbrev(idaMatch.away)}` : (t.not_played || "No jugado");
-                        
-                        // Solo mostramos el slider si ya han elegido un ganador
-                        let sliderDisplay = simulatedPicks[match.id] ? 'block' : 'none';
-                        let diffValue = simulatedPicks[match.id] ? (simulatedPicks[match.id].diff || 1) : 1;
-                        let textIda = t.first_leg || 'Ida:';
-                        let textDif = t.diff_short || 'Dif:'; // NUEVO: Atrapamos la palabra Dif
-
-                        jGames += `<div class="match-card" style="padding:10px; gap:10px; align-items:center;">
-                            <div style="display:flex; gap:5px; align-items:stretch; width: 100%;">
-                                <button id="btn-home-${match.id}" class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.home)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.home}%</span></button>
-                                <div style="display:flex; align-items:center; font-weight:bold; color:#9ca3af; font-size:0.8rem; padding:0 2px;">vs</div>
-                                <button id="btn-away-${match.id}" class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.away)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.away}%</span></button>
-                            </div>
-                            <div id="slider-box-${match.id}" class="slider-container" style="display:${sliderDisplay}; width: 100%; box-sizing: border-box;">
-                                <div class="ida-context">ℹ️ ${textIda} ${idaText}</div>
-                                <div class="slider-row">
-                                    <span style="font-size:0.85rem; font-weight:bold;">${textDif}</span>
-                                    <input type="range" min="1" max="30" value="${diffValue}" class="slider-input" oninput="updateDiff(${match.id}, this.value)" onchange="applyDiff(${match.id}, this.value)">
-                                    <span id="val-diff-${match.id}" class="slider-val">+${diffValue}</span>
-                                </div>
-                            </div>
+                        jGames += `<div class="match-card" style="flex-direction:row; padding:5px; gap:5px; align-items:stretch;">
+                            <button id="btn-home-${match.id}" class="btn-win ${selH}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'home')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.home)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.home}%</span></button>
+                            <div style="display:flex; align-items:center; font-weight:bold; color:#9ca3af; font-size:0.8rem; padding:0 2px;">vs</div>
+                            <button id="btn-away-${match.id}" class="btn-win ${selA}" onclick="pickWinner(${match.id}, '${match.home}', '${match.away}', 'away')" style="margin:0; flex:1; padding:12px 2px; font-size:0.85rem; line-height:1.2;">${tName(match.away)}<br><span style="font-size:0.75rem; font-weight:normal; opacity:0.8;">${odds.away}%</span></button>
                         </div>`;
                     }
                 });
+                container.innerHTML += jHeader + jGames + `</div>`;
+            });
+        }
 
         function pickWinner(matchId, homeName, awayName, side) {
-            let prevDiff = simulatedPicks[matchId] ? simulatedPicks[matchId].diff : 1;
-            simulatedPicks[matchId] = { home: homeName, away: awayName, winner: side === 'home' ? homeName : awayName, diff: prevDiff };
+            simulatedPicks[matchId] = { home: homeName, away: awayName, winner: side === 'home' ? homeName : awayName };
             
+            // 1. Cambiamos el color de los botones INSTANTÁNEAMENTE (Feedback visual rápido)
             let btnHome = document.getElementById(`btn-home-${matchId}`);
             let btnAway = document.getElementById(`btn-away-${matchId}`);
             if(btnHome && btnAway) {
@@ -2231,33 +2148,14 @@ const i18n = {
                 if (side === 'home') btnHome.classList.add('selected');
                 else btnAway.classList.add('selected');
             }
-
-            // Mostramos el slider al hacer clic
-            let sliderBox = document.getElementById(`slider-box-${matchId}`);
-            if(sliderBox) sliderBox.style.display = 'block';
             
+            // 2. Retrasamos las matemáticas pesadas 10 milisegundos para que el procesador respire y el INP sea perfecto
             setTimeout(() => {
                 renderStandings();
                 if(typeof renderBracket === 'function') renderBracket();
                 renderMatrices();
                 if (document.getElementById('select-myteam')?.value) renderMyTeam();
             }, 10);
-        }
-
-        // --- NUEVAS FUNCIONES PARA EL SLIDER ---
-        function updateDiff(matchId, val) {
-            let valSpan = document.getElementById(`val-diff-${matchId}`);
-            if(valSpan) valSpan.innerText = '+' + val; // Actualiza el número visual mientras arrastras
-        }
-
-        function applyDiff(matchId, val) {
-            if(simulatedPicks[matchId]) {
-                simulatedPicks[matchId].diff = parseInt(val);
-                // Solo recargamos la tabla al soltar el dedo, para evitar lag en móviles
-                renderStandings();
-                if(typeof renderBracket === 'function') renderBracket();
-                renderMatrices();
-            }
         }
 
         function renderMatrices() {
@@ -2626,21 +2524,7 @@ const i18n = {
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // NUEVO: Lógica de la Persiana Móvil
-            const btnDrawer = document.getElementById("btn-toggle-drawer");
-            const panelStandings = document.querySelector(".sim-standings");
-            const overlay = document.getElementById("drawer-overlay");
-
-            if(btnDrawer && panelStandings && overlay) {
-                btnDrawer.addEventListener("click", () => {
-                    panelStandings.classList.add("abierto");
-                    overlay.classList.add("active");
-                });
-                overlay.addEventListener("click", () => {
-                    panelStandings.classList.remove("abierto");
-                    overlay.classList.remove("active");
-                });
-            }
+            // Ejecutamos la automatización antes de pintar nada
             autoUpdateData(); 
             
             initFilters();
