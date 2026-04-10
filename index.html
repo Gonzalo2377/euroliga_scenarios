@@ -178,7 +178,6 @@
             height: 24px;
             border-radius: 50%;
             object-fit: cover;
-            display: none !important;
         }
         .playoff-zone { border-left: 4px solid var(--win); } 
         .playin-zone { border-left: 4px solid #f59e0b; } 
@@ -240,6 +239,14 @@
             flex: 1;
             margin: 0 5px;
         }
+        /* Colores de tendencia para la clasificación */
+        .trend-up { color: #10b981; font-weight: bold; font-size: 0.8rem; margin-left: 5px; }
+        .trend-down { color: #ef4444; font-weight: bold; font-size: 0.8rem; margin-left: 5px; }
+        .trend-flat { color: #9ca3af; font-size: 0.8rem; margin-left: 5px; }
+        
+        /* Ajuste para que la posición y la flecha se vean bien juntas */
+        .rank-cell { display: flex; align-items: center; justify-content: center; gap: 4px; flex-direction: column; line-height: 1; }
+        
         .btn-win:hover {
             background-color: var(--light);
             border-color: var(--primary);
@@ -763,7 +770,7 @@
                 net_rating_desc: "El Net Rating mide la eficiencia ofensiva y defensiva combinada.",
                 view_all_games: "Ver todos los juegos", latest_round: "Última Jornada", final: "Final", q1: "1C", q2: "2C", q3: "3C", q4: "4C", ot: "PR",
                 legend_title: "Leyenda de la Clasificación", leg_playoff: "Clasificación directa a Playoffs", leg_playin: "Clasificación a Play-In", leg_out: "Eliminados", leg_sos: "Fuerza del Calendario (dificultad de los rivales restantes)", leg_diff: "Diferencia de puntos (Basket Average)",
-                first_leg: "Ida:", not_played: "No jugado", diff_short: "Dif:", view_standings: "📊 Ver Clasificación"
+                first_leg: "Ida:", not_played: "No jugado", diff_short: "Dif:", view_standings: "📊 Ver Clasificación", close_standings: "❌ Cerrar Tabla"
             },
             en: {
                 title: "🏆 EuroLeague Ultimate Calculator 25/26", standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis", bracket: "🏆 Bracket",
@@ -785,7 +792,7 @@
                 net_rating_desc: "Net Rating measures combined offensive and defensive efficiency.",
                 view_all_games: "View all games", latest_round: "Latest Round", final: "Final", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "OT",
                 legend_title: "Standings Legend", leg_playoff: "Direct Playoff Qualification", leg_playin: "Play-In Qualification", leg_out: "Eliminated", leg_sos: "Strength of Schedule (combined difficulty of remaining opponents)", leg_diff: "Point Differential (Basket Average)",
-                first_leg: "1st Leg:", not_played: "Not played", diff_short: "Diff:", view_standings: "📊 View Standings"
+                first_leg: "1st Leg:", not_played: "Not played", diff_short: "Diff:", view_standings: "📊 View Standings", close_standings: "❌ Close Table"
             },
             fr: {
                 title: "🏆 Calculatrice EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
@@ -807,7 +814,7 @@
                 net_rating_desc: "Le Net Rating mesure l'efficacité offensive et défensive combinée.",
                 view_all_games: "Voir tous les matchs", latest_round: "Dernière journée", final: "Terminé", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "PR",
                 legend_title: "Légende du Classement", leg_playoff: "Qualification directe en Playoffs", leg_playin: "Qualification en Play-In", leg_out: "Éliminés", leg_sos: "Force du calendrier (difficulté combinée des adversaires)", leg_diff: "Différence de points (Basket Average)",
-                first_leg: "Aller :", not_played: "Non joué", diff_short: "Diff :", view_standings: "📊 Voir Classement"
+                first_leg: "Aller :", not_played: "Non joué", diff_short: "Diff :", view_standings: "📊 Voir Classement", close_standings: "❌ Fermer le tableau"
             },
             tr: {
                 title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26", standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz", bracket: "🏆 Eşleşmeler",
@@ -829,7 +836,7 @@
                 net_rating_desc: "Net Rating, birleşik hücum ve savunma verimliliğini ölçer.",
                 view_all_games: "Tüm maçları gör", latest_round: "Son Hafta", final: "Bitti", q1: "1Ç", q2: "2Ç", q3: "3Ç", q4: "4Ç", ot: "UZ",
                 legend_title: "Puan Durumu Lejantı", leg_playoff: "Doğrudan Playoff Katılımı", leg_playin: "Play-In Katılımı", leg_out: "Elendi", leg_sos: "Fikstür Zorluğu (kalan rakiplerin zorluk derecesi)", leg_diff: "Sayı Farkı (Averaj)",
-                first_leg: "İlk Maç:", not_played: "Oynanmadı", diff_short: "Fark:", view_standings: "📊 Puan Durumu"
+                first_leg: "İlk Maç:", not_played: "Oynanmadı", diff_short: "Fark:", view_standings: "📊 Puan Durumu", close_standings: "❌ Tabloyu Kapat"
             },
             gr: {
                 title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26", standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
@@ -851,7 +858,7 @@
                 net_rating_desc: "Το Net Rating μετρά τη συνδυασμένη επιθετική και αμυντική αποτελεσματικότητα.",
                 view_all_games: "Όλοι οι αγώνες", latest_round: "Τελευταία", final: "Τελικό", q1: "1ο", q2: "2ο", q3: "3ο", q4: "4ο", ot: "ΠΡ",
                 legend_title: "Υπόμνημα Βαθμολογίας", leg_playoff: "Απευθείας Πρόκριση στα Playoffs", leg_playin: "Πρόκριση στο Play-In", leg_out: "Αποκλεισμός", leg_sos: "Δυναμικότητα Προγράμματος (δυσκολία εναπομεινάντων αντιπάλων)", leg_diff: "Διαφορά Πόντων (Basket Average)",
-                first_leg: "1ος Γύρος:", not_played: "Δεν παίχτηκε", diff_short: "Διαφ:", view_standings: "📊 Βαθμολογία"
+                first_leg: "1ος Γύρος:", not_played: "Δεν παίχτηκε", diff_short: "Διαφ:", view_standings: "📊 Βαθμολογία", close_standings: "❌ Κλείσιμο Πίνακα"
             },
             sr: {
                 title: "🏆 Evroliga Ultimate Kalkulator 25/26", standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza", bracket: "🏆 Kostur",
@@ -873,7 +880,7 @@
                 net_rating_desc: "Net rejting meri kombinovanu ofanzivnu i defanzivnu efikasnost.",
                 view_all_games: "Sve utakmice", latest_round: "Poslednje Kolo", final: "Kraj", q1: "1Č", q2: "2Č", q3: "3Č", q4: "4Č", ot: "PR",
                 legend_title: "Legenda Tabele", leg_playoff: "Direktan plasman u Plej-of", leg_playin: "Plasman u Plej-in", leg_out: "Eliminisani", leg_sos: "Težina rasporeda (težina preostalih protivnika)", leg_diff: "Koš razlika (Basket Average)",
-                first_leg: "Prvi meč:", not_played: "Nije odigrano", diff_short: "Razl:", view_standings: "📊 Vidi Tabelu"
+                first_leg: "Prvi meč:", not_played: "Nije odigrano", diff_short: "Razl:", view_standings: "📊 Vidi Tabelu", close_standings: "❌ Zatvori Tabelu"
             },
             lt: {
                 title: "🏆 Eurolygos Ultimate Skaičiuoklė 25/26", standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė", bracket: "🏆 Medis",
@@ -895,7 +902,7 @@
                 net_rating_desc: "„Net Rating“ matuoja kombinuotą puolimo ir gynybos efektyvumą.",
                 view_all_games: "Visi mačai", latest_round: "Paskutinis turas", final: "Pabaiga", q1: "1K", q2: "2K", q3: "3K", q4: "4K", ot: "PR",
                 legend_title: "Lentelės Paaiškinimai", leg_playoff: "Tiesioginis patekimas į atkrintamąsias", leg_playin: "Patekimas į įkrintamąsias", leg_out: "Eliminuoti", leg_sos: "Tvarkaraščio sunkumas (likusių varžovų pajėgumas)", leg_diff: "Taškų skirtumas (Basket Average)",
-                first_leg: "1-as mačas:", not_played: "Nežaista", diff_short: "Skirt:", view_standings: "📊 Žiūrėti Lentelę"
+                first_leg: "1-as mačas:", not_played: "Nežaista", diff_short: "Skirt:", view_standings: "📊 Žiūrėti Lentelę", close_standings: "❌ Uždaryti Lentelę"
             },
             he: {
                 title: "🏆 מחשבון יורוליג 25/26", standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
@@ -920,7 +927,7 @@
                 "Paris": "פריז", "Virtus Bolonia": "וירטוס", "Baskonia": "באסקוניה", "Anadolu Efes": "אנדולו אפס", "Asvel Basket": "וילרבאן",
                 view_all_games: "לכל המשחקים", latest_round: "מחזור אחרון", final: "סיום", q1: "רבע 1", q2: "רבע 2", q3: "רבע 3", q4: "רבע 4", ot: "הארכה",
                 legend_title: "מקרא טבלה", leg_playoff: "העפלה ישירה לפלייאוף", leg_playin: "העפלה לפליי-אין", leg_out: "הודחו", leg_sos: "חוזק לוח המשחקים (רמת הקושי של היריבות שנותרו)", leg_diff: "הפרש סלים כללי",
-                first_leg: "משחק ראשון:", not_played: "לא שוחק", diff_short: "הפרש:", view_standings: "📊 צפה בטבלה"
+                first_leg: "משחק ראשון:", not_played: "לא שוחק", diff_short: "הפרש:", view_standings: "📊 צפה בטבלה", close_standings: "❌ סגור טבלה"
             }
         };
         // 1. Miramos si la URL fuerza un idioma 
@@ -1514,7 +1521,7 @@
 
             // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
             // AÑADIDO: renderBracket() para que se actualice junto a la clasificación
-            setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
+            setTimeout(() => { ings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
             setTimeout(() => { renderMatrices(); renderResultados(); }, 0);
             setTimeout(() => {
@@ -1832,6 +1839,13 @@
             let teams = getLiveTeams();
             if (!teams || teams.length === 0) return;
             
+            // A. Calculamos la clasificación "OFICIAL" actual (sin simulaciones)
+            let baseTeams = JSON.parse(JSON.stringify(teamsBase)).map(t => ({...t, wins: t.initialWins, losses: t.initialLosses}));
+            let sortedBase = sortTeamsWithH2H(baseTeams);
+            let officialRanks = {};
+            sortedBase.forEach((t, i) => officialRanks[t.name] = i + 1);
+
+            // B. Ordenamos la clasificación "SIMULADA"
             teams = sortTeamsWithH2H(teams); 
             
             const tbodyMain = document.getElementById("standings-body");
@@ -1841,12 +1855,25 @@
             tbodyMain.innerHTML = ""; tbodySim.innerHTML = "";
             
             teams.forEach((team, index) => {
+                let currentRank = index + 1;
                 let games = team.wins + team.losses; 
                 let pct = games > 0 ? (team.wins / games).toFixed(3).replace('0.', '.') : ".000";
                 let rowClass = index < 6 ? "playoff-zone" : (index < 10 ? "playin-zone" : "out-zone");
                 
+                // --- CÁLCULO DE TENDENCIA ---
+                let oldRank = officialRanks[team.name];
+                let trendHTML = "";
+                if (currentRank < oldRank) {
+                    trendHTML = `<span class="trend-up">▲${oldRank - currentRank}</span>`;
+                } else if (currentRank > oldRank) {
+                    trendHTML = `<span class="trend-down">▼${currentRank - oldRank}</span>`;
+                } else {
+                    trendHTML = `<span class="trend-flat">-</span>`;
+                }
+                
+                // Tabla Desktop
                 tbodyMain.innerHTML += `<tr>
-                    <td class="${rowClass}"><strong>${index + 1}</strong></td>
+                    <td class="${rowClass}"><strong>${currentRank}</strong></td>
                     <td><div class="team-cell"><span>${team.flag}</span><img src="${getLogo(team.name)}" class="team-logo">${tName(team.name)}</div></td>
                     <td>${games}</td><td><strong>${team.wins}</strong></td><td>${team.losses}</td><td>${pct}</td>
                     <td>${getFormHTML(team.name)}</td>
@@ -1855,8 +1882,15 @@
                     <td style="font-weight:bold; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
                 
-                tbodySim.innerHTML += `<tr><td class="${rowClass}"><strong>${index + 1}</strong></td><td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${tName(team.name)}</div></td><td><strong>${team.wins}</strong></td><td>${team.losses}</td></tr>`;
+                // Tabla Móvil (Persiana) con flechas
+                tbodySim.innerHTML += `<tr>
+                    <td class="${rowClass}"><div class="rank-cell"><strong>${currentRank}</strong>${trendHTML}</div></td>
+                    <td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${tName(team.name)}</div></td>
+                    <td><strong>${team.wins}</strong></td><td>${team.losses}</td>
+                </tr>`;
             });
+
+            // Leyenda (igual que antes)
             const legendContainer = document.getElementById("standings-legend-container");
             const t = i18n[currentLang] || i18n['es'];
             if(legendContainer && t.legend_title) {
@@ -1868,10 +1902,6 @@
                             <div class="legend-item"><div class="legend-color color-po"></div><span><strong>1º - 6º:</strong> ${t.leg_playoff}</span></div>
                             <div class="legend-item"><div class="legend-color color-pi"></div><span><strong>7º - 10º:</strong> ${t.leg_playin}</span></div>
                             <div class="legend-item"><div class="legend-color color-out"></div><span><strong>11º - 20º:</strong> ${t.leg_out}</span></div>
-                        </div>
-                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee; font-size:0.85rem; color:#4b5563;">
-                            <div style="margin-bottom:5px;"><strong>SOS:</strong> ${t.leg_sos}</div>
-                            <div><strong>+/- :</strong> ${t.leg_diff}</div>
                         </div>
                     </div>`;
             }
@@ -2635,14 +2665,27 @@
             const overlay = document.getElementById("drawer-overlay");
 
             if(btnDrawer && panelStandings && overlay) {
-                btnDrawer.addEventListener("click", () => {
-                    panelStandings.classList.add("abierto");
-                    overlay.classList.add("active");
-                });
-                overlay.addEventListener("click", () => {
-                    panelStandings.classList.remove("abierto");
-                    overlay.classList.remove("active");
-                });
+                const toggleDrawer = () => {
+                    const isOpen = panelStandings.classList.contains("abierto");
+                    const t = i18n[currentLang] || i18n['es'];
+
+                    if (isOpen) {
+                        // Si está abierto, lo cerramos
+                        panelStandings.classList.remove("abierto");
+                        overlay.classList.remove("active");
+                        btnDrawer.innerHTML = t.view_standings || "📊 Ver Clasificación";
+                        btnDrawer.style.backgroundColor = "var(--primary)"; // Vuelve al color naranja
+                    } else {
+                        // Si está cerrado, lo abrimos
+                        panelStandings.classList.add("abierto");
+                        overlay.classList.add("active");
+                        btnDrawer.innerHTML = t.close_standings || "❌ Cerrar Tabla"; 
+                        btnDrawer.style.backgroundColor = "var(--dark)"; // Cambia a oscuro para indicar cierre
+                    }
+                };
+
+                btnDrawer.addEventListener("click", toggleDrawer);
+                overlay.addEventListener("click", toggleDrawer);
             }
             autoUpdateData(); 
             
