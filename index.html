@@ -595,6 +595,11 @@
             }
             .sim-standings.abierto { bottom: 0; }
         }
+        @media (max-width: 768px) {
+            #bmc-wbtn {
+                bottom: 80px !important; /* Sube el botón del café hacia arriba */
+            }
+        }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -950,6 +955,7 @@
         function tName(name) {
             return (i18n[currentLang] && i18n[currentLang][name]) ? i18n[currentLang][name] : name;
         }
+        let snapshotOfficialRanks = null; // Guardará la foto inamovible de la clasificación real
 
         const teamsBase = [
             { id: "FEN", name: "Fenerbahçe", flag: "🇹🇷", initialWins: 23, initialLosses: 12, diff: 68 },
@@ -1839,13 +1845,16 @@
             let teams = getLiveTeams();
             if (!teams || teams.length === 0) return;
             
-            // A. Calculamos la clasificación "OFICIAL" actual (sin simulaciones)
-            let baseTeams = JSON.parse(JSON.stringify(teamsBase)).map(t => ({...t, wins: t.initialWins, losses: t.initialLosses}));
-            let sortedBase = sortTeamsWithH2H(baseTeams);
-            let officialRanks = {};
-            sortedBase.forEach((t, i) => officialRanks[t.name] = i + 1);
+            // --- NUEVO: CAPTURAR LA FOTO ORIGINAL SOLO UNA VEZ ---
+            // Si es la primera vez que se carga y no hay simulaciones, guardamos los rangos oficiales
+            if (!snapshotOfficialRanks) {
+                let baseTeams = JSON.parse(JSON.stringify(teamsBase)).map(t => ({...t, wins: t.initialWins, losses: t.initialLosses}));
+                let sortedBase = sortTeamsWithH2H(baseTeams);
+                snapshotOfficialRanks = {};
+                sortedBase.forEach((t, i) => snapshotOfficialRanks[t.name] = i + 1);
+            }
 
-            // B. Ordenamos la clasificación "SIMULADA"
+            // Calculamos la clasificación SIMULADA
             teams = sortTeamsWithH2H(teams); 
             
             const tbodyMain = document.getElementById("standings-body");
@@ -1860,8 +1869,8 @@
                 let pct = games > 0 ? (team.wins / games).toFixed(3).replace('0.', '.') : ".000";
                 let rowClass = index < 6 ? "playoff-zone" : (index < 10 ? "playin-zone" : "out-zone");
                 
-                // --- CÁLCULO DE TENDENCIA ---
-                let oldRank = officialRanks[team.name];
+                // --- CÁLCULO DE TENDENCIA (Contra la foto inamovible) ---
+                let oldRank = snapshotOfficialRanks[team.name];
                 let trendHTML = "";
                 if (currentRank < oldRank) {
                     trendHTML = `<span class="trend-up">▲${oldRank - currentRank}</span>`;
@@ -1885,12 +1894,12 @@
                 // Tabla Móvil (Persiana) con flechas
                 tbodySim.innerHTML += `<tr>
                     <td class="${rowClass}"><div class="rank-cell"><strong>${currentRank}</strong>${trendHTML}</div></td>
-                    <td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" style="width:20px;height:20px;">${tName(team.name)}</div></td>
+                    <td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo">${tName(team.name)}</div></td>
                     <td><strong>${team.wins}</strong></td><td>${team.losses}</td>
                 </tr>`;
             });
 
-            // Leyenda (igual que antes)
+            // Leyenda
             const legendContainer = document.getElementById("standings-legend-container");
             const t = i18n[currentLang] || i18n['es'];
             if(legendContainer && t.legend_title) {
