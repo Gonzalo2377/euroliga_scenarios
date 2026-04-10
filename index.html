@@ -596,8 +596,16 @@
             .sim-standings.abierto { bottom: 0; }
         }
         @media (max-width: 768px) {
+            /* Movemos el botón de la clasificación a la izquierda */
+            #btn-toggle-drawer {
+                left: 20px !important;
+                right: auto !important;
+            }
+        
+            /* El del café se queda abajo a la derecha (posición original) */
             #bmc-wbtn {
-                bottom: 80px !important; /* Sube el botón del café hacia arriba */
+                bottom: 20px !important;
+                right: 20px !important;
             }
         }
     </style>
