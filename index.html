@@ -1521,7 +1521,7 @@
 
             // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
             // AÑADIDO: renderBracket() para que se actualice junto a la clasificación
-            setTimeout(() => { ings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
+            setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
             setTimeout(() => { renderMatrices(); renderResultados(); }, 0);
             setTimeout(() => {
