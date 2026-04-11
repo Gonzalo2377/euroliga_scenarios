@@ -380,27 +380,30 @@
         .q-table td:first-child img { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
 
         #col-pi .matchup { position: relative; z-index: 2; }
+        
+        /* Limpiamos estilos residuales */
         #col-pi .matchup::after, #col-pi .matchup::before { display: none; }
+        #col-pi .matchup-header::after, #col-pi .matchup-header::before { display: none; }
         .bracket-note { display: none !important; }
 
         /* --- TOP: 9vs10 (PI2) --- */
         /* L (Rojo) recta hacia Eliminado */
         #pi2-matchup::before {
-            content: ''; position: absolute; top: 25%; right: -75px; width: 75px; height: 2px;
+            content: ''; position: absolute; top: 25px; right: -85px; width: 85px; height: 2px;
             background: var(--loss); z-index: 1; display: block !important;
         }
         #pi2-matchup::after {
-            content: 'L - ELIMINADO'; position: absolute; top: 25%; right: -175px; transform: translateY(-50%);
+            content: 'L - ELIMINADO'; position: absolute; top: 15px; right: -180px;
             background: var(--loss); color: white; font-size: 9px; font-weight: 900; padding: 3px 6px; border-radius: 4px; z-index: 10;
         }
         /* W (Verde) Codo abajo a Decisoria */
         #pi2-matchup .matchup-header::before {
-            content: ''; position: absolute; top: 75%; right: -20px; width: 20px; height: 50px;
+            content: ''; position: absolute; top: 60px; right: -20px; width: 20px; height: 110px;
             border-right: 2px solid var(--win); border-bottom: 2px solid var(--win);
             border-bottom-right-radius: 6px; z-index: 1; display: block !important;
         }
         #pi2-matchup .matchup-header::after {
-            content: 'W'; position: absolute; top: 110px; right: -28px;
+            content: 'W'; position: absolute; top: 162px; right: -28px;
             background: var(--win); color: white; font-size: 10px; font-weight: 900;
             width: 16px; height: 16px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
         }
@@ -408,22 +411,22 @@
         /* --- BOTTOM: 7vs8 (PI1) --- */
         /* W (Verde) recta a Cuartos (QF4) */
         #pi1-matchup::before {
-            content: ''; position: absolute; top: 75%; right: -40px; width: 40px; height: 2px;
+            content: ''; position: absolute; top: 55px; right: -40px; width: 40px; height: 2px;
             background: var(--win); z-index: 1; display: block !important;
         }
         #pi1-matchup::after {
-            content: 'W'; position: absolute; top: 75%; right: -25px; transform: translateY(-50%);
+            content: 'W'; position: absolute; top: 47px; right: -25px;
             background: var(--win); color: white; font-size: 10px; font-weight: 900;
             width: 16px; height: 16px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
         }
         /* L (Rojo) Codo arriba a Decisoria */
         #pi1-matchup .matchup-header::before {
-            content: ''; position: absolute; bottom: 75%; right: -20px; width: 20px; height: 50px;
+            content: ''; position: absolute; bottom: 55px; right: -20px; width: 20px; height: 110px;
             border-right: 2px solid var(--loss); border-top: 2px solid var(--loss);
             border-top-right-radius: 6px; z-index: 1; display: block !important;
         }
         #pi1-matchup .matchup-header::after {
-            content: 'L'; position: absolute; bottom: 110px; right: -28px;
+            content: 'L'; position: absolute; top: -88px; right: -28px;
             background: var(--loss); color: white; font-size: 10px; font-weight: 900;
             width: 16px; height: 16px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
         }
@@ -440,8 +443,11 @@
             width: 16px; height: 16px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
         }
 
-        /* Recepción en Cuartos (Limpiar conectores base viejos) */
-        #col-qf .matchup.qf1::before, #col-qf .matchup.qf4::before { display: none !important; }
+        /* Recepción en Cuartos (Conectores grises para que entren limpios) */
+        #col-qf .matchup.qf1::before, #col-qf .matchup.qf4::before {
+            content: ''; position: absolute; width: 22px; height: 2px;
+            background: var(--win); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
+        }
         
         @keyframes el-scroll {
             0% { transform: translateX(0); }
@@ -1996,11 +2002,11 @@
                         ${buildMatchup('pi2', '9º vs 10º (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
                     </div>
                     
-                    <div id="pi3-matchup" style="margin-top: 35px; margin-left: 20px; width: calc(100% - 20px);">
+                    <div id="pi3-matchup" style="margin-top: 55px; margin-left: 20px; width: calc(100% - 20px);">
                         ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
                     </div>
                     
-                    <div id="pi1-matchup" style="margin-top: 35px;">
+                    <div id="pi1-matchup" style="margin-top: 55px;">
                         ${buildMatchup('pi1', '7º vs 8º (Winner = 7º Seed)', p_pi1_A, p_pi1_B, 7, 8)}
                     </div>
                 </div>
@@ -2008,7 +2014,7 @@
                 <div class="bracket-col" id="col-qf">
                     <div class="bracket-label">${txtQF}</div>
                     
-                    <div style="margin-top: 55px;">
+                    <div style="margin-top: 75px;">
                         ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
                     </div>
                     
