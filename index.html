@@ -1773,24 +1773,6 @@
         
             return { winsA, winsB, played, diffA };
         }
-        
-            // NUEVO: Leemos la diferencia de puntos del slider
-            Object.values(simulatedPicks).forEach(m => {
-                let margin = m.diff || 1; // Si no tocan el slider, gana de 1 por defecto
-                if (m.home === teamA && m.away === teamB) { 
-                    played++; 
-                    if(m.winner === teamA) { winsA++; diffA += margin; } 
-                    else { winsB++; diffA -= margin; }
-                }
-                if (m.home === teamB && m.away === teamA) { 
-                    played++; 
-                    if(m.winner === teamB) { winsB++; diffA -= margin; } 
-                    else { winsA++; diffA += margin; }
-                }
-            });
-        
-            return { winsA, winsB, played, diffA };
-        }
 
         function calculateWinOdds(homeTeamName, awayTeamName) {
             let homeTeam = teamsBase.find(t => t.name === homeTeamName);
