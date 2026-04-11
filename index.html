@@ -378,65 +378,6 @@
         
         .q-table th:first-child, .q-table td:first-child { text-align: left; width: 26px; border: none !important; }
         .q-table td:first-child img { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
-
-        /* 1. LÍNEAS DEL PLAY-IN (9v10 Arriba, Decisoria Medio, 7v8 Abajo) */
-        #col-pi .matchup { position: relative; z-index: 2; }
-        #col-pi .matchup::after, #col-pi .matchup::before { display: none; }
-        .bracket-note { display: none !important; }
-
-        /* --- TOP: 9vs10 (PI2) --- */
-        /* W (Verde) bajando a la Decisoria */
-        #pi2-matchup::after {
-            content: 'W'; position: absolute; bottom: -20px; right: -5px; 
-            background: var(--win); color: white; font-size: 11px; font-weight: 900;
-            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
-        }
-        #pi2-matchup::before { /* Línea Codo hacia abajo */
-            content: ''; position: absolute; top: 50%; right: -15px; width: 15px; height: 70px;
-            border-bottom: 2px solid var(--win); border-right: 2px solid var(--win); border-bottom-right-radius: 6px; z-index: 1; display: block !important;
-        }
-
-        /* --- BOTTOM: 7vs8 (PI1) --- */
-        /* W (Verde) recta a Cuartos (Contra el 2º) */
-        #pi1-matchup::after {
-            content: 'W'; position: absolute; top: 50%; right: -25px; transform: translateY(-50%);
-            background: var(--win); color: white; font-size: 11px; font-weight: 900;
-            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
-        }
-        #pi1-matchup::before { /* Línea recta W */
-            content: ''; position: absolute; top: 50%; right: -45px; width: 45px; height: 2px;
-            background: var(--win); transform: translateY(-50%); z-index: 1; display: block !important;
-        }
-        
-        /* L (Roja) subiendo a la Decisoria */
-        #pi1-matchup .matchup-header::after {
-            content: 'L'; position: absolute; top: -30px; right: -5px; 
-            background: var(--loss); color: white; font-size: 11px; font-weight: 900;
-            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
-        }
-        #pi1-matchup .matchup-header::before { /* Línea Codo L hacia arriba */
-            content: ''; position: absolute; bottom: 50%; right: -15px; width: 15px; height: 75px;
-            border-top: 2px solid var(--loss); border-right: 2px solid var(--loss); border-top-right-radius: 6px; z-index: 1; display: block !important;
-        }
-
-        /* --- MIDDLE: Decisoria (PI3) --- */
-        /* W (Verde) subiendo a Cuartos (Contra el 1º) */
-        #pi3-matchup::after {
-            content: 'W'; position: absolute; top: -15px; right: -30px; 
-            background: var(--win); color: white; font-size: 11px; font-weight: 900;
-            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
-        }
-        #pi3-matchup::before { /* Línea Codo W hacia arriba largo */
-            content: ''; position: absolute; bottom: 50%; right: -20px; width: 20px; height: 115px;
-            border-top: 2px solid var(--win); border-right: 2px solid var(--win); border-top-right-radius: 6px; z-index: 1; display: block !important;
-        }
-
-        /* Entradas a Cuartos (Sólo mantenemos la de QF4, QF1 entra por arriba) */
-        #col-qf .matchup.qf4::before {
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--win); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
-        }
-        #col-qf .matchup.qf1::before { display: none; }
         
         @keyframes el-scroll {
             0% { transform: translateX(0); }
@@ -548,129 +489,123 @@
         /* ========================================================= */
         /* --- ESTILOS DEL BRACKET MEJORADOS (MÁS GRANDES Y LÍNEAS) --- */
         /* ========================================================= */
-        .bracket-wrapper { overflow-x: auto; padding: 30px 10px; position: relative; }
+        .bracket-wrapper { overflow-x: auto; padding: 20px 0; }
         .bracket-container { 
             display: flex; justify-content: flex-start; align-items: flex-start; 
-            gap: 45px; min-width: 1050px; padding: 30px; background: #0f172a; /* Fondo más elegante tipo pizarra */
-            border-radius: 16px; border: 1px solid #1e293b; color: white; position: relative; 
+            gap: 40px; min-width: 1000px; padding: 30px; background: #1a1a1a; 
+            border-radius: 12px; color: white; position: relative; 
         }
         
-        .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 250px; position: relative; z-index: 2;}
+        /* Aumentamos el ancho de las columnas a 260px (antes 240) */
+        .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 260px; position: relative; }
         
+        /* IMPORTANTE: overflow: visible para que las líneas de conexión puedan salir fuera de la caja */
         .matchup { 
-            background: #1e293b; border-radius: 8px; border: 1px solid #334155; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); overflow: visible; 
-            transition: transform 0.2s, border-color 0.2s; position: relative; z-index: 2; 
+            background: #333; border-radius: 6px; border: 1px solid #555; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); overflow: visible; 
+            transition: transform 0.2s; position: relative; z-index: 2; 
         }
-        .matchup:hover { border-color: #64748b; transform: translateY(-2px); }
+        .matchup:hover { border-color: #888; }
         
+        /* Como quitamos el overflow:hidden, le ponemos border-radius manual arriba y abajo */
         .matchup-header { 
-            background: #0f172a; font-size: 0.75rem; text-align: center; padding: 6px; 
-            color: #94a3b8; text-transform: uppercase; border-bottom: 1px solid #334155; 
-            font-weight: bold; border-top-left-radius: 7px; border-top-right-radius: 7px; 
+            background: #222; font-size: 0.8rem; text-align: center; padding: 8px; 
+            color: #aaa; text-transform: uppercase; border-bottom: 1px solid #555; 
+            font-weight: bold; border-top-left-radius: 5px; border-top-right-radius: 5px; 
         }
         
+        /* Más padding (12px) y texto más grande (1.05rem) */
         .matchup-team { 
-            display: flex; align-items: center; padding: 10px 12px; font-size: 1rem; 
-            cursor: pointer; transition: background 0.2s; 
-            border-left: 4px solid transparent; background: transparent; 
+            display: flex; align-items: center; padding: 12px 10px; font-size: 1.05rem; 
+            cursor: pointer; transition: background 0.2s, opacity 0.2s; 
+            border-left: 4px solid transparent; background: #333; 
         }
-        .matchup-team:last-child { border-bottom-left-radius: 7px; border-bottom-right-radius: 7px; }
-        .matchup-team:not(:last-child) { border-bottom: 1px solid #334155; }
+        .matchup-team:last-child { border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
         
-        .matchup-team:hover:not(.disabled) { background: #334155; }
-        .matchup-team.winner { background: #172554; border-left: 4px solid var(--primary); font-weight: bold; }
-        .matchup-team.loser { opacity: 0.5; }
+        .matchup-team:not(:last-child) { border-bottom: 1px solid #444; }
+        .matchup-team:hover:not(.disabled) { background: #444; }
+        .matchup-team.winner { background: #1f2937; border-left: 4px solid var(--win); font-weight: bold; }
+        .matchup-team.loser { opacity: 0.4; filter: grayscale(1); }
         .matchup-team.disabled { cursor: not-allowed; opacity: 0.5; }
         
-        .seed-badge { font-size: 0.75rem; font-weight: bold; color: #f8fafc; background: #475569; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-right: 10px; }
-        .team-name-bracket { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f8fafc; }
-        .bracket-logo { width: 26px; height: 26px; border-radius: 50%; background: white; margin-right: 10px; object-fit: contain; border: 1px solid #cbd5e1;}
+        .seed-badge { font-size: 0.75rem; font-weight: bold; color: #111; background: #ddd; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 3px; margin-right: 10px; }
+        .team-name-bracket { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Logo más grande */
+        .bracket-logo { width: 28px; height: 28px; border-radius: 50%; background: white; margin-right: 10px; object-fit: contain;}
         
-        .bracket-label { text-align: center; color: var(--primary); font-weight: 800; font-size: 1.1rem; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #334155; padding-bottom: 8px; z-index: 2; position: relative;}
-        .bracket-note { font-size: 0.75rem; color: #94a3b8; text-align: center; font-style: italic; margin: -10px 0; z-index: 2; position: relative;}
+        .bracket-label { text-align: center; color: var(--primary); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #333; padding-bottom: 10px; z-index: 2; position: relative;}
+        .bracket-note { font-size: 0.75rem; color: #888; text-align: center; font-style: italic; margin: -10px 0; z-index: 2; position: relative;}
         
-        .champion-box { text-align: center; background: linear-gradient(135deg, #ea580c, #7c2d12); border-radius: 12px; padding: 25px 10px; box-shadow: 0 0 25px rgba(234, 88, 12, 0.3); margin-top: 20px; border: 2px solid #fb923c; }
-        .champion-box img { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; margin-bottom: 15px; background: white; object-fit: contain; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
-        .champion-box h3 { margin: 0; color: white; font-size: 1.5rem; text-transform: uppercase; font-weight: 900;}
-        .disabled-champ { background: #1e293b; border: 2px dashed #475569; color: #94a3b8; padding: 25px 10px; border-radius: 12px; text-align: center; margin-top: 20px; font-weight: bold; }
+        .champion-box { text-align: center; background: linear-gradient(135deg, #ea580c, #9a3412); border-radius: 8px; padding: 25px 10px; box-shadow: 0 0 20px rgba(234, 88, 12, 0.4); margin-top: 20px; animation: pulse 2s infinite; border: 2px solid #fb923c; }
+        .champion-box img { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; margin-bottom: 15px; background: white; }
+        .champion-box h3 { margin: 0; color: white; font-size: 1.6rem; text-transform: uppercase; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .disabled-champ { background: #333; border: 2px dashed #555; color: #666; padding: 25px 10px; border-radius: 8px; text-align: center; margin-top: 20px; font-weight: bold; }
         
-        /* MARCA DE AGUA */
-        .watermark-x {
-            position: absolute;
-            bottom: 20px;
-            right: 30px;
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.1);
-            font-weight: 900;
-            pointer-events: none;
-            z-index: 10;
-            letter-spacing: 1px;
-        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234,88,12,0.7); } 70% { box-shadow: 0 0 0 15px rgba(234,88,12,0); } 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0); } }
 
         /* --------------------------------------------------- */
-        /* CONECTORES CSS: AJUSTADOS PARA QF4 ARRIBA DE QF3    */
+        /* MAGIA PURA: LÍNEAS DE CONEXIÓN CALCULADAS (CSS)     */
         /* --------------------------------------------------- */
-        :root { --connector: #475569; }
         
-        /* 1. Entrada a Cuartos desde Play-In */
+        /* 1. Entrada a Cuartos desde Play-In (Queda recta a la izq de QF1) */
         #col-qf .matchup:nth-child(2)::before {
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
+            content: ''; position: absolute; width: 20px; height: 2px;
+            background: var(--connector); top: 50%; left: -20px; z-index: -1; transform: translateY(-50%);
         }
+        /* Salida recta desde Play-In 1 */
         #col-pi .matchup:nth-child(2)::after { 
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; right: -22px; z-index: -1; transform: translateY(-50%);
+            content: ''; position: absolute; width: 20px; height: 2px;
+            background: var(--connector); top: 50%; right: -20px; z-index: -1; transform: translateY(-50%);
         }
 
         /* 2. CUARTOS -> SEMIS */
         /* QF1 hacia abajo */
         #col-qf .matchup:nth-child(2)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            content: ''; position: absolute; width: 20px; height: calc(50% + 10px); /* 10px es la mitad del gap de 20px */
             border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
+            top: 50%; right: -20px; z-index: -1; border-top-right-radius: 4px;
         }
         /* QF2 hacia arriba */
         #col-qf .matchup:nth-child(3)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            content: ''; position: absolute; width: 20px; height: calc(50% + 10px);
             border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -22px; z-index: -1; border-bottom-right-radius: 6px;
+            bottom: 50%; right: -20px; z-index: -1; border-bottom-right-radius: 4px;
         }
-        /* QF4 (ahora es el 3º partido) hacia abajo */
+        /* QF3 hacia abajo */
         #col-qf .matchup:nth-child(5)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            content: ''; position: absolute; width: 20px; height: calc(50% + 10px);
             border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
+            top: 50%; right: -20px; z-index: -1; border-top-right-radius: 4px;
         }
-        /* QF3 (ahora es el 4º partido) hacia arriba */
+        /* QF4 hacia arriba */
         #col-qf .matchup:nth-child(6)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            content: ''; position: absolute; width: 20px; height: calc(50% + 10px);
             border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -22px; z-index: -1; border-bottom-right-radius: 6px;
+            bottom: 50%; right: -20px; z-index: -1; border-bottom-right-radius: 4px;
         }
-        /* Entradas a Semis */
+        /* Entradas horizontales a Semis */
         #col-sf .matchup::before {
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
+            content: ''; position: absolute; width: 20px; height: 2px;
+            background: var(--connector); top: 50%; left: -20px; z-index: -1; transform: translateY(-50%);
         }
 
         /* 3. SEMIS -> FINAL */
-        /* SF1 hacia abajo */
+        /* SF1 hacia abajo (Cálculo: mitad del spacer de 140px + gap de 20px = 90px) */
         #col-sf .matchup:nth-child(3)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 90px); 
+            content: ''; position: absolute; width: 20px; height: calc(50% + 90px); 
             border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
+            top: 50%; right: -20px; z-index: -1; border-top-right-radius: 4px;
         }
         /* SF2 hacia arriba */
         #col-sf .matchup:nth-child(5)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 90px);
+            content: ''; position: absolute; width: 20px; height: calc(50% + 90px);
             border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -22px; z-index: -1; border-bottom-right-radius: 6px;
+            bottom: 50%; right: -20px; z-index: -1; border-bottom-right-radius: 4px;
         }
-        /* Entrada a Final */
+        /* Entrada horizontal a la Final */
         #col-fin .matchup::before {
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
+            content: ''; position: absolute; width: 20px; height: 2px;
+            background: var(--connector); top: 50%; left: -20px; z-index: -1; transform: translateY(-50%);
         }
         
         /* ESTILOS BOTÓN DE CAPTURA BRACKET */
@@ -873,7 +808,6 @@
 
             <div class="bracket-wrapper">
                 <div class="bracket-container" id="bracket-ui">
-                    <div class="watermark-x">https://x.com/_TheBenchTalk_</div>
                 </div>
             </div>
         </div>
@@ -1863,11 +1797,12 @@
         }
 
         function advanceBracket(matchupId, winnerName, loserName) {
-            if (!winnerName) return; 
-            if (bracketState[matchupId] === winnerName) return; 
+            if (!winnerName) return; // Si hace clic en un hueco vacío o "TBD"
+            if (bracketState[matchupId] === winnerName) return; // Ya estaba seleccionado, no hacemos nada
 
             bracketState[matchupId] = winnerName;
 
+            // Rutas de reseteo en cascada: Si cambias de opinión, se borra todo el "futuro" de esa rama
             const resetPaths = {
                 'pi1': ['pi3', 'qf4', 'qf1', 'sf1', 'sf2', 'final'], 
                 'pi2': ['pi3', 'qf1', 'sf1', 'final'],
@@ -1880,6 +1815,7 @@
                 'sf2': ['final']
             };
 
+            // Regla especial del Play-In 7vs8: El perdedor tiene otra vida en el pi3
             if (matchupId === 'pi1') bracketState.pi1Loser = loserName;
 
             if (resetPaths[matchupId]) {
@@ -1888,30 +1824,42 @@
 
             renderBracket();
 
-            // Lógica Inteligente de Scroll Móvil
+            // --- Lógica Inteligente de Scroll Móvil ---
+            // Solo actuamos si el usuario está en móvil (< 768px de ancho)
             if (window.innerWidth <= 768) {
                 setTimeout(() => {
+                    // Seleccionamos el contenedor que tiene el scroll (la barra de desplazamiento)
                     const wrapper = document.querySelector('.bracket-wrapper');
                     if (!wrapper) return;
 
                     let targetCol = null;
 
+                    // 1. Determinar a qué columna queremos viajar
                     if (matchupId.startsWith('pi') && bracketState.pi1 && bracketState.pi2 && bracketState.pi3) {
-                        targetCol = document.getElementById('col-qf'); 
-                    } else if (matchupId.startsWith('qf') && bracketState.qf1 && bracketState.qf2 && bracketState.qf3 && bracketState.qf4) {
-                        targetCol = document.getElementById('col-sf'); 
-                    } else if (matchupId.startsWith('sf') && bracketState.sf1 && bracketState.sf2) {
-                        targetCol = document.getElementById('col-fin'); 
+                        targetCol = document.getElementById('col-qf'); // Viaje a Cuartos
+                    }
+                    else if (matchupId.startsWith('qf') && bracketState.qf1 && bracketState.qf2 && bracketState.qf3 && bracketState.qf4) {
+                        targetCol = document.getElementById('col-sf'); // Viaje a Semis
+                    }
+                    else if (matchupId.startsWith('sf') && bracketState.sf1 && bracketState.sf2) {
+                        targetCol = document.getElementById('col-fin'); // Viaje a la Final
                     }
 
+                    // 2. Ejecutar el desplazamiento si tenemos un objetivo válido
                     if (targetCol) {
                         const offsetLeft = targetCol.offsetLeft;
                         const wrapperWidth = wrapper.offsetWidth;
+                        
+                        // Fórmula que centra la columna dejando ver un 20% de la ronda anterior
                         const finalScrollLeft = offsetLeft - (wrapperWidth * 0.2); 
 
-                        wrapper.scrollTo({ left: finalScrollLeft, behavior: 'smooth' });
+                        // Ejecutamos el scroll suave
+                        wrapper.scrollTo({
+                            left: finalScrollLeft,
+                            behavior: 'smooth'
+                        });
                     }
-                }, 150); 
+                }, 150); // Retraso de 0.15s para dejar que se pinte el ganador antes de mover
             }
         }
 
@@ -1941,14 +1889,13 @@
             
             let p_qf1_A = tBase(1), p_qf1_B = bracketState.pi3 ? getT(bracketState.pi3) : null;
             let p_qf2_A = tBase(4), p_qf2_B = tBase(5);
-            let p_qf3_A = tBase(3), p_qf3_B = tBase(6); // 3º vs 6º
-            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null; // 2º vs 7º
+            let p_qf3_A = tBase(3), p_qf3_B = tBase(6);
+            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null;
 
             let p_sf1_A = bracketState.qf1 ? getT(bracketState.qf1) : null;
             let p_sf1_B = bracketState.qf2 ? getT(bracketState.qf2) : null;
-            // INTERCAMBIO: QF4 va arriba en la Semi 2, QF3 va abajo
-            let p_sf2_A = bracketState.qf4 ? getT(bracketState.qf4) : null; 
-            let p_sf2_B = bracketState.qf3 ? getT(bracketState.qf3) : null; 
+            let p_sf2_A = bracketState.qf3 ? getT(bracketState.qf3) : null;
+            let p_sf2_B = bracketState.qf4 ? getT(bracketState.qf4) : null;
 
             let p_fin_A = bracketState.sf1 ? getT(bracketState.sf1) : null;
             let p_fin_B = bracketState.sf2 ? getT(bracketState.sf2) : null;
@@ -1980,29 +1927,20 @@
             container.innerHTML = `
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
-                    
-                    <div id="pi2-matchup" style="margin-top: 10px;">
-                        ${buildMatchup('pi2', '9º vs 10º (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
-                    </div>
-                    
-                    <div id="pi3-matchup" style="margin-top: 25px; margin-left: 30px; width: calc(100% - 30px);">
-                        ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
-                    </div>
-                    
-                    <div id="pi1-matchup" style="margin-top: 25px;">
-                        ${buildMatchup('pi1', '7º vs 8º (Winner = 7º Seed)', p_pi1_A, p_pi1_B, 7, 8)}
-                    </div>
+                    ${buildMatchup('pi1', '7th vs 8th (Winner = 7th Seed)', p_pi1_A, p_pi1_B, 7, 8)}
+                    <div class="bracket-note">↓ ${txtLoser} ↓</div>
+                    ${buildMatchup('pi3', '8th Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
+                    <div style="height: 15px;"></div>
+                    ${buildMatchup('pi2', '9th vs 10th (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
                 </div>
                 
                 <div class="bracket-col" id="col-qf">
                     <div class="bracket-label">${txtQF}</div>
-                    ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
-                    ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
+                    ${buildMatchup('qf1', 'QF 1 (1st vs 8th)', p_qf1_A, p_qf1_B, 1, 8)}
+                    ${buildMatchup('qf2', 'QF 2 (4th vs 5th)', p_qf2_A, p_qf2_B, 4, 5)}
                     <div style="height: 35px;"></div>
-                    ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
-                    <div id="qf4-wrap">
-                        ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
-                    </div>
+                    ${buildMatchup('qf3', 'QF 3 (3rd vs 6th)', p_qf3_A, p_qf3_B, 3, 6)}
+                    ${buildMatchup('qf4', 'QF 4 (2nd vs 7th)', p_qf4_A, p_qf4_B, 2, 7)}
                 </div>
 
                 <div class="bracket-col" id="col-sf">
