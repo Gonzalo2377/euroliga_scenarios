@@ -552,57 +552,121 @@
         /* --------------------------------------------------- */
         /* CONECTORES CSS: AJUSTADOS PARA QF4 ARRIBA DE QF3    */
         /* --------------------------------------------------- */
-        :root { --connector: #475569; }
-        
-        /* 1. Entrada a Cuartos desde Play-In */
-        #col-qf .matchup:nth-child(2)::before {
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
+        :root { 
+            --connector: #475569; /* Gris oscuro para líneas vacías */
         }
-        #col-pi .matchup:nth-child(2)::after { 
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; right: -22px; z-index: -1; transform: translateY(-50%);
+        
+        /* 1. LÍNEAS DEL PLAY-IN (Lógica W en Verde / L en Rojo) */
+        
+        /* Contenedores de conectores para Play-In */
+        #col-pi .matchup { position: relative; z-index: 2; }
+        
+        /* Ocultar cualquier conector antiguo que pueda interferir */
+        #col-pi .matchup::after, #col-pi .matchup::before { display: none; }
+
+        /* --- Lógica del PI1 (7vs8 - Arriba) --- */
+        
+        /* Cajita W (Verde) y línea hacia Cuartos */
+        #pi1-matchup::after { 
+            content: 'W';
+            position: absolute; width: 22px; height: 22px;
+            background: var(--win); color: white; font-weight: 900;
+            top: 50%; right: -35px; z-index: 10; transform: translateY(-50%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        /* Línea base verde recta */
+        #pi1-matchup::before {
+            content: ''; position: absolute; top: 50%; right: -45px; width: 45px; height: 2px;
+            background: var(--win); transform: translateY(-50%); z-index: 1; display: block !important;
         }
 
-        /* 2. CUARTOS -> SEMIS */
+        /* --- Lógica de la Etiqueta "L" (Roja) que baja --- */
+        /* Usamos el contenedor .bracket-note para hacer la magia de bajar a la Decisoria */
+        .bracket-note {
+            position: relative; color: transparent !important; height: 35px; margin: 0; 
+            display: flex; align-items: center; justify-content: center; z-index: 2;
+        }
+        .bracket-note::after {
+            content: 'L'; position: absolute; 
+            background: var(--loss); color: white; font-size: 11px; font-weight: 900;
+            width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+        }
+        /* Línea base roja vertical (Conectando el de arriba con el de abajo) */
+        .bracket-note::before {
+            content: ''; position: absolute; top: -10px; bottom: -10px; left: 50%; width: 2px;
+            background: var(--loss); transform: translateX(-50%); z-index: 1;
+        }
+
+        /* --- Lógica del PI3 (Decisoria - Medio) --- */
+        
+        /* Cajita W (Verde) y línea hacia Cuartos */
+        #pi3-matchup::after {
+            content: 'W'; position: absolute; top: 50%; right: -35px; transform: translateY(-50%);
+            background: var(--win); color: white; font-size: 11px; font-weight: 900;
+            width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+        }
+        /* Línea base verde recta */
+        #pi3-matchup::before {
+            content: ''; position: absolute; top: 50%; right: -45px; width: 45px; height: 2px;
+            background: var(--win); transform: translateY(-50%); z-index: 1; display: block !important;
+        }
+
+        /* --- Lógica del PI2 (9vs10 - Abajo) --- */
+        
+        /* Cajita W (Verde) que sube hacia el Decider */
+        #pi2-matchup::after {
+            content: 'W'; position: absolute; top: -20px; right: -15px; 
+            background: var(--win); color: white; font-size: 11px; font-weight: 900;
+            width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+        }
+        /* Línea base verde con codo hacia arriba */
+        #pi2-matchup::before {
+            content: ''; position: absolute; top: -35px; right: -4px; width: 20px; height: 50px;
+            border-bottom: 2px solid var(--win); border-right: 2px solid var(--win); 
+            border-bottom-right-radius: 8px; z-index: 1; display: block !important;
+        }
+
+        /* Entrada recta desde la izquierda a los Cuartos (QF <- PI) */
+        #col-qf .matchup.qf1::before,
+        #col-qf .matchup.qf4::before {
+            content: ''; position: absolute; width: 22px; height: 2px;
+            background: var(--win); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
+        }
+        /* ========================================================= */
+        /* --- CONECTORES CSS ESTÁNDAR (QF -> FIN) ---             */
+        /* ========================================================= */
+        
+        /* Salidas desde CUARTOS -> SEMIS */
+        #col-qf .matchup::after {
+            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            z-index: -1; border-color: var(--connector); border-style: solid;
+        }
+        
         /* QF1 hacia abajo */
-        #col-qf .matchup:nth-child(2)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
-            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
-        }
+        #col-qf .matchup.qf1::after { border-top-width: 2px; border-right-width: 2px; top: 50%; right: -22px; border-top-right-radius: 6px; }
         /* QF2 hacia arriba */
-        #col-qf .matchup:nth-child(3)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
-            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -22px; z-index: -1; border-bottom-right-radius: 6px;
-        }
-        /* QF4 (ahora es el 3º partido) hacia abajo */
-        #col-qf .matchup:nth-child(5)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
-            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
-        }
-        /* QF3 (ahora es el 4º partido) hacia arriba */
-        #col-qf .matchup:nth-child(6)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
-            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -22px; z-index: -1; border-bottom-right-radius: 6px;
-        }
+        #col-qf .matchup.qf2::after { border-bottom-width: 2px; border-right-width: 2px; bottom: 50%; right: -22px; border-bottom-right-radius: 6px; }
+        /* QF4 (2º seed) hacia abajo */
+        #col-qf .matchup.qf4::after { border-top-width: 2px; border-right-width: 2px; top: 50%; right: -22px; border-top-right-radius: 6px; }
+        /* QF3 (3º seed) hacia arriba */
+        #col-qf .matchup.qf3::after { border-bottom-width: 2px; border-right-width: 2px; bottom: 50%; right: -22px; border-bottom-right-radius: 6px; }
+
         /* Entradas a Semis */
         #col-sf .matchup::before {
             content: ''; position: absolute; width: 22px; height: 2px;
             background: var(--connector); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
         }
 
-        /* 3. SEMIS -> FINAL */
-        /* SF1 hacia abajo */
+        /* Salidas desde SEMIS -> FINAL */
         #col-sf .matchup:nth-child(3)::after {
             content: ''; position: absolute; width: 22px; height: calc(50% + 90px); 
             border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
             top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
         }
-        /* SF2 hacia arriba */
         #col-sf .matchup:nth-child(5)::after {
             content: ''; position: absolute; width: 22px; height: calc(50% + 90px);
             border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
