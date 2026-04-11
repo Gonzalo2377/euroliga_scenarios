@@ -556,81 +556,67 @@
             --connector: #475569; /* Gris oscuro para líneas vacías */
         }
         
-        /* 1. LÍNEAS DEL PLAY-IN (Layout Oficial EuroLeague - Imagen 1) */
-        
-        /* Contenedores de conectores para Play-In */
+        /* 1. LÍNEAS DEL PLAY-IN (Lógica W en Verde / L en Rojo - TOP 9v10 / BOTTOM 7v8) */
         #col-pi .matchup { position: relative; z-index: 2; }
-        
-        /* Ocultar cualquier conector antiguo que pueda interferir */
         #col-pi .matchup::after, #col-pi .matchup::before { display: none; }
-        .bracket-note { display: none; } /* Ocultamos la nota antigua porque usamos líneas ahora */
+        .bracket-note, .bracket-note-L, .bracket-note-W { display: none !important; }
 
-        /* --- TOP: PI3 (Decisoria 8º Puesto) --- */
-        
-        /* Cajita W (Verde) hacia Cuartos (1vs8) */
-        #pi3-matchup::after { 
-            content: 'W'; position: absolute; width: 22px; height: 22px;
-            background: var(--win); color: white; font-weight: 900;
-            top: 50%; right: -35px; z-index: 10; transform: translateY(-50%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        /* Línea base verde recta */
-        #pi3-matchup::before {
-            content: ''; position: absolute; top: 50%; right: -45px; width: 45px; height: 2px;
-            background: var(--win); transform: translateY(-50%); z-index: 1; display: block !important;
-        }
-
-        /* --- MIDDLE: PI2 (9vs10) --- */
-        
-        /* Cajita W (Verde) que sube a la Decisoria */
+        /* --- TOP: PI2 (9vs10) --- */
+        /* W (Verde) bajando a Decisoria */
         #pi2-matchup::after {
-            content: 'W'; position: absolute; top: -15px; left: 40px; 
+            content: 'W'; position: absolute; top: 50%; right: -25px; transform: translateY(-50%);
             background: var(--win); color: white; font-size: 11px; font-weight: 900;
-            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-        /* Línea verde recta hacia arriba */
-        #pi2-matchup::before {
-            content: ''; position: absolute; top: -20px; left: 50px; width: 2px; height: 20px;
-            background: var(--win); z-index: 1; display: block !important;
+        #pi2-matchup::before { /* Codo hacia abajo a Decisoria */
+            content: ''; position: absolute; top: 50%; right: -15px; width: 15px; height: 105px;
+            border-top: 2px solid var(--win); border-right: 2px solid var(--win); border-top-right-radius: 6px; z-index: 1; display: block !important;
         }
 
         /* --- BOTTOM: PI1 (7vs8) --- */
-        
-        /* Cajita W (Verde) recta hacia Cuartos (2vs7) */
+        /* W (Verde) recta a Cuartos (QF4) */
         #pi1-matchup::after {
-            content: 'W'; position: absolute; top: 50%; right: -35px; transform: translateY(-50%);
+            content: 'W'; position: absolute; top: 50%; right: -25px; transform: translateY(-50%);
             background: var(--win); color: white; font-size: 11px; font-weight: 900;
-            width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-        /* Línea verde recta hacia Cuartos */
-        #pi1-matchup::before {
+        #pi1-matchup::before { /* Línea recta a Cuartos */
             content: ''; position: absolute; top: 50%; right: -45px; width: 45px; height: 2px;
             background: var(--win); transform: translateY(-50%); z-index: 1; display: block !important;
         }
-
-        /* L (Roja) que sube todo el camino hasta la Decisoria (PI3) */
+        /* L (Roja) subiendo a Decisoria */
         #pi1-matchup .matchup-header::after {
-            content: 'L'; position: absolute; top: -80px; left: -10px; 
+            content: 'L'; position: absolute; top: -65px; right: -25px; 
             background: var(--loss); color: white; font-size: 11px; font-weight: 900;
-            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-        /* Línea roja que envuelve hacia arriba */
-        #pi1-matchup .matchup-header::before {
-            content: ''; position: absolute; bottom: 10px; left: 0px; width: 10px; height: 165px;
-            border-top: 2px solid var(--loss); border-left: 2px solid var(--loss); border-bottom: 2px solid var(--loss);
-            border-top-left-radius: 6px; border-bottom-left-radius: 6px; z-index: 1; display: block !important;
+        #pi1-matchup .matchup-header::before { /* Codo hacia arriba */
+            content: ''; position: absolute; top: -75px; right: -15px; width: 15px; height: 90px;
+            border-bottom: 2px solid var(--loss); border-right: 2px solid var(--loss); border-bottom-right-radius: 6px; z-index: 1; display: block !important;
         }
 
-        /* Entrada recta desde la izquierda a los Cuartos (QF <- PI) */
-        #col-qf .matchup.qf1::before,
+        /* --- MIDDLE: PI3 (Decisoria) --- */
+        /* W (Verde) subiendo a QF1 */
+        #pi3-matchup::after {
+            content: 'W'; position: absolute; top: 50%; right: -25px; transform: translateY(-50%);
+            background: var(--win); color: white; font-size: 11px; font-weight: 900;
+            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        #pi3-matchup::before { /* Codo largo hacia arriba a QF1 */
+            content: ''; position: absolute; bottom: 50%; right: -15px; width: 30px; height: 105px;
+            border-bottom: 2px solid var(--win); border-right: 2px solid var(--win); border-bottom-right-radius: 6px; z-index: 1; display: block !important;
+        }
+
+        /* Entradas a Cuartos (Sólo mantenemos la de QF4, QF1 recibe directo del codo) */
         #col-qf .matchup.qf4::before {
             content: ''; position: absolute; width: 22px; height: 2px;
             background: var(--win); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
         }
+        #col-qf .matchup.qf1::before { display: none; }
         /* ========================================================= */
         /* --- CONECTORES CSS ESTÁNDAR (QF -> FIN) ---             */
         /* ========================================================= */
@@ -1997,29 +1983,38 @@
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
                     
-                    <div id="pi3-matchup">
-                        ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
-                    </div>
-                    
-                    <div style="height: 15px;"></div>
-                    <div id="pi2-matchup">
+                    <div id="pi2-matchup" style="margin-top: 15px;">
                         ${buildMatchup('pi2', '9º vs 10º (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
                     </div>
                     
-                    <div style="height: 45px;"></div>
-                    <div id="pi1-matchup">
+                    <div id="pi3-matchup" style="margin-top: 40px; margin-left: 25px; width: calc(100% - 25px);">
+                        ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
+                    </div>
+                    
+                    <div id="pi1-matchup" style="margin-top: 40px;">
                         ${buildMatchup('pi1', '7º vs 8º (Winner = 7º Seed)', p_pi1_A, p_pi1_B, 7, 8)}
                     </div>
                 </div>
                 
                 <div class="bracket-col" id="col-qf">
                     <div class="bracket-label">${txtQF}</div>
-                    ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
-                    ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
+                    <div id="qf1-wrap" style="margin-top: -25px;">
+                        ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
+                    </div>
                     
-                    <div style="height: 35px;"></div>
-                    ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
-                    ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
+                    <div style="margin-top: 20px;">
+                        ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
+                    </div>
+                    
+                    <div style="height: 40px;"></div>
+                    
+                    <div>
+                        ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
+                    </div>
+                    
+                    <div id="qf4-wrap" style="margin-top: 20px;">
+                        ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
+                    </div>
                 </div>
 
                 <div class="bracket-col" id="col-sf">
