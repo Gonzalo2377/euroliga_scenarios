@@ -556,57 +556,24 @@
             --connector: #475569; /* Gris oscuro para líneas vacías */
         }
         
-        /* 1. LÍNEAS DEL PLAY-IN (Lógica W en Verde / L en Rojo) */
+        /* 1. LÍNEAS DEL PLAY-IN (Layout Oficial EuroLeague - Imagen 1) */
         
         /* Contenedores de conectores para Play-In */
         #col-pi .matchup { position: relative; z-index: 2; }
         
         /* Ocultar cualquier conector antiguo que pueda interferir */
         #col-pi .matchup::after, #col-pi .matchup::before { display: none; }
+        .bracket-note { display: none; } /* Ocultamos la nota antigua porque usamos líneas ahora */
 
-        /* --- Lógica del PI1 (7vs8 - Arriba) --- */
+        /* --- TOP: PI3 (Decisoria 8º Puesto) --- */
         
-        /* Cajita W (Verde) y línea hacia Cuartos */
-        #pi1-matchup::after { 
-            content: 'W';
-            position: absolute; width: 22px; height: 22px;
+        /* Cajita W (Verde) hacia Cuartos (1vs8) */
+        #pi3-matchup::after { 
+            content: 'W'; position: absolute; width: 22px; height: 22px;
             background: var(--win); color: white; font-weight: 900;
             top: 50%; right: -35px; z-index: 10; transform: translateY(-50%);
             display: flex; align-items: center; justify-content: center;
             font-size: 11px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        /* Línea base verde recta */
-        #pi1-matchup::before {
-            content: ''; position: absolute; top: 50%; right: -45px; width: 45px; height: 2px;
-            background: var(--win); transform: translateY(-50%); z-index: 1; display: block !important;
-        }
-
-        /* --- Lógica de la Etiqueta "L" (Roja) que baja --- */
-        /* Usamos el contenedor .bracket-note para hacer la magia de bajar a la Decisoria */
-        .bracket-note {
-            position: relative; color: transparent !important; height: 35px; margin: 0; 
-            display: flex; align-items: center; justify-content: center; z-index: 2;
-        }
-        .bracket-note::after {
-            content: 'L'; position: absolute; 
-            background: var(--loss); color: white; font-size: 11px; font-weight: 900;
-            width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
-        }
-        /* Línea base roja vertical (Conectando el de arriba con el de abajo) */
-        .bracket-note::before {
-            content: ''; position: absolute; top: -10px; bottom: -10px; left: 50%; width: 2px;
-            background: var(--loss); transform: translateX(-50%); z-index: 1;
-        }
-
-        /* --- Lógica del PI3 (Decisoria - Medio) --- */
-        
-        /* Cajita W (Verde) y línea hacia Cuartos */
-        #pi3-matchup::after {
-            content: 'W'; position: absolute; top: 50%; right: -35px; transform: translateY(-50%);
-            background: var(--win); color: white; font-size: 11px; font-weight: 900;
-            width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
         }
         /* Línea base verde recta */
         #pi3-matchup::before {
@@ -614,20 +581,48 @@
             background: var(--win); transform: translateY(-50%); z-index: 1; display: block !important;
         }
 
-        /* --- Lógica del PI2 (9vs10 - Abajo) --- */
+        /* --- MIDDLE: PI2 (9vs10) --- */
         
-        /* Cajita W (Verde) que sube hacia el Decider */
+        /* Cajita W (Verde) que sube a la Decisoria */
         #pi2-matchup::after {
-            content: 'W'; position: absolute; top: -20px; right: -15px; 
+            content: 'W'; position: absolute; top: -15px; left: 40px; 
+            background: var(--win); color: white; font-size: 11px; font-weight: 900;
+            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+        }
+        /* Línea verde recta hacia arriba */
+        #pi2-matchup::before {
+            content: ''; position: absolute; top: -20px; left: 50px; width: 2px; height: 20px;
+            background: var(--win); z-index: 1; display: block !important;
+        }
+
+        /* --- BOTTOM: PI1 (7vs8) --- */
+        
+        /* Cajita W (Verde) recta hacia Cuartos (2vs7) */
+        #pi1-matchup::after {
+            content: 'W'; position: absolute; top: 50%; right: -35px; transform: translateY(-50%);
             background: var(--win); color: white; font-size: 11px; font-weight: 900;
             width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
         }
-        /* Línea base verde con codo hacia arriba */
-        #pi2-matchup::before {
-            content: ''; position: absolute; top: -35px; right: -4px; width: 20px; height: 50px;
-            border-bottom: 2px solid var(--win); border-right: 2px solid var(--win); 
-            border-bottom-right-radius: 8px; z-index: 1; display: block !important;
+        /* Línea verde recta hacia Cuartos */
+        #pi1-matchup::before {
+            content: ''; position: absolute; top: 50%; right: -45px; width: 45px; height: 2px;
+            background: var(--win); transform: translateY(-50%); z-index: 1; display: block !important;
+        }
+
+        /* L (Roja) que sube todo el camino hasta la Decisoria (PI3) */
+        #pi1-matchup .matchup-header::after {
+            content: 'L'; position: absolute; top: -80px; left: -10px; 
+            background: var(--loss); color: white; font-size: 11px; font-weight: 900;
+            width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+        }
+        /* Línea roja que envuelve hacia arriba */
+        #pi1-matchup .matchup-header::before {
+            content: ''; position: absolute; bottom: 10px; left: 0px; width: 10px; height: 165px;
+            border-top: 2px solid var(--loss); border-left: 2px solid var(--loss); border-bottom: 2px solid var(--loss);
+            border-top-left-radius: 6px; border-bottom-left-radius: 6px; z-index: 1; display: block !important;
         }
 
         /* Entrada recta desde la izquierda a los Cuartos (QF <- PI) */
@@ -2001,17 +1996,27 @@
             container.innerHTML = `
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
-                    ${buildMatchup('pi1', '7th vs 8th (Winner = 7th Seed)', p_pi1_A, p_pi1_B, 7, 8)}
-                    <div class="bracket-note">↓ ${txtLoser} ↓</div>
-                    ${buildMatchup('pi3', '8th Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
+                    
+                    <div id="pi3-matchup">
+                        ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
+                    </div>
+                    
                     <div style="height: 15px;"></div>
-                    ${buildMatchup('pi2', '9th vs 10th (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
+                    <div id="pi2-matchup">
+                        ${buildMatchup('pi2', '9º vs 10º (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
+                    </div>
+                    
+                    <div style="height: 45px;"></div>
+                    <div id="pi1-matchup">
+                        ${buildMatchup('pi1', '7º vs 8º (Winner = 7º Seed)', p_pi1_A, p_pi1_B, 7, 8)}
+                    </div>
                 </div>
                 
                 <div class="bracket-col" id="col-qf">
                     <div class="bracket-label">${txtQF}</div>
                     ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
                     ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
+                    
                     <div style="height: 35px;"></div>
                     ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
                     ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
