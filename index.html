@@ -1684,8 +1684,8 @@
             }
 
             // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
-            // AÑADIDO: renderBracket() para que se actualice junto a la clasificación
-            setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
+            // AÑADIDO: () para que se actualice junto a la clasificación
+            setTimeout(() => { renderStandings(); if(typeof  === 'function') (); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
             setTimeout(() => { renderMatrices(); renderResultados(); }, 0);
             setTimeout(() => {
@@ -1738,20 +1738,42 @@
         function calculateH2HStats(teamA, teamB) {
             let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
             
-            pastMatches.forEach(m => {
-                if (m.home === teamA && m.away === teamB) { 
-                    played++; 
+            // Optimización: Solo mirar partidos donde jueguen ambos
+            let headToHeadMatches = pastMatches.filter(m => 
+                (m.home === teamA && m.away === teamB) || (m.home === teamB && m.away === teamA)
+            );
+
+            headToHeadMatches.forEach(m => {
+                played++;
+                if (m.home === teamA) {
                     if(m.scoreH > m.scoreA) winsA++; else winsB++; 
                     let margin = m.isOT ? 0 : (m.scoreH - m.scoreA);
-                    diffA += margin; 
-                }
-                if (m.home === teamB && m.away === teamA) { 
-                    played++; 
+                    diffA += margin;
+                } else {
                     if(m.scoreH > m.scoreA) winsB++; else winsA++; 
                     let margin = m.isOT ? 0 : (m.scoreA - m.scoreH);
-                    diffA += margin; 
+                    diffA += margin;
                 }
             });
+        
+            // Leemos la diferencia de puntos del slider
+            Object.values(simulatedPicks).forEach(m => {
+                if ((m.home === teamA && m.away === teamB) || (m.home === teamB && m.away === teamA)) {
+                    played++;
+                    let margin = m.diff || 1;
+                    
+                    if (m.home === teamA) {
+                        if(m.winner === teamA) { winsA++; diffA += margin; } 
+                        else { winsB++; diffA -= margin; }
+                    } else {
+                        if(m.winner === teamB) { winsB++; diffA -= margin; } 
+                        else { winsA++; diffA += margin; }
+                    }
+                }
+            });
+        
+            return { winsA, winsB, played, diffA };
+        }
         
             // NUEVO: Leemos la diferencia de puntos del slider
             Object.values(simulatedPicks).forEach(m => {
@@ -1853,7 +1875,7 @@
 
         function resetBracket() {
             bracketState = {};
-            renderBracket();
+            ();
         }
         function resetSim() {
             simulatedPicks = {}; 
@@ -1861,7 +1883,7 @@
             
             setTimeout(() => {
                 renderStandings();   
-                if(typeof renderBracket === 'function') renderBracket(); 
+                if(typeof  === 'function') (); 
                 renderMatrices();    
                 if (document.getElementById('select-myteam')?.value) renderMyTeam(); 
             }, 10);
@@ -1893,7 +1915,7 @@
                 resetPaths[matchupId].forEach(node => delete bracketState[node]);
             }
 
-            renderBracket();
+            ();
 
             // --- Lógica Inteligente de Scroll Móvil ---
             // Solo actuamos si el usuario está en móvil (< 768px de ancho)
@@ -1979,7 +2001,7 @@
                 let winner = bracketState[id];
                 
                 const buildTeam = (teamObj, seedNum) => {
-                    if (!teamObj) return `<div class="matchup-team disabled"><span class="seed-badge">${seedNum}</span> <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span></div>`;
+                    if (!teamObj || !teamObj.name) return `<div class="matchup-team disabled"><span class="seed-badge">${seedNum}</span> <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span></div>`;
                     
                     let isWin = winner === teamObj.name;
                     let isLoser = winner && winner !== teamObj.name;
@@ -2850,6 +2872,7 @@
         function renderBanner() {
             const container = document.getElementById("results-banner-container");
             if(!container) return;
+            container.innerHTML = "";
             const t = i18n[currentLang] || i18n['es'];
             
             const lastRound = Math.max(...pastMatches.map(m => m.jornada));
@@ -2942,16 +2965,22 @@
                 overlay.addEventListener("click", toggleDrawer);
             }
             autoUpdateData(); 
-            
             initFilters();
-            updateUI(); // Forzamos una carga inicial para aplicar idioma default
+            
+            // Forzar que solo una pestaña esté activa al inicio
+            document.querySelectorAll(".tab-content").forEach(tab => tab.style.display = "none");
+            document.querySelectorAll(".tab-link").forEach(link => link.classList.remove("active"));
             
             let hash = window.location.hash.substring(1); 
             if (hash && document.getElementById(hash)) {
                 openTab(null, hash);
+            } else {
+                openTab(null, 'clasificacion'); // Por defecto abre Clasificación
+                document.getElementById('tab-standings').classList.add('active');
             }
+            
+            updateUI();
         });
-
        
     </script>
     <div id="footer-methodology" style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px; color: #374151; font-size: 0.95rem; line-height: 1.6; max-width: 1200px; margin-left: auto; margin-right: auto; transition: all 0.3s;">
