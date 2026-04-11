@@ -1896,13 +1896,14 @@
             
             let p_qf1_A = tBase(1), p_qf1_B = bracketState.pi3 ? getT(bracketState.pi3) : null;
             let p_qf2_A = tBase(4), p_qf2_B = tBase(5);
-            let p_qf3_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null;
-            let p_qf4_A = tBase(3), p_qf3_B = tBase(6);
+            let p_qf3_A = tBase(3), p_qf3_B = tBase(6); // 3º vs 6º
+            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null; // 2º vs 7º
 
             let p_sf1_A = bracketState.qf1 ? getT(bracketState.qf1) : null;
             let p_sf1_B = bracketState.qf2 ? getT(bracketState.qf2) : null;
-            let p_sf2_A = bracketState.qf3 ? getT(bracketState.qf3) : null;
-            let p_sf2_B = bracketState.qf4 ? getT(bracketState.qf4) : null;
+            // INTERCAMBIO: QF4 va arriba en la Semi 2, QF3 va abajo
+            let p_sf2_A = bracketState.qf4 ? getT(bracketState.qf4) : null; 
+            let p_sf2_B = bracketState.qf3 ? getT(bracketState.qf3) : null; 
 
             let p_fin_A = bracketState.sf1 ? getT(bracketState.sf1) : null;
             let p_fin_B = bracketState.sf2 ? getT(bracketState.sf2) : null;
@@ -1943,11 +1944,11 @@
                 
                 <div class="bracket-col" id="col-qf">
                     <div class="bracket-label">${txtQF}</div>
-                    ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', t_qf1_A, t_qf1_B)}
-                    ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', t_qf2_A, t_qf2_B)}
+                    ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
+                    ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
                     <div style="height: 35px;"></div>
-                    ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', t_qf4_A, t_qf4_B)}
-                    ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', t_qf3_A, t_qf3_B)}
+                    ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
+                    ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
                 </div>
 
                 <div class="bracket-col" id="col-sf">
