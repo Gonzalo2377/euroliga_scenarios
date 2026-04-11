@@ -55,6 +55,7 @@
             --border: #e5e7eb;
             --win: #10b981;
             --loss: #ef4444;
+            --connector: #6b7280; /* Color para las líneas del Bracket */
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -255,7 +256,7 @@
             display: flex;
             align-items: center;
             width: 100%;
-            height: 110px; /* Más grande para que no se corte el hover */
+            height: 110px;
             background: linear-gradient(90deg, #111827 0%, #1f2937 100%);
             position: relative;
             border-bottom: 3px solid var(--primary);
@@ -285,8 +286,8 @@
         .el-ticker-track:hover { animation-play-state: paused; }
         
         .el-game-card {
-            background: rgba(255, 255, 255, 0.08); /* Un pelín más opaco para que parezca una pegatina de cristal */
-            border: 1px solid rgba(255, 255, 255, 0.85) !important; /* LÍNEA BLANCA alrededor de toda la caja */
+            background: rgba(255, 255, 255, 0.08); 
+            border: 1px solid rgba(255, 255, 255, 0.85) !important; 
             border-radius: 8px;
             padding: 8px 15px;
             min-width: 240px; 
@@ -296,32 +297,27 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* SOMBRA 3D: Crea el efecto de que la caja flota sobre el fondo oscuro */
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7), 0px 1px 3px rgba(0, 0, 0, 0.9);
         }
         
         .el-game-card:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-3px); 
-            border-color: var(--primary) !important; /* Al pasar el ratón, la línea blanca se vuelve naranja */
-            /* La sombra se hace más grande al "levantar" la caja */
+            border-color: var(--primary) !important; 
             box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.9), 0px 2px 4px rgba(0, 0, 0, 1);
         }
         
-        /* Barra de estado pequeña arriba */
         .el-game-status {
             font-size: 10px; color: #9ca3af;
             display: flex; justify-content: space-between;
             margin-bottom: 6px; width: 100%; font-weight: bold; text-transform: uppercase;
-            transition: opacity 0.2s ease, visibility 0.2s ease; /* Animación para ocultarlo */
+            transition: opacity 0.2s ease, visibility 0.2s ease; 
         }
-        /* Ocultar JORNADA y FINAL al pasar el ratón */
         .el-game-card:hover .el-game-status {
             opacity: 0;
             visibility: hidden;
         }
         
-        /* El resultado normal que desaparece al hacer hover */
         .el-game-main {
             display: flex; align-items: center; justify-content: space-between; gap: 15px; width: 100%;
             transition: opacity 0.2s ease, visibility 0.2s ease;
@@ -351,7 +347,7 @@
             width: 100%;
             height: 100%; 
             display: flex;
-            align-items: center; /* Esto hace el centrado vertical */
+            align-items: center; 
             justify-content: center;
             opacity: 0;
             visibility: hidden;
@@ -365,68 +361,29 @@
             visibility: visible; 
         }
         
-        /* Estilos de la tabla de cuartos: BLINDADA CONTRA ESTILOS GLOBALES */
         .q-table { 
-            color: #ffffff; 
-            border-collapse: collapse; 
-            width: 95%; 
-            margin: 0 auto; 
-            border: none !important; 
-            background: transparent !important;
+            color: #ffffff; border-collapse: collapse; width: 95%; margin: 0 auto; border: none !important; background: transparent !important;
         }
-
-        .q-table tr,
-        .q-table tr:nth-child(even),
-        .q-table tr:nth-child(odd) {
-            background-color: transparent !important;
-            border: none !important;
+        .q-table tr, .q-table tr:nth-child(even), .q-table tr:nth-child(odd) {
+            background-color: transparent !important; border: none !important;
         }
-
-        /* TÍTULOS (1C, 2C...) - Más grandes, resaltados y con espaciado simétrico */
         .q-table th { 
-            padding: 4px 3px; /* Espaciado idéntico arriba y abajo para centrar perfecto */
-            color: #e5e7eb !important; /* Gris muy clarito para que resalte más */
-            font-size: 13px !important; /* Aumentado (antes 11px) */
-            font-weight: 800 !important; /* Más grueso */
-            text-align: center;
-            border: none !important; 
-            background: transparent !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Sombra para máxima lectura */
+            padding: 4px 3px; color: #e5e7eb !important; font-size: 13px !important; font-weight: 800 !important;
+            text-align: center; border: none !important; background: transparent !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); 
         }
-
-        /* NÚMEROS DE PUNTOS - Espaciado simétrico */
         .q-table td { 
-            padding: 4px 3px; /* Espaciado idéntico arriba y abajo para centrar perfecto */
-            text-align: center; 
-            font-size: 15px !important; 
-            font-weight: 800; 
-            color: #ffffff !important; 
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.9); 
-            border: none !important; 
-            background: transparent !important;
+            padding: 4px 3px; text-align: center; font-size: 15px !important; font-weight: 800; color: #ffffff !important; 
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9); border: none !important; background: transparent !important;
         }
         
-        /* Ajuste de los logos */
-        .q-table th:first-child,
-        .q-table td:first-child {
-            text-align: left;
-            width: 26px;
-            border: none !important;
-        }
-        .q-table td:first-child img {
-            width: 22px; 
-            height: 22px;
-            object-fit: contain;
-            vertical-align: middle;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); 
-        }
+        .q-table th:first-child, .q-table td:first-child { text-align: left; width: 26px; border: none !important; }
+        .q-table td:first-child img { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
         
         @keyframes el-scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
 
-        /* Botón derecho */
         .el-banner-action {
             position: absolute; right: 0; top: 0; width: 180px; height: 100%;
             display: flex; justify-content: center; align-items: center;
@@ -447,7 +404,6 @@
             .el-results-banner { height: 100px; }
         }
 
-        /* ---------------- LEYENDA DE CLASIFICACIÓN ---------------- */
         .standings-legend {
             background: #fff; border: 1px solid var(--border); border-radius: 8px;
             padding: 15px 20px; margin-top: 25px; font-size: 0.9rem;
@@ -513,6 +469,7 @@
         .bg-t6 { background-color: #ecfdf5; }
         .bg-pi { background-color: #fffbeb; }
         .bg-out { background-color: #fef2f2; }
+        
         @media (max-width: 768px) {
             header { padding: 3rem 1rem 1rem 1rem; } 
             header h1 { font-size: 1.3rem; margin: 0; line-height: 1.2; }
@@ -528,23 +485,56 @@
             .game-badge { padding: 2px 3px; font-size: 0.65rem; margin-right: 1px; }
             #myteam-dashboard > div:first-child { flex-direction: column; text-align: center; }
         }
+
+        /* ========================================================= */
+        /* --- ESTILOS DEL BRACKET MEJORADOS (MÁS GRANDES Y LÍNEAS) --- */
+        /* ========================================================= */
         .bracket-wrapper { overflow-x: auto; padding: 20px 0; }
-        .bracket-container { display: flex; justify-content: flex-start; align-items: flex-start; gap: 40px; min-width: 1000px; padding: 30px; background: #1a1a1a; border-radius: 12px; color: white; }
-        .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 240px; }
-        .matchup { background: #333; border-radius: 6px; border: 1px solid #555; box-shadow: 0 4px 10px rgba(0,0,0,0.5); overflow: hidden; transition: transform 0.2s; }
+        .bracket-container { 
+            display: flex; justify-content: flex-start; align-items: flex-start; 
+            gap: 40px; min-width: 1000px; padding: 30px; background: #1a1a1a; 
+            border-radius: 12px; color: white; position: relative; 
+        }
+        
+        /* Aumentamos el ancho de las columnas a 260px (antes 240) */
+        .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 260px; position: relative; }
+        
+        /* IMPORTANTE: overflow: visible para que las líneas de conexión puedan salir fuera de la caja */
+        .matchup { 
+            background: #333; border-radius: 6px; border: 1px solid #555; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); overflow: visible; 
+            transition: transform 0.2s; position: relative; z-index: 2; 
+        }
         .matchup:hover { border-color: #888; }
-        .matchup-header { background: #222; font-size: 0.75rem; text-align: center; padding: 6px; color: #aaa; text-transform: uppercase; border-bottom: 1px solid #555; font-weight: bold; }
-        .matchup-team { display: flex; align-items: center; padding: 10px; font-size: 0.95rem; cursor: pointer; transition: background 0.2s, opacity 0.2s; border-left: 4px solid transparent; }
+        
+        /* Como quitamos el overflow:hidden, le ponemos border-radius manual arriba y abajo */
+        .matchup-header { 
+            background: #222; font-size: 0.8rem; text-align: center; padding: 8px; 
+            color: #aaa; text-transform: uppercase; border-bottom: 1px solid #555; 
+            font-weight: bold; border-top-left-radius: 5px; border-top-right-radius: 5px; 
+        }
+        
+        /* Más padding (12px) y texto más grande (1.05rem) */
+        .matchup-team { 
+            display: flex; align-items: center; padding: 12px 10px; font-size: 1.05rem; 
+            cursor: pointer; transition: background 0.2s, opacity 0.2s; 
+            border-left: 4px solid transparent; background: #333; 
+        }
+        .matchup-team:last-child { border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; }
+        
         .matchup-team:not(:last-child) { border-bottom: 1px solid #444; }
         .matchup-team:hover:not(.disabled) { background: #444; }
         .matchup-team.winner { background: #1f2937; border-left: 4px solid var(--win); font-weight: bold; }
         .matchup-team.loser { opacity: 0.4; filter: grayscale(1); }
         .matchup-team.disabled { cursor: not-allowed; opacity: 0.5; }
-        .seed-badge { font-size: 0.7rem; font-weight: bold; color: #111; background: #ddd; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 3px; margin-right: 10px; }
+        
+        .seed-badge { font-size: 0.75rem; font-weight: bold; color: #111; background: #ddd; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 3px; margin-right: 10px; }
         .team-name-bracket { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .bracket-logo { width: 24px; height: 24px; border-radius: 50%; background: white; margin-right: 10px; }
-        .bracket-label { text-align: center; color: var(--primary); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #333; padding-bottom: 10px; }
-        .bracket-note { font-size: 0.75rem; color: #888; text-align: center; font-style: italic; margin: -10px 0; }
+        /* Logo más grande */
+        .bracket-logo { width: 28px; height: 28px; border-radius: 50%; background: white; margin-right: 10px; object-fit: contain;}
+        
+        .bracket-label { text-align: center; color: var(--primary); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #333; padding-bottom: 10px; z-index: 2; position: relative;}
+        .bracket-note { font-size: 0.75rem; color: #888; text-align: center; font-style: italic; margin: -10px 0; z-index: 2; position: relative;}
         
         .champion-box { text-align: center; background: linear-gradient(135deg, #ea580c, #9a3412); border-radius: 8px; padding: 25px 10px; box-shadow: 0 0 20px rgba(234, 88, 12, 0.4); margin-top: 20px; animation: pulse 2s infinite; border: 2px solid #fb923c; }
         .champion-box img { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; margin-bottom: 15px; background: white; }
@@ -552,6 +542,84 @@
         .disabled-champ { background: #333; border: 2px dashed #555; color: #666; padding: 25px 10px; border-radius: 8px; text-align: center; margin-top: 20px; font-weight: bold; }
         
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234,88,12,0.7); } 70% { box-shadow: 0 0 0 15px rgba(234,88,12,0); } 100% { box-shadow: 0 0 0 0 rgba(234,88,12,0); } }
+
+        /* --------------------------------------------------- */
+        /* MAGIA PURA: LÍNEAS DE CONEXIÓN CALCULADAS (CSS)     */
+        /* --------------------------------------------------- */
+        
+        /* 1. Entrada a Cuartos desde Play-In (Queda recta a la izq de QF1) */
+        #col-qf .matchup:nth-child(2)::before {
+            content: ''; position: absolute; width: 20px; height: 2px;
+            background: var(--connector); top: 50%; left: -20px; z-index: -1; transform: translateY(-50%);
+        }
+        /* Salida recta desde Play-In 1 */
+        #col-pi .matchup:nth-child(2)::after { 
+            content: ''; position: absolute; width: 20px; height: 2px;
+            background: var(--connector); top: 50%; right: -20px; z-index: -1; transform: translateY(-50%);
+        }
+
+        /* 2. CUARTOS -> SEMIS */
+        /* QF1 hacia abajo */
+        #col-qf .matchup:nth-child(2)::after {
+            content: ''; position: absolute; width: 20px; height: calc(50% + 10px); /* 10px es la mitad del gap de 20px */
+            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            top: 50%; right: -20px; z-index: -1; border-top-right-radius: 4px;
+        }
+        /* QF2 hacia arriba */
+        #col-qf .matchup:nth-child(3)::after {
+            content: ''; position: absolute; width: 20px; height: calc(50% + 10px);
+            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            bottom: 50%; right: -20px; z-index: -1; border-bottom-right-radius: 4px;
+        }
+        /* QF3 hacia abajo */
+        #col-qf .matchup:nth-child(5)::after {
+            content: ''; position: absolute; width: 20px; height: calc(50% + 10px);
+            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            top: 50%; right: -20px; z-index: -1; border-top-right-radius: 4px;
+        }
+        /* QF4 hacia arriba */
+        #col-qf .matchup:nth-child(6)::after {
+            content: ''; position: absolute; width: 20px; height: calc(50% + 10px);
+            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            bottom: 50%; right: -20px; z-index: -1; border-bottom-right-radius: 4px;
+        }
+        /* Entradas horizontales a Semis */
+        #col-sf .matchup::before {
+            content: ''; position: absolute; width: 20px; height: 2px;
+            background: var(--connector); top: 50%; left: -20px; z-index: -1; transform: translateY(-50%);
+        }
+
+        /* 3. SEMIS -> FINAL */
+        /* SF1 hacia abajo (Cálculo: mitad del spacer de 140px + gap de 20px = 90px) */
+        #col-sf .matchup:nth-child(3)::after {
+            content: ''; position: absolute; width: 20px; height: calc(50% + 90px); 
+            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            top: 50%; right: -20px; z-index: -1; border-top-right-radius: 4px;
+        }
+        /* SF2 hacia arriba */
+        #col-sf .matchup:nth-child(5)::after {
+            content: ''; position: absolute; width: 20px; height: calc(50% + 90px);
+            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            bottom: 50%; right: -20px; z-index: -1; border-bottom-right-radius: 4px;
+        }
+        /* Entrada horizontal a la Final */
+        #col-fin .matchup::before {
+            content: ''; position: absolute; width: 20px; height: 2px;
+            background: var(--connector); top: 50%; left: -20px; z-index: -1; transform: translateY(-50%);
+        }
+        
+        /* ESTILOS BOTÓN DE CAPTURA BRACKET */
+        #capture-btn {
+            background: linear-gradient(135deg, var(--primary), #c2410a);
+            color: white; border: none; padding: 12px 24px; font-size: 1.1rem;
+            border-radius: 8px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex; align-items: center; gap: 8px; margin: 15px 0;
+        }
+        #capture-btn:hover {
+            transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
         /* --- MAGIA DEL SLIDER Y LA PERSIANA MÓVIL --- */
         .floating-btn-sim { display: none; }
         .drawer-overlay { 
@@ -573,7 +641,7 @@
         .slider-input { flex: 1; accent-color: var(--primary); cursor: pointer; }
         .slider-val { font-weight: 900; color: var(--primary); width: 45px; text-align: right; font-size: 1.1rem;}
         
-        /* Adaptación para móviles */
+        /* Adaptación para móviles de paneles */
         @media (max-width: 991px) {
             .floating-btn-sim {
                 display: flex; align-items: center; justify-content: center;
@@ -596,13 +664,10 @@
             .sim-standings.abierto { bottom: 0; }
         }
         @media (max-width: 768px) {
-            /* Movemos el botón de la clasificación a la izquierda */
             #btn-toggle-drawer {
                 left: 20px !important;
                 right: auto !important;
             }
-        
-            /* El del café se queda abajo a la derecha (posición original) */
             #bmc-wbtn {
                 bottom: 20px !important;
                 right: 20px !important;
@@ -740,6 +805,13 @@
                     </div>
             </div>
         </div>
+        <div style="text-align: center; margin: 20px 0; display: none;" id="capture-container">
+            <button id="capture-btn" class="primary" style="font-size: 0.9rem; padding: 12px 24px;">
+                📸 Guardar Captura de Todo el Bracket
+            </button>
+        </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
         <div id="resultados" class="tab-content">
             <h2 id="title-results">Resultados Históricos</h2>
@@ -1751,23 +1823,42 @@
 
             renderBracket();
 
-            // --- NUEVO: Lógica Inteligente de Scroll Móvil ---
+            // --- Lógica Inteligente de Scroll Móvil ---
+            // Solo actuamos si el usuario está en móvil (< 768px de ancho)
             if (window.innerWidth <= 768) {
-                // Le damos 100ms de respiro al navegador para que dibuje el bracket antes de moverlo
                 setTimeout(() => {
-                    // Si acabas de tocar Play-In Y los 3 partidos de Play-In ya tienen ganador
+                    // Seleccionamos el contenedor que tiene el scroll (la barra de desplazamiento)
+                    const wrapper = document.querySelector('.bracket-wrapper');
+                    if (!wrapper) return;
+
+                    let targetCol = null;
+
+                    // 1. Determinar a qué columna queremos viajar
                     if (matchupId.startsWith('pi') && bracketState.pi1 && bracketState.pi2 && bracketState.pi3) {
-                        document.getElementById('col-qf')?.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+                        targetCol = document.getElementById('col-qf'); // Viaje a Cuartos
                     }
-                    // Si acabas de tocar Cuartos Y los 4 partidos de Cuartos ya tienen ganador
                     else if (matchupId.startsWith('qf') && bracketState.qf1 && bracketState.qf2 && bracketState.qf3 && bracketState.qf4) {
-                        document.getElementById('col-sf')?.scrollIntoView({ behavior: 'smooth', inline: 'start' });
+                        targetCol = document.getElementById('col-sf'); // Viaje a Semis
                     }
-                    // Si acabas de tocar Semis Y las 2 Semis ya tienen ganador
                     else if (matchupId.startsWith('sf') && bracketState.sf1 && bracketState.sf2) {
-                        document.getElementById('col-fin')?.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                        targetCol = document.getElementById('col-fin'); // Viaje a la Final
                     }
-                }, 100); 
+
+                    // 2. Ejecutar el desplazamiento si tenemos un objetivo válido
+                    if (targetCol) {
+                        const offsetLeft = targetCol.offsetLeft;
+                        const wrapperWidth = wrapper.offsetWidth;
+                        
+                        // Fórmula que centra la columna dejando ver un 20% de la ronda anterior
+                        const finalScrollLeft = offsetLeft - (wrapperWidth * 0.2); 
+
+                        // Ejecutamos el scroll suave
+                        wrapper.scrollTo({
+                            left: finalScrollLeft,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 150); // Retraso de 0.15s para dejar que se pinte el ganador antes de mover
             }
         }
 
@@ -1872,6 +1963,70 @@
                     ` : `<div class="disabled-champ">🏆<br>${txtTBD}</div>`}
                 </div>
             `;
+        }
+        function captureBracket() {
+            const btn = document.getElementById('capture-btn');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '⏳ Generando imagen...';
+            btn.disabled = true;
+            
+            // Seleccionamos el contenedor que queremos capturar
+            const bracketFlex = document.querySelector('.bracket-flex');
+            
+            if (!bracketFlex) {
+                alert('No se pudo encontrar el bracket para capturar.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                return;
+            }
+            
+            // Usamos la biblioteca html2canvas
+            html2canvas(bracketFlex, {
+                backgroundColor: '#0c1120', // Forzamos fondo oscuro para que la imagen salga bien
+                scale: 2, // Aumentamos la escala para mayor calidad (Retina)
+                logging: false, // Desactivamos logs en consola
+                // Importante: No capturamos las barras de desplazamiento
+                useCORS: true // Por si cargaras escudos desde otra URL
+            }).then(canvas => {
+                // Convertimos el canvas en una URL de imagen
+                const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                
+                // Creamos un enlace de descarga invisible
+                const link = document.createElement('a');
+                link.download = 'mi-prediccion-euroliga.png';
+                link.href = image;
+                link.click(); // Disparamos la descarga
+                
+                // Restauramos el botón
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error('Error capturando el bracket:', err);
+                alert('Hubo un error generando la imagen. Revisa la consola para más detalles.');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+
+        // Asignamos el clic al botón de captura
+        document.getElementById('capture-btn').addEventListener('click', captureBracket);
+
+        // Modificamos ligeramente la función existente para cambiar de pestaña
+        // para que muestre u oculte el botón de captura.
+        const originalChangeTab = changeTab; // Guardamos la función original
+        changeTab = function(tabName) {
+            originalChangeTab(tabName); // Ejecutamos la original
+            
+            const captureContainer = document.getElementById('capture-container');
+            if (!captureContainer) return;
+            
+            // Mostramos el botón solo si estamos en la pestaña del bracket
+            if (tabName === 'bracket') {
+                captureContainer.style.display = 'block';
+            } else {
+                captureContainer.style.display = 'none';
+            }
         }
 
         function renderStandings() {
