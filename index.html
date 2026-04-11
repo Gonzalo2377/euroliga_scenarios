@@ -800,15 +800,16 @@
                 </button>
             </div>
 
+            <div style="text-align: center; margin: 20px 0;" id="capture-container">
+                <button id="capture-btn" class="primary" style="font-size: 0.9rem; padding: 12px 24px;">
+                    📸 Guardar Captura de Todo el Bracket
+                </button>
+            </div>
+
             <div class="bracket-wrapper">
                 <div class="bracket-container" id="bracket-ui">
-                    </div>
+                </div>
             </div>
-        </div>
-        <div style="text-align: center; margin: 20px 0; display: none;" id="capture-container">
-            <button id="capture-btn" class="primary" style="font-size: 0.9rem; padding: 12px 24px;">
-                📸 Guardar Captura de Todo el Bracket
-            </button>
         </div>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1972,7 +1973,7 @@
             btn.disabled = true;
             
             // Seleccionamos el contenedor que queremos capturar
-            const bracketFlex = document.querySelector('.bracket-flex');
+            const bracketFlex = document.querySelector('.bracket-container');
             
             if (!bracketFlex) {
                 alert('No se pudo encontrar el bracket para capturar.');
@@ -2011,23 +2012,6 @@
 
         // Asignamos el clic al botón de captura
         document.getElementById('capture-btn').addEventListener('click', captureBracket);
-
-        // Modificamos ligeramente la función existente para cambiar de pestaña
-        // para que muestre u oculte el botón de captura.
-        const originalChangeTab = changeTab; // Guardamos la función original
-        changeTab = function(tabName) {
-            originalChangeTab(tabName); // Ejecutamos la original
-            
-            const captureContainer = document.getElementById('capture-container');
-            if (!captureContainer) return;
-            
-            // Mostramos el botón solo si estamos en la pestaña del bracket
-            if (tabName === 'bracket') {
-                captureContainer.style.display = 'block';
-            } else {
-                captureContainer.style.display = 'none';
-            }
-        }
 
         function renderStandings() {
             let teams = getLiveTeams();
