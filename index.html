@@ -1685,13 +1685,12 @@
 
             // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
             // AÑADIDO: () para que se actualice junto a la clasificación
-            setTimeout(() => { renderStandings(); if(typeof  === 'function') (); }, 0);
+            setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
             setTimeout(() => { renderMatrices(); renderResultados(); }, 0);
             setTimeout(() => {
                 renderAnalysis();
                 if (document.getElementById('select-myteam')?.value) renderMyTeam();
-                // AÑADE ESTA LÍNEA 👇 PARA QUE ARRANQUE EL BANNER
                 renderBanner(); 
             }, 0);
         }
@@ -1875,7 +1874,7 @@
 
         function resetBracket() {
             bracketState = {};
-            ();
+            renderBracket();
         }
         function resetSim() {
             simulatedPicks = {}; 
@@ -1883,7 +1882,7 @@
             
             setTimeout(() => {
                 renderStandings();   
-                if(typeof  === 'function') (); 
+                if(typeof renderBracket === 'function') renderBracket(); 
                 renderMatrices();    
                 if (document.getElementById('select-myteam')?.value) renderMyTeam(); 
             }, 10);
@@ -1915,7 +1914,7 @@
                 resetPaths[matchupId].forEach(node => delete bracketState[node]);
             }
 
-            ();
+            renderBracket();
 
             // --- Lógica Inteligente de Scroll Móvil ---
             // Solo actuamos si el usuario está en móvil (< 768px de ancho)
