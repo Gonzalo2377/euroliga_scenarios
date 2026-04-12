@@ -1870,46 +1870,6 @@
             }
         }
 
-        function advanceBracket(matchupId, winnerName, loserName) {
-            if (!winnerName) return; 
-            if (bracketState[matchupId] === winnerName) return; 
-
-            bracketState[matchupId] = winnerName;
-
-            const resetPaths = {
-                'pi1': ['pi3', 'qf4', 'qf1', 'sf1', 'sf2', 'final'], 
-                'pi2': ['pi3', 'qf1', 'sf1', 'final'],
-                'pi3': ['qf1', 'sf1', 'final'],
-                'qf1': ['sf1', 'final'],
-                'qf2': ['sf1', 'final'],
-                'qf3': ['sf2', 'final'],
-                'qf4': ['sf2', 'final'],
-                'sf1': ['final'],
-                'sf2': ['final']
-            };
-
-            if (matchupId === 'pi1') bracketState.pi1Loser = loserName;
-            if (resetPaths[matchupId]) {
-                resetPaths[matchupId].forEach(node => delete bracketState[node]);
-            }
-
-            renderBracket();
-
-            // Scroll automático en móviles
-            if (window.innerWidth <= 768) {
-                setTimeout(() => {
-                    const wrapper = document.querySelector('.bracket-wrapper');
-                    let targetCol = null;
-                    if (matchupId.startsWith('pi') && bracketState.pi1 && bracketState.pi2 && bracketState.pi3) targetCol = document.getElementById('col-qf'); 
-                    else if (matchupId.startsWith('qf') && bracketState.qf1 && bracketState.qf2 && bracketState.qf3 && bracketState.qf4) targetCol = document.getElementById('col-sf'); 
-                    else if (matchupId.startsWith('sf') && bracketState.sf1 && bracketState.sf2) targetCol = document.getElementById('col-fin'); 
-                    if (targetCol && wrapper) {
-                        wrapper.scrollTo({ left: targetCol.offsetLeft - (wrapper.offsetWidth * 0.15), behavior: 'smooth' });
-                    }
-                }, 150); 
-            }
-        }
-
         function renderBracket() {
             const container = document.getElementById("bracket-ui");
             if (!container) return;
@@ -2073,6 +2033,7 @@
                 let rowClass = index < 6 ? "playoff-zone" : (index < 10 ? "playin-zone" : "out-zone");
                 
                 // --- CÁLCULO DE TENDENCIA (Contra la foto inamovible) ---
+                let oldRank = snapshotOfficialRanks[team.name]; // <- ESTA LÍNEA ES LA QUE FALTABA
                 let trendHTML = '';
                 let diff = oldRank - currentRank;
     
