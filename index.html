@@ -780,7 +780,22 @@
             z-index: 1;
             display: block !important;
         }
-        
+        #random-bracket-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9); /* Un color morado distinto para que destaque */
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 1.05rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        #random-bracket-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
         /* Adaptación para móviles de paneles */
         @media (max-width: 991px) {
             .floating-btn-sim {
@@ -933,7 +948,12 @@
         <div id="bracket" class="tab-content">
             <h2 id="title-bracket" style="text-align: center;">Playoffs & Play-In Bracket</h2>
             <p id="bracket-desc" style="text-align: center; color: #6b7280; margin-bottom: 10px;">Haz clic en los equipos para simular tu camino hacia el campeonato.</p>
-            
+
+            <div style="text-align: center; margin-bottom: 30px;">
+                <button id="random-bracket-btn" onclick="randomizeBracket()">
+                    🎲 Simular Aleatoriamente
+                </button>
+            </div>
             <div style="text-align: center; margin-bottom: 20px;">
                 <button onclick="resetBracket()" style="background: var(--dark); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
                     🔄 Limpiar Bracket
@@ -2718,6 +2738,29 @@
             });
         }
 
+        function randomizeBracket() {
+            // 1. Si tienes una función para resetear el bracket, la llamamos primero para empezar limpios
+            if (typeof resetBracket === 'function') resetBracket();
+
+            // 2. El orden estricto en el que se juegan los partidos
+            const sequence = ['pi1', 'pi2', 'pi3', 'qf1', 'qf2', 'qf3', 'qf4', 'sf1', 'sf2', 'final'];
+
+            // 3. Hacemos que nuestro "robot" visite cada partido
+            sequence.forEach(matchupId => {
+                // Busca los dos equipos de ese partido concreto que no estén deshabilitados
+                const teams = document.querySelectorAll(`.${matchupId} .matchup-team:not(.disabled)`);
+                
+                // Si hay dos equipos listos para jugar...
+                if (teams.length === 2) {
+                    // Tira una moneda (0 o 1)
+                    const randomWinnerIndex = Math.floor(Math.random() * 2);
+                    
+                    // Simula un clic real del ratón sobre ese equipo
+                    teams[randomWinnerIndex].click();
+                }
+            });
+        }
+        
         function renderAnalysis() {
             const container = document.getElementById("analysis-container");
             if(!container) return;
