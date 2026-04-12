@@ -649,68 +649,7 @@
 
         /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ 
 
-        #col-pi .matchup.pi1 { position: relative; z-index: 2; }
-        #qf4-wrap .matchup { position: relative; z-index: 2; }
-
-        /* 1. Dibujamos el codo (La "L" que sale del 7vs8) */
-        #col-pi .matchup.pi1::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            /* ESTE NÚMERO (50px) ES LA LONGITUD DEL BRAZO HORIZONTAL */
-            right: -50px; 
-            width: 50px;  
-            /* ESTE NÚMERO (60px) ES LA ALTURA DEL BRAZO VERTICAL */
-            height: 60px; 
-            
-            /* Dibuja la L (Hacia la derecha y hacia ABAJO). 
-               ⚠️ Si el QF4 en tu pantalla está más ARRIBA que el 7vs8, 
-               cambia 'border-top' por 'border-bottom' */
-            border-top: 2px solid var(--win);
-            border-right: 2px solid var(--win);
-            border-top-right-radius: 6px;
-            
-            background: transparent;
-            z-index: 1;
-            display: block !important;
-        }
-
-        /* 2. Colocamos la "W" justo en la esquina de la L */
-        #col-pi .matchup.pi1::before {
-            content: 'W';
-            position: absolute;
-            top: 50%;
-            /* ⚠️ ESTE NÚMERO DEBE SER IDÉNTICO AL RIGHT DE ARRIBA (-50px) */
-            right: -50px; 
-            transform: translate(50%, -50%); /* Esto la centra matemáticamente en la esquina */
-            
-            background-color: var(--win);
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            width: 18px;
-            height: 18px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10; /* Asegura que la letra esté siempre por encima de las líneas */
-        }
-
-        /* 3. Tramo final que conecta la L con la caja del QF4 */
-        #qf4-wrap .matchup::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            /* Esto mete una pequeña línea recta dentro de QF4 para unirse a la L */
-            left: -20px; 
-            width: 20px;
-            height: 2px;
-            background-color: var(--win);
-            transform: translateY(-50%);
-            z-index: 1;
-            display: block !important;
-        }
+       
 
         /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ 
         
