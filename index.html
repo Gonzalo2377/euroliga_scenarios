@@ -2750,51 +2750,59 @@
         async function randomizeBracket() {
             const btn = document.getElementById('random-bracket-btn');
             
-            // 1. Bloqueamos el botón y cambiamos el texto para que el usuario espere
+            // 1. Bloqueamos el botón para que el usuario espere
             btn.disabled = true;
             btn.innerHTML = '⏳ Simulando...';
             btn.style.opacity = '0.7';
             btn.style.cursor = 'not-allowed';
 
-            // Ayudante: Busca un partido y hace clic en uno de los dos equipos al azar
-            const clickRandom = (matchupClass) => {
-                const teams = document.querySelectorAll(`.${matchupClass} .matchup-team:not(.disabled)`);
-                if (teams.length === 2) {
-                    const randomWinnerIndex = Math.floor(Math.random() * 2);
-                    teams[randomWinnerIndex].click(); // 👈 Clic real simulado
+            // 2. ¡MUY IMPORTANTE! Vaciamos el bracket antes de empezar
+            bracketState = {};
+            if(typeof renderBracket === 'function') renderBracket();
+
+            // Función auxiliar para pausas reales
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            
+            // Le damos medio segundo al navegador para pintar el bracket vacío
+            await sleep(500);
+
+            // 3. El Robot: Busca la caja, comprueba si hay 2 equipos y clica uno al azar
+            const clickRandom = async (matchupClass) => {
+                const container = document.querySelector(`.${matchupClass}`);
+                if (container) {
+                    const teams = container.querySelectorAll('.matchup-team:not(.disabled)');
+                    if (teams.length === 2) {
+                        const randomWinnerIndex = Math.floor(Math.random() * 2);
+                        teams[randomWinnerIndex].click(); // Clic real simulado
+                        
+                        // ⚠️ LA MAGIA: Esperamos medio segundo tras CADA clic 
+                        // para que el navegador tenga tiempo de dibujar al ganador
+                        await sleep(400); 
+                    }
                 }
             };
 
-            // Ayudante: La "pausilla" mágica
-            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            // 4. SECUENCIA ESTRICTA CRONOLÓGICA (Esperando a que acabe cada uno)
+            
+            // Fase 1: Play-In
+            await clickRandom('pi1');
+            await clickRandom('pi2');
+            await clickRandom('pi3'); 
 
-            // --- SECUENCIA ESTRICTA CRONOLÓGICA ---
+            // Fase 2: Cuartos de Final
+            await clickRandom('qf1');
+            await clickRandom('qf2');
+            await clickRandom('qf3');
+            await clickRandom('qf4');
 
-            // PASO 1: Play-In (Partidos iniciales)
-            clickRandom('pi1');
-            clickRandom('pi2');
-            await sleep(600); // ⏱️ Pausa de 0.6 segundos para que las cajas se actualicen
+            // Fase 3: Semifinales
+            await clickRandom('sf1');
+            await clickRandom('sf2');
 
-            // PASO 2: Play-In (Partido Decisorio)
-            clickRandom('pi3');
-            await sleep(600); 
+            // Fase 4: Final
+            await clickRandom('final');
 
-            // PASO 3: Cuartos de Final (Se juegan los 4)
-            clickRandom('qf1');
-            clickRandom('qf2');
-            clickRandom('qf3');
-            clickRandom('qf4');
-            await sleep(800); // ⏱️ Pausa un poco más larga para darle emoción
-
-            // PASO 4: Semifinales
-            clickRandom('sf1');
-            clickRandom('sf2');
-            await sleep(800);
-
-            // PASO 5: La Gran Final
-            clickRandom('final');
-
-            // 2. La simulación ha terminado, restauramos el botón
+            // 5. Hemos terminado, restauramos el botón
             btn.disabled = false;
             btn.innerHTML = '🎲 Aleatorio';
             btn.style.opacity = '1';
