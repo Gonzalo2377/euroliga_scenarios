@@ -2756,33 +2756,35 @@
             btn.style.opacity = '0.7';
             btn.style.cursor = 'not-allowed';
 
-            // 2. ¡MUY IMPORTANTE! Vaciamos el bracket antes de empezar
+            // 2. Vaciamos el bracket antes de empezar para que esté limpio
             bracketState = {};
             if(typeof renderBracket === 'function') renderBracket();
 
-            // Función auxiliar para pausas reales
             const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-            
-            // Le damos medio segundo al navegador para pintar el bracket vacío
             await sleep(500);
 
-            // 3. El Robot: Busca la caja, comprueba si hay 2 equipos y clica uno al azar
-            const clickRandom = async (matchupClass) => {
-                const container = document.querySelector(`.${matchupClass}`);
-                if (container) {
-                    const teams = container.querySelectorAll('.matchup-team:not(.disabled)');
-                    if (teams.length === 2) {
-                        const randomWinnerIndex = Math.floor(Math.random() * 2);
-                        teams[randomWinnerIndex].click(); // Clic real simulado
-                        
-                        // ⚠️ LA MAGIA: Esperamos medio segundo tras CADA clic 
-                        // para que el navegador tenga tiempo de dibujar al ganador
-                        await sleep(400); 
-                    }
+            // 3. El Robot Inteligente: Busca los equipos por su código interno 'onclick'
+            const clickRandom = async (matchupId) => {
+                // Cogemos TODOS los equipos clickeables del bracket
+                const allTeams = document.querySelectorAll('.matchup-team:not(.disabled)');
+                
+                // Filtramos solo los 2 equipos que pertenecen al partido que toca (ej: 'pi1')
+                const teams = Array.from(allTeams).filter(team => {
+                    const onclickAttr = team.getAttribute('onclick');
+                    return onclickAttr && onclickAttr.includes(`advanceBracket('${matchupId}'`);
+                });
+
+                // Si ha encontrado los 2 rivales, lanza la moneda
+                if (teams.length === 2) {
+                    const randomWinnerIndex = Math.floor(Math.random() * 2);
+                    teams[randomWinnerIndex].click(); // Clic real simulado
+                    
+                    // ⏱️ Esperamos medio segundo para que el CSS dibuje las líneas y el ganador
+                    await sleep(400); 
                 }
             };
 
-            // 4. SECUENCIA ESTRICTA CRONOLÓGICA (Esperando a que acabe cada uno)
+            // 4. SECUENCIA ESTRICTA CRONOLÓGICA
             
             // Fase 1: Play-In
             await clickRandom('pi1');
