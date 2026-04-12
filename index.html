@@ -649,58 +649,41 @@
 
         /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ 
 
-        #col-pi .matchup.pi1 {
-            position: relative;
-            z-index: 2;
-        }
+        #col-pi .matchup.pi1 { position: relative; z-index: 2; }
+        #qf4-wrap .matchup { position: relative; z-index: 2; }
 
-        /* 2. Dibujamos la "L tumbada" (Codo) */
+        /* 1. Dibujamos el codo (La "L" que sale del 7vs8) */
         #col-pi .matchup.pi1::after {
             content: '';
             position: absolute;
-            /* Empieza en el centro derecho de la caja 7vs8 */
             top: 50%;
-            right: -40px; /* Ancho del primer tramo horizontal */
-            width: 40px;  
-            /* Altura hasta el QF4 (Ajusta este valor si el QF4 está más abajo o más arriba) */
-            height: 35px; 
+            /* ESTE NÚMERO (50px) ES LA LONGITUD DEL BRAZO HORIZONTAL */
+            right: -50px; 
+            width: 50px;  
+            /* ESTE NÚMERO (60px) ES LA ALTURA DEL BRAZO VERTICAL */
+            height: 60px; 
             
-            /* Dibuja los bordes para formar la L */
-            /* Si QF4 está MÁS ABAJO que 7vs8, usa border-top y border-right */
+            /* Dibuja la L (Hacia la derecha y hacia ABAJO). 
+               ⚠️ Si el QF4 en tu pantalla está más ARRIBA que el 7vs8, 
+               cambia 'border-top' por 'border-bottom' */
             border-top: 2px solid var(--win);
             border-right: 2px solid var(--win);
-            
-            /* Redondeamos la esquina del codo para que quede profesional */
             border-top-right-radius: 6px;
             
-            /* No lleva fondo, solo bordes */
             background: transparent;
             z-index: 1;
             display: block !important;
         }
 
-        /* 3. El tramo final que entra en el QF4 */
-        #qf4-wrap .matchup::before {
-            content: '';
-            position: absolute;
-            /* Alineado con la parte inferior del codo */
-            top: 50%;
-            left: -20px; /* Longitud del tramo que entra */
-            width: 20px; 
-            height: 2px;
-            background-color: var(--win);
-            transform: translateY(-50%);
-            z-index: 1;
-            display: block !important;
-        }
-
-        /* 4. La "W" incrustada en el codo (esquina superior derecha) */
+        /* 2. Colocamos la "W" justo en la esquina de la L */
         #col-pi .matchup.pi1::before {
             content: 'W';
             position: absolute;
-            top: 50%; /* Alineado con la salida horizontal */
-            right: -25px; /* Ajusta para centrar la W en el primer tramo de la L */
-            transform: translateY(-50%);
+            top: 50%;
+            /* ⚠️ ESTE NÚMERO DEBE SER IDÉNTICO AL RIGHT DE ARRIBA (-50px) */
+            right: -50px; 
+            transform: translate(50%, -50%); /* Esto la centra matemáticamente en la esquina */
+            
             background-color: var(--win);
             color: white;
             font-size: 10px;
@@ -711,7 +694,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
+            z-index: 10; /* Asegura que la letra esté siempre por encima de las líneas */
+        }
+
+        /* 3. Tramo final que conecta la L con la caja del QF4 */
+        #qf4-wrap .matchup::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            /* Esto mete una pequeña línea recta dentro de QF4 para unirse a la L */
+            left: -20px; 
+            width: 20px;
+            height: 2px;
+            background-color: var(--win);
+            transform: translateY(-50%);
+            z-index: 1;
+            display: block !important;
         }
 
         /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ 
