@@ -1285,6 +1285,7 @@
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
         const rawResultsArray = [
+            "30|Maccabi Tel Aviv|Hapoel Tel-Aviv|88|99||14,27,25,22|26,26,21,26"
             "37|Monaco|Barcelona|93|86||18,28,26,21|26,18,23,19",
             "37|Dubai|Anadolu Efes|69|85||20,13,21,15|24,27,13,21",
             "37|Partizan|Zalgiris Kaunas|74|83||22,19,16,17|26,22,15,20",
@@ -1865,7 +1866,7 @@
             return currentTeams;
         }
 
-        function calculateH2HStats(teamA, teamB) {
+        function calculateH2HStats(teamA, teamB, customPicks = simulatedPicks) {
             let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
             
             pastMatches.forEach(m => {
@@ -1883,9 +1884,9 @@
                 }
             });
         
-            // NUEVO: Leemos la diferencia de puntos del slider
-            Object.values(simulatedPicks).forEach(m => {
-                let margin = m.diff || 1; // Si no tocan el slider, gana de 1 por defecto
+            // ⚠️ La clave: usamos los partidos del universo paralelo si existen
+            Object.values(customPicks).forEach(m => {
+                let margin = m.diff || 1; 
                 if (m.home === teamA && m.away === teamB) { 
                     played++; 
                     if(m.winner === teamA) { winsA++; diffA += margin; } 
@@ -1945,7 +1946,7 @@
             return { home: homeInt, away: 100 - homeInt, homeDecimal: probHome };
         }
 
-        function sortTeamsWithH2H(teamsArray) {
+        function sortTeamsWithH2H(teamsArray, customPicks = simulatedPicks) {
             teamsArray.sort((a, b) => b.wins - a.wins);
 
             let finalSorted = [];
@@ -1966,7 +1967,8 @@
                         t.h2hDiff = 0;
                         tiedGroup.forEach(other => {
                             if (t.name !== other.name) {
-                                let stats = calculateH2HStats(t.name, other.name);
+                                // ⚠️ Le pasamos el universo paralelo al calculador
+                                let stats = calculateH2HStats(t.name, other.name, customPicks);
                                 t.h2hWins += stats.winsA;
                                 t.h2hDiff += stats.diffA;
                             }
@@ -1981,7 +1983,16 @@
         }
         let bracketState = {};
 
+        // Helper para centrar la pantalla en el Bracket
+        function scrollToBracket() {
+            const bracketUI = document.querySelector('.bracket-wrapper');
+            if (bracketUI) {
+                bracketUI.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
         function resetBracket() {
+            scrollToBracket(); // 👈 Magia del scroll
             bracketState = {};
             renderBracket();
         }
@@ -2187,6 +2198,8 @@
             
             btn.innerHTML = '⏳ Generando imagen...';
             btn.disabled = true;
+            
+            scrollToBracket();
             
             // Seleccionamos el contenedor que queremos capturar
             const bracketFlex = document.querySelector('.bracket-container');
@@ -2549,25 +2562,50 @@
 
                 let unplayed = [];
                 schedule.forEach(j => j.games.forEach(g => { 
-                    if(!g.played) {
+                    // Si el usuario no lo ha elegido a mano, lo metemos en la ruleta
+                    if(!g.played && !simulatedPicks[g.id]) { 
                         let odds = calculateWinOdds(g.home, g.away);
-                        unplayed.push({ home: g.home, away: g.away, homeWinProb: odds.homeDecimal });
+                        unplayed.push({ id: g.id, home: g.home, away: g.away, homeWinProb: odds.homeDecimal });
                     } 
                 }));
 
                 for(let i=0; i<iterations; i++) {
+                    // Preparamos los equipos 
                     let tempStd = JSON.parse(JSON.stringify(teamsBase));
+                    tempStd.forEach(t => { t.wins = t.initialWins; t.losses = t.initialLosses; });
                     
+                    // Clonamos lo que el usuario haya tocado en el simulador
+                    let virtualPicks = { ...simulatedPicks };
+                    
+                    // 1. Sumamos a la tabla temporal lo que el usuario ha tocado a mano
+                    Object.values(simulatedPicks).forEach(pick => {
+                        let wTeam = tempStd.find(t => t.name === pick.winner);
+                        let lTeam = tempStd.find(t => t.name === (pick.winner === pick.home ? pick.away : pick.home));
+                        if(wTeam) wTeam.wins++;
+                        if(lTeam) lTeam.losses++;
+                    });
+
+                    // 2. Simulamos el resto de partidos aleatoriamente
                     unplayed.forEach(g => {
                         let hWins = Math.random() < g.homeWinProb; 
-                        tempStd.find(t => t.name === (hWins ? g.home : g.away)).initialWins++;
-                        tempStd.find(t => t.name === (hWins ? g.away : g.home)).initialLosses++;
+                        let winnerName = hWins ? g.home : g.away;
+                        let loserName = hWins ? g.away : g.home;
+                        
+                        tempStd.find(t => t.name === winnerName).wins++;
+                        tempStd.find(t => t.name === loserName).losses++;
+                        
+                        // Fabricamos el "partido fantasma" para que el desempate H2H lo pueda leer
+                        virtualPicks[g.id] = { home: g.home, away: g.away, winner: winnerName, diff: 1 };
                     });
                     
-                    tempStd.sort((a,b) => b.initialWins - a.initialWins || b.diff - a.diff);
+                    // 3. ⚠️ MAGIA: Ordenamos la tabla usando H2H exacto sobre ese universo paralelo
+                    tempStd = sortTeamsWithH2H(tempStd, virtualPicks);
+                    
+                    // Guardamos la posición
                     tempStd.forEach((t, index) => { tRes[t.name].positions[index]++; tRes[t.name].avg += (index+1); });
                 }
 
+                // Generar la tabla visual (esto queda exactamente igual que lo tenías)
                 let sortedTeams = Object.keys(tRes).sort((a,b) => tRes[a].avg - tRes[b].avg);
                 const tbody = document.getElementById("prob-body");
                 if(tbody) {
@@ -2780,11 +2818,13 @@
         async function randomizeBracket() {
             const btn = document.getElementById('random-bracket-btn');
             
-            // 1. Bloqueamos el botón para que el usuario espere
+            // 1. Bloqueamos el botón y Hacemos Scroll
             btn.disabled = true;
             btn.innerHTML = '⏳ Simulando...';
             btn.style.opacity = '0.7';
             btn.style.cursor = 'not-allowed';
+            
+            scrollToBracket();
 
             // 2. Vaciamos el bracket antes de empezar para que esté limpio
             bracketState = {};
