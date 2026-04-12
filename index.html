@@ -820,7 +820,7 @@
             /* ➡️ Cuánto sale hacia la derecha inicialmente */
             width: 25px;  
             /* ⬆️ Cuánto sube en vertical hacia QF1 */
-            height: 220px; 
+            height: 260px; 
             
             /* Dibujamos el borde Inferior (salida a derecha) y Derecho (subida) */
             border-bottom: 8px solid var(--win);
@@ -838,8 +838,8 @@
             content: 'W';
             position: absolute;
             /* ⚠️ Matemáticas exactas: bottom + la subida (140) y left + la salida (40) */
-            bottom: calc(50% + 155px); 
-            left: calc(100% + 25px); 
+            bottom: calc(50% + 165px); 
+            left: calc(100% + 20px); 
             
             /* Centramos la W exactamente en ese vértice */
             transform: translate(-50%, 50%); 
@@ -864,8 +864,8 @@
             position: absolute;
             top: 50%; 
             /* ⬅️ Cuánto avanza hacia la izquierda buscando la W */
-            left: -40px; 
-            width: 40px; 
+            left: -25px; 
+            width: 25px; 
             
             height: 8px; /* Grosor idéntico al resto de la línea */
             background-color: var(--win);
