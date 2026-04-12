@@ -646,6 +646,50 @@
         .slider-row { display: flex; align-items: center; gap: 10px; }
         .slider-input { flex: 1; accent-color: var(--primary); cursor: pointer; }
         .slider-val { font-weight: 900; color: var(--primary); width: 45px; text-align: right; font-size: 1.1rem;}
+
+        #col-pi .matchup.pi1 {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 1. La línea verde recta (W) */
+        #col-pi .matchup.pi1::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -30px; /* Ajusta este valor si la distancia entre columnas cambia */
+            width: 30px;  /* Ajusta esto para que toque la caja de QF4 */
+            height: 2px;
+            background-color: var(--win); /* Verde victoria */
+            transform: translateY(-50%);
+            z-index: 1;
+            display: block !important;
+        }
+
+        /* 2. La cajita con la "W" incrustada en medio de la línea */
+        #col-pi .matchup.pi1::before {
+            content: 'W';
+            position: absolute;
+            top: 50%;
+            right: -25px; /* Sitúa la "W" en medio de la línea (la mitad del right de arriba aprox) */
+            transform: translate(50%, -50%);
+            background-color: var(--win);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        /* 3. Limpiar cualquier conector gris antiguo que tuviera QF4 */
+        #col-qf .matchup.qf4::before {
+            display: none !important;
+        }
         
         /* Adaptación para móviles de paneles */
         @media (max-width: 991px) {
