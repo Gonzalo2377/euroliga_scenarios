@@ -2747,49 +2747,58 @@
             });
         }
 
-        function randomizeBracket() {
-            // 1. Calculamos el ranking igual que en renderBracket
-            const sortedTeams = [...teamsBase].sort((a, b) => {
-                if (b.wins !== a.wins) return b.wins - a.wins;
-                return b.diff - a.diff;
-            });
-
-            // 2. Limpiamos el estado para una simulación limpia
-            bracketState = {};
-
-            // Ayudantes lógicos
-            const pick = (tA, tB) => (tA && tB) ? (Math.random() < 0.5 ? tA.name : tB.name) : null;
-            const findT = (name) => teamsBase.find(t => t.name === name);
-
-            // --- SIMULACIÓN PASO A PASO ---
+        async function randomizeBracket() {
+            const btn = document.getElementById('random-bracket-btn');
             
-            // Play-In inicial
-            const p1A = sortedTeams[6], p1B = sortedTeams[7];
-            bracketState['pi1'] = pick(p1A, p1B);
-            
-            const p2A = sortedTeams[8], p2B = sortedTeams[9];
-            bracketState['pi2'] = pick(p2A, p2B);
+            // 1. Bloqueamos el botón y cambiamos el texto para que el usuario espere
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Simulando...';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
 
-            // Decisorio Play-In (Ganador 9/10 vs Perdedor 7/8)
-            const p3A = findT(bracketState['pi2']);
-            const p3B = (bracketState['pi1'] === p1A.name) ? p1B : p1A;
-            bracketState['pi3'] = pick(p3A, p3B);
+            // Ayudante: Busca un partido y hace clic en uno de los dos equipos al azar
+            const clickRandom = (matchupClass) => {
+                const teams = document.querySelectorAll(`.${matchupClass} .matchup-team:not(.disabled)`);
+                if (teams.length === 2) {
+                    const randomWinnerIndex = Math.floor(Math.random() * 2);
+                    teams[randomWinnerIndex].click(); // 👈 Clic real simulado
+                }
+            };
 
-            // Cuartos de Final
-            bracketState['qf1'] = pick(sortedTeams[0], findT(bracketState['pi3']));
-            bracketState['qf2'] = pick(sortedTeams[3], sortedTeams[4]);
-            bracketState['qf3'] = pick(sortedTeams[2], sortedTeams[5]);
-            bracketState['qf4'] = pick(sortedTeams[1], findT(bracketState['pi1']));
+            // Ayudante: La "pausilla" mágica
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-            // Semifinales
-            bracketState['sf1'] = pick(findT(bracketState['qf1']), findT(bracketState['qf2']));
-            bracketState['sf2'] = pick(findT(bracketState['qf3']), findT(bracketState['qf4']));
+            // --- SECUENCIA ESTRICTA CRONOLÓGICA ---
 
-            // Final
-            bracketState['final'] = pick(findT(bracketState['sf1']), findT(bracketState['sf2']));
+            // PASO 1: Play-In (Partidos iniciales)
+            clickRandom('pi1');
+            clickRandom('pi2');
+            await sleep(600); // ⏱️ Pausa de 0.6 segundos para que las cajas se actualicen
 
-            // 3. Dibujamos el resultado final
-            renderBracket();
+            // PASO 2: Play-In (Partido Decisorio)
+            clickRandom('pi3');
+            await sleep(600); 
+
+            // PASO 3: Cuartos de Final (Se juegan los 4)
+            clickRandom('qf1');
+            clickRandom('qf2');
+            clickRandom('qf3');
+            clickRandom('qf4');
+            await sleep(800); // ⏱️ Pausa un poco más larga para darle emoción
+
+            // PASO 4: Semifinales
+            clickRandom('sf1');
+            clickRandom('sf2');
+            await sleep(800);
+
+            // PASO 5: La Gran Final
+            clickRandom('final');
+
+            // 2. La simulación ha terminado, restauramos el botón
+            btn.disabled = false;
+            btn.innerHTML = '🎲 Aleatorio';
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
         }
         
         function renderAnalysis() {
