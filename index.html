@@ -647,32 +647,60 @@
         .slider-input { flex: 1; accent-color: var(--primary); cursor: pointer; }
         .slider-val { font-weight: 900; color: var(--primary); width: 45px; text-align: right; font-size: 1.1rem;}
 
-        #pi1-matchup {
+        /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ 
+
+        #col-pi .matchup.pi1 {
             position: relative;
             z-index: 2;
         }
 
-        /* 2. Dibujamos la línea verde recta */
-        #pi1-matchup::after {
+        /* 2. Dibujamos la "L tumbada" (Codo) */
+        #col-pi .matchup.pi1::after {
             content: '';
             position: absolute;
+            /* Empieza en el centro derecho de la caja 7vs8 */
             top: 50%;
-            right: -40px; /* Esto empuja la línea hacia la derecha */
-            width: 40px;  /* Esta es la longitud de la línea */
+            right: -40px; /* Ancho del primer tramo horizontal */
+            width: 40px;  
+            /* Altura hasta el QF4 (Ajusta este valor si el QF4 está más abajo o más arriba) */
+            height: 35px; 
+            
+            /* Dibuja los bordes para formar la L */
+            /* Si QF4 está MÁS ABAJO que 7vs8, usa border-top y border-right */
+            border-top: 2px solid var(--win);
+            border-right: 2px solid var(--win);
+            
+            /* Redondeamos la esquina del codo para que quede profesional */
+            border-top-right-radius: 6px;
+            
+            /* No lleva fondo, solo bordes */
+            background: transparent;
+            z-index: 1;
+            display: block !important;
+        }
+
+        /* 3. El tramo final que entra en el QF4 */
+        #qf4-wrap .matchup::before {
+            content: '';
+            position: absolute;
+            /* Alineado con la parte inferior del codo */
+            top: 50%;
+            left: -20px; /* Longitud del tramo que entra */
+            width: 20px; 
             height: 2px;
-            background-color: var(--win); /* Tu variable de color verde */
+            background-color: var(--win);
             transform: translateY(-50%);
             z-index: 1;
             display: block !important;
         }
 
-        /* 3. Colocamos la cajita con la "W" justo en medio de esa línea */
-        #pi1-matchup::before {
+        /* 4. La "W" incrustada en el codo (esquina superior derecha) */
+        #col-pi .matchup.pi1::before {
             content: 'W';
             position: absolute;
-            top: 50%;
-            right: -20px; /* Es exactamente la mitad de los 40px de la línea para centrarlo */
-            transform: translate(50%, -50%);
+            top: 50%; /* Alineado con la salida horizontal */
+            right: -25px; /* Ajusta para centrar la W en el primer tramo de la L */
+            transform: translateY(-50%);
             background-color: var(--win);
             color: white;
             font-size: 10px;
@@ -686,10 +714,7 @@
             z-index: 10;
         }
 
-        /* 4. Nos aseguramos de que el QF4 no tenga líneas grises viejas molestando */
-        #qf4-wrap .matchup::before {
-            display: none !important;
-        }
+        /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ /*AQUIII*/ 
         
         /* Adaptación para móviles de paneles */
         @media (max-width: 991px) {
