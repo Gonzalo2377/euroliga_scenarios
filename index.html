@@ -670,8 +670,8 @@
             width: 120px;  /* ➡️ Cuánto avanza hacia la derecha */
             
             /* Dibujamos solo los bordes izquierdo (bajada) e inferior (horizontal) */
-            border-left: 2px solid var(--win); /* Cambia var(--win) por #10b981 si no usas variables */
-            border-bottom: 2px solid var(--win);
+            border-left: 4px solid var(--win); /* Cambia var(--win) por #10b981 si no usas variables */
+            border-bottom: 4px solid var(--win);
             border-bottom-left-radius: 6px; /* Para que el giro no sea un pico duro */
             
             /* Estilos estructurales */
@@ -695,15 +695,15 @@
             /* Diseño de la W */
             background-color: var(--win);
             color: white;
-            font-size: 10px;
+            font-size: 13px;
             font-weight: bold;
-            width: 18px;
-            height: 18px;
-            border-radius: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
+            z-index: 12;
         }
         
         /* 4. EL RECEPTOR DE QF4 (Un trocito que sale para encontrarse con la tubería) */
@@ -712,9 +712,9 @@
             position: absolute;
             /* Inicio: Centro exacto del borde izquierdo de la caja QF4 */
             top: 60%; 
-            left: -40px; /* Sale 30px hacia la izquierda */
-            width: 30px; 
-            height: 2px;
+            left: -50px; /* Sale 30px hacia la izquierda */
+            width: 50px; 
+            height: 4px;
             background-color: var(--win);
             transform: translateY(-50%);
             z-index: 1;
