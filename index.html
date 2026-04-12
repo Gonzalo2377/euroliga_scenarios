@@ -647,40 +647,52 @@
         .slider-input { flex: 1; accent-color: var(--primary); cursor: pointer; }
         .slider-val { font-weight: 900; color: var(--primary); width: 45px; text-align: right; font-size: 1.1rem;}
 
-        .bracket-col { overflow: visible !important; }
-        #col-pi .matchup.pi1 { position: relative; z-index: 2; overflow: visible !important; }
+        #bracket-ui,
+        .bracket-col,
+        .matchup {
+            overflow: visible !important;
+        }
+        
+        /* Preparamos los contenedores para poder posicionar las líneas respecto a ellos */
+        #pi1-matchup { position: relative; z-index: 2; }
         #qf4-wrap .matchup { position: relative; z-index: 2; }
-
-        /* 2. LA TUBERÍA GIGANTE */
-        #col-pi .matchup.pi1::after {
+        
+        /* 2. DIBUJAR LA TUBERÍA (Baja desde el centro y tuerce a la derecha) */
+        #pi1-matchup::after {
             content: '';
             position: absolute;
-            top: 100%; /* Sale del fondo */
-            left: 50%; /* Sale del medio */
+            /* Inicio: Centro exacto del borde inferior de la caja 7vs8 */
+            top: 100%; 
+            left: 50%; 
             
-            /* --- MANDOS DE CONTROL --- */
-            height: 60px;  /* BAJADA: Cámbialo para que quede a la altura perfecta de QF4 */
-            width: 150px;  /* LONGITUD: Muy largo para que cruce el vacío. Bájaselo si se pasa de largo */
+            /* Dimensiones de la tubería */
+            height: 40px;  /* ⬇️ Cuánto baja antes de girar */
+            width: 120px;  /* ➡️ Cuánto avanza hacia la derecha */
             
-            border-left: 2px solid var(--win);
+            /* Dibujamos solo los bordes izquierdo (bajada) e inferior (horizontal) */
+            border-left: 2px solid var(--win); /* Cambia var(--win) por #10b981 si no usas variables */
             border-bottom: 2px solid var(--win);
-            border-bottom-left-radius: 6px;
+            border-bottom-left-radius: 6px; /* Para que el giro no sea un pico duro */
             
+            /* Estilos estructurales */
             background: transparent;
-            box-sizing: border-box; /* Crucial para que el borde no colapse */
+            box-sizing: border-box;
             z-index: 1;
             display: block !important;
         }
-
-        /* 3. LA "W" ANCLADA EN LA ESQUINA */
-        #col-pi .matchup.pi1::before {
+        
+        /* 3. COLOCAR LA "W" EN EL CODO */
+        #pi1-matchup::before {
             content: 'W';
             position: absolute;
-            /* ⚠️ ESTE 60px DEBE SER IDÉNTICO AL 'height' DE ARRIBA PARA QUE NO SE DESPEGUE */
-            top: calc(100% + 60px); 
+            /* ⚠️ El 'top' debe ser 100% + la misma 'height' que la tubería (40px) */
+            top: calc(100% + 40px); 
             left: 50%; 
+            
+            /* Centramos la W exactamente en ese punto */
             transform: translate(-50%, -50%); 
             
+            /* Diseño de la W */
             background-color: var(--win);
             color: white;
             font-size: 10px;
@@ -693,14 +705,15 @@
             justify-content: center;
             z-index: 10;
         }
-
-        /* 4. EL RECEPTOR DE QF4 */
+        
+        /* 4. EL RECEPTOR DE QF4 (Un trocito que sale para encontrarse con la tubería) */
         #qf4-wrap .matchup::before {
             content: '';
             position: absolute;
+            /* Inicio: Centro exacto del borde izquierdo de la caja QF4 */
             top: 50%; 
-            left: -20px; 
-            width: 20px; 
+            left: -30px; /* Sale 30px hacia la izquierda */
+            width: 30px; 
             height: 2px;
             background-color: var(--win);
             transform: translateY(-50%);
