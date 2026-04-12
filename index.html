@@ -715,10 +715,8 @@
             
             /* Dimensiones de la tubería roja */
             /* ⬆️ Cuánto sube (Debe ser negativo para ir hacia arriba) */
-            height: 45px; 
-            /* ⬅️ Cuánto avanza hacia la izquierda para enganchar con la Decisoria */
-            width: 40px;  
-            
+            height: 60px; 
+                     
             /* Dibujamos solo los bordes izquierdo (subida) y superior (horizontal) */
             border-left: 8px solid var(--loss); /* Rojo derrota */
             border-top: 8px solid var(--loss);
@@ -738,9 +736,8 @@
             content: 'L';
             position: absolute;
             /* ⚠️ Mismos valores que el tamaño de la tubería roja para encajar en el codo */
-            top: -45px; 
-            left: calc(43% - 40px); /* Restamos el ancho para ir a la esquina izquierda */
-            
+            top: -25px; 
+                       
             /* Centramos la L exactamente en ese punto */
             transform: translate(-50%, -50%); 
             
