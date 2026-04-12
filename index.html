@@ -1936,15 +1936,15 @@
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
                     
-                    <div id="pi2-matchup" style="margin-top: 55px;">
+                    <div id="pi2-matchup" style="margin-top: 50px;">
                         ${buildMatchup('pi2', '9º vs 10º (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
                     </div>
                     
-                    <div id="pi3-matchup" style="margin-top: 40px;">
+                    <div id="pi3-matchup" style="margin-top: 50px;">
                         ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
                     </div>
                     
-                    <div id="pi1-matchup" style="margin-top: 40px;">
+                    <div id="pi1-matchup" style="margin-top: 50px;">
                         ${buildMatchup('pi1', '7º vs 8º (Winner = 7º Seed)', p_pi1_A, p_pi1_B, 7, 8)}
                     </div>
                 </div>
@@ -1975,13 +1975,13 @@
                     <div class="bracket-label">${txtF4}</div>
                     <div style="height: 60px;"></div>
                     ${buildMatchup('sf1', 'Semifinal 1', p_sf1_A, p_sf1_B, '-', '-')}
-                    <div style="height: 180px;"></div>
+                    <div style="height: 195px;"></div>
                     ${buildMatchup('sf2', 'Semifinal 2', p_sf2_A, p_sf2_B, '-', '-')}
                 </div>
 
                 <div class="bracket-col" id="col-fin" style="justify-content: center;">
                     <div class="bracket-label">${txtFIN}</div>
-                    <div id="final-wrap" style="margin-top: 150px;">
+                    <div id="final-wrap" style="margin-top: 200px;">
                     ${buildMatchup('final', txtFIN, p_fin_A, p_fin_B, '-', '-')}
                     ${champion ? `<div class="champion-box"><div style="font-size:0.8rem; font-weight:bold;">🏆 ${txtChamp} 🏆</div><img src="${getLogo(champion.name)}"><h3>${tName(champion.name)}</h3></div>` : `<div class="disabled-champ">🏆<br>${txtTBD}</div>`}
                 </div>
