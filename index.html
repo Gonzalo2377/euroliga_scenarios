@@ -2033,19 +2033,24 @@
                 let rowClass = index < 6 ? "playoff-zone" : (index < 10 ? "playin-zone" : "out-zone");
                 
                 // --- CÁLCULO DE TENDENCIA (Contra la foto inamovible) ---
-                let oldRank = snapshotOfficialRanks[team.name]; // <- ESTA LÍNEA ES LA QUE FALTABA
+                let oldRank = currentRank; // Por defecto, asumimos que se queda igual
+                
+                // Solo buscamos el ranking antiguo si la lista existe y el equipo está en ella
+                if (typeof snapshotOfficialRanks !== 'undefined' && snapshotOfficialRanks[team.name]) {
+                    oldRank = snapshotOfficialRanks[team.name];
+                }
+
                 let trendHTML = '';
                 let diff = oldRank - currentRank;
     
                 if (diff > 0) {
-                    // SUBE (ej: estaba 5º, ahora 3º -> diff es 2 positivo)
+                    // SUBE
                     trendHTML = `<span class="trend-up" style="color: #10b981; font-weight: bold; font-size: 0.9em;">▲ ${diff}</span>`;
                 } else if (diff < 0) {
-                    // BAJA (ej: estaba 3º, ahora 5º -> diff es -2)
-                    // Usamos Math.abs() para quitarle el signo "menos" y que ponga ▼ 2 en vez de ▼ -2
+                    // BAJA
                     trendHTML = `<span class="trend-down" style="color: #ef4444; font-weight: bold; font-size: 0.9em;">▼ ${Math.abs(diff)}</span>`;
                 } else {
-                    // SE MANTIENE IGUAL
+                    // SE MANTIENE
                     trendHTML = `<span class="trend-same" style="color: #9ca3af; font-weight: bold; font-size: 0.9em;">-</span>`;
                 }
                 
