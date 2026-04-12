@@ -1755,8 +1755,14 @@
             let btnDrawer = document.getElementById('btn-toggle-drawer');
             if (btnDrawer) btnDrawer.textContent = t.view_standings || "📊 Ver Clasificación";
 
-            let btnResetBracket = document.querySelector('#bracket button'); // o si le pones id='btn-reset-bracket' al botón en HTML
-            if (btnResetBracket) btnResetBracket.textContent = t.reset_bracket || "🔄 Limpiar Bracket";
+            let btnResetBracket = document.getElementById('reset-btn');
+            if (btnResetBracket) btnResetBracket.innerHTML = t.reset_bracket;
+
+            let btnRandomBracket = document.getElementById('random-bracket-btn');
+            if (btnRandomBracket) btnRandomBracket.innerHTML = t.random_bracket;
+
+            let btnCaptureBracket = document.getElementById('capture-btn');
+            if (btnCaptureBracket) btnCaptureBracket.innerHTML = t.capture_bracket;
             
             let titleMyteam = document.getElementById('title-myteam');
             if (titleMyteam) titleMyteam.textContent = t.my_team;
