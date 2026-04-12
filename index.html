@@ -804,6 +804,75 @@
             justify-content: center;
             z-index: 12;
         }
+
+        #pi3-matchup { position: relative; z-index: 2; overflow: visible !important; }
+        #qf1-wrap .matchup { position: relative; z-index: 2; overflow: visible !important; }
+
+        /* 1. EL ESCALÓN (Sale a la derecha y sube) */
+        #pi3-matchup::after {
+            content: '';
+            position: absolute;
+            /* Inicio: Centro del borde derecho de la caja Decisoria */
+            bottom: 50%; 
+            left: 100%;  
+            
+            /* -- MANDOS DE CONTROL DEL ESCALÓN -- */
+            /* ➡️ Cuánto sale hacia la derecha inicialmente */
+            width: 40px;  
+            /* ⬆️ Cuánto sube en vertical hacia QF1 */
+            height: 140px; 
+            
+            /* Dibujamos el borde Inferior (salida a derecha) y Derecho (subida) */
+            border-bottom: 8px solid var(--win);
+            border-right: 8px solid var(--win);
+            border-bottom-right-radius: 6px; /* Curva suave en el primer codo */
+            
+            background: transparent;
+            box-sizing: border-box;
+            z-index: 1;
+            display: block !important;
+        }
+
+        /* 2. COLOCAR LA "W" EN EL CODO SUPERIOR (Antes de girar a QF1) */
+        #pi3-matchup::before {
+            content: 'W';
+            position: absolute;
+            /* ⚠️ Matemáticas exactas: bottom + la subida (140) y left + la salida (40) */
+            bottom: calc(50% + 140px); 
+            left: calc(100% + 40px); 
+            
+            /* Centramos la W exactamente en ese vértice */
+            transform: translate(-50%, 50%); 
+            
+            /* Diseño de la W */
+            background-color: var(--win);
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 12;
+        }
+
+        /* 3. EL EMPALME FINAL (Trocito que sale de QF1 y va a la izquierda a buscar la W) */
+        #qf1-wrap .matchup::before {
+            content: '';
+            position: absolute;
+            top: 50%; 
+            /* ⬅️ Cuánto avanza hacia la izquierda buscando la W */
+            left: -60px; 
+            width: 60px; 
+            
+            height: 8px; /* Grosor idéntico al resto de la línea */
+            background-color: var(--win);
+            transform: translateY(-50%);
+            z-index: 1;
+            display: block !important;
+        }
         
         /* Adaptación para móviles de paneles */
         @media (max-width: 991px) {
