@@ -1935,20 +1935,40 @@
             container.innerHTML = `
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
-                    ${buildMatchup('pi1', '7th vs 8th (Winner = 7th Seed)', p_pi1_A, p_pi1_B, 7, 8)}
-                    <div class="bracket-note">↓ ${txtLoser} ↓</div>
-                    ${buildMatchup('pi3', '8th Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
-                    <div style="height: 15px;"></div>
-                    ${buildMatchup('pi2', '9th vs 10th (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
+                    
+                    <div id="pi2-matchup" style="margin-top: 0px;">
+                        ${buildMatchup('pi2', '9º vs 10º (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
+                    </div>
+                    
+                    <div id="pi3-matchup" style="margin-top: 40px; margin-left: 20px; width: calc(100% - 20px);">
+                        ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
+                    </div>
+                    
+                    <div id="pi1-matchup" style="margin-top: 40px;">
+                        ${buildMatchup('pi1', '7º vs 8º (Winner = 7º Seed)', p_pi1_A, p_pi1_B, 7, 8)}
+                    </div>
                 </div>
                 
                 <div class="bracket-col" id="col-qf">
                     <div class="bracket-label">${txtQF}</div>
-                    ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
-                    ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
-                    <div style="height: 35px;"></div>
-                    ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
-                    ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
+                    
+                    <div id="qf1-wrap" style="margin-top: 110px;">
+                        ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
+                    </div>
+                    
+                    <div style="height: 30px;"></div>
+                    
+                    <div>
+                        ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
+                    </div>
+                    
+                    <div id="qf4-wrap" style="margin-top: 20px;">
+                        ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
+                    </div>
                 </div>
 
                 <div class="bracket-col" id="col-sf">
@@ -1962,14 +1982,7 @@
                 <div class="bracket-col" id="col-fin" style="justify-content: center;">
                     <div class="bracket-label">${txtFIN}</div>
                     ${buildMatchup('final', txtFIN, p_fin_A, p_fin_B, '-', '-')}
-                    
-                    ${champion ? `
-                        <div class="champion-box">
-                            <div style="font-size:0.8rem; opacity:0.9; margin-bottom:5px; font-weight:bold;">🏆 ${txtChamp} 🏆</div>
-                            <img src="${getLogo(champion.name)}">
-                            <h3>${tName(champion.name)}</h3>
-                        </div>
-                    ` : `<div class="disabled-champ">🏆<br>${txtTBD}</div>`}
+                    ${champion ? `<div class="champion-box"><div style="font-size:0.8rem; font-weight:bold;">🏆 ${txtChamp} 🏆</div><img src="${getLogo(champion.name)}"><h3>${tName(champion.name)}</h3></div>` : `<div class="disabled-champ">🏆<br>${txtTBD}</div>`}
                 </div>
             `;
         }
