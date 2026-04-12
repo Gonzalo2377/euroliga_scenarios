@@ -1870,15 +1870,55 @@
             }
         }
 
+        function advanceBracket(matchupId, winnerName, loserName) {
+            if (!winnerName) return; 
+            if (bracketState[matchupId] === winnerName) return; 
+
+            bracketState[matchupId] = winnerName;
+
+            const resetPaths = {
+                'pi1': ['pi3', 'qf4', 'qf1', 'sf1', 'sf2', 'final'], 
+                'pi2': ['pi3', 'qf1', 'sf1', 'final'],
+                'pi3': ['qf1', 'sf1', 'final'],
+                'qf1': ['sf1', 'final'],
+                'qf2': ['sf1', 'final'],
+                'qf3': ['sf2', 'final'],
+                'qf4': ['sf2', 'final'],
+                'sf1': ['final'],
+                'sf2': ['final']
+            };
+
+            if (matchupId === 'pi1') bracketState.pi1Loser = loserName;
+            if (resetPaths[matchupId]) {
+                resetPaths[matchupId].forEach(node => delete bracketState[node]);
+            }
+
+            renderBracket();
+
+            // Scroll automático en móviles
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    const wrapper = document.querySelector('.bracket-wrapper');
+                    let targetCol = null;
+                    if (matchupId.startsWith('pi') && bracketState.pi1 && bracketState.pi2 && bracketState.pi3) targetCol = document.getElementById('col-qf'); 
+                    else if (matchupId.startsWith('qf') && bracketState.qf1 && bracketState.qf2 && bracketState.qf3 && bracketState.qf4) targetCol = document.getElementById('col-sf'); 
+                    else if (matchupId.startsWith('sf') && bracketState.sf1 && bracketState.sf2) targetCol = document.getElementById('col-fin'); 
+                    if (targetCol && wrapper) {
+                        wrapper.scrollTo({ left: targetCol.offsetLeft - (wrapper.offsetWidth * 0.15), behavior: 'smooth' });
+                    }
+                }, 150); 
+            }
+        }
+
         function renderBracket() {
             const container = document.getElementById("bracket-ui");
             if (!container) return;
 
+            // 1. Datos y Participantes
             let st = sortTeamsWithH2H(getLiveTeams());
             const getT = (name) => st.find(x => x.name === name);
             const tBase = (seed) => st[seed - 1]; 
 
-            // Textos traducidos dinámicamente desde el diccionario i18n
             const t = i18n[currentLang] || i18n['es'];
             const txtPI = t.playin || "PLAY-IN";
             const txtQF = t.quarterfinals || "QUARTERFINALS";
@@ -1886,9 +1926,7 @@
             const txtFIN = t.championship || "CHAMPIONSHIP";
             const txtTBD = t.tbd || "TBD";
             const txtChamp = t.champion || "CHAMPION";
-            const txtLoser = t.loser_drops || "Loser plays here";
 
-            // Asignación de participantes según el avance de la simulación
             let p_pi1_A = tBase(7), p_pi1_B = tBase(8);
             let p_pi2_A = tBase(9), p_pi2_B = tBase(10);
             let p_pi3_A = bracketState.pi1Loser ? getT(bracketState.pi1Loser) : null;
@@ -1896,96 +1934,67 @@
             
             let p_qf1_A = tBase(1), p_qf1_B = bracketState.pi3 ? getT(bracketState.pi3) : null;
             let p_qf2_A = tBase(4), p_qf2_B = tBase(5);
-            let p_qf3_A = tBase(3), p_qf3_B = tBase(6); // 3º vs 6º
-            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null; // 2º vs 7º
+            let p_qf3_A = tBase(3), p_qf3_B = tBase(6);
+            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null; 
 
             let p_sf1_A = bracketState.qf1 ? getT(bracketState.qf1) : null;
             let p_sf1_B = bracketState.qf2 ? getT(bracketState.qf2) : null;
-            // INTERCAMBIO: QF4 va arriba en la Semi 2, QF3 va abajo
             let p_sf2_A = bracketState.qf4 ? getT(bracketState.qf4) : null; 
             let p_sf2_B = bracketState.qf3 ? getT(bracketState.qf3) : null; 
 
             let p_fin_A = bracketState.sf1 ? getT(bracketState.sf1) : null;
             let p_fin_B = bracketState.sf2 ? getT(bracketState.sf2) : null;
-            
             let champion = bracketState.final ? getT(bracketState.final) : null;
 
-            // Creador de cajas de partidos
+            // 2. Constructor de Partidos
             const buildMatchup = (id, title, teamA, teamB, seedA, seedB) => {
                 let winner = bracketState[id];
-                
                 const buildTeam = (teamObj, seedNum) => {
                     if (!teamObj) return `<div class="matchup-team disabled"><span class="seed-badge">${seedNum}</span> <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span></div>`;
-                    
                     let isWin = winner === teamObj.name;
                     let isLoser = winner && winner !== teamObj.name;
-                    let opponentObj = teamObj === teamA ? teamB : teamA;
-                    let opponentName = opponentObj ? opponentObj.name : '';
-                    
+                    let opponentName = (teamObj === teamA && teamB) ? teamB.name : (teamA ? teamA.name : '');
                     return `<div class="matchup-team ${isWin ? 'winner' : ''} ${isLoser ? 'loser' : ''}" onclick="advanceBracket('${id}', '${teamObj.name}', '${opponentName}')">
                                 <span class="seed-badge">${seedNum}</span>
                                 <img src="${getLogo(teamObj.name)}" class="bracket-logo">
                                 <span class="team-name-bracket">${tName(teamObj.name)}</span>
                             </div>`;
                 };
-
-                return `<div class="matchup"><div class="matchup-header">${title}</div>${buildTeam(teamA, seedA)}${buildTeam(teamB, seedB)}</div>`;
+                return `<div class="matchup ${id}"><div class="matchup-header">${title}</div>${buildTeam(teamA, seedA)}${buildTeam(teamB, seedB)}</div>`;
             };
 
+            // 3. Inyección del HTML con la Distribución Exacta
             container.innerHTML = `
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
-                    
-                    <div id="pi2-matchup" style="margin-top: 10px;">
-                        ${buildMatchup('pi2', '9º vs 10º (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
-                    </div>
-                    
-                    <div id="pi3-matchup" style="margin-top: 40px; margin-left: 40px;">
-                        ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
-                    </div>
-                    
-                    <div id="pi1-matchup" style="margin-top: 40px;">
-                        ${buildMatchup('pi1', '7º vs 8º (Winner = 7º Seed)', p_pi1_A, p_pi1_B, 7, 8)}
-                    </div>
+                    <div id="pi2-matchup">${buildMatchup('pi2', '9º vs 10º', p_pi2_A, p_pi2_B, 9, 10)}</div>
+                    <div id="pi3-matchup" style="margin-top: 40px; margin-left: 20px; width: calc(100% - 20px);">${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}</div>
+                    <div id="pi1-matchup" style="margin-top: 40px;">${buildMatchup('pi1', '7º vs 8º', p_pi1_A, p_pi1_B, 7, 8)}</div>
                 </div>
                 
                 <div class="bracket-col" id="col-qf">
                     <div class="bracket-label">${txtQF}</div>
-                    
-                    <div id="qf1-wrap" style="margin-top: 0px;">
-                        ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
-                    </div>
-                    
-                    <div style="margin-top: 20px;">
-                        ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
-                    </div>
-                    
+                    <div id="qf1-wrap" style="margin-top: 110px;">${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}</div>
+                    <div style="margin-top: 20px;">${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}</div>
                     <div style="height: 30px;"></div>
-                    
-                    <div>
-                        ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
-                    </div>
-                    
-                    <div id="qf4-wrap" style="margin-top: 20px;">
-                        ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
-                    </div>
+                    <div>${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}</div>
+                    <div id="qf4-wrap" style="margin-top: 20px;">${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}</div>
                 </div>
 
                 <div class="bracket-col" id="col-sf">
                     <div class="bracket-label">${txtF4}</div>
                     <div style="height: 45px;"></div>
                     ${buildMatchup('sf1', 'Semifinal 1', p_sf1_A, p_sf1_B, '-', '-')}
-                    <div style="height: 180px;"></div>
+                    <div style="height: 140px;"></div>
                     ${buildMatchup('sf2', 'Semifinal 2', p_sf2_A, p_sf2_B, '-', '-')}
                 </div>
 
                 <div class="bracket-col" id="col-fin" style="justify-content: center;">
                     <div class="bracket-label">${txtFIN}</div>
-                    <div id="final-wrap" style="margin-top: 170px;">
                     ${buildMatchup('final', txtFIN, p_fin_A, p_fin_B, '-', '-')}
-                    ${champion ? `<div class="champion-box"><div style="font-size:0.8rem; font-weight:bold;">🏆 ${txtChamp} 🏆</div><img src="${getLogo(champion.name)}"><h3>${tName(champion.name)}</h3></div>` : `<div class="disabled-champ">🏆<br>${txtTBD}</div>`}
+                    ${champion ? \`<div class="champion-box"><div style="font-size:0.8rem; font-weight:bold;">🏆 \${txtChamp} 🏆</div><img src="\${getLogo(champion.name)}"><h3>\${tName(champion.name)}</h3></div>\` : \`<div class="disabled-champ">🏆<br>\${txtTBD}</div>\`}
                 </div>
-            `;
+            \`;
         }
         function captureBracket() {
             const btn = document.getElementById('capture-btn');
