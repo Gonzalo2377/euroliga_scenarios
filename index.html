@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     
+    
     <title>EuroLeague Calculator 25/26 | Bracket & Simulator</title>
     <meta name="description" content="Simulador interactivo de los Playoffs de la Euroliga 25/26. Calcula desempates H2H automáticamente, probabilidades matemáticas para el Top 4, Top 6 y Play-In.">
     <meta name="keywords" content="euroliga, euroleague, calculadora, simulador, playoffs, play-in, clasificacion, desempates, h2h, baloncesto, predicciones, monte carlo">
@@ -1620,7 +1620,7 @@
             }
 
             // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
-            // AÑADIDO: () para que se actualice junto a la clasificación
+            // AÑADIDO: renderBracket() para que se actualice junto a la clasificación
             setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
             setTimeout(() => { renderMatrices(); renderResultados(); }, 0);
@@ -1874,11 +1874,11 @@
             const container = document.getElementById("bracket-ui");
             if (!container) return;
 
-            // 1. Datos y Participantes
             let st = sortTeamsWithH2H(getLiveTeams());
             const getT = (name) => st.find(x => x.name === name);
             const tBase = (seed) => st[seed - 1]; 
 
+            // Textos traducidos dinámicamente desde el diccionario i18n
             const t = i18n[currentLang] || i18n['es'];
             const txtPI = t.playin || "PLAY-IN";
             const txtQF = t.quarterfinals || "QUARTERFINALS";
@@ -1886,7 +1886,9 @@
             const txtFIN = t.championship || "CHAMPIONSHIP";
             const txtTBD = t.tbd || "TBD";
             const txtChamp = t.champion || "CHAMPION";
+            const txtLoser = t.loser_drops || "Loser plays here";
 
+            // Asignación de participantes según el avance de la simulación
             let p_pi1_A = tBase(7), p_pi1_B = tBase(8);
             let p_pi2_A = tBase(9), p_pi2_B = tBase(10);
             let p_pi3_A = bracketState.pi1Loser ? getT(bracketState.pi1Loser) : null;
@@ -1894,51 +1896,79 @@
             
             let p_qf1_A = tBase(1), p_qf1_B = bracketState.pi3 ? getT(bracketState.pi3) : null;
             let p_qf2_A = tBase(4), p_qf2_B = tBase(5);
-            let p_qf3_A = tBase(3), p_qf3_B = tBase(6);
-            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null; 
+            let p_qf3_A = tBase(3), p_qf3_B = tBase(6); // 3º vs 6º
+            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null; // 2º vs 7º
 
             let p_sf1_A = bracketState.qf1 ? getT(bracketState.qf1) : null;
             let p_sf1_B = bracketState.qf2 ? getT(bracketState.qf2) : null;
+            // INTERCAMBIO: QF4 va arriba en la Semi 2, QF3 va abajo
             let p_sf2_A = bracketState.qf4 ? getT(bracketState.qf4) : null; 
             let p_sf2_B = bracketState.qf3 ? getT(bracketState.qf3) : null; 
 
             let p_fin_A = bracketState.sf1 ? getT(bracketState.sf1) : null;
             let p_fin_B = bracketState.sf2 ? getT(bracketState.sf2) : null;
+            
             let champion = bracketState.final ? getT(bracketState.final) : null;
 
-            // 2. Constructor de Partidos
+            // Creador de cajas de partidos
             const buildMatchup = (id, title, teamA, teamB, seedA, seedB) => {
                 let winner = bracketState[id];
+                
                 const buildTeam = (teamObj, seedNum) => {
                     if (!teamObj) return `<div class="matchup-team disabled"><span class="seed-badge">${seedNum}</span> <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span></div>`;
+                    
                     let isWin = winner === teamObj.name;
                     let isLoser = winner && winner !== teamObj.name;
-                    let opponentName = (teamObj === teamA && teamB) ? teamB.name : (teamA ? teamA.name : '');
+                    let opponentObj = teamObj === teamA ? teamB : teamA;
+                    let opponentName = opponentObj ? opponentObj.name : '';
+                    
                     return `<div class="matchup-team ${isWin ? 'winner' : ''} ${isLoser ? 'loser' : ''}" onclick="advanceBracket('${id}', '${teamObj.name}', '${opponentName}')">
                                 <span class="seed-badge">${seedNum}</span>
                                 <img src="${getLogo(teamObj.name)}" class="bracket-logo">
                                 <span class="team-name-bracket">${tName(teamObj.name)}</span>
                             </div>`;
                 };
-                return `<div class="matchup ${id}"><div class="matchup-header">${title}</div>${buildTeam(teamA, seedA)}${buildTeam(teamB, seedB)}</div>`;
+
+                return `<div class="matchup"><div class="matchup-header">${title}</div>${buildTeam(teamA, seedA)}${buildTeam(teamB, seedB)}</div>`;
             };
 
-            // 3. Inyección del HTML con la Distribución Exacta
             container.innerHTML = `
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
-                    <div id="pi2-matchup">${buildMatchup('pi2', '9º vs 10º', p_pi2_A, p_pi2_B, 9, 10)}</div>
-                    <div id="pi3-matchup" style="margin-top: 40px; margin-left: 20px; width: calc(100% - 20px);">${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}</div>
-                    <div id="pi1-matchup" style="margin-top: 40px;">${buildMatchup('pi1', '7º vs 8º', p_pi1_A, p_pi1_B, 7, 8)}</div>
+                    
+                    <div id="pi2-matchup" style="margin-top: 0px;">
+                        ${buildMatchup('pi2', '9º vs 10º (Loser Eliminated)', p_pi2_A, p_pi2_B, 9, 10)}
+                    </div>
+                    
+                    <div id="pi3-matchup" style="margin-top: 40px; margin-left: 20px; width: calc(100% - 20px);">
+                        ${buildMatchup('pi3', '8º Seed Decider', p_pi3_A, p_pi3_B, '-', '-')}
+                    </div>
+                    
+                    <div id="pi1-matchup" style="margin-top: 40px;">
+                        ${buildMatchup('pi1', '7º vs 8º (Winner = 7º Seed)', p_pi1_A, p_pi1_B, 7, 8)}
+                    </div>
                 </div>
                 
                 <div class="bracket-col" id="col-qf">
                     <div class="bracket-label">${txtQF}</div>
-                    <div id="qf1-wrap" style="margin-top: 110px;">${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}</div>
-                    <div style="margin-top: 20px;">${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}</div>
+                    
+                    <div id="qf1-wrap" style="margin-top: 0px;">
+                        ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
+                    </div>
+                    
                     <div style="height: 30px;"></div>
-                    <div>${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}</div>
-                    <div id="qf4-wrap" style="margin-top: 20px;">${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}</div>
+                    
+                    <div>
+                        ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
+                    </div>
+                    
+                    <div id="qf4-wrap" style="margin-top: 20px;">
+                        ${buildMatchup('qf4', 'QF 4 (2º vs 7º)', p_qf4_A, p_qf4_B, 2, 7)}
+                    </div>
                 </div>
 
                 <div class="bracket-col" id="col-sf">
@@ -1951,10 +1981,11 @@
 
                 <div class="bracket-col" id="col-fin" style="justify-content: center;">
                     <div class="bracket-label">${txtFIN}</div>
+                    <div id="final-wrap" style="margin-top: 110px;">
                     ${buildMatchup('final', txtFIN, p_fin_A, p_fin_B, '-', '-')}
                     ${champion ? `<div class="champion-box"><div style="font-size:0.8rem; font-weight:bold;">🏆 ${txtChamp} 🏆</div><img src="${getLogo(champion.name)}"><h3>${tName(champion.name)}</h3></div>` : `<div class="disabled-champ">🏆<br>${txtTBD}</div>`}
                 </div>
-            \`;
+            `;
         }
         function captureBracket() {
             const btn = document.getElementById('capture-btn');
@@ -2033,25 +2064,14 @@
                 let rowClass = index < 6 ? "playoff-zone" : (index < 10 ? "playin-zone" : "out-zone");
                 
                 // --- CÁLCULO DE TENDENCIA (Contra la foto inamovible) ---
-                let oldRank = currentRank; // Por defecto, asumimos que se queda igual
-                
-                // Solo buscamos el ranking antiguo si la lista existe y el equipo está en ella
-                if (typeof snapshotOfficialRanks !== 'undefined' && snapshotOfficialRanks[team.name]) {
-                    oldRank = snapshotOfficialRanks[team.name];
-                }
-
-                let trendHTML = '';
-                let diff = oldRank - currentRank;
-    
-                if (diff > 0) {
-                    // SUBE
-                    trendHTML = `<span class="trend-up" style="color: #10b981; font-weight: bold; font-size: 0.9em;">▲ ${diff}</span>`;
-                } else if (diff < 0) {
-                    // BAJA
-                    trendHTML = `<span class="trend-down" style="color: #ef4444; font-weight: bold; font-size: 0.9em;">▼ ${Math.abs(diff)}</span>`;
+                let oldRank = snapshotOfficialRanks[team.name];
+                let trendHTML = "";
+                if (currentRank < oldRank) {
+                    trendHTML = `<span class="trend-up">▲${oldRank - currentRank}</span>`;
+                } else if (currentRank > oldRank) {
+                    trendHTML = `<span class="trend-down">▼${currentRank - oldRank}</span>`;
                 } else {
-                    // SE MANTIENE
-                    trendHTML = `<span class="trend-same" style="color: #9ca3af; font-weight: bold; font-size: 0.9em;">-</span>`;
+                    trendHTML = `<span class="trend-flat">-</span>`;
                 }
                 
                 // Tabla Desktop
