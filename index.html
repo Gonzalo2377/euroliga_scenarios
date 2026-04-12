@@ -755,6 +755,55 @@
             justify-content: center;
             z-index: 12;
         }      
+
+        #pi2-matchup { position: relative; z-index: 2; overflow: visible !important; }
+
+        /* 1. DIBUJAR LA TUBERÍA VERDE (Línea recta hacia abajo) */
+        #pi2-matchup::after {
+            content: '';
+            position: absolute;
+            /* Inicio: Centro exacto del borde inferior de la caja 9vs10 */
+            top: 100%;
+            left: 47%; /* Alineado matemáticamente con tus otras líneas */
+            
+            /* Dimensiones de la tubería */
+            /* ⬇️ Cuánto baja hasta la caja de la Decisoria */
+            height: 50px; 
+            width: 0; /* Como es recta, no necesita avanzar a los lados */
+            
+            /* Dibujamos solo un borde gordo para crear la línea vertical */
+            border-left: 8px solid var(--win); 
+            
+            background: transparent;
+            box-sizing: border-box;
+            z-index: 1;
+            display: block !important;
+        }
+
+        /* 2. COLOCAR LA "W" EN MEDIO DE LA LÍNEA */
+        #pi2-matchup::before {
+            content: 'W';
+            position: absolute;
+            /* ⚠️ Ajustamos para que caiga justo a la mitad de la altura de la tubería (25px) */
+            top: calc(100% + 25px); 
+            left: 47%; 
+            
+            /* Centramos la W exactamente en ese punto */
+            transform: translate(-50%, -50%); 
+            
+            /* Diseño de la W (Idéntico a las que ya tienes) */
+            background-color: var(--win);
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 12;
+        }
         
         /* Adaptación para móviles de paneles */
         @media (max-width: 991px) {
