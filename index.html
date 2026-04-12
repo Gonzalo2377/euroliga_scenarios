@@ -552,63 +552,76 @@
         /* --------------------------------------------------- */
         /* CONECTORES CSS: AJUSTADOS PARA QF4 ARRIBA DE QF3    */
         /* --------------------------------------------------- */
-        #col-qf .matchup:nth-child(2)::after {
-            content: ''; position: absolute; 
-            /* ➡️ Anchura horizontal */
-            width: 40px; 
-            /* ⬇️ Cuánto baja. Sube este número si se queda corta verticalmente */
-            height: 55px; 
+        .bracket-col, .matchup { overflow: visible !important; }
+
+        /* --- 1. DE CUARTOS A SEMIFINALES --- */
+
+        /* QF1 (1º partido) - Línea que va a la derecha y BAJA */
+        .matchup.qf1::after {
+            content: ''; position: absolute;
+            width: 40px;   /* ➡️ Avance a la derecha */
+            height: 60px;  /* ⬇️ Caída vertical */
             border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
             top: 50%; right: -40px; z-index: 1; border-top-right-radius: 6px;
-        }
-        /* QF2 hacia arriba */
-        #col-qf .matchup:nth-child(3)::after {
-            content: ''; position: absolute; width: 40px; height: 55px;
-            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -40px; z-index: 1; border-bottom-right-radius: 6px;
-        }
-        /* QF4 (ahora es el 3º partido) hacia abajo */
-        #col-qf .matchup:nth-child(5)::after {
-            content: ''; position: absolute; width: 40px; height: 55px;
-            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -40px; z-index: 1; border-top-right-radius: 6px;
-        }
-        /* QF3 (ahora es el 4º partido) hacia arriba */
-        #col-qf .matchup:nth-child(6)::after {
-            content: ''; position: absolute; width: 40px; height: 55px;
-            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -40px; z-index: 1; border-bottom-right-radius: 6px;
-        }
-        /* Entradas a Semis (Receptor de Semis) */
-        #col-sf .matchup::before {
-            content: ''; position: absolute; width: 40px; height: 2px;
-            background: var(--connector); top: 50%; left: -40px; z-index: 1; transform: translateY(-50%);
         }
 
-        /* ========================================================= */
-        /* --- 3. SEMIS -> FINAL --- */
-        /* ========================================================= */
-        
-        /* SF1 hacia abajo */
-        #col-sf .matchup:nth-child(3)::after {
-            content: ''; position: absolute; 
-            /* ➡️ La final está más lejos, alargamos más el brazo */
-            width: 70px; 
-            /* ⬇️ La caída de la final es inmensa, bajamos mucho más */
-            height: 180px; 
-            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -70px; z-index: 1; border-top-right-radius: 6px;
-        }
-        /* SF2 hacia arriba */
-        #col-sf .matchup:nth-child(5)::after {
-            content: ''; position: absolute; width: 70px; height: 180px;
+        /* QF2 (2º partido) - Línea que va a la derecha y SUBE */
+        .matchup.qf2::after {
+            content: ''; position: absolute;
+            width: 40px; height: 60px; /* ⬆️ Subida vertical */
             border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -70px; z-index: 1; border-bottom-right-radius: 6px;
+            bottom: 50%; right: -40px; z-index: 1; border-bottom-right-radius: 6px;
         }
-        /* Entrada a Final (Receptor de la Final) */
-        #col-fin .matchup::before {
-            content: ''; position: absolute; width: 70px; height: 2px;
-            background: var(--connector); top: 50%; left: -70px; z-index: 1; transform: translateY(-50%);
+
+        /* QF3 (3º partido) - Línea que va a la derecha y BAJA */
+        .matchup.qf3::after {
+            content: ''; position: absolute;
+            width: 40px; height: 60px; /* ⬇️ Caída vertical */
+            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            top: 50%; right: -40px; z-index: 1; border-top-right-radius: 6px;
+        }
+
+        /* QF4 (4º partido) - Línea que va a la derecha y SUBE */
+        .matchup.qf4::after {
+            content: ''; position: absolute;
+            width: 40px; height: 60px; /* ⬆️ Subida vertical */
+            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            bottom: 50%; right: -40px; z-index: 1; border-bottom-right-radius: 6px;
+        }
+
+        /* Receptores de las dos Semifinales (Línea recta que va a la izquierda) */
+        .matchup.sf1::before, .matchup.sf2::before {
+            content: ''; position: absolute;
+            width: 40px; height: 2px;
+            background: var(--connector);
+            top: 50%; left: -40px; z-index: 1; transform: translateY(-50%);
+        }
+
+        /* --- 2. DE SEMIFINALES A FINAL --- */
+
+        /* SF1 (Semifinal de arriba) - Línea que va a la derecha y BAJA MUCHO */
+        .matchup.sf1::after {
+            content: ''; position: absolute;
+            width: 50px;   /* ➡️ Avance a la derecha (más largo) */
+            height: 140px; /* ⬇️ Caída vertical profunda hacia la Final */
+            border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            top: 50%; right: -50px; z-index: 1; border-top-right-radius: 6px;
+        }
+
+        /* SF2 (Semifinal de abajo) - Línea que va a la derecha y SUBE MUCHO */
+        .matchup.sf2::after {
+            content: ''; position: absolute;
+            width: 50px; height: 140px; /* ⬆️ Subida profunda hacia la Final */
+            border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
+            bottom: 50%; right: -50px; z-index: 1; border-bottom-right-radius: 6px;
+        }
+
+        /* Receptor de la Gran Final */
+        .matchup.final::before {
+            content: ''; position: absolute;
+            width: 50px; height: 2px;
+            background: var(--connector);
+            top: 50%; left: -50px; z-index: 1; transform: translateY(-50%);
         }
         
         /* ESTILOS BOTÓN DE CAPTURA BRACKET */
