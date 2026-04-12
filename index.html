@@ -663,7 +663,7 @@
             position: absolute;
             /* Inicio: Centro exacto del borde inferior de la caja 7vs8 */
             top: 100%; 
-            left: 50%; 
+            left: 40%; 
             
             /* Dimensiones de la tubería */
             height: 40px;  /* ⬇️ Cuánto baja antes de girar */
@@ -697,8 +697,8 @@
             color: white;
             font-size: 13px;
             font-weight: bold;
-            width: 22px;
-            height: 22px;
+            width: 30px;
+            height: 30px;
             border-radius: 5px;
             display: flex;
             align-items: center;
@@ -706,21 +706,7 @@
             z-index: 12;
         }
         
-        /* 4. EL RECEPTOR DE QF4 (Un trocito que sale para encontrarse con la tubería) */
-        #qf4-wrap .matchup::before {
-            content: '';
-            position: absolute;
-            /* Inicio: Centro exacto del borde izquierdo de la caja QF4 */
-            top: 62%; 
-            left: -175px; 
-            width: 175px; 
-            height: 8px;
-            background-color: var(--win);
-            transform: translateY(-50%);
-            z-index: 1;
-            display: block !important;
-        }
-        
+               
         
         /* Adaptación para móviles de paneles */
         @media (max-width: 991px) {
