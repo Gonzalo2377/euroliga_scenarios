@@ -552,66 +552,63 @@
         /* --------------------------------------------------- */
         /* CONECTORES CSS: AJUSTADOS PARA QF4 ARRIBA DE QF3    */
         /* --------------------------------------------------- */
-        :root { --connector: #475569; }
-        
-        /* 1. Entrada a Cuartos desde Play-In */
-        #col-qf .matchup:nth-child(2)::before {
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
-        }
-        #col-pi .matchup:nth-child(2)::after { 
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; right: -22px; z-index: -1; transform: translateY(-50%);
-        }
-
-        /* 2. CUARTOS -> SEMIS */
-        /* QF1 hacia abajo */
         #col-qf .matchup:nth-child(2)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            content: ''; position: absolute; 
+            /* ➡️ Anchura horizontal */
+            width: 40px; 
+            /* ⬇️ Cuánto baja. Sube este número si se queda corta verticalmente */
+            height: 55px; 
             border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
+            top: 50%; right: -40px; z-index: 1; border-top-right-radius: 6px;
         }
         /* QF2 hacia arriba */
         #col-qf .matchup:nth-child(3)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            content: ''; position: absolute; width: 40px; height: 55px;
             border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -22px; z-index: -1; border-bottom-right-radius: 6px;
+            bottom: 50%; right: -40px; z-index: 1; border-bottom-right-radius: 6px;
         }
         /* QF4 (ahora es el 3º partido) hacia abajo */
         #col-qf .matchup:nth-child(5)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            content: ''; position: absolute; width: 40px; height: 55px;
             border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
+            top: 50%; right: -40px; z-index: 1; border-top-right-radius: 6px;
         }
         /* QF3 (ahora es el 4º partido) hacia arriba */
         #col-qf .matchup:nth-child(6)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 10px);
+            content: ''; position: absolute; width: 40px; height: 55px;
             border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -22px; z-index: -1; border-bottom-right-radius: 6px;
+            bottom: 50%; right: -40px; z-index: 1; border-bottom-right-radius: 6px;
         }
-        /* Entradas a Semis */
+        /* Entradas a Semis (Receptor de Semis) */
         #col-sf .matchup::before {
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
+            content: ''; position: absolute; width: 40px; height: 2px;
+            background: var(--connector); top: 50%; left: -40px; z-index: 1; transform: translateY(-50%);
         }
 
-        /* 3. SEMIS -> FINAL */
+        /* ========================================================= */
+        /* --- 3. SEMIS -> FINAL --- */
+        /* ========================================================= */
+        
         /* SF1 hacia abajo */
         #col-sf .matchup:nth-child(3)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 90px); 
+            content: ''; position: absolute; 
+            /* ➡️ La final está más lejos, alargamos más el brazo */
+            width: 70px; 
+            /* ⬇️ La caída de la final es inmensa, bajamos mucho más */
+            height: 180px; 
             border-top: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            top: 50%; right: -22px; z-index: -1; border-top-right-radius: 6px;
+            top: 50%; right: -70px; z-index: 1; border-top-right-radius: 6px;
         }
         /* SF2 hacia arriba */
         #col-sf .matchup:nth-child(5)::after {
-            content: ''; position: absolute; width: 22px; height: calc(50% + 90px);
+            content: ''; position: absolute; width: 70px; height: 180px;
             border-bottom: 2px solid var(--connector); border-right: 2px solid var(--connector);
-            bottom: 50%; right: -22px; z-index: -1; border-bottom-right-radius: 6px;
+            bottom: 50%; right: -70px; z-index: 1; border-bottom-right-radius: 6px;
         }
-        /* Entrada a Final */
+        /* Entrada a Final (Receptor de la Final) */
         #col-fin .matchup::before {
-            content: ''; position: absolute; width: 22px; height: 2px;
-            background: var(--connector); top: 50%; left: -22px; z-index: -1; transform: translateY(-50%);
+            content: ''; position: absolute; width: 70px; height: 2px;
+            background: var(--connector); top: 50%; left: -70px; z-index: 1; transform: translateY(-50%);
         }
         
         /* ESTILOS BOTÓN DE CAPTURA BRACKET */
