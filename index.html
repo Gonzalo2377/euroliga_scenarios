@@ -780,21 +780,33 @@
             z-index: 1;
             display: block !important;
         }
-        #random-bracket-btn {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9); /* Un color morado distinto para que destaque */
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            font-size: 1.05rem;
+        #random-bracket-btn, #capture-btn {
+            padding: 10px 20px;
+            font-size: 0.95rem;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-        #random-bracket-btn:hover {
+
+        #random-bracket-btn {
+            background: linear-gradient(135deg, #6366f1, #4338ca);
+        }
+
+        #capture-btn {
+            background: linear-gradient(135deg, var(--primary), #c2410a);
+            margin: 0 !important; /* Quita márgenes extra si los tiene */
+        }
+
+        #random-bracket-btn:hover, #capture-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            filter: brightness(1.1);
         }
         /* Adaptación para móviles de paneles */
         @media (max-width: 991px) {
@@ -949,22 +961,19 @@
             <h2 id="title-bracket" style="text-align: center;">Playoffs & Play-In Bracket</h2>
             <p id="bracket-desc" style="text-align: center; color: #6b7280; margin-bottom: 10px;">Haz clic en los equipos para simular tu camino hacia el campeonato.</p>
 
-            <div style="text-align: center; margin-bottom: 30px;">
-                <button id="random-bracket-btn" onclick="randomizeBracket()">
-                    🎲 Simular Aleatoriamente
-                </button>
-            </div>
-            <div style="text-align: center; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0;">
                 <button onclick="resetBracket()" style="background: var(--dark); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
                     🔄 Limpiar Bracket
                 </button>
+                <button id="random-bracket-btn" onclick="randomizeBracket()">
+                    🎲 Aleatorio
+                </button>
+                <button id="capture-btn">
+                    📸 Capturar Bracket
+                </button>
+                
             </div>
 
-            <div style="text-align: center; margin: 20px 0;" id="capture-container">
-                <button id="capture-btn" class="primary" style="font-size: 0.9rem; padding: 12px 24px;">
-                    📸 Guardar Captura de Todo el Bracket
-                </button>
-            </div>
 
             <div class="bracket-wrapper">
                 <div class="bracket-container" id="bracket-ui">
@@ -2739,26 +2748,48 @@
         }
 
         function randomizeBracket() {
-            // 1. Si tienes una función para resetear el bracket, la llamamos primero para empezar limpios
-            if (typeof resetBracket === 'function') resetBracket();
-
-            // 2. El orden estricto en el que se juegan los partidos
-            const sequence = ['pi1', 'pi2', 'pi3', 'qf1', 'qf2', 'qf3', 'qf4', 'sf1', 'sf2', 'final'];
-
-            // 3. Hacemos que nuestro "robot" visite cada partido
-            sequence.forEach(matchupId => {
-                // Busca los dos equipos de ese partido concreto que no estén deshabilitados
-                const teams = document.querySelectorAll(`.${matchupId} .matchup-team:not(.disabled)`);
-                
-                // Si hay dos equipos listos para jugar...
-                if (teams.length === 2) {
-                    // Tira una moneda (0 o 1)
-                    const randomWinnerIndex = Math.floor(Math.random() * 2);
-                    
-                    // Simula un clic real del ratón sobre ese equipo
-                    teams[randomWinnerIndex].click();
-                }
+            // 1. Calculamos el ranking igual que en renderBracket
+            const sortedTeams = [...teamsBase].sort((a, b) => {
+                if (b.wins !== a.wins) return b.wins - a.wins;
+                return b.diff - a.diff;
             });
+
+            // 2. Limpiamos el estado para una simulación limpia
+            bracketState = {};
+
+            // Ayudantes lógicos
+            const pick = (tA, tB) => (tA && tB) ? (Math.random() < 0.5 ? tA.name : tB.name) : null;
+            const findT = (name) => teamsBase.find(t => t.name === name);
+
+            // --- SIMULACIÓN PASO A PASO ---
+            
+            // Play-In inicial
+            const p1A = sortedTeams[6], p1B = sortedTeams[7];
+            bracketState['pi1'] = pick(p1A, p1B);
+            
+            const p2A = sortedTeams[8], p2B = sortedTeams[9];
+            bracketState['pi2'] = pick(p2A, p2B);
+
+            // Decisorio Play-In (Ganador 9/10 vs Perdedor 7/8)
+            const p3A = findT(bracketState['pi2']);
+            const p3B = (bracketState['pi1'] === p1A.name) ? p1B : p1A;
+            bracketState['pi3'] = pick(p3A, p3B);
+
+            // Cuartos de Final
+            bracketState['qf1'] = pick(sortedTeams[0], findT(bracketState['pi3']));
+            bracketState['qf2'] = pick(sortedTeams[3], sortedTeams[4]);
+            bracketState['qf3'] = pick(sortedTeams[2], sortedTeams[5]);
+            bracketState['qf4'] = pick(sortedTeams[1], findT(bracketState['pi1']));
+
+            // Semifinales
+            bracketState['sf1'] = pick(findT(bracketState['qf1']), findT(bracketState['qf2']));
+            bracketState['sf2'] = pick(findT(bracketState['qf3']), findT(bracketState['qf4']));
+
+            // Final
+            bracketState['final'] = pick(findT(bracketState['sf1']), findT(bracketState['sf2']));
+
+            // 3. Dibujamos el resultado final
+            renderBracket();
         }
         
         function renderAnalysis() {
