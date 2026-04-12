@@ -855,6 +855,7 @@
             <button class="lang-btn" onclick="changeLang('sr')" title="Srpski">🇷🇸</button>
             <button class="lang-btn" onclick="changeLang('lt')" title="Lietuvių">🇱🇹</button>
             <button class="lang-btn" onclick="changeLang('he')" title="עברית">🇮🇱</button>
+            <button class="lang-btn" onclick="changeLang('it')" title="Italiano">🇮🇹</button>
         </div>
     </header>
 
@@ -959,8 +960,8 @@
             <h2 id="title-bracket" style="text-align: center;">Playoffs & Play-In Bracket</h2>
             <p id="bracket-desc" style="text-align: center; color: #6b7280; margin-bottom: 10px;">Haz clic en los equipos para simular tu camino hacia el campeonato.</p>
 
-            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0;">
-                <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0;">
+            <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 10px 0;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 10px 0;">
                     <button id="reset-btn" onclick="resetBracket()">
                         🔄 Limpiar Bracket
                     </button>
@@ -1024,7 +1025,7 @@
                 sc_needed: "Ruta al objetivo", sc_for_top6: "Para asegurar Top 6:", sc_for_top10: "Para asegurar Play-In:",
                 postponed: "Partidos Aplazados", analysis_title: "Análisis Avanzado", net_rating_label: "Net Rating (Dif. Media de Puntos)",
                 all_games: "Todos los partidos", last_5: "Últimos 5", last_10: "Últimos 10", only_home: "Solo en casa", only_away: "Solo fuera",
-                reset_sim: "🔄 Limpiar Simulador", reset_bracket: "🔄 Limpiar Bracket",
+                reset_sim: "🔄 Limpiar Simulador", reset_bracket: "🔄 Limpiar Bracket", random_bracket: "🎲 Aleatorio", capture_bracket: "📸 Capturar Bracket",
                 net_rating_desc: "El Net Rating mide la eficiencia ofensiva y defensiva combinada.",
                 view_all_games: "Ver todos los juegos", latest_round: "Última Jornada", final: "Final", q1: "1C", q2: "2C", q3: "3C", q4: "4C", ot: "PR",
                 legend_title: "Leyenda de la Clasificación", leg_playoff: "Clasificación directa a Playoffs", leg_playin: "Clasificación a Play-In", leg_out: "Eliminados", leg_sos: "Fuerza del Calendario (dificultad de los rivales restantes)", leg_diff: "Diferencia de puntos (Basket Average)",
@@ -1046,11 +1047,33 @@
                 sc_needed: "Path to goal", sc_for_top6: "To secure Top 6:", sc_for_top10: "To secure Play-In:",
                 postponed: "Postponed Games", analysis_title: "Advanced Analysis", net_rating_label: "Net Rating (Avg Point Diff)",
                 all_games: "All games", last_5: "Last 5", last_10: "Last 10", only_home: "Home only", only_away: "Away only",
-                reset_sim: "🔄 Clear Simulator", reset_bracket: "🔄 Clear Bracket",
+                reset_sim: "🔄 Clear Simulator", reset_bracket: "🔄 Clear Bracket", random_bracket: "🎲 Random", capture_bracket: "📸 Capture Bracket",
                 net_rating_desc: "Net Rating measures combined offensive and defensive efficiency.",
                 view_all_games: "View all games", latest_round: "Latest Round", final: "Final", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "OT",
                 legend_title: "Standings Legend", leg_playoff: "Direct Playoff Qualification", leg_playin: "Play-In Qualification", leg_out: "Eliminated", leg_sos: "Strength of Schedule (combined difficulty of remaining opponents)", leg_diff: "Point Differential (Basket Average)",
                 first_leg: "1st Leg:", not_played: "Not played", diff_short: "Diff:", view_standings: "📊 View Standings", close_standings: "❌ Close Table"
+            },
+            it: {
+                title: "🏆 Calcolatore EuroLeague Ultimate 25/26", standings: "📊 Classifica", my_team: "🎯 La Mia Squadra", prob: "🎲 Probabilità", simulator: "🎮 Simulatore", ties: "⚔️ Spareggi", results: "🏀 Risultati", news: "📰 Analisi", bracket: "🏆 Tabellone",
+                bracket_title: "Tabellone Playoffs & Play-In", bracket_desc: "Clicca sulle squadre per simulare il percorso verso il titolo.",
+                playin: "PLAY-IN", quarterfinals: "QUARTI DI FINALE", finalfour: "FINAL FOUR", championship: "CAMPIONATO", tbd: "Da dec.", champion: "CAMPIONE", loser_drops: "La perdente gioca qui",
+                official_standings: "Classifica Ufficiale", live_standings: "Classifica in Diretta", sim_desc: "Seleziona le vincenti per aggiornare la classifica.",
+                team: "Squadra", w: "V", l: "S", form: "Stato", diff_pct: "SOS", schedule: "Calendario", round: "Giornata", score: "Punt.",
+                home: "Casa", away: "Trasferta", ties_desc: "Gruppi calcolati automaticamente in base alle tue simulazioni.",
+                all_rounds: "Tutte le Giornate", all_teams: "Tutte le Squadre", final_res: "Risultato Finale", btn_home: "Casa", btn_away: "Trasf.",
+                tied_at: "A pari merito a", victories: "vittorie", total_vd: "Totale V-S", no_ties: "Nessun pareggio attuale.",
+                prob_desc: "Il simulatore gioca 2.000 finali casuali e calcola la % esatta di arrivo in ogni posizione.",
+                run_prob: "🎲 Esegui 2.000 Simulazioni", computing: "Calcolo dei futuri paralleli... ⏳",
+                select_team: "-- Seleziona la tua squadra --", next_games: "Prossime Partite", direct_rivals: "Rivali Diretti (Pari merito)",
+                sc_next: "Prossima partita chiave", sc_win_next: "Se vince contro {opp}:", sc_lose_next: "Se perde contro {opp}:",
+                sc_needed: "Percorso verso l'obiettivo", sc_for_top6: "Per assicurarsi la Top 6:", sc_for_top10: "Per assicurarsi i Play-In:",
+                postponed: "Partite Rinviate", analysis_title: "Analisi Avanzata", net_rating_label: "Net Rating (Diff. Media Punti)",
+                all_games: "Tutte le partite", last_5: "Ultime 5", last_10: "Ultime 10", only_home: "Solo in casa", only_away: "Solo in trasferta",
+                reset_sim: "🔄 Azzera Simulatore", reset_bracket: "🔄 Svuota Tabellone", random_bracket: "🎲 Casuale", capture_bracket: "📸 Cattura Tabellone",
+                net_rating_desc: "Il Net Rating misura l'efficienza offensiva e difensiva combinata.",
+                view_all_games: "Vedi tutte le partite", latest_round: "Ultima Giornata", final: "Finale", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "TS",
+                legend_title: "Legenda Classifica", leg_playoff: "Qualificazione diretta ai Playoff", leg_playin: "Qualificazione ai Play-In", leg_out: "Eliminate", leg_sos: "Forza del Calendario (difficoltà avversari rimanenti)", leg_diff: "Differenza punti (Basket Average)",
+                first_leg: "Andata:", not_played: "Non giocata", diff_short: "Diff:", view_standings: "📊 Vedi Classifica", close_standings: "❌ Chiudi Tabella"
             },
             fr: {
                 title: "🏆 Calculatrice EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
@@ -1068,7 +1091,7 @@
                 sc_needed: "Chemin vers l'objectif", sc_for_top6: "Pour assurer le Top 6 :", sc_for_top10: "Pour assurer le Play-In :",
                 postponed: "Matchs Reportés", analysis_title: "Analyse Avancée", net_rating_label: "Net Rating (Diff Moyenne)",
                 all_games: "Tous les matchs", last_5: "Les 5 derniers", last_10: "Les 10 derniers", only_home: "À domicile", only_away: "À l'extérieur",
-                reset_sim: "🔄 Effacer le simulateur", reset_bracket: "🔄 Effacer le tableau",
+                reset_sim: "🔄 Effacer le simulateur", reset_bracket: "🔄 Effacer le tableau", random_bracket: "🎲 Aléatoire", capture_bracket: "📸 Capturer Tableau",
                 net_rating_desc: "Le Net Rating mesure l'efficacité offensive et défensive combinée.",
                 view_all_games: "Voir tous les matchs", latest_round: "Dernière journée", final: "Terminé", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "PR",
                 legend_title: "Légende du Classement", leg_playoff: "Qualification directe en Playoffs", leg_playin: "Qualification en Play-In", leg_out: "Éliminés", leg_sos: "Force du calendrier (difficulté combinée des adversaires)", leg_diff: "Différence de points (Basket Average)",
@@ -1090,7 +1113,7 @@
                 sc_needed: "Hedefe giden yol", sc_for_top6: "Top 6'yı garantilemek için:", sc_for_top10: "Play-In garantilemek için:",
                 postponed: "Ertelenen Maçlar", analysis_title: "Gelişmiş Analiz", net_rating_label: "Net Reyting (Ort. Fark)",
                 all_games: "Tüm maçlar", last_5: "Son 5", last_10: "Son 10", only_home: "Sadece içeride", only_away: "Sadece deplasmanda",
-                reset_sim: "🔄 Simülatörü Temizle", reset_bracket: "🔄 Eşleşmeleri Temizle",
+                reset_sim: "🔄 Simülatörü Temizle", reset_bracket: "🔄 Eşleşmeleri Temizle", random_bracket: "🎲 Rastgele", capture_bracket: "📸 Eşleşmeleri Kaydet",
                 net_rating_desc: "Net Rating, birleşik hücum ve savunma verimliliğini ölçer.",
                 view_all_games: "Tüm maçları gör", latest_round: "Son Hafta", final: "Bitti", q1: "1Ç", q2: "2Ç", q3: "3Ç", q4: "4Ç", ot: "UZ",
                 legend_title: "Puan Durumu Lejantı", leg_playoff: "Doğrudan Playoff Katılımı", leg_playin: "Play-In Katılımı", leg_out: "Elendi", leg_sos: "Fikstür Zorluğu (kalan rakiplerin zorluk derecesi)", leg_diff: "Sayı Farkı (Averaj)",
@@ -1112,7 +1135,7 @@
                 sc_needed: "Δρόμος για τον στόχο", sc_for_top6: "Για κλείδωμα 6άδας:", sc_for_top10: "Για κλείδωμα Play-In:",
                 postponed: "Αναβληθέντα", analysis_title: "Προηγμένη Ανάλυση", net_rating_label: "Net Rating (Μέση Διαφ. Πόντων)",
                 all_games: "Όλα τα ματς", last_5: "Τελευταία 5", last_10: "Τελευταία 10", only_home: "Μόνο εντός", only_away: "Μόνο εκτός",
-                reset_sim: "🔄 Καθαρισμός Προσομοιωτή", reset_bracket: "🔄 Καθαρισμός Ταμπλό",
+                reset_sim: "🔄 Καθαρισμός Προσομοιωτή", reset_bracket: "🔄 Καθαρισμός Ταμπλό", random_bracket: "🎲 Τυχαίο", capture_bracket: "📸 Λήψη Ταμπλό",
                 net_rating_desc: "Το Net Rating μετρά τη συνδυασμένη επιθετική και αμυντική αποτελεσματικότητα.",
                 view_all_games: "Όλοι οι αγώνες", latest_round: "Τελευταία", final: "Τελικό", q1: "1ο", q2: "2ο", q3: "3ο", q4: "4ο", ot: "ΠΡ",
                 legend_title: "Υπόμνημα Βαθμολογίας", leg_playoff: "Απευθείας Πρόκριση στα Playoffs", leg_playin: "Πρόκριση στο Play-In", leg_out: "Αποκλεισμός", leg_sos: "Δυναμικότητα Προγράμματος (δυσκολία εναπομεινάντων αντιπάλων)", leg_diff: "Διαφορά Πόντων (Basket Average)",
@@ -1134,7 +1157,7 @@
                 sc_needed: "Put do cilja", sc_for_top6: "Za siguran Top 6:", sc_for_top10: "Za siguran Play-In:",
                 postponed: "Odložene Utakmice", analysis_title: "Napredna Analiza", net_rating_label: "Net Rejting (Pros. Razlika)",
                 all_games: "Sve utakmice", last_5: "Poslednjih 5", last_10: "Poslednjih 10", only_home: "Samo kod kuće", only_away: "Samo u gostima",
-                reset_sim: "🔄 Očisti simulator", reset_bracket: "🔄 Očisti kostur",
+                reset_sim: "🔄 Očisti simulator", reset_bracket: "🔄 Očisti kostur", random_bracket: "🎲 Nasumično", capture_bracket: "📸 Sačuvaj Kostur",
                 net_rating_desc: "Net rejting meri kombinovanu ofanzivnu i defanzivnu efikasnost.",
                 view_all_games: "Sve utakmice", latest_round: "Poslednje Kolo", final: "Kraj", q1: "1Č", q2: "2Č", q3: "3Č", q4: "4Č", ot: "PR",
                 legend_title: "Legenda Tabele", leg_playoff: "Direktan plasman u Plej-of", leg_playin: "Plasman u Plej-in", leg_out: "Eliminisani", leg_sos: "Težina rasporeda (težina preostalih protivnika)", leg_diff: "Koš razlika (Basket Average)",
@@ -1156,7 +1179,7 @@
                 sc_needed: "Kelias link tikslo", sc_for_top6: "Užsitikrinti Top 6:", sc_for_top10: "Užsitikrinti Play-In:",
                 postponed: "Atidėtos Rungtynės", analysis_title: "Išplėstinė Analizė", net_rating_label: "Grynasis Reitingas (Vid. Skirtumas)",
                 all_games: "Visos rungtynės", last_5: "Paskutinės 5", last_10: "Paskutinės 10", only_home: "Tik namuose", only_away: "Tik išvykoje",
-                reset_sim: "🔄 Išvalyti simuliatorių", reset_bracket: "🔄 Išvalyti medį",
+                reset_sim: "🔄 Išvalyti simuliatorių", reset_bracket: "🔄 Išvalyti medį", random_bracket: "🎲 Atsitiktinai", capture_bracket: "📸 Išsaugoti Medį",
                 net_rating_desc: "„Net Rating“ matuoja kombinuotą puolimo ir gynybos efektyvumą.",
                 view_all_games: "Visi mačai", latest_round: "Paskutinis turas", final: "Pabaiga", q1: "1K", q2: "2K", q3: "3K", q4: "4K", ot: "PR",
                 legend_title: "Lentelės Paaiškinimai", leg_playoff: "Tiesioginis patekimas į atkrintamąsias", leg_playin: "Patekimas į įkrintamąsias", leg_out: "Eliminuoti", leg_sos: "Tvarkaraščio sunkumas (likusių varžovų pajėgumas)", leg_diff: "Taškų skirtumas (Basket Average)",
@@ -1178,7 +1201,8 @@
                 sc_needed: "הדרך למטרה", sc_for_top6: "להבטחת טופ 6:", sc_for_top10: "להבטחת פליי-אין:",
                 postponed: "משחקים דחויים", analysis_title: "ניתוח מתקדם", net_rating_label: "מדד נט (הפרש ממוצע)",
                 all_games: "כל המשחקים", last_5: "5 אחרונים", last_10: "10 אחרונים", only_home: "רק בבית", only_away: "רק בחוץ",
-                reset_sim: "נקה סימולטור 🔄", reset_bracket: "נקה בראקט 🔄", net_rating_desc: "מדד הנט (Net Rating) מודד את היעילות ההתקפית וההגנתית המשולבת.",
+                reset_sim: "נקה סימולטור 🔄", reset_bracket: "נקה בראקט 🔄", random_bracket: "🎲 אקראי", capture_bracket: "📸 צלם בראקט",
+                net_rating_desc: "מדד הנט (Net Rating) מודד את היעילות ההתקפית וההגנתית המשולבת.",
                 "Olympiacos": "אולימפיאקוס", "Fenerbahçe": "פנרבחצ'ה", "Real Madrid": "ריאל מדריד", "Valencia Basket": "ולנסיה", "Hapoel Tel-Aviv": "הפועל תל אביב",
                 "Zalgiris Kaunas": "ז'לגיריס", "Panathinaikos": "פנאתינייקוס", "Barcelona": "ברצלונה", "Crvena Zvezda": "הכוכב האדום", "Monaco": "מונאקו",
                 "Maccabi Tel Aviv": "מכבי תל אביב", "Dubai": "דובאי", "Olimpia Milano": "מילאנו", "Partizan": "פרטיזן", "Bayern": "באיירן מינכן",
