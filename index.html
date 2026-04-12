@@ -780,7 +780,7 @@
             z-index: 1;
             display: block !important;
         }
-        #random-bracket-btn, #capture-btn {
+        #random-bracket-btn, #capture-btn, #reset-btn {
             padding: 10px 20px;
             font-size: 0.95rem;
             border-radius: 8px;
@@ -793,18 +793,16 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            margin: 0 !important;
         }
 
-        #random-bracket-btn {
-            background: linear-gradient(135deg, #6366f1, #4338ca);
-        }
+        /* 2. Colores (Degradados específicos para cada uno) */
+        #random-bracket-btn { background: linear-gradient(135deg, #6366f1, #4338ca); }
+        #capture-btn { background: linear-gradient(135deg, var(--primary), #c2410a); }
+        #reset-btn { background: linear-gradient(135deg, #4b5563, #1f2937); } /* Gris oscuro / Pizarra */
 
-        #capture-btn {
-            background: linear-gradient(135deg, var(--primary), #c2410a);
-            margin: 0 !important; /* Quita márgenes extra si los tiene */
-        }
-
-        #random-bracket-btn:hover, #capture-btn:hover {
+        /* 3. Animación idéntica al pasar el ratón */
+        #random-bracket-btn:hover, #capture-btn:hover, #reset-btn:hover {
             transform: translateY(-2px);
             filter: brightness(1.1);
         }
@@ -962,15 +960,17 @@
             <p id="bracket-desc" style="text-align: center; color: #6b7280; margin-bottom: 10px;">Haz clic en los equipos para simular tu camino hacia el campeonato.</p>
 
             <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0;">
-                <button onclick="resetBracket()" style="background: var(--dark); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-                    🔄 Limpiar Bracket
-                </button>
-                <button id="random-bracket-btn" onclick="randomizeBracket()">
-                    🎲 Aleatorio
-                </button>
-                <button id="capture-btn">
-                    📸 Capturar Bracket
-                </button>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 20px 0;">
+                    <button id="reset-btn" onclick="resetBracket()">
+                        🔄 Limpiar Bracket
+                    </button>
+                    <button id="random-bracket-btn" onclick="randomizeBracket()">
+                        🎲 Aleatorio
+                    </button>
+                    <button id="capture-btn">
+                        📸 Capturar Bracket
+                    </button>
+                </div>
                 
             </div>
 
