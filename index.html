@@ -807,9 +807,15 @@
             filter: brightness(1.1);
         }
         /* Adaptación para móviles de paneles */
+        .floating-btn-sim {
+            display: none !important;
+        }
+
+        /* 2. REGLA MÓVIL/TABLET: Mostrar el botón cuando la pantalla es de 991px o menos */
         @media (max-width: 991px) {
             .floating-btn-sim {
-                display: flex; align-items: center; justify-content: center;
+                display: flex !important; /* El !important vence a la regla global */
+                align-items: center; justify-content: center;
                 position: fixed; bottom: 20px; right: 20px;
                 background: var(--primary); color: white; border: none; 
                 padding: 15px 25px; border-radius: 50px; font-weight: bold; font-size: 1rem;
@@ -828,6 +834,8 @@
             }
             .sim-standings.abierto { bottom: 0; }
         }
+
+        /* 3. REGLAS EXTRA PARA PANTALLAS AÚN MÁS PEQUEÑAS (Móviles) */
         @media (max-width: 768px) {
             #btn-toggle-drawer {
                 left: 20px !important;
@@ -2362,135 +2370,151 @@
 
             
             const scenariosLang = {
-                es: {
-                    "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Dependen de sí mismos. Una victoria ante Milano asegura la primera plaza.</li><li>🔝 <strong>Top 4 (Factor Cancha):</strong> ✅ Asegurado matemáticamente.</li></ul>",
-                    "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> En sus manos. Ganar en su visita a Dubai asegura el factor cancha.</li><li>🎯 <strong>Top 6 (Playoffs):</strong> ✅ Asegurado.</li></ul>",
-                    "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> Visitan a ASVEL. Un triunfo garantiza ventaja de campo.</li><li>🎯 <strong>Top 6 (Playoffs):</strong> ✅ Asegurado.</li></ul>",
-                    "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Reciben a Estrella Roja en el WiZink. Ganar evita el Play-In. Una derrota los deja en grave peligro.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Doble Bala:</strong> ¡Tienen 2 partidos (Maccabi y Mónaco)! Controlan su destino para evitar el Play-In y soñar con el Top 4.</li></ul>",
-                    "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Obligados a ganar su último partido y esperar pinchazos de Madrid o Hapoel.</li><li>🛡️ <strong>Top 10:</strong> ✅ Asegurado.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Reciben a Paris Basketball. Una victoria mete presión máxima a Madrid y PAO.</li><li>🛡️ <strong>Top 10:</strong> ✅ Asegurado.</li></ul>",
-                    "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Visitan al Madrid. Dar la sorpresa asegura el Play-In. Si pierden, dependen de lo que hagan Maccabi y Dubai.</li><li>❌ <strong>Top 6:</strong> Imposible.</li></ul>",
-                    "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> ¡Alerta Roja! Si pierden su último partido, podrían quedarse fuera del Play-In definitivamente.</li><li>❌ <strong>Top 6:</strong> Imposible.</li></ul>",
-                    "Monaco": "<ul><li>🇲🇨 <strong>Top 10:</strong> Reciben a Hapoel TA. Ganar este duelo clave les asegura prácticamente el Play-In.</li><li>❌ <strong>Top 6:</strong> Imposible.</li></ul>",
-                    "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Reciben a Valencia. Obligados a ganar y rezar para que Zvezda, Barça o Mónaco pierdan.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>El Comodín:</strong> ¡Tienen 2 partidos (Hapoel y Virtus)! Si hacen el 2/2, roban la plaza a los de 20 victorias.</li></ul>",
-                    "Olimpia Milano": "<ul><li>❌ <strong>Eliminados:</strong> Visitan a Olympiacos ya sin opciones matemáticas.</li></ul>",
-                    "default": `<ul><li>❌ <strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
-                },
-                en: {
-                    "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Control their destiny. A win against Milano secures 1st place.</li><li>🔝 <strong>Top 4:</strong> ✅ Secured.</li></ul>",
-                    "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> In their hands. Winning in Dubai secures home court advantage.</li><li>🎯 <strong>Top 6:</strong> ✅ Secured.</li></ul>",
-                    "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> Visiting ASVEL. A win guarantees home court.</li><li>🎯 <strong>Top 6:</strong> ✅ Secured.</li></ul>",
-                    "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Hosting Crvena Zvezda. A win avoids the Play-In. A loss puts them in serious danger.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Double Bullet:</strong> 2 games left (Maccabi & Monaco)! They control their Top 6 destiny.</li></ul>",
-                    "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Must win their final game and hope Madrid or Hapoel stumble.</li><li>🛡️ <strong>Top 10:</strong> ✅ Secured.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Hosting Paris Basketball. A win puts massive pressure on Madrid and PAO.</li><li>🛡️ <strong>Top 10:</strong> ✅ Secured.</li></ul>",
-                    "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Visiting Madrid. An upset secures the Play-In. If they lose, Maccabi/Dubai are hunting.</li><li>❌ <strong>Top 6:</strong> Impossible.</li></ul>",
-                    "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Red Alert! Losing their last game leaves them highly vulnerable to elimination.</li><li>❌ <strong>Top 6:</strong> Impossible.</li></ul>",
-                    "Monaco": "<ul><li>🇲🇨 <strong>Top 10:</strong> Hosting Hapoel TA. A win in this key duel practically secures a Play-In spot.</li><li>❌ <strong>Top 6:</strong> Impossible.</li></ul>",
-                    "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Hosting Valencia. Must win and pray Zvezda, Barça, or Monaco lose.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>The Wildcard:</strong> 2 games left (Hapoel & Virtus)! Going 2/2 steals a spot from the 20W group.</li></ul>",
-                    "Olimpia Milano": "<ul><li>❌ <strong>Eliminated:</strong> Visiting Olympiacos with no mathematical chance left.</li></ul>",
-                    "default": `<ul><li>❌ <strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
-                },
-                fr: {
-                    "Olympiacos": "<ul><li>🥇 <strong>Top 1 :</strong> Maîtres de leur destin. Une victoire contre Milano assure la 1ère place.</li><li>🔝 <strong>Top 4 :</strong> ✅ Assuré.</li></ul>",
-                    "Valencia Basket": "<ul><li>🥈 <strong>Top 4 :</strong> Entre leurs mains. Gagner à Dubaï assure l'avantage du terrain.</li><li>🎯 <strong>Top 6 :</strong> ✅ Assuré.</li></ul>",
-                    "Fenerbahçe": "<ul><li>🥉 <strong>Top 4 :</strong> En visite à l'ASVEL. Une victoire garantit l'avantage du terrain.</li><li>🎯 <strong>Top 6 :</strong> ✅ Assuré.</li></ul>",
-                    "Real Madrid": "<ul><li>👑 <strong>Top 6 :</strong> Reçoivent l'Étoile Rouge. Gagner évite le Play-In. Une défaite les met en grand danger.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Double Chance :</strong> 2 matchs à jouer (Maccabi & Monaco) ! Ils contrôlent leur destin pour le Top 6.</li></ul>",
-                    "Panathinaikos": "<ul><li>☘️ <strong>Top 6 :</strong> Doivent gagner le dernier match et espérer un faux pas de Madrid ou de l'Hapoel.</li><li>🛡️ <strong>Top 10 :</strong> ✅ Assuré.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6 :</strong> Reçoivent Paris Basketball. Une victoire met une pression folle sur le Top 6.</li><li>🛡️ <strong>Top 10 :</strong> ✅ Assuré.</li></ul>",
-                    "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10 :</strong> À Madrid. Un exploit assure le Play-In. S'ils perdent, attention au Maccabi et Dubaï.</li><li>❌ <strong>Top 6 :</strong> Impossible.</li></ul>",
-                    "Barcelona": "<ul><li>🚨 <strong>Top 10 :</strong> Alerte Rouge ! Perdre le dernier match les mettrait en danger d'élimination.</li><li>❌ <strong>Top 6 :</strong> Impossible.</li></ul>",
-                    "Monaco": "<ul><li>🇲🇨 <strong>Top 10 :</strong> Reçoivent l'Hapoel. Gagner ce duel clé assure presque le Play-In.</li><li>❌ <strong>Top 6 :</strong> Impossible.</li></ul>",
-                    "Dubai": "<ul><li>🐪 <strong>Top 10 :</strong> Reçoivent Valence. Doivent gagner et prier.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Le Joker :</strong> 2 matchs (Hapoel & Virtus) ! Un 2/2 leur offre la qualification.</li></ul>",
-                    "Olimpia Milano": "<ul><li>❌ <strong>Éliminés :</strong> En visite à l'Olympiacos sans aucun espoir mathématique.</li></ul>",
-                    "default": `<ul><li>❌ <strong>Playoffs/Play-In :</strong> ${ui.eliminated}</li></ul>`
-                },
-                tr: {
-                    "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Kaderleri kendi ellerinde. Milano galibiyeti liderliği getirir.</li><li>🔝 <strong>Top 4:</strong> ✅ Garantilendi.</li></ul>",
-                    "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> Kendi ellerinde. Dubai galibiyeti saha avantajını verir.</li><li>🎯 <strong>Top 6:</strong> ✅ Garantilendi.</li></ul>",
-                    "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ASVEL deplasmanı. Galibiyet saha avantajı demek.</li><li>🎯 <strong>Top 6:</strong> ✅ Garantilendi.</li></ul>",
-                    "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Kızılyıldız'ı ağırlıyorlar. Kazanmak Play-In'i önler, kaybetmek tehlikeli.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Çifte Şans:</strong> 2 maçları var (Maccabi & Monaco)! Top 6 için kaderleri ellerinde.</li></ul>",
-                    "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Son maçı kazanıp Madrid veya Hapoel'in takılmasını beklemeliler.</li><li>🛡️ <strong>Top 10:</strong> ✅ Garantilendi.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Paris'i ağırlıyorlar. Galibiyet üsttekileri çok zorlar.</li><li>🛡️ <strong>Top 10:</strong> ✅ Garantilendi.</li></ul>",
-                    "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Madrid deplasmanı. Sürpriz galibiyet Play-In getirir. Kaybederlerse Maccabi/Dubai'yi bekleyecekler.</li><li>❌ <strong>Top 6:</strong> İmkansız.</li></ul>",
-                    "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Kırmızı Alarm! Son maçı kaybederlerse elenebilirler.</li><li>❌ <strong>Top 6:</strong> İmkansız.</li></ul>",
-                    "Monaco": "<ul><li>🇲🇨 <strong>Top 10:</strong> Hapoel'i ağırlıyorlar. Kazanan Play-In yapar.</li><li>❌ <strong>Top 6:</strong> İmkansız.</li></ul>",
-                    "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Valencia'yı ağırlıyorlar. Kazanıp dua etmeliler.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Joker:</strong> 2 maçları var (Hapoel & Virtus)! İkisini de kazanırlarsa bileti kaparlar.</li></ul>",
-                    "Olimpia Milano": "<ul><li>❌ <strong>Elendi:</strong> Olympiacos deplasmanına iddiasız çıkıyorlar.</li></ul>",
-                    "default": `<ul><li>❌ <strong>Playofflar/Play-In:</strong> ${ui.eliminated}</li></ul>`
-                },
-                gr: {
-                    "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Ορίζει τη μοίρα του. Νίκη επί της Μιλάνο δίνει την 1η θέση.</li><li>🔝 <strong>Top 4:</strong> ✅ Εξασφαλισμένο.</li></ul>",
-                    "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> Στα χέρια της. Νίκη στο Ντουμπάι δίνει πλεονέκτημα.</li><li>🎯 <strong>Top 6:</strong> ✅ Εξασφαλισμένο.</li></ul>",
-                    "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> Στη Βιλερμπάν. Νίκη εξασφαλίζει πλεονέκτημα.</li><li>🎯 <strong>Top 6:</strong> ✅ Εξασφαλισμένο.</li></ul>",
-                    "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Φιλοξενεί τον Ερυθρό Αστέρα. Νίκη αποφεύγει το Play-In, ήττα φέρνει κίνδυνο.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Διπλή Ευκαιρία:</strong> Έχει 2 ματς (Μακάμπι & Μονακό)! Ορίζει τη μοίρα της για την εξάδα.</li></ul>",
-                    "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Πρέπει να κερδίσει το τελευταίο ματς και να γκελάρει Μαδρίτη ή Χάποελ.</li><li>🛡️ <strong>Top 10:</strong> ✅ Εξασφαλισμένο.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Φιλοξενεί την Παρί. Νίκη βάζει φωτιά στην εξάδα.</li><li>🛡️ <strong>Top 10:</strong> ✅ Εξασφαλισμένο.</li></ul>",
-                    "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Στη Μαδρίτη. Έκπληξη δίνει Play-In. Ήττα βάζει Μακάμπι/Ντουμπάι στο παιχνίδι.</li><li>❌ <strong>Top 6:</strong> Αδύνατο.</li></ul>",
-                    "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Συναγερμός! Ήττα στο τελευταίο ματς μπορεί να φέρει αποκλεισμό.</li><li>❌ <strong>Top 6:</strong> Αδύνατο.</li></ul>",
-                    "Monaco": "<ul><li>🇲🇨 <strong>Top 10:</strong> Φιλοξενεί τη Χάποελ. Νίκη δίνει Play-In.</li><li>❌ <strong>Top 6:</strong> Αδύνατο.</li></ul>",
-                    "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Φιλοξενεί Βαλένθια. Πρέπει να κερδίσει και να προσεύχεται.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Ο Άσος:</strong> Έχει 2 ματς (Χάποελ & Βίρτους)! Με 2/2 κλέβει την πρόκριση.</li></ul>",
-                    "Olimpia Milano": "<ul><li>❌ <strong>Αποκλεισμός:</strong> Στο ΣΕΦ χωρίς ελπίδες.</li></ul>",
-                    "default": `<ul><li>❌ <strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
-                },
-                sr: {
-                    "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Sve u njihovim rukama. Pobeda nad Milanom donosi 1. mesto.</li><li>🔝 <strong>Top 4:</strong> ✅ Osigurano.</li></ul>",
-                    "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> Pobeda u Dubaiju donosi prednost domaćeg terena.</li><li>🎯 <strong>Top 6:</strong> ✅ Osigurano.</li></ul>",
-                    "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> Gostuju Asvelu. Pobeda donosi prednost.</li><li>🎯 <strong>Top 6:</strong> ✅ Osigurano.</li></ul>",
-                    "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Čekaju Zvezdu. Pobeda izbegava Plej-in, poraz donosi paniku.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Dupla šansa:</strong> Imaju 2 meča (Makabi i Monako)! Drže sudbinu u svojim rukama.</li></ul>",
-                    "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Moraju dobiti poslednji meč i čekati kiks Reala/Hapoela.</li><li>🛡️ <strong>Top 10:</strong> ✅ Osigurano.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Čekaju Pariz. Pobeda pravi haos na tabeli.</li><li>🛡️ <strong>Top 10:</strong> ✅ Osigurano.</li></ul>",
-                    "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Gostuju u Madridu. Pobeda znači Plej-in. Poraz ostavlja nadu Makabiju i Dubaiju.</li><li>❌ <strong>Top 6:</strong> Nemoguće.</li></ul>",
-                    "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Crveni alarm! Poraz u poslednjem kolu ih može potpuno izbaciti.</li><li>❌ <strong>Top 6:</strong> Nemoguće.</li></ul>",
-                    "Monaco": "<ul><li>🇲🇨 <strong>Top 10:</strong> Čekaju Hapoel. Pobeda sigurno znači Plej-in.</li><li>❌ <strong>Top 6:</strong> Nemoguće.</li></ul>",
-                    "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Čekaju Valensiju. Moraju dobiti i moliti se za kiks rivala.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Džoker:</strong> 2 meča (Hapoel i Virtus)! Dve pobede ih gube u Plej-in.</li></ul>",
-                    "Olimpia Milano": "<ul><li>❌ <strong>Eliminisani:</strong> Gostuju Olimpijakosu bez šansi.</li></ul>",
-                    "default": `<ul><li>❌ <strong>Plej-of/Plej-in:</strong> ${ui.eliminated}</li></ul>`
-                },
-                lt: {
-                    "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Viskas jų rankose. Pergalė prieš Milano garantuoja 1 vietą.</li><li>🔝 <strong>Top 4:</strong> ✅ Užtikrinta.</li></ul>",
-                    "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> Pergalė Dubajuje užtikrina namų pranašumą.</li><li>🎯 <strong>Top 6:</strong> ✅ Užtikrinta.</li></ul>",
-                    "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> Išvyka į Vilerbaną. Pergalė duoda namų pranašumą.</li><li>🎯 <strong>Top 6:</strong> ✅ Užtikrinta.</li></ul>",
-                    "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Priima „Crvena Zvezda“. Pergalė išvengia Play-In, pralaimėjimas kelia grėsmę.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Dvigubas Šansas:</strong> Liko 2 rungtynės (Maccabi ir Monaco)! Patys lemia savo likimą.</li></ul>",
-                    "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Privalo laimėti paskutinį mačą ir laukti Madrido/Hapoel klaidų.</li><li>🛡️ <strong>Top 10:</strong> ✅ Užtikrinta.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Priima Paryžių. Pergalė sukurtų didžiulį spaudimą lentelės viršuje.</li><li>🛡️ <strong>Top 10:</strong> ✅ Užtikrinta.</li></ul>",
-                    "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Išvyka Madride. Pergalė atveria duris į Play-In. Pralaimėjus, šansų lauks Maccabi/Dubai.</li><li>❌ <strong>Top 6:</strong> Neįmanoma.</li></ul>",
-                    "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Raudonas signalas! Pralaimėjus paskutinį mačą, gresia iškritimas.</li><li>❌ <strong>Top 6:</strong> Neįmanoma.</li></ul>",
-                    "Monaco": "<ul><li>🇲🇨 <strong>Top 10:</strong> Priima Hapoel. Pergalė atveria kelią į Play-In.</li><li>❌ <strong>Top 6:</strong> Neįmanoma.</li></ul>",
-                    "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Priima Valensiją. Privalo laimėti ir laukti varžovų nesėkmių.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Džokeris:</strong> 2 rungtynės (Hapoel ir Virtus)! 2 pergalės garantuotų vietą Top 10.</li></ul>",
-                    "Olimpia Milano": "<ul><li>❌ <strong>Eliminuoti:</strong> Išvyka pas Olympiacos be jokių šansų.</li></ul>",
-                    "default": `<ul><li>❌ <strong>Atkrintamosios/Play-In:</strong> ${ui.eliminated}</li></ul>`
-                },
-                he: {
-                    "Olympiacos": "<ul><li>🥇 <strong>טופ 1:</strong> תלויים רק בעצמם. ניצחון על מילאנו מבטיח פסגה.</li><li>🔝 <strong>טופ 4:</strong> ✅ מובטח.</li></ul>",
-                    "Valencia Basket": "<ul><li>🥈 <strong>טופ 4:</strong> ניצחון בדובאי יבטיח את יתרון הביתיות.</li><li>🎯 <strong>טופ 6:</strong> ✅ מובטח.</li></ul>",
-                    "Fenerbahçe": "<ul><li>🥉 <strong>טופ 4:</strong> מתארחים אצל וילרבאן. ניצחון יבטיח ביתיות.</li><li>🎯 <strong>טופ 6:</strong> ✅ מובטח.</li></ul>",
-                    "Real Madrid": "<ul><li>👑 <strong>טופ 6:</strong> מארחים את הכוכב האדום. ניצחון והם בטופ 6. הפסד והם בסכנת פליי-אין.</li></ul>",
-                    "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>היתרון שלנו:</strong> 2 משחקים נותרו (מכבי ומונאקו)! שולטים בגורל שלהם לטופ 6.</li></ul>",
-                    "Panathinaikos": "<ul><li>☘️ <strong>טופ 6:</strong> חייבים לנצח את המשחק האחרון ולקוות למעידה של מדריד או הפועל.</li><li>🛡️ <strong>טופ 10:</strong> ✅ מובטח.</li></ul>",
-                    "Zalgiris Kaunas": "<ul><li>🌲 <strong>טופ 6:</strong> מארחים את פריז. ניצחון ילחיץ מאוד את הצמרת.</li><li>🛡️ <strong>טופ 10:</strong> ✅ מובטח.</li></ul>",
-                    "Crvena Zvezda": "<ul><li>🔴 <strong>טופ 10:</strong> במדריד. הפתעה תבטיח פליי-אין. הפסד ייתן הזדמנות למכבי ודובאי.</li><li>❌ <strong>טופ 6:</strong> בלתי אפשרי.</li></ul>",
-                    "Barcelona": "<ul><li>🚨 <strong>טופ 10:</strong> אזעקת אמת! הפסד במחזור האחרון עלול לזרוק אותם מחוץ לפליי-אין.</li><li>❌ <strong>טופ 6:</strong> בלתי אפשרי.</li></ul>",
-                    "Monaco": "<ul><li>🇲🇨 <strong>טופ 10:</strong> מארחים את הפועל. ניצחון יבטיח פליי-אין כמעט סופית.</li><li>❌ <strong>טופ 6:</strong> בלתי אפשרי.</li></ul>",
-                    "Dubai": "<ul><li>🐪 <strong>טופ 10:</strong> מארחים את ולנסיה. חייבים לנצח ולהתפלל להפסד של יריבותיהם.</li></ul>",
-                    "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>הג'וקר:</strong> 2 משחקים (הפועל ווירטוס)! שני ניצחונות יזרקו קבוצה אחרת החוצה.</li></ul>",
-                    "Olimpia Milano": "<ul><li>❌ <strong>הודחו:</strong> מתארחים באתונה ללא סיכויים.</li></ul>",
-                    "default": `<ul><li>❌ <strong>פלייאוף/פליי-אין:</strong> ${ui.eliminated}</li></ul>`
-                }
-            };
+            es: {
+                "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Dependen de sí mismos. Ganar a Milano asegura la primera plaza matemática.</li><li>🔝 <strong>Top 4:</strong> ✅ Asegurado.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> ✅ Asegurado. Visitan a Dubai buscando una victoria que certifique el factor cancha a su favor.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ✅ Asegurado. Juegan contra ASVEL. Una victoria garantiza arrancar los Playoffs en casa.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Reciben a Estrella Roja. Con el cuádruple empate a 20 victorias, ganar es vital para ir directos a Playoffs.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Doble Bala:</strong> ¡Tienen 2 partidos por jugar! Ganando al menos uno tienen pie y medio en el codiciado Top 6 directo.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Reciben a Efes en el OAKA. Obligados a ganar para sobrevivir a la guerra de desempates de las 20 victorias.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Reciben a Paris. Ganar es innegociable para aferrarse a los Playoffs y evitar el infierno del Play-In.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Visitan al Madrid. Ganar les asegura Play-In y opciones de Top 6. Si pierden, quedan a merced de Mónaco, Barça y Dubai.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>La Amenaza:</strong> ¡Tienen 2 partidos! Si hacen el 2/2 llegan a 20 victorias y asaltan el Top 6. Si fallan, su plaza de Play-In peligra.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Reciben a Bayern. Con 18 victorias, tienen que ganar sí o sí y esperar pinchazos de sus rivales para entrar al Play-In.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Reciben a Valencia. Situación crítica: obligados a ganar para soñar con arrebatar una plaza de repesca in extremis.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>El Milagro:</strong> Tienen 2 partidos. Si consiguen el 2/2 llegan a 19 victorias y podrían colarse en el Play-In en el último suspiro.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>Eliminados:</strong> Juegan en El Pireo ya sin opciones matemáticas.</li></ul>",
+                "default": `<ul><li>❌ <strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
+            },
+            en: {
+                "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Destiny in their hands. A win vs Milano secures 1st place.</li><li>🔝 <strong>Top 4:</strong> ✅ Secured.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> ✅ Secured. A win in Dubai guarantees home-court advantage.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ✅ Secured. Visiting ASVEL to lock in their home-court spot.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Hosting Crvena Zvezda. Tied at 20 wins, winning is vital to secure direct Playoffs.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Double Bullet:</strong> 2 games left! Winning just one puts them in prime position for the Top 6.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Hosting Efes. Must win to survive the massive 4-way tiebreaker battle for the Playoffs.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Hosting Paris. A win is mandatory to hold onto the Top 6 and avoid the Play-In.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Visiting Madrid. A win secures Play-In (and Top 6 hopes). A loss leaves them exposed.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>The Threat:</strong> 2 games left! Winning both pushes them to 20 wins and Top 6. Dropping them risks elimination.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Hosting Bayern with 18 wins. Must win and pray for Monaco, Zvezda, or Dubai to drop games.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Hosting Valencia. Critical situation. Winning is the only way to stay alive.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>The Miracle:</strong> 2 games left. Going 2/2 gets them to 19 wins, potentially stealing a final Play-In ticket.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>Eliminated:</strong> Visiting Olympiacos with no mathematical chance.</li></ul>",
+                "default": `<ul><li>❌ <strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
+            },
+            it: {
+                "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Padroni del proprio destino. Una vittoria contro Milano assicura il 1° posto.</li><li>🔝 <strong>Top 4:</strong> ✅ Assicurato.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> ✅ Assicurato. Una vittoria a Dubai garantisce il fattore campo.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ✅ Assicurato. In visita all'ASVEL per blindare i playoff in casa.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Ospitano la Stella Rossa. A quota 20 vittorie, vincere è vitale per i Playoff diretti.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Doppia Chance:</strong> 2 partite da giocare! Vincerne una li avvicina alla Top 6.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Ospitano l'Efes. Devono vincere per sopravvivere alla guerra degli spareggi a quota 20.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Ospitano Parigi. Vittoria obbligatoria per evitare l'inferno dei Play-In.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> A Madrid. Una vittoria assicura i Play-In. Una sconfitta li mette a rischio.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>La Minaccia:</strong> 2 partite rimaste! Vincendole entrambe assaltano la Top 6, perdendo rischiano l'eliminazione.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Ospitano il Bayern. A 18 vittorie devono vincere e sperare nei passi falsi delle rivali.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Ospitano Valencia. Situazione critica, vincere è l'unica speranza.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Il Miracolo:</strong> 2 partite da giocare. Un 2/2 li porta a 19 vittorie per rubare l'ultimo pass.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>Eliminati:</strong> Al Pireo senza possibilità matematiche.</li></ul>",
+                "default": `<ul><li>❌ <strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
+            },
+            fr: {
+                "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Maîtres de leur destin. Une victoire contre Milano assure la 1ère place.</li><li>🔝 <strong>Top 4:</strong> ✅ Assuré.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> ✅ Assuré. Gagner à Dubaï garantit l'avantage du terrain.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ✅ Assuré. En visite à l'ASVEL pour verrouiller leur place à domicile.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Reçoivent l'Étoile Rouge. À égalité à 20 victoires, gagner est vital pour éviter le Play-In.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Double Chance:</strong> 2 matchs à jouer ! En gagner un seul les rapproche grandement du Top 6.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Reçoivent l'Efes. Victoire impérative pour survivre à la guerre des départages à 20 victoires.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Reçoivent Paris. Gagner est non-négociable pour garder le Top 6.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> À Madrid. Une victoire assure le Play-In. S'ils perdent, ils sont à la merci des poursuivants.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>La Menace:</strong> 2 matchs restants ! Un 2/2 les propulse dans la lutte pour le Top 6, un échec les met en danger.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Reçoivent le Bayern avec 18 victoires. Doivent gagner et prier pour des faux pas.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Reçoivent Valence. Situation critique, obligation de gagner.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Le Miracle:</strong> 2 matchs à jouer. Un 2/2 les amène à 19 victoires pour un hold-up parfait.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>Éliminés:</strong> En visite à l'Olympiacos sans espoir mathématique.</li></ul>",
+                "default": `<ul><li>❌ <strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
+            },
+            tr: {
+                "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Kaderleri ellerinde. Milano galibiyeti liderliği garantiler.</li><li>🔝 <strong>Top 4:</strong> ✅ Garantilendi.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> ✅ Garantilendi. Dubai galibiyeti saha avantajını kesinleştirir.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ✅ Garantilendi. ASVEL deplasmanında saha avantajını korumak için oynayacaklar.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Kızılyıldız'ı ağırlıyorlar. 20 galibiyetteki 4'lü averajda kazanmak hayati önem taşıyor.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Çifte Şans:</strong> 2 maçları var! Sadece birini kazanmak bile Top 6 için büyük avantaj sağlar.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Efes'i konuk ediyorlar. Averaj savaşında ayakta kalmak için kazanmak zorundalar.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Paris'i ağırlıyorlar. Play-In cehenneminden kaçmak için galibiyet şart.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Madrid deplasmanı. Galibiyet Play-In'i garantiler, mağlubiyet onları tehlikeye atar.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>Tehdit:</strong> 2 maçları var! İkide iki yaparlarsa Top 6'ya sıçrarlar, kaybederlerse elenebilirler.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Bayern maçı. 18 galibiyetle kazanıp rakiplerinin takılmasını beklemek zorundalar.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Valencia'yı ağırlıyorlar. Durum kritik, hayatta kalmak için tek yol galibiyet.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Mucize:</strong> 2 maçları var. İkide iki yapıp 19 galibiyete ulaşırlarsa son bileti çalabilirler.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>Elendi:</strong> Yunanistan deplasmanına iddiasız çıkıyorlar.</li></ul>",
+                "default": `<ul><li>❌ <strong>Playofflar/Play-In:</strong> ${ui.eliminated}</li></ul>`
+            },
+            gr: {
+                "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Ορίζει τη μοίρα του. Νίκη επί της Μιλάνο στο ΣΕΦ εξασφαλίζει την πρωτιά.</li><li>🔝 <strong>Top 4:</strong> ✅ Εξασφαλισμένο.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> ✅ Εξασφαλισμένο. Νίκη στο Ντουμπάι κλειδώνει το πλεονέκτημα έδρας.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ✅ Εξασφαλισμένο. Με νίκη στη Βιλερμπάν κλειδώνει την έδρα.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Φιλοξενεί τον Ερυθρό Αστέρα. Στην τετραπλή ισοβαθμία (20 νίκες), η νίκη είναι ζωτικής σημασίας.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Διπλή Ευκαιρία:</strong> Έχει 2 ματς! Έστω μία νίκη της δίνει τεράστιο προβάδισμα για την εξάδα.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Υποδέχεται την Έφες στο ΟΑΚΑ. Υποχρεωτική νίκη για να επιβιώσει στον πόλεμο των ισοβαθμιών.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Φιλοξενεί την Παρί. Αδιαπραγμάτευτη νίκη για την αποφυγή του Play-In.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Στη Μαδρίτη. Νίκη δίνει Play-In. Ήττα τους αφήνει στο έλεος του ανταγωνισμού.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>Η Απειλή:</strong> Έχει 2 ματς! Με 2/2 χτυπάει εξάδα, με γκέλες κινδυνεύει με αποκλεισμό.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Φιλοξενεί την Μπάγερν. Πρέπει να κερδίσει και να περιμένει στραβοπατήματα.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Φιλοξενεί τη Βαλένθια. Κρίσιμη κατάσταση, μόνο νίκη τη διατηρεί ζωντανή.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Το Θαύμα:</strong> Έχει 2 ματς. Με 2/2 φτάνει τις 19 νίκες και μπορεί να κλέψει το τελευταίο εισιτήριο.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>Αποκλεισμός:</strong> Στο ΣΕΦ χωρίς μαθηματικές ελπίδες.</li></ul>",
+                "default": `<ul><li>❌ <strong>Playoffs/Play-In:</strong> ${ui.eliminated}</li></ul>`
+            },
+            sr: {
+                "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Sve u njihovim rukama. Pobeda nad Milanom donosi prvo mesto.</li><li>🔝 <strong>Top 4:</strong> ✅ Osigurano.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> ✅ Osigurano. Pobeda u Dubaiju garantuje prednost domaćeg terena.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ✅ Osigurano. Gostuju Asvelu da potvrde prednost domaćeg terena.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Čekaju Zvezdu. U krugu od 4 tima sa 20 pobeda, trijumf je ključan.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Dupla šansa:</strong> Imaju 2 meča! Jedna pobeda ih stavlja blizu direktnog plasmana.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Čekaju Efes. Moraju dobiti kako bi preživeli ludilo izjednačenja.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Čekaju Pariz. Pobeda je pod obavezno za ostanak u prvih 6.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Gostuju u Madridu. Pobeda znači Plej-in. Poraz donosi strah od pratilaca.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>Pretnja:</strong> Imaju 2 meča! Sa dve pobede napadaju Top 6, sa greškama rizikuju sve.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Čekaju Bajern. Sa 18 pobeda, moraju dobiti i čekati rezultate drugih.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Čekaju Valensiju. Kritična situacija, samo pobeda ih drži u životu.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Čudo:</strong> Imaju 2 meča. Dve pobede ih dovode do 19 trijumfa i možda poslednjeg mesta.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>Eliminisani:</strong> Gostuju Olimpijakosu bez ikakvih šansi.</li></ul>",
+                "default": `<ul><li>❌ <strong>Plej-of/Plej-in:</strong> ${ui.eliminated}</li></ul>`
+            },
+            lt: {
+                "Olympiacos": "<ul><li>🥇 <strong>Top 1:</strong> Viskas jų rankose. Pergalė prieš Milano užtikrina 1-ąją vietą.</li><li>🔝 <strong>Top 4:</strong> ✅ Užtikrinta.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>Top 4:</strong> ✅ Užtikrinta. Pergalė Dubajuje garantuoja namų pranašumą.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>Top 4:</strong> ✅ Užtikrinta. Pergalė Vilerbane įtvirtins namų pranašumą.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>Top 6:</strong> Priima „Crvena Zvezda“. Turint 20 pergalių, pergalė privaloma norint išvengti Play-In.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>Dvigubas Šansas:</strong> Liko 2 rungtynės! Laimėjus bent vienas, atsiranda didžiulis šansas į Top 6.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>Top 6:</strong> Priima „Efes“. Privalo laimėti, kad išgyventų 4 komandų lygiųjų karą.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>Top 6:</strong> Priima Paryžių. Pergalė būtina norint išlaikyti tiesioginį kelialapį į atkrintamąsias.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>Top 10:</strong> Išvyka Madride. Pergalė garantuoja Play-In. Pralaimėjus, teks drebėti dėl Monako ar Barsos.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>Grėsmė:</strong> Liko 2 mačai! Dvi pergalės atveria Top 6, klaidos grasina iškritimu.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>Top 10:</strong> Priima „Bayern“. Privalo laimėti ir laukti varžovų dovanų.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>Top 10:</strong> Priima Valensiją. Situacija kritinė – laimėti privaloma.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>Stebuklas:</strong> Liko 2 rungtynės. Laimėjus abi, su 19 pergalių galima pavogti paskutinį bilietą.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>Eliminuoti:</strong> Išvyka pas Olympiacos nebeturi prasmės.</li></ul>",
+                "default": `<ul><li>❌ <strong>Atkrintamosios/Play-In:</strong> ${ui.eliminated}</li></ul>`
+            },
+            he: {
+                "Olympiacos": "<ul><li>🥇 <strong>טופ 1:</strong> תלויים בעצמם. ניצחון על מילאנו מבטיח את המקום הראשון.</li><li>🔝 <strong>טופ 4:</strong> ✅ מובטח.</li></ul>",
+                "Valencia Basket": "<ul><li>🥈 <strong>טופ 4:</strong> ✅ מובטח. ניצחון בדובאי יבטיח את יתרון הביתיות.</li></ul>",
+                "Fenerbahçe": "<ul><li>🥉 <strong>טופ 4:</strong> ✅ מובטח. ינסו להבטיח את הביתיות מול וילרבאן.</li></ul>",
+                "Real Madrid": "<ul><li>👑 <strong>טופ 6:</strong> מארחים את הכוכב האדום. בשוויון המרובע בצמרת, ניצחון הוא חובה.</li></ul>",
+                "Hapoel Tel-Aviv": "<ul><li>🃏 <strong>הזדמנות כפולה:</strong> 2 משחקים נותרו! ניצחון אחד שם אותם בעמדה מצוינת לטופ 6.</li></ul>",
+                "Panathinaikos": "<ul><li>☘️ <strong>טופ 6:</strong> מארחים את אפס. חייבים לנצח כדי לשרוד את מלחמת שוברי השוויון.</li></ul>",
+                "Zalgiris Kaunas": "<ul><li>🌲 <strong>טופ 6:</strong> מארחים את פריז. ניצחון הוא בגדר חובה כדי לא ליפול לפליי-אין.</li></ul>",
+                "Crvena Zvezda": "<ul><li>🔴 <strong>טופ 10:</strong> במדריד. ניצחון מבטיח פליי-אין. הפסד והם נתונים לחסדי קבוצות ה-18 ניצחונות.</li></ul>",
+                "Monaco": "<ul><li>🇲🇨 <strong>האיום:</strong> 2 משחקים נותרו! שני ניצחונות והם בטופ 6, הפסדים עלולים להוביל להדחה.</li></ul>",
+                "Barcelona": "<ul><li>🚨 <strong>טופ 10:</strong> מארחים את באיירן. חייבים לנצח ולהתפלל להפסד של מונאקו, זבזדה או דובאי.</li></ul>",
+                "Dubai": "<ul><li>🐪 <strong>טופ 10:</strong> מארחים את ולנסיה. מצב קריטי, רק ניצחון ישאיר אותם בחיים.</li></ul>",
+                "Maccabi Tel Aviv": "<ul><li>🇮🇱 <strong>הנס:</strong> 2 משחקים נותרו. שני ניצחונות יובילו ל-19 ניצחונות ויכולים לגנוב את הכרטיס האחרון.</li></ul>",
+                "Olimpia Milano": "<ul><li>❌ <strong>הודחו:</strong> משחקים ביוון ללא סיכוי מתמטי.</li></ul>",
+                "default": `<ul><li>❌ <strong>פלייאוף/פליי-אין:</strong> ${ui.eliminated}</li></ul>`
+            }
+        };
             
             let currentScenarios = scenariosLang[currentLang] || scenariosLang['en'];
             let scenarioText = currentScenarios[teamName] || currentScenarios['default'];
