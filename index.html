@@ -1839,7 +1839,7 @@
             // AÑADIDO: renderBracket() para que se actualice junto a la clasificación
             setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
-            setTimeout(() => { (); renderResultados(); }, 0);
+            setTimeout(() => { renderResultados(); }, 0);
             setTimeout(() => {
                 renderAnalysis();
                 if (document.getElementById('select-myteam')?.value) renderMyTeam();
