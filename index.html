@@ -1839,7 +1839,7 @@
             // AÑADIDO: renderBracket() para que se actualice junto a la clasificación
             setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
-            setTimeout(() => { renderMatrices(); renderResultados(); }, 0);
+            setTimeout(() => { (); renderResultados(); }, 0);
             setTimeout(() => {
                 renderAnalysis();
                 if (document.getElementById('select-myteam')?.value) renderMyTeam();
@@ -2881,22 +2881,31 @@
                     return { team: tRow, w: totalW, l: totalL, diff: totalDiff };
                 });
                 
-                // Ordenar para la visualización de la tabla
-                miniLeague.sort((a, b) => b.w - a.w || b.diff - a.diff); 
-                let sortedTiedTeams = miniLeague.map(m => m.team);
+                // =========================================================
+                // EL CAMBIO MÁGICO: ORDENACIÓN VISUAL PERFECTA
+                // Usamos el motor matemático para ordenar la tabla visual
+                // =========================================================
+                let sortedTiedTeams = sortTeamsWithH2H([...tiedTeams]);
+                
+                miniLeague.sort((a, b) => {
+                    let indexA = sortedTiedTeams.findIndex(t => t.name === a.team.name);
+                    let indexB = sortedTiedTeams.findIndex(t => t.name === b.team.name);
+                    return indexA - indexB;
+                });
 
-                // Estilos para destacar cuando es una Liguilla 2.0
                 let extraStyle = isSubTie ? 'margin-top: 15px; border-left: 4px solid var(--primary); padding-left: 10px; background: #fdfdfd;' : '';
                 let titleHTML = isSubTie ? `<h4 style="color:var(--primary); margin-top:0;">🔄 Desempate Directo: ${title}</h4>` : `<h3 style="margin-top:0;">${title}</h3>`;
 
                 let html = `<div class="matrix-container" style="${extraStyle}">${titleHTML}<table><tr><th>${t.team || 'Equipo'}</th>`;
                 
+                // Generamos las cabeceras en el nuevo orden perfecto
                 sortedTiedTeams.forEach(te => { 
                     html += `<th><div class="team-cell team-cell-center"><span style="font-size:0.85rem; color:#9ca3af;">${getTeamAbrev(te.name)}</span></div></th>`; 
                 });
                 
                 html += `<th class="total-h2h-col">${t.total_vd || 'V/D'}</th><th class="total-h2h-col">+/-</th></tr>`;
                 
+                // Generamos las filas en el nuevo orden perfecto
                 sortedTiedTeams.forEach(tRow => {
                     let logoHTML = typeof getLogo === 'function' ? `<img src="${getLogo(tRow.name)}" width="20" style="margin-right:5px;">` : ``;
                     html += `<tr><td><div class="team-cell">${logoHTML} <strong>${tName(tRow.name)}</strong></div></td>`;
@@ -2924,21 +2933,18 @@
                     while (i < miniLeague.length) {
                         let subTie = [miniLeague[i].team];
                         let j = i + 1;
-                        // Agrupamos a los que tienen EXACTAMENTE las mismas victorias (ej: los dos de 5-1)
                         while (j < miniLeague.length && miniLeague[i].w === miniLeague[j].w) {
                             subTie.push(miniLeague[j].team);
                             j++;
                         }
                         
-                        // Si hemos encontrado un grupito (ej. RM y ZAL) y NO son todos los equipos
                         if (subTie.length > 1 && subTie.length < tiedTeams.length) {
                             let subTitle = subTie.map(st => getTeamAbrev(st.name)).join(' vs ');
-                            html += generateTiebreakerUI(subTie, subTitle, true); // Generamos su propia tabla debajo
+                            html += generateTiebreakerUI(subTie, subTitle, true);
                         }
                         i = j;
                     }
                     
-                    // Si todos empataron a victorias, comprobamos si se separaron por diferencia de puntos
                     let isTotalTieInWins = miniLeague.every(m => m.w === miniLeague[0].w);
                     if (isTotalTieInWins) {
                         let k = 0;
