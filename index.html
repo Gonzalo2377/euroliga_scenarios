@@ -1996,61 +1996,78 @@
 
         function sortTeamsWithH2H(teamsArray, customPicks = simulatedPicks) {
             
-            // Función recursiva que aplica el reglamento estricto Euroleague
             function resolveTie(tiedGroup) {
-                if (tiedGroup.length === 1) return tiedGroup;
+                if (tiedGroup.length <= 1) return tiedGroup;
 
-                // 1. Calcular H2H solo entre los implicados en este sub-grupo
+                // 1. Criterio: Victorias en la mini-liga actual
                 tiedGroup.forEach(t => {
-                    t.h2hWins = 0; t.h2hDiff = 0;
+                    t.h2hWins = 0;
                     tiedGroup.forEach(other => {
                         if (t.name !== other.name) {
-                            let stats = calculateH2HStats(t.name, other.name, customPicks);
-                            t.h2hWins += stats.winsA;
-                            t.h2hDiff += stats.diffA;
+                            t.h2hWins += calculateH2HStats(t.name, other.name, customPicks).winsA;
                         }
                     });
                 });
 
-                // 2. Ordenar aplicando todos los criterios (1 a 5)
+                // Agrupar por victorias H2H
+                tiedGroup.sort((a, b) => b.h2hWins - a.h2hWins);
+
+                // ¿El empate general se ha roto parcialmente por victorias (Ej: dos 5-1 y dos 1-5)?
+                if (tiedGroup[0].h2hWins !== tiedGroup[tiedGroup.length - 1].h2hWins) {
+                    let result = [];
+                    let i = 0;
+                    while (i < tiedGroup.length) {
+                        let subGroup = [tiedGroup[i]];
+                        let j = i + 1;
+                        while (j < tiedGroup.length && tiedGroup[i].h2hWins === tiedGroup[j].h2hWins) {
+                            subGroup.push(tiedGroup[j]);
+                            j++;
+                        }
+                        // ¡RECURSIÓN! Si hay un subgrupo empatado, lo metemos en una Liguilla 2.0 aislada
+                        result.push(...resolveTie(subGroup)); 
+                        i = j;
+                    }
+                    return result;
+                }
+
+                // 2. Criterio: Si TODOS tienen las mismas victorias, miramos la diferencia de puntos (+/-) de la mini-liga
+                tiedGroup.forEach(t => {
+                    t.h2hDiff = 0;
+                    tiedGroup.forEach(other => {
+                        if (t.name !== other.name) {
+                            t.h2hDiff += calculateH2HStats(t.name, other.name, customPicks).diffA;
+                        }
+                    });
+                });
+
+                tiedGroup.sort((a, b) => b.h2hDiff - a.h2hDiff);
+
+                if (tiedGroup[0].h2hDiff !== tiedGroup[tiedGroup.length - 1].h2hDiff) {
+                    let result = [];
+                    let i = 0;
+                    while (i < tiedGroup.length) {
+                        let subGroup = [tiedGroup[i]];
+                        let j = i + 1;
+                        while (j < tiedGroup.length && tiedGroup[i].h2hDiff === tiedGroup[j].h2hDiff) {
+                            subGroup.push(tiedGroup[j]);
+                            j++;
+                        }
+                        result.push(...resolveTie(subGroup));
+                        i = j;
+                    }
+                    return result;
+                }
+
+                // 3. Fallback: Si sigue el empate absoluto tras todo esto, vamos a criterios globales
                 tiedGroup.sort((a, b) => {
-                    if (a.h2hWins !== b.h2hWins) return b.h2hWins - a.h2hWins;       // Criterio 1: Victorias H2H
-                    if (a.h2hDiff !== b.h2hDiff) return b.h2hDiff - a.h2hDiff;       // Criterio 2: Average H2H
-                    if (a.diff !== b.diff) return b.diff - a.diff;                   // Criterio 3: Average Global
-                    if (a.pf !== b.pf) return b.pf - a.pf;                           // Criterio 4: Puntos Totales a Favor
-                    let gaA = a.pa ? (a.pf / a.pa) : 0;                              // Criterio 5: Goal Average division
+                    if (a.diff !== b.diff) return b.diff - a.diff;                   // Global +/-
+                    if (a.pf !== b.pf) return b.pf - a.pf;                           // Puntos a Favor
+                    let gaA = a.pa ? (a.pf / a.pa) : 0;                              // Goal Average
                     let gaB = b.pa ? (b.pf / b.pa) : 0;
                     return gaB - gaA;
                 });
 
-                // 3. Reducción Parcial (Crear sub-liguillas si siguen empatados)
-                let finalResolved = [];
-                let i = 0;
-                while (i < tiedGroup.length) {
-                    let subTie = [tiedGroup[i]];
-                    let j = i + 1;
-                    
-                    // Comprobar si hay empate total en todos los criterios con el siguiente
-                    while(j < tiedGroup.length &&
-                          tiedGroup[i].h2hWins === tiedGroup[j].h2hWins &&
-                          tiedGroup[i].h2hDiff === tiedGroup[j].h2hDiff &&
-                          tiedGroup[i].diff === tiedGroup[j].diff) { 
-                          subTie.push(tiedGroup[j]);
-                          j++;
-                    }
-
-                    if (subTie.length > 1 && subTie.length < tiedGroup.length) {
-                        // ¡RECURSIÓN! Han empatado parcialmente. Volvemos a calcular H2H solo entre ellos
-                        finalResolved.push(...resolveTie(subTie)); 
-                    } else if (subTie.length === tiedGroup.length) {
-                        // Empate absoluto idéntico en todo (evitamos bucle infinito)
-                        finalResolved.push(...subTie); 
-                    } else {
-                        finalResolved.push(tiedGroup[i]);
-                    }
-                    i = j;
-                }
-                return finalResolved;
+                return tiedGroup;
             }
 
             teamsArray.sort((a, b) => b.wins - a.wins);
@@ -2068,7 +2085,7 @@
                 }
 
                 if (tiedGroup.length > 1) {
-                    finalSorted.push(...resolveTie(tiedGroup)); // Dispara el motor
+                    finalSorted.push(...resolveTie(tiedGroup));
                 } else {
                     finalSorted.push(tiedGroup[0]);
                 }
@@ -2850,14 +2867,13 @@
             let winKeys = Object.keys(grouped).sort((a,b) => b - a);
             let hasTies = false;
             
-            // Función visual recursiva
             function generateTiebreakerUI(tiedTeams, title, isSubTie = false) {
                 if (tiedTeams.length <= 1) return "";
 
                 let miniLeague = tiedTeams.map(tRow => {
                     let totalW = 0, totalL = 0, totalDiff = 0;
                     tiedTeams.forEach(tCol => {
-                        if(tRow.id !== tCol.id) {
+                        if(tRow.name !== tCol.name) {
                             let s = calculateH2HStats(tRow.name, tCol.name);
                             totalW += s.winsA; totalL += s.winsB; totalDiff += s.diffA;
                         }
@@ -2865,12 +2881,13 @@
                     return { team: tRow, w: totalW, l: totalL, diff: totalDiff };
                 });
                 
-                miniLeague.sort((a, b) => b.w - a.w || b.diff - a.diff || b.team.diff - a.team.diff); 
+                // Ordenar para la visualización de la tabla
+                miniLeague.sort((a, b) => b.w - a.w || b.diff - a.diff); 
                 let sortedTiedTeams = miniLeague.map(m => m.team);
 
-                // Estilo especial si es una Liguilla 2.0
-                let extraStyle = isSubTie ? 'margin-top: 15px; border-left: 4px solid var(--primary); background: #fff;' : '';
-                let titleHTML = isSubTie ? `<h4 style="color:var(--primary); margin-top:0;">🔄 Liguilla 2.0: ${title}</h4>` : `<h3 style="margin-top:0;">${title}</h3>`;
+                // Estilos para destacar cuando es una Liguilla 2.0
+                let extraStyle = isSubTie ? 'margin-top: 15px; border-left: 4px solid var(--primary); padding-left: 10px; background: #fdfdfd;' : '';
+                let titleHTML = isSubTie ? `<h4 style="color:var(--primary); margin-top:0;">🔄 Desempate Directo: ${title}</h4>` : `<h3 style="margin-top:0;">${title}</h3>`;
 
                 let html = `<div class="matrix-container" style="${extraStyle}">${titleHTML}<table><tr><th>${t.team || 'Equipo'}</th>`;
                 
@@ -2884,10 +2901,10 @@
                     let logoHTML = typeof getLogo === 'function' ? `<img src="${getLogo(tRow.name)}" width="20" style="margin-right:5px;">` : ``;
                     html += `<tr><td><div class="team-cell">${logoHTML} <strong>${tName(tRow.name)}</strong></div></td>`;
                     
-                    let mRow = miniLeague.find(m => m.team.id === tRow.id);
+                    let mRow = miniLeague.find(m => m.team.name === tRow.name);
 
                     sortedTiedTeams.forEach(tCol => {
-                        if(tRow.id === tCol.id) html += `<td style="background:#e5e7eb;">-</td>`;
+                        if(tRow.name === tCol.name) html += `<td style="background:#e5e7eb;">-</td>`;
                         else {
                             let stats = calculateH2HStats(tRow.name, tCol.name);
                             let hClass = stats.winsA > stats.winsB ? "h2h-win" : (stats.winsB > stats.winsA ? "h2h-loss" : "h2h-tie");
@@ -2897,26 +2914,47 @@
                     
                     let diffColor = mRow.diff > 0 ? "var(--win, #10b981)" : (mRow.diff < 0 ? "var(--loss, #ef4444)" : "inherit");
                     let diffStr = mRow.diff > 0 ? `+${mRow.diff}` : mRow.diff;
-                    html += `<td class="total-h2h-col">${mRow.w} - ${mRow.l}</td><td class="total-h2h-col" style="font-weight:bold; color:${diffColor};">${diffStr}</td></tr>`;
+                    html += `<td class="total-h2h-col" style="font-weight:bold;">${mRow.w}-${mRow.l}</td><td class="total-h2h-col" style="font-weight:bold; color:${diffColor};">${diffStr}</td></tr>`;
                 });
                 html += `</table></div>`;
 
-                // ¿Hay Sub-Empates (Liguilla 2.0)?
+                // --- DETECCIÓN VISUAL DE LA LIGUILLA 2.0 ---
                 if (tiedTeams.length > 2) {
                     let i = 0;
                     while (i < miniLeague.length) {
                         let subTie = [miniLeague[i].team];
                         let j = i + 1;
-                        while (j < miniLeague.length && miniLeague[i].w === miniLeague[j].w && miniLeague[i].diff === miniLeague[j].diff) {
+                        // Agrupamos a los que tienen EXACTAMENTE las mismas victorias (ej: los dos de 5-1)
+                        while (j < miniLeague.length && miniLeague[i].w === miniLeague[j].w) {
                             subTie.push(miniLeague[j].team);
                             j++;
                         }
-                        // Disparamos la caja visual de la Liguilla 2.0
+                        
+                        // Si hemos encontrado un grupito (ej. RM y ZAL) y NO son todos los equipos
                         if (subTie.length > 1 && subTie.length < tiedTeams.length) {
                             let subTitle = subTie.map(st => getTeamAbrev(st.name)).join(' vs ');
-                            html += generateTiebreakerUI(subTie, subTitle, true);
+                            html += generateTiebreakerUI(subTie, subTitle, true); // Generamos su propia tabla debajo
                         }
                         i = j;
+                    }
+                    
+                    // Si todos empataron a victorias, comprobamos si se separaron por diferencia de puntos
+                    let isTotalTieInWins = miniLeague.every(m => m.w === miniLeague[0].w);
+                    if (isTotalTieInWins) {
+                        let k = 0;
+                        while (k < miniLeague.length) {
+                            let subTieDiff = [miniLeague[k].team];
+                            let m = k + 1;
+                            while (m < miniLeague.length && miniLeague[k].diff === miniLeague[m].diff) {
+                                subTieDiff.push(miniLeague[m].team);
+                                m++;
+                            }
+                            if (subTieDiff.length > 1 && subTieDiff.length < tiedTeams.length) {
+                                let subTitleDiff = subTieDiff.map(st => getTeamAbrev(st.name)).join(' vs ');
+                                html += generateTiebreakerUI(subTieDiff, subTitleDiff, true);
+                            }
+                            k = m;
+                        }
                     }
                 }
                 return html;
