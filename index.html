@@ -1840,6 +1840,7 @@
             setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
             setTimeout(() => { renderMatches(); }, 0);
             setTimeout(() => { renderResultados(); }, 0);
+            renderMatrices();
             setTimeout(() => {
                 renderAnalysis();
                 if (document.getElementById('select-myteam')?.value) renderMyTeam();
