@@ -558,245 +558,25 @@
         /* CONECTORES PLAYOFFS: PLAYIN -> CUARTOS     */
         /* ========================================== */
         
-        /* Preparamos los contenedores para poder posicionar las líneas respecto a ellos */
-        #pi1-matchup { position: relative; z-index: 2; }
-        #qf4-wrap .matchup { position: relative; z-index: 2; }
-        
-        /* 2. DIBUJAR LA TUBERÍA (Baja desde el centro y tuerce a la derecha) */
-        #pi1-matchup::after {
-            content: '';
-            position: absolute;
-            /* Inicio: Centro exacto del borde inferior de la caja 7vs8 */
-            top: 100%; 
-            left: 43%; 
-            
-            /* Dimensiones de la tubería */
-            height: 50px;  /* ⬇️ Cuánto baja antes de girar */
-            width: 200px;  /* ➡️ Cuánto avanza hacia la derecha */
-            
-            /* Dibujamos solo los bordes izquierdo (bajada) e inferior (horizontal) */
-            border-left: 8px solid var(--win); /* Cambia var(--win) por #10b981 si no usas variables */
-            border-bottom: 8px solid var(--win);
-            border-bottom-left-radius: 6px; /* Para que el giro no sea un pico duro */
-            
-            /* Estilos estructurales */
-            background: transparent;
-            box-sizing: border-box;
-            z-index: 1;
-            display: block !important;
-        }
-        
-        /* 3. COLOCAR LA "W" EN EL CODO */
-        #pi1-matchup::before {
-            content: 'W';
-            position: absolute;
-            /* ⚠️ El 'top' debe ser 100% + la misma 'height' que la tubería (40px) */
-            top: calc(100% + 45px); 
-            left: 45%; 
-            
-            /* Centramos la W exactamente en ese punto */
-            transform: translate(-50%, -50%); 
-            
-            /* Diseño de la W */
-            background-color: var(--win);
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
-            width: 30px;
-            height: 30px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 12;
-        }
-        
-        #pi1-matchup .matchup-header::after {
-            content: '';
-            position: absolute;
-            /* Inicio: Centro exacto del borde superior de la caja 7vs8 */
-            top: 0;
-            left: 47%; /* Alineado con tu línea verde */
-            
-            /* Dimensiones de la tubería roja */
-            /* ⬆️ Cuánto sube (Debe ser negativo para ir hacia arriba) */
-            height: 71px; 
-                     
-            /* Dibujamos solo los bordes izquierdo (subida) y superior (horizontal) */
-            border-top: 8px solid var(--loss);
-            border-left: 8px solid var(--loss); /* Rojo derrota */
-           
-            
-            /* Subimos la tubería para que empiece justo en el borde y vaya hacia arriba */
-            transform: translate(-100%, -100%); 
-            
-            background: transparent;
-            box-sizing: border-box;
-            z-index: 1;
-            display: block !important;
-        }
-
-        /* 2. COLOCAR LA "L" EN EL CODO SUPERIOR */
-        #pi1-matchup .matchup-header::before {
-            content: 'L';
-            position: absolute;
-            /* ⚠️ Mismos valores que el tamaño de la tubería roja para encajar en el codo */
-            top: -35px; 
-            left: 45%;
-                       
-            /* Centramos la L exactamente en ese punto */
-            transform: translate(-50%, -50%); 
-            
-            /* Diseño de la L (Igual que tu W pero en rojo) */
-            background-color: var(--loss);
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
-            width: 30px;
-            height: 30px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 12;
-        }      
-
-        #pi2-matchup { position: relative; z-index: 2; overflow: visible !important; }
-
-        /* 1. DIBUJAR LA TUBERÍA VERDE (Línea recta hacia abajo) */
-        #pi2-matchup::after {
-            content: '';
-            position: absolute;
-            /* Inicio: Centro exacto del borde inferior de la caja 9vs10 */
-            top: 100%;
-            left: 43%; /* Alineado matemáticamente con tus otras líneas */
-            
-            /* Dimensiones de la tubería */
-            /* ⬇️ Cuánto baja hasta la caja de la Decisoria */
-            height: 71px; 
-            width: 0; /* Como es recta, no necesita avanzar a los lados */
-            
-            /* Dibujamos solo un borde gordo para crear la línea vertical */
-            border-left: 8px solid var(--win); 
-            
-            background: transparent;
-            box-sizing: border-box;
-            z-index: 1;
-            display: block !important;
-        }
-
-        /* 2. COLOCAR LA "W" EN MEDIO DE LA LÍNEA */
-        #pi2-matchup::before {
-            content: 'W';
-            position: absolute;
-            /* ⚠️ Ajustamos para que caiga justo a la mitad de la altura de la tubería (25px) */
-            top: calc(100% + 35px); 
-            left: 45%; 
-            
-            /* Centramos la W exactamente en ese punto */
-            transform: translate(-50%, -50%); 
-            
-            /* Diseño de la W (Idéntico a las que ya tienes) */
-            background-color: var(--win);
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
-            width: 30px;
-            height: 30px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 12;
-        }
-
-        #pi3-matchup { position: relative; z-index: 2; overflow: visible !important; }
-        #qf1-wrap .matchup { position: relative; z-index: 2; overflow: visible !important; }
-
-        /* 1. EL ESCALÓN (Sale a la derecha y sube) */
-        #pi3-matchup::after {
-            content: '';
-            position: absolute;
-            /* Inicio: Centro del borde derecho de la caja Decisoria */
-            bottom: 45%; 
-            left: 100%;  
-            
-            /* -- MANDOS DE CONTROL DEL ESCALÓN -- */
-            /* ➡️ Cuánto sale hacia la derecha inicialmente */
-            width: 25px;  
-            /* ⬆️ Cuánto sube en vertical hacia QF1 */
-            height: 252px; 
-
-            border-top-left-radius: 6px; /* Curva suave en el primer codo */
-            
-            /* Dibujamos el borde Inferior (salida a derecha) y Derecho (subida) */
-            border-bottom: 8px solid var(--win);
-            border-right: 8px solid var(--win);
-            border-bottom-right-radius: 6px; /* Curva suave en el primer codo */
-            
-            background: transparent;
-            box-sizing: border-box;
-            z-index: 1;
-            display: block !important;
-        }
-
-        /* 2. COLOCAR LA "W" EN EL CODO SUPERIOR (Antes de girar a QF1) */
-        #pi3-matchup::before {
-            content: 'W';
-            position: absolute;
-            /* ⚠️ Matemáticas exactas: bottom + la subida (140) y left + la salida (40) */
-            bottom: calc(45% + 252px); 
-            left: calc(100% + 20px); 
-            
-            /* Centramos la W exactamente en ese vértice */
-            transform: translate(-50%, 50%); 
-            
-            /* Diseño de la W */
-            background-color: var(--win);
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
-            width: 30px;
-            height: 30px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 12;
-        }
-
-        /* 3. EL EMPALME FINAL (Trocito que sale de QF1 y va a la izquierda a buscar la W) */
+        /* ========================================== */
+        /* 1. EMPALME FINAL (Play-In -> QF1)          */
+        /* (¡Recuperado! Ya no se borra)              */
+        /* ========================================== */
         #qf1-wrap .matchup::before {
             content: '';
             position: absolute;
             top: 50%; 
-            /* ⬅️ Cuánto avanza hacia la izquierda buscando la W */
             left: -15px; 
             width: 15px; 
-            
-            height: 8px; /* Grosor idéntico al resto de la línea */
+            height: 8px;
             background-color: var(--win);
             transform: translateY(-50%);
             z-index: 1;
             display: block !important;
         }
-        #random-bracket-btn, #capture-btn, #reset-btn {
-            padding: 10px 20px;
-            font-size: 0.95rem;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin: 0 !important;
-        }
+
         /* ========================================== */
-        /* CONECTORES PLAYOFFS: QF -> SF -> FINAL     */
+        /* 2. CONECTORES PLAYOFFS (QF -> SF -> FINAL) */
         /* ========================================== */
 
         #qf1-wrap, #qf2-wrap, #qf3-wrap, #qf4-wrap,
@@ -814,7 +594,6 @@
 
         /* --- CUARTOS (QF) A SEMIFINALES (SF) --- */
         
-        /* QF1 y QF3 (Arriba): Salen a la derecha y bajan */
         #qf1-wrap .matchup::after, #qf3-wrap .matchup::after {
             content: ''; position: absolute;
             top: 50%; left: 100%;
@@ -823,46 +602,43 @@
             border-right: 8px solid var(--win);   
             border-top-right-radius: 6px;         
             z-index: 1;
+            box-sizing: content-box !important; /* Fuerza la matemática exacta del borde */
         }
 
-        /* QF2 y QF4 (Abajo): Salen a la derecha y suben */
         #qf2-wrap .matchup::after, #qf4-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 15px; height: 73px; 
+            width: 15px; height: 75px; 
             border-bottom: 8px solid var(--win);  
             border-right: 8px solid var(--win);   
             border-bottom-right-radius: 6px;      
             z-index: 1;
+            box-sizing: content-box !important;
         }
 
-        /* LA "W" ÚNICA (Solo se la ponemos al partido de arriba para no duplicarla) */
-        #qf1-wrap .matchup::before, #qf3-wrap .matchup::before {
+        /* LA "W" - Ahora anclada al Wrapper para no pisar la línea del Play-In */
+        #qf1-wrap::before, #qf3-wrap::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 79px); 
-            left: calc(100% + 19px);
+            top: calc(50% + 79px);   /* 75px de bajada + 4px (mitad del grosor del borde) */
+            left: calc(100% + 19px); /* 15px de hueco + 4px (mitad del grosor del borde) */
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 26px; height: 26px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
             z-index: 12; transform: translate(-50%, -50%); 
         }
 
-        /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la caja de Semifinales) */
+        /* LÍNEA HORIZONTAL DE EMPALME (A Semifinales) */
         #qf1-wrap::after, #qf3-wrap::after {
             content: ''; position: absolute;
-            top: calc(50% + 79px); /* Alineado con la W */
-            left: calc(100% + 19px); /* Nace desde la W */
-            width: 60px; /* Se estira hacia la derecha para tocar la siguiente caja */
-            height: 8px; /* Mismo grosor que el resto */
+            top: calc(50% + 79px); 
+            left: calc(100% + 19px); 
+            width: 60px; height: 8px; 
             background-color: var(--win);
-            transform: translateY(-50%);
-            z-index: 0; /* z-index 0 para que se esconda debajo de la tarjeta de SF */
+            transform: translateY(-50%); z-index: 0; 
         }
-
 
         /* --- SEMIFINALES (SF) A FINAL --- */
         
-        /* SF1 (Arriba) */
         #sf1-wrap .matchup::after {
             content: ''; position: absolute;
             top: 50%; left: 100%;
@@ -871,40 +647,39 @@
             border-right: 8px solid var(--win);   
             border-top-right-radius: 6px; 
             z-index: 1;
+            box-sizing: content-box !important;
         }
 
-        /* SF2 (Abajo) */
         #sf2-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 15px; height: 165px; 
+            width: 15px; height: 150px; 
             border-bottom: 8px solid var(--win);  
             border-right: 8px solid var(--win);   
             border-bottom-right-radius: 6px; 
             z-index: 1;
+            box-sizing: content-box !important;
         }
 
-        /* LA "W" ÚNICA DE SEMIFINALES */
-        #sf1-wrap .matchup::before {
+        /* LA "W" DE SEMIFINALES */
+        #sf1-wrap::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 169px);
-            left: calc(100% + 19px);
+            top: calc(50% + 169px);  /* 165px + 4px */
+            left: calc(100% + 19px); /* 15px + 4px */
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 28px; height: 28px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
             z-index: 12; transform: translate(-50%, -50%);
         }
 
-        /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la Final) */
+        /* LÍNEA HORIZONTAL DE EMPALME (A la Final) */
         #sf1-wrap::after {
             content: ''; position: absolute;
             top: calc(50% + 169px); 
             left: calc(100% + 19px); 
-            width: 80px; /* Aún más larga por si el espacio a la final es mayor */
-            height: 8px;
+            width: 80px; height: 8px;
             background-color: var(--win);
-            transform: translateY(-50%);
-            z-index: 0; 
+            transform: translateY(-50%); z-index: 0; 
         }
 
         /* ========================================== */
