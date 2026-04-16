@@ -839,8 +839,8 @@
         /* LA "W" ÚNICA (Solo se la ponemos al partido de arriba para no duplicarla) */
         #qf1-wrap .matchup::before, #qf3-wrap .matchup::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 75px); 
-            left: calc(100% + 15px);
+            top: calc(50% + 79px); 
+            left: calc(100% + 19px);
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 26px; height: 26px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
@@ -850,8 +850,8 @@
         /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la caja de Semifinales) */
         #qf1-wrap::after, #qf3-wrap::after {
             content: ''; position: absolute;
-            top: calc(50% + 75px); /* Alineado con la W */
-            left: calc(100% + 15px); /* Nace desde la W */
+            top: calc(50% + 79px); /* Alineado con la W */
+            left: calc(100% + 19px); /* Nace desde la W */
             width: 60px; /* Se estira hacia la derecha para tocar la siguiente caja */
             height: 8px; /* Mismo grosor que el resto */
             background-color: var(--win);
@@ -887,8 +887,8 @@
         /* LA "W" ÚNICA DE SEMIFINALES */
         #sf1-wrap .matchup::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 165px);
-            left: calc(100% + 15px);
+            top: calc(50% + 169px);
+            left: calc(100% + 19px);
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 28px; height: 28px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
@@ -898,8 +898,8 @@
         /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la Final) */
         #sf1-wrap::after {
             content: ''; position: absolute;
-            top: calc(50% + 165px); 
-            left: calc(100% + 18px); 
+            top: calc(50% + 169px); 
+            left: calc(100% + 19px); 
             width: 80px; /* Aún más larga por si el espacio a la final es mayor */
             height: 8px;
             background-color: var(--win);
