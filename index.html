@@ -548,15 +548,15 @@
             z-index: 10;
             letter-spacing: 1px;
         }
-
-        /* --------------------------------------------------- */
-        /* CONECTORES CSS: AJUSTADOS PARA QF4 ARRIBA DE QF3    */
-        /* --------------------------------------------------- */
+        
         #bracket-ui,
         .bracket-col,
         .matchup {
             overflow: visible !important;
         }
+        /* ========================================== */
+        /* CONECTORES PLAYOFFS: PLAYIN -> CUARTOS     */
+        /* ========================================== */
         
         /* Preparamos los contenedores para poder posicionar las líneas respecto a ellos */
         #pi1-matchup { position: relative; z-index: 2; }
@@ -795,6 +795,111 @@
             gap: 8px;
             margin: 0 !important;
         }
+        /* ========================================== */
+        /* CONECTORES PLAYOFFS: QF -> SF -> FINAL     */
+        /* ========================================== */
+
+        /* 1. Preparamos las cajas para albergar los conectores */
+        #qf1-matchup, #qf2-matchup, #qf3-matchup, #qf4-matchup,
+        #sf1-matchup, #sf2-matchup, #final-matchup {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- CUARTOS (QF) A SEMIFINALES (SF) --- */
+
+        /* QF1 y QF3 (Los de arriba de cada pareja) */
+        #qf1-matchup::after, #qf3-matchup::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 100%;
+            width: 30px; height: 105px; /* Altura ajustable según tu espaciado */
+            border-right: 8px solid var(--win);
+            border-bottom: 8px solid var(--win);
+            border-bottom-right-radius: 6px;
+            z-index: 1;
+        }
+
+        /* QF2 y QF4 (Los de abajo de cada pareja) */
+        #qf2-matchup::after, #qf4-matchup::after {
+            content: '';
+            position: absolute;
+            bottom: 50%; left: 100%;
+            width: 30px; height: 105px; 
+            border-right: 8px solid var(--win);
+            border-top: 8px solid var(--win);
+            border-top-right-radius: 6px;
+            z-index: 1;
+        }
+
+        /* Etiquetas "W" para los Cuartos */
+        #qf1-matchup::before, #qf2-matchup::before, #qf3-matchup::before, #qf4-matchup::before {
+            content: 'W';
+            position: absolute;
+            left: calc(100% + 15px);
+            background-color: var(--win);
+            color: white;
+            font-size: 13px; font-weight: bold;
+            width: 26px; height: 26px;
+            border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 12;
+            transform: translateX(-50%);
+        }
+        #qf1-matchup::before, #qf3-matchup::before { top: calc(50% + 90px); }
+        #qf2-matchup::before, #qf4-matchup::before { bottom: calc(50% + 90px); }
+
+        /* --- SEMIFINALES (SF) A FINAL --- */
+
+        /* SF1 (Arriba) */
+        #sf1-matchup::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 100%;
+            width: 40px; height: 215px; /* Más largo para llegar al centro de la Final */
+            border-right: 8px solid var(--win);
+            border-bottom: 8px solid var(--win);
+            border-bottom-right-radius: 6px;
+            z-index: 1;
+        }
+
+        /* SF2 (Abajo) */
+        #sf2-matchup::after {
+            content: '';
+            position: absolute;
+            bottom: 50%; left: 100%;
+            width: 40px; height: 215px;
+            border-right: 8px solid var(--win);
+            border-top: 8px solid var(--win);
+            border-top-right-radius: 6px;
+            z-index: 1;
+        }
+
+        /* Etiquetas "W" para Semis */
+        #sf1-matchup::before, #sf2-matchup::before {
+            content: 'W';
+            position: absolute;
+            left: calc(100% + 25px);
+            background-color: var(--win);
+            color: white;
+            font-size: 13px; font-weight: bold;
+            width: 28px; height: 28px;
+            border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 12;
+            transform: translateX(-50%);
+        }
+        #sf1-matchup::before { top: calc(50% + 200px); }
+        #sf2-matchup::before { bottom: calc(50% + 200px); }
+
+        /* --- ENTRADAS HORIZONTALES (El pequeño tramo que entra a la izquierda de la caja) --- */
+        #sf1-matchup::before, #sf2-matchup::before, #final-matchup::before {
+            /* Usamos este selector para crear la pequeña línea de entrada si fuera necesario */
+        }
+
+        /* ========================================== */
+        /* CONECTORES PLAYOFFS: QF -> SF -> FINAL     */
+        /* ========================================== */
 
         /* 2. Colores (Degradados específicos para cada uno) */
         #random-bracket-btn { background: linear-gradient(135deg, #6366f1, #4338ca); }
