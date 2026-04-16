@@ -895,10 +895,17 @@
             left: calc(100% + 19px); 
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 28px; height: 28px; 
-            line-height: 1; /* <-- Corregido para que la W quede en el centro de su caja */
+            line-height: 1; 
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
-            z-index: 99 !important; /* <-- Añadido !important para que NADA le pase por encima */
+            
+            /* LA MAGIA: Un borde invisible que se come a la línea de abajo */
+            /* var(--bg) asume el color de fondo general de tu web. Si tu fondo es otro, pon el HEX, ej: #f3f4f6 */
+            border: 4px solid var(--bg, #f4f7f6); 
+            
+            z-index: 99 !important; 
             transform: translate(-50%, -50%);
+            /* Aseguramos que el borde se expanda hacia afuera para tapar más */
+            box-sizing: content-box; 
         }
 
         /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la Final) */
