@@ -799,75 +799,84 @@
         /* CONECTORES PLAYOFFS: QF -> SF -> FINAL     */
         /* ========================================== */
 
-        /* 1. Preparamos las cajas con los nombres correctos */
-        #qf1-wrap, #qf2-wrap, #qf3-wrap, #qf4-wrap,
-        #sf1-wrap, #sf2-wrap, #final-wrap {
+        #qf1-wrap .matchup, #qf2-wrap .matchup, #qf3-wrap .matchup, #qf4-wrap .matchup,
+        #sf1-wrap .matchup, #sf2-wrap .matchup, #final-wrap .matchup {
             position: relative;
             z-index: 2;
             overflow: visible !important;
         }
 
         /* --- CUARTOS (QF) A SEMIFINALES (SF) --- */
-
-        #qf1-wrap::after, #qf3-wrap::after {
+        
+        /* QF1 y QF3: Primero a la DERECHA, luego ABAJO */
+        #qf1-wrap .matchup::after, #qf3-wrap .matchup::after {
             content: ''; position: absolute;
             top: 50%; left: 100%;
-            width: 30px; height: 65px; 
-            border-right: 8px solid var(--win);
-            border-bottom: 8px solid var(--win);
-            border-bottom-right-radius: 6px; z-index: 1;
+            width: 15px; height: 75px; 
+            border-top: 8px solid var(--win);     /* Sale a la derecha */
+            border-right: 8px solid var(--win);   /* Baja */
+            border-top-right-radius: 6px;         /* Curva en el codo superior derecho */
+            z-index: 1;
         }
 
-        #qf2-wrap::after, #qf4-wrap::after {
+        /* QF2 y QF4: Primero a la DERECHA, luego ARRIBA */
+        #qf2-wrap .matchup::after, #qf4-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 30px; height: 65px; 
-            border-right: 8px solid var(--win);
-            border-top: 8px solid var(--win);
-            border-top-right-radius: 6px; z-index: 1;
+            width: 15px; height: 75px; 
+            border-bottom: 8px solid var(--win);  /* Sale a la derecha */
+            border-right: 8px solid var(--win);   /* Sube */
+            border-bottom-right-radius: 6px;      /* Curva en el codo inferior derecho */
+            z-index: 1;
         }
 
-        #qf1-wrap::before, #qf2-wrap::before, #qf3-wrap::before, #qf4-wrap::before {
+        /* La "W" se mantiene en el punto de encuentro vertical */
+        #qf1-wrap .matchup::before, #qf2-wrap .matchup::before, #qf3-wrap .matchup::before, #qf4-wrap .matchup::before {
             content: 'W'; position: absolute;
             left: calc(100% + 15px);
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 26px; height: 26px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
-            z-index: 12; transform: translateX(-50%);
+            z-index: 12; transform: translate(-50%, -50%); 
         }
-        #qf1-wrap::before, #qf3-wrap::before { top: calc(50% + 52px); }
-        #qf2-wrap::before, #qf4-wrap::before { bottom: calc(50% + 52px); }
+        #qf1-wrap .matchup::before, #qf3-wrap .matchup::before { top: calc(50% + 75px); }
+        #qf2-wrap .matchup::before, #qf4-wrap .matchup::before { bottom: calc(50% + 75px); }
 
         /* --- SEMIFINALES (SF) A FINAL --- */
-
-        #sf1-wrap::after {
+        
+        /* SF1: Primero a la DERECHA, luego ABAJO */
+        #sf1-wrap .matchup::after {
             content: ''; position: absolute;
             top: 50%; left: 100%;
-            width: 40px; height: 155px; 
-            border-right: 8px solid var(--win);
-            border-bottom: 8px solid var(--win);
-            border-bottom-right-radius: 6px; z-index: 1;
+            width: 15px; height: 165px; 
+            border-top: 8px solid var(--win);     /* Sale a la derecha */
+            border-right: 8px solid var(--win);   /* Baja */
+            border-top-right-radius: 6px; 
+            z-index: 1;
         }
 
-        #sf2-wrap::after {
+        /* SF2: Primero a la DERECHA, luego ARRIBA */
+        #sf2-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 40px; height: 155px;
-            border-right: 8px solid var(--win);
-            border-top: 8px solid var(--win);
-            border-top-right-radius: 6px; z-index: 1;
+            width: 15px; height: 150px; 
+            border-bottom: 8px solid var(--win);  /* Sale a la derecha */
+            border-right: 8px solid var(--win);   /* Sube */
+            border-bottom-right-radius: 6px; 
+            z-index: 1;
         }
 
-        #sf1-wrap::before, #sf2-wrap::before {
+        /* La "W" de Semifinales */
+        #sf1-wrap .matchup::before, #sf2-wrap .matchup::before {
             content: 'W'; position: absolute;
-            left: calc(100% + 25px);
+            left: calc(100% + 15px);
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 28px; height: 28px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
-            z-index: 12; transform: translateX(-50%);
+            z-index: 12; transform: translate(-50%, -50%);
         }
-        #sf1-wrap::before { top: calc(50% + 141px); }
-        #sf2-wrap::before { bottom: calc(50% + 141px); }
+        #sf1-wrap .matchup::before { top: calc(50% + 165px); }
+        #sf2-wrap .matchup::before { bottom: calc(50% + 150px); }
 
         /* ========================================== */
         /* CONECTORES PLAYOFFS: QF -> SF -> FINAL     */
