@@ -799,103 +799,75 @@
         /* CONECTORES PLAYOFFS: QF -> SF -> FINAL     */
         /* ========================================== */
 
-        /* 1. Preparamos las cajas para albergar los conectores */
-        #qf1-matchup, #qf2-matchup, #qf3-matchup, #qf4-matchup,
-        #sf1-matchup, #sf2-matchup, #final-matchup {
+        /* 1. Preparamos las cajas con los nombres correctos */
+        #qf1-wrap, #qf2-wrap, #qf3-wrap, #qf4-wrap,
+        #sf1-wrap, #sf2-wrap, #final-wrap {
             position: relative;
             z-index: 2;
+            overflow: visible !important;
         }
 
         /* --- CUARTOS (QF) A SEMIFINALES (SF) --- */
 
-        /* QF1 y QF3 (Los de arriba de cada pareja) */
-        #qf1-matchup::after, #qf3-matchup::after {
-            content: '';
-            position: absolute;
+        #qf1-wrap::after, #qf3-wrap::after {
+            content: ''; position: absolute;
             top: 50%; left: 100%;
-            width: 30px; height: 105px; /* Altura ajustable según tu espaciado */
+            width: 30px; height: 65px; 
             border-right: 8px solid var(--win);
             border-bottom: 8px solid var(--win);
-            border-bottom-right-radius: 6px;
-            z-index: 1;
+            border-bottom-right-radius: 6px; z-index: 1;
         }
 
-        /* QF2 y QF4 (Los de abajo de cada pareja) */
-        #qf2-matchup::after, #qf4-matchup::after {
-            content: '';
-            position: absolute;
+        #qf2-wrap::after, #qf4-wrap::after {
+            content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 30px; height: 105px; 
+            width: 30px; height: 65px; 
             border-right: 8px solid var(--win);
             border-top: 8px solid var(--win);
-            border-top-right-radius: 6px;
-            z-index: 1;
+            border-top-right-radius: 6px; z-index: 1;
         }
 
-        /* Etiquetas "W" para los Cuartos */
-        #qf1-matchup::before, #qf2-matchup::before, #qf3-matchup::before, #qf4-matchup::before {
-            content: 'W';
-            position: absolute;
+        #qf1-wrap::before, #qf2-wrap::before, #qf3-wrap::before, #qf4-wrap::before {
+            content: 'W'; position: absolute;
             left: calc(100% + 15px);
-            background-color: var(--win);
-            color: white;
-            font-size: 13px; font-weight: bold;
-            width: 26px; height: 26px;
-            border-radius: 5px;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 12;
-            transform: translateX(-50%);
+            background-color: var(--win); color: white;
+            font-size: 13px; font-weight: bold; width: 26px; height: 26px;
+            border-radius: 5px; display: flex; align-items: center; justify-content: center;
+            z-index: 12; transform: translateX(-50%);
         }
-        #qf1-matchup::before, #qf3-matchup::before { top: calc(50% + 90px); }
-        #qf2-matchup::before, #qf4-matchup::before { bottom: calc(50% + 90px); }
+        #qf1-wrap::before, #qf3-wrap::before { top: calc(50% + 52px); }
+        #qf2-wrap::before, #qf4-wrap::before { bottom: calc(50% + 52px); }
 
         /* --- SEMIFINALES (SF) A FINAL --- */
 
-        /* SF1 (Arriba) */
-        #sf1-matchup::after {
-            content: '';
-            position: absolute;
+        #sf1-wrap::after {
+            content: ''; position: absolute;
             top: 50%; left: 100%;
-            width: 40px; height: 215px; /* Más largo para llegar al centro de la Final */
+            width: 40px; height: 155px; 
             border-right: 8px solid var(--win);
             border-bottom: 8px solid var(--win);
-            border-bottom-right-radius: 6px;
-            z-index: 1;
+            border-bottom-right-radius: 6px; z-index: 1;
         }
 
-        /* SF2 (Abajo) */
-        #sf2-matchup::after {
-            content: '';
-            position: absolute;
+        #sf2-wrap::after {
+            content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 40px; height: 215px;
+            width: 40px; height: 155px;
             border-right: 8px solid var(--win);
             border-top: 8px solid var(--win);
-            border-top-right-radius: 6px;
-            z-index: 1;
+            border-top-right-radius: 6px; z-index: 1;
         }
 
-        /* Etiquetas "W" para Semis */
-        #sf1-matchup::before, #sf2-matchup::before {
-            content: 'W';
-            position: absolute;
+        #sf1-wrap::before, #sf2-wrap::before {
+            content: 'W'; position: absolute;
             left: calc(100% + 25px);
-            background-color: var(--win);
-            color: white;
-            font-size: 13px; font-weight: bold;
-            width: 28px; height: 28px;
-            border-radius: 5px;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 12;
-            transform: translateX(-50%);
+            background-color: var(--win); color: white;
+            font-size: 13px; font-weight: bold; width: 28px; height: 28px;
+            border-radius: 5px; display: flex; align-items: center; justify-content: center;
+            z-index: 12; transform: translateX(-50%);
         }
-        #sf1-matchup::before { top: calc(50% + 200px); }
-        #sf2-matchup::before { bottom: calc(50% + 200px); }
-
-        /* --- ENTRADAS HORIZONTALES (El pequeño tramo que entra a la izquierda de la caja) --- */
-        #sf1-matchup::before, #sf2-matchup::before, #final-matchup::before {
-            /* Usamos este selector para crear la pequeña línea de entrada si fuera necesario */
-        }
+        #sf1-wrap::before { top: calc(50% + 141px); }
+        #sf2-wrap::before { bottom: calc(50% + 141px); }
 
         /* ========================================== */
         /* CONECTORES PLAYOFFS: QF -> SF -> FINAL     */
@@ -2387,13 +2359,13 @@
                         ${buildMatchup('qf1', 'QF 1 (1º vs 8º)', p_qf1_A, p_qf1_B, 1, 8)}
                     </div>
                     
-                    <div style="margin-top: 20px;">
+                    <div id="qf2-wrap" style="margin-top: 20px;">
                         ${buildMatchup('qf2', 'QF 2 (4º vs 5º)', p_qf2_A, p_qf2_B, 4, 5)}
                     </div>
                     
                     <div style="height: 30px;"></div>
                     
-                    <div>
+                    <div id="qf3-wrap">
                         ${buildMatchup('qf3', 'QF 3 (3º vs 6º)', p_qf3_A, p_qf3_B, 3, 6)}
                     </div>
                     
@@ -2405,9 +2377,13 @@
                 <div class="bracket-col" id="col-sf">
                     <div class="bracket-label">${txtF4}</div>
                     <div style="height: 60px;"></div>
-                    ${buildMatchup('sf1', 'Semifinal 1', p_sf1_A, p_sf1_B, '-', '-')}
+                    <div id="sf1-wrap">
+                        ${buildMatchup('sf1', 'Semifinal 1', p_sf1_A, p_sf1_B, '-', '-')}
+                    </div>
                     <div style="height: 195px;"></div>
-                    ${buildMatchup('sf2', 'Semifinal 2', p_sf2_A, p_sf2_B, '-', '-')}
+                    <div id="sf2-wrap">
+                        ${buildMatchup('sf2', 'Semifinal 2', p_sf2_A, p_sf2_B, '-', '-')}
+                    </div>
                 </div>
 
                 <div class="bracket-col" id="col-fin" style="justify-content: center;">
@@ -2415,6 +2391,7 @@
                     <div id="final-wrap" style="margin-top: 250px;">
                     ${buildMatchup('final', txtFIN, p_fin_A, p_fin_B, '-', '-')}
                     ${champion ? `<div class="champion-box"><div style="font-size:0.8rem; font-weight:bold;">🏆 ${txtChamp} 🏆</div><img src="${getLogo(champion.name)}"><h3>${tName(champion.name)}</h3></div>` : `<div class="disabled-champ">🏆<br>${txtTBD}</div>`}
+                    </div>
                 </div>
             `;
         }
