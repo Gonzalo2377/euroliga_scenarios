@@ -765,21 +765,38 @@
             z-index: 12;
         }
 
+        /* 3. EL EMPALME FINAL (Trocito que sale de QF1 y va a la izquierda a buscar la W) */
         #qf1-wrap .matchup::before {
             content: '';
             position: absolute;
             top: 50%; 
+            /* ⬅️ Cuánto avanza hacia la izquierda buscando la W */
             left: -15px; 
             width: 15px; 
-            height: 8px;
+            
+            height: 8px; /* Grosor idéntico al resto de la línea */
             background-color: var(--win);
             transform: translateY(-50%);
             z-index: 1;
             display: block !important;
         }
-
+        #random-bracket-btn, #capture-btn, #reset-btn {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 !important;
+        }
         /* ========================================== */
-        /* 2. CONECTORES PLAYOFFS (QF -> SF -> FINAL) */
+        /* CONECTORES PLAYOFFS: QF -> SF -> FINAL     */
         /* ========================================== */
 
         #qf1-wrap, #qf2-wrap, #qf3-wrap, #qf4-wrap,
@@ -797,6 +814,7 @@
 
         /* --- CUARTOS (QF) A SEMIFINALES (SF) --- */
         
+        /* QF1 y QF3 (Arriba): Salen a la derecha y bajan */
         #qf1-wrap .matchup::after, #qf3-wrap .matchup::after {
             content: ''; position: absolute;
             top: 50%; left: 100%;
@@ -805,43 +823,46 @@
             border-right: 8px solid var(--win);   
             border-top-right-radius: 6px;         
             z-index: 1;
-            box-sizing: content-box !important; /* Fuerza la matemática exacta del borde */
         }
 
+        /* QF2 y QF4 (Abajo): Salen a la derecha y suben */
         #qf2-wrap .matchup::after, #qf4-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 15px; height: 75px; 
+            width: 15px; height: 73px; 
             border-bottom: 8px solid var(--win);  
             border-right: 8px solid var(--win);   
             border-bottom-right-radius: 6px;      
             z-index: 1;
-            box-sizing: content-box !important;
         }
 
-        /* LA "W" - Ahora anclada al Wrapper para no pisar la línea del Play-In */
-        #qf1-wrap::before, #qf3-wrap::before {
+        /* LA "W" ÚNICA (Solo se la ponemos al partido de arriba para no duplicarla) */
+        #qf1-wrap .matchup::before, #qf3-wrap .matchup::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 79px);   /* 75px de bajada + 4px (mitad del grosor del borde) */
-            left: calc(100% + 19px); /* 15px de hueco + 4px (mitad del grosor del borde) */
+            top: calc(50% + 75px); 
+            left: calc(100% + 15px);
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 26px; height: 26px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
             z-index: 12; transform: translate(-50%, -50%); 
         }
 
-        /* LÍNEA HORIZONTAL DE EMPALME (A Semifinales) */
+        /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la caja de Semifinales) */
         #qf1-wrap::after, #qf3-wrap::after {
             content: ''; position: absolute;
-            top: calc(50% + 79px); 
-            left: calc(100% + 19px); 
-            width: 60px; height: 8px; 
+            top: calc(50% + 75px); /* Alineado con la W */
+            left: calc(100% + 15px); /* Nace desde la W */
+            width: 60px; /* Se estira hacia la derecha para tocar la siguiente caja */
+            height: 8px; /* Mismo grosor que el resto */
             background-color: var(--win);
-            transform: translateY(-50%); z-index: 0; 
+            transform: translateY(-50%);
+            z-index: 0; /* z-index 0 para que se esconda debajo de la tarjeta de SF */
         }
+
 
         /* --- SEMIFINALES (SF) A FINAL --- */
         
+        /* SF1 (Arriba) */
         #sf1-wrap .matchup::after {
             content: ''; position: absolute;
             top: 50%; left: 100%;
@@ -850,39 +871,40 @@
             border-right: 8px solid var(--win);   
             border-top-right-radius: 6px; 
             z-index: 1;
-            box-sizing: content-box !important;
         }
 
+        /* SF2 (Abajo) */
         #sf2-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 15px; height: 150px; 
+            width: 15px; height: 165px; 
             border-bottom: 8px solid var(--win);  
             border-right: 8px solid var(--win);   
             border-bottom-right-radius: 6px; 
             z-index: 1;
-            box-sizing: content-box !important;
         }
 
-        /* LA "W" DE SEMIFINALES */
-        #sf1-wrap::before {
+        /* LA "W" ÚNICA DE SEMIFINALES */
+        #sf1-wrap .matchup::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 169px);  /* 165px + 4px */
-            left: calc(100% + 19px); /* 15px + 4px */
+            top: calc(50% + 165px);
+            left: calc(100% + 15px);
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 28px; height: 28px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
             z-index: 12; transform: translate(-50%, -50%);
         }
 
-        /* LÍNEA HORIZONTAL DE EMPALME (A la Final) */
+        /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la Final) */
         #sf1-wrap::after {
             content: ''; position: absolute;
-            top: calc(50% + 169px); 
-            left: calc(100% + 19px); 
-            width: 80px; height: 8px;
+            top: calc(50% + 165px); 
+            left: calc(100% + 18px); 
+            width: 80px; /* Aún más larga por si el espacio a la final es mayor */
+            height: 8px;
             background-color: var(--win);
-            transform: translateY(-50%); z-index: 0; 
+            transform: translateY(-50%);
+            z-index: 0; 
         }
 
         /* ========================================== */
