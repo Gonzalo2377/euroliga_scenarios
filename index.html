@@ -880,7 +880,7 @@
         #sf2-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 15px; height: 180px; 
+            width: 15px; height: 175px; 
             border-bottom: 8px solid var(--win);  
             border-right: 8px solid var(--win);   
             border-bottom-right-radius: 6px; 
@@ -891,12 +891,14 @@
         /* LA "W" ÚNICA DE SEMIFINALES */
         #sf1-wrap::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 169px); /* 165 + 4 */
-            left: calc(100% + 19px); /* 15 + 4 */
+            top: calc(50% + 169px); 
+            left: calc(100% + 19px); 
             background-color: var(--win); color: white;
-            font-size: 13px; font-weight: bold; width: 28px; height: 28px; line-height: 99; 
+            font-size: 13px; font-weight: bold; width: 28px; height: 28px; 
+            line-height: 1; /* <-- Corregido para que la W quede en el centro de su caja */
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
-            z-index: 99; transform: translate(-50%, -50%);
+            z-index: 99 !important; /* <-- Añadido !important para que NADA le pase por encima */
+            transform: translate(-50%, -50%);
         }
 
         /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la Final) */
