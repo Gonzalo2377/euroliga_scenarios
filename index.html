@@ -823,40 +823,42 @@
             border-right: 8px solid var(--win);   
             border-top-right-radius: 6px;         
             z-index: 1;
+            box-sizing: content-box !important; /* Fuerza matemática exacta */
         }
 
         /* QF2 y QF4 (Abajo): Salen a la derecha y suben */
         #qf2-wrap .matchup::after, #qf4-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 15px; height: 73px; 
+            width: 15px; height: 75px; /* Igualado a 75px para que sea simétrico */
             border-bottom: 8px solid var(--win);  
             border-right: 8px solid var(--win);   
             border-bottom-right-radius: 6px;      
             z-index: 1;
+            box-sizing: content-box !important;
         }
 
-        /* LA "W" ÚNICA (Solo se la ponemos al partido de arriba para no duplicarla) */
-        #qf1-wrap .matchup::before, #qf3-wrap .matchup::before {
+        /* LA "W" ÚNICA - Ahora cuelga del 'wrap', no del 'matchup' */
+        #qf1-wrap::before, #qf3-wrap::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 75px); 
-            left: calc(100% + 15px);
+            top: calc(50% + 79px);  /* 75px + 4px (mitad del borde) */
+            left: calc(100% + 19px); /* 15px + 4px (mitad del borde) */
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 26px; height: 26px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
             z-index: 12; transform: translate(-50%, -50%); 
         }
 
-        /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la caja de Semifinales) */
+        /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hacia SF) */
         #qf1-wrap::after, #qf3-wrap::after {
             content: ''; position: absolute;
-            top: calc(50% + 75px); /* Alineado con la W */
-            left: calc(100% + 15px); /* Nace desde la W */
-            width: 60px; /* Se estira hacia la derecha para tocar la siguiente caja */
-            height: 8px; /* Mismo grosor que el resto */
+            top: calc(50% + 79px); 
+            left: calc(100% + 19px); 
+            width: 60px; 
+            height: 8px; 
             background-color: var(--win);
             transform: translateY(-50%);
-            z-index: 0; /* z-index 0 para que se esconda debajo de la tarjeta de SF */
+            z-index: 0; 
         }
 
 
@@ -871,6 +873,7 @@
             border-right: 8px solid var(--win);   
             border-top-right-radius: 6px; 
             z-index: 1;
+            box-sizing: content-box !important;
         }
 
         /* SF2 (Abajo) */
@@ -882,13 +885,14 @@
             border-right: 8px solid var(--win);   
             border-bottom-right-radius: 6px; 
             z-index: 1;
+            box-sizing: content-box !important;
         }
 
         /* LA "W" ÚNICA DE SEMIFINALES */
-        #sf1-wrap .matchup::before {
+        #sf1-wrap::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 165px);
-            left: calc(100% + 15px);
+            top: calc(50% + 169px); /* 165 + 4 */
+            left: calc(100% + 19px); /* 15 + 4 */
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 28px; height: 28px;
             border-radius: 5px; display: flex; align-items: center; justify-content: center;
@@ -898,9 +902,9 @@
         /* LÍNEA HORIZONTAL DE EMPALME (Desde la 'W' hasta la Final) */
         #sf1-wrap::after {
             content: ''; position: absolute;
-            top: calc(50% + 165px); 
-            left: calc(100% + 18px); 
-            width: 80px; /* Aún más larga por si el espacio a la final es mayor */
+            top: calc(50% + 169px); 
+            left: calc(100% + 19px); 
+            width: 80px; 
             height: 8px;
             background-color: var(--win);
             transform: translateY(-50%);
