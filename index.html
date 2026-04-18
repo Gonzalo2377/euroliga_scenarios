@@ -2368,6 +2368,20 @@
             const buildMatchup = (id, title, teamA, teamB, seedA, seedB) => {
                 let winner = bracketState[id];
                 
+                // --- NUEVO: CÁLCULO H2H EN VIVO ---
+                let h2hText = "";
+                // Solo calculamos si ya tenemos a los dos equipos definidos en la llave
+                if (teamA && teamB && teamA.name && teamB.name) {
+                    let stats = calculateH2HStats(teamA.name, teamB.name);
+                    if (stats.played > 0) {
+                        let diffStr = stats.diffA > 0 ? `+${stats.diffA}` : stats.diffA;
+                        // Formato: H2H: RMA 2-0 BAS (+15)
+                        h2hText = `<div style="font-size: 0.65rem; color: #cbd5e1; margin-top: 3px; font-weight: normal; text-transform: none; letter-spacing: normal;">
+                            H2H Reg. Season: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="opacity:0.8;">(${diffStr})</span>
+                        </div>`;
+                    }
+                }
+                
                 const buildTeam = (teamObj, seedNum) => {
                     if (!teamObj) return `<div class="matchup-team disabled"><span class="seed-badge">${seedNum}</span> <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span></div>`;
                     
@@ -2383,7 +2397,14 @@
                             </div>`;
                 };
 
-                return `<div class="matchup"><div class="matchup-header">${title}</div>${buildTeam(teamA, seedA)}${buildTeam(teamB, seedB)}</div>`;
+                return `<div class="matchup">
+                            <div class="matchup-header">
+                                ${title}
+                                ${h2hText}
+                            </div>
+                            ${buildTeam(teamA, seedA)}
+                            ${buildTeam(teamB, seedB)}
+                        </div>`;
             };
 
             container.innerHTML = `
