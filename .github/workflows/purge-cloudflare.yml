@@ -8,10 +8,7 @@ on:
 jobs:
   purge-cache:
     runs-on: ubuntu-latest
-    steps:
-      - name: Wait for GitHub Pages to deploy
-        run: sleep 90
-        
+    steps:     
       - name: Send Purge Request to Cloudflare
         run: |
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
