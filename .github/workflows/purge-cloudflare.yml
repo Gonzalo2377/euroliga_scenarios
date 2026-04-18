@@ -3,7 +3,7 @@ name: Purge Cloudflare Cache
 on:
   push:
     branches:
-      - main  # Ojo: si tu rama principal se llama 'master', cámbialo aquí.
+      - main
 
 jobs:
   purge-cache:
