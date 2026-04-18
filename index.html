@@ -507,6 +507,15 @@
         /* Solo le damos un ligero brillo al borde y sombra a la caja principal */
         .matchup:hover { border-color: #64748b; box-shadow: 0 8px 15px rgba(0,0,0,0.4); }
         
+        .matchup { 
+            background: #1e293b; border-radius: 8px; border: 1px solid #334155; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); overflow: visible; 
+            /* Quitamos el transform de aquí para que la caja (y sus líneas) sean inamovibles */
+            transition: box-shadow 0.2s, border-color 0.2s; position: relative; z-index: 2; 
+        }
+        /* Solo le damos un ligero brillo al borde y sombra a la caja principal */
+        .matchup:hover { border-color: #64748b; box-shadow: 0 8px 15px rgba(0,0,0,0.4); }
+        
         .matchup-header { 
             background: #0f172a; font-size: 0.75rem; text-align: center; padding: 6px; 
             color: #94a3b8; text-transform: uppercase; border-bottom: 1px solid #334155; 
