@@ -2368,27 +2368,24 @@
             const buildMatchup = (id, title, teamA, teamB, seedA, seedB) => {
                 let winner = bracketState[id];
                 
-                // --- NUEVO: CÁLCULO H2H EN VIVO ---
-                let h2hText = "";
-                // Solo calculamos si ya tenemos a los dos equipos definidos en la llave
+                // --- CÁLCULO H2H EN VIVO ---
+                let h2hContent = "";
                 if (teamA && teamB && teamA.name && teamB.name) {
                     let stats = calculateH2HStats(teamA.name, teamB.name);
                     if (stats.played > 0) {
                         let diffStr = stats.diffA > 0 ? `+${stats.diffA}` : stats.diffA;
-                        // Formato: H2H: RMA 2-0 BAS (+15)
-                        h2hText = `<div style="font-size: 0.65rem; color: #cbd5e1; margin-top: 3px; font-weight: normal; text-transform: none; letter-spacing: normal;">
-                            H2H Reg. Season: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="opacity:0.8;">(${diffStr})</span>
-                        </div>`;
+                        h2hContent = `H2H Reg. Season: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="opacity:0.8;">(${diffStr})</span>`;
                     }
                 }
+
+                // NUEVO: Envolvemos el contenido en un div de ALTURA FIJA (14px).
+                // Así la caja no crece ni encoge al aparecer el texto.
+                let h2hText = `<div style="height: 14px; font-size: 0.65rem; color: #cbd5e1; margin-top: 3px; font-weight: normal; text-transform: none; letter-spacing: normal; display: flex; align-items: center; justify-content: center;">
+                    ${h2hContent}
+                </div>`;
                 
                 const buildTeam = (teamObj, seedNum) => {
-                    // Le añadimos un span con la clase 'bracket-logo' vacío para que reserve el espacio del escudo
-                    if (!teamObj) return `<div class="matchup-team disabled">
-                                <span class="seed-badge">${seedNum}</span>
-                                <span class="bracket-logo" style="display:inline-block;"></span>
-                                <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span>
-                            </div>`;
+                    if (!teamObj) return `<div class="matchup-team disabled"><span class="seed-badge">${seedNum}</span> <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span></div>`;
                     
                     let isWin = winner === teamObj.name;
                     let isLoser = winner && winner !== teamObj.name;
