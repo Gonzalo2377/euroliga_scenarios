@@ -498,24 +498,12 @@
         
         .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 250px; position: relative; z-index: 2;}
         
-        .matchup {
-            width: 260px !important; 
-            box-sizing: border-box;
-            background: var(--card-bg);
-            border: 1px solid var(--border); /* <- RECUPERADO EL BORDE DE LA CAJA */
-            border-radius: 12px;
-            padding: 8px;
-            display: flex;               /* <- RECUPERADO PARA QUE QUEDE BIEN ALINEADO */
-            flex-direction: column;
-            position: relative;
-            z-index: 2;
-            overflow: visible !important;
-            transition: all 0.2s ease;
+        .matchup { 
+            background: #1e293b; border-radius: 8px; border: 1px solid #334155; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); overflow: visible; 
+            transition: transform 0.2s, border-color 0.2s; position: relative; z-index: 2; 
         }
-
-        .matchup:hover {
-            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-        }
+        .matchup:hover { border-color: #64748b; transform: translateY(-2px); }
         
         .matchup-header { 
             background: #0f172a; font-size: 0.75rem; text-align: center; padding: 6px; 
@@ -523,45 +511,21 @@
             font-weight: bold; border-top-left-radius: 7px; border-top-right-radius: 7px; 
         }
         
-        .matchup-team {
-            display: flex; align-items: center; padding: 10px 12px; gap: 12px;
-            cursor: pointer; transition: all 0.2s ease;
-            position: relative; overflow: hidden;
-            border-radius: 8px; margin: 4px; 
-            height: 44px; /* Mantiene la caja congelada para que no salten las líneas */
-            box-sizing: border-box;
-            
-            /* Borde invisible de 1px. Así cuando gane y se ponga verde no cambia de tamaño */
-            border: 1px solid transparent; 
-        }
-
-        .matchup-team.winner {
-            background-color: var(--win-bg);
-            border: 1px solid var(--win) !important; /* Recuperado el grosor fino original */
+        .matchup-team { 
+            display: flex; align-items: center; padding: 10px 12px; font-size: 1rem; 
+            cursor: pointer; transition: background 0.2s; 
+            border-left: 4px solid transparent; background: transparent; 
         }
         .matchup-team:last-child { border-bottom-left-radius: 7px; border-bottom-right-radius: 7px; }
         .matchup-team:not(:last-child) { border-bottom: 1px solid #334155; }
         
-        ..matchup-team:hover:not(.disabled) {
-            background-color: rgba(255, 255, 255, 0.05);
-            transform: translateY(-2px);
-        }
-        .matchup-team:active:not(.disabled) {
-            transform: translateY(0);
-            background-color: rgba(255, 255, 255, 0.08);
-        }
-        
+        .matchup-team:hover:not(.disabled) { background: #334155; }
+        .matchup-team.winner { background: #172554; border-left: 4px solid var(--primary); font-weight: bold; }
         .matchup-team.loser { opacity: 0.5; }
         .matchup-team.disabled { cursor: not-allowed; opacity: 0.5; }
         
         .seed-badge { font-size: 0.75rem; font-weight: bold; color: #f8fafc; background: #475569; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-right: 10px; }
-        .team-name-bracket {
-            font-size: 0.95rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex-grow: 1;
-        }
+        .team-name-bracket { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f8fafc; }
         .bracket-logo { width: 26px; height: 26px; border-radius: 50%; background: white; margin-right: 10px; object-fit: contain; border: 1px solid #cbd5e1;}
         
         .bracket-label { text-align: center; color: var(--primary); font-weight: 800; font-size: 1.1rem; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #334155; padding-bottom: 8px; z-index: 2; position: relative;}
