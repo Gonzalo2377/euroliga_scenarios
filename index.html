@@ -634,7 +634,7 @@
             position: absolute;
             /* ⚠️ El 'top' debe ser 100% + la misma 'height' que la tubería (40px) */
             top: calc(100% + 50px); 
-            left: 20%; 
+            left: 48%; 
             
             /* Centramos la W exactamente en ese punto */
             transform: translate(-50%, -50%); 
@@ -788,7 +788,7 @@
             position: absolute;
             /* ⚠️ Matemáticas exactas: bottom + la subida (140) y left + la salida (40) */
             bottom: calc(45% + 235px); 
-            left: calc(100% + 15px); 
+            left: calc(100% + 8px); 
             
             /* Centramos la W exactamente en ese vértice */
             transform: translate(-50%, 50%); 
@@ -813,8 +813,8 @@
             position: absolute;
             top: 50%; 
             /* ⬅️ Cuánto avanza hacia la izquierda buscando la W */
-            left: -15px; 
-            width: 15px; 
+            left: -8px; 
+            width: 8px; 
             
             height: 8px; /* Grosor idéntico al resto de la línea */
             background-color: var(--win);
@@ -883,7 +883,7 @@
         /* LA "W" ÚNICA - Ahora cuelga del 'wrap', no del 'matchup' */
         #qf1-wrap::before, #qf3-wrap::before {
             content: 'W'; position: absolute;
-            top: calc(50% + 65px);  /* 75px + 4px (mitad del borde) */
+            top: calc(50% + 79px);  /* 75px + 4px (mitad del borde) */
             left: calc(100% + 20px); /* 15px + 4px (mitad del borde) */
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 26px; height: 26px;
@@ -895,7 +895,7 @@
         #qf1-wrap::after, #qf3-wrap::after {
             content: ''; position: absolute;
             top: calc(50% + 79px); 
-            left: calc(100% + 10px); 
+            left: calc(100% + 5px); 
             width: 60px; 
             height: 8px; 
             background-color: var(--win);
@@ -934,7 +934,7 @@
         #sf1-wrap::before {
             content: 'W'; position: absolute;
             top: calc(50% + 172px); 
-            left: calc(100% + 8px); 
+            left: calc(100% + 15px); 
             background-color: var(--win); color: white;
             font-size: 13px; font-weight: bold; width: 28px; height: 28px; 
             line-height: 1; /* <-- Corregido para que la W quede en el centro de su caja */
@@ -947,7 +947,7 @@
         #sf1-wrap::after {
             content: ''; position: absolute;
             top: calc(50% + 172px); 
-            left: calc(100% + 8px); 
+            left: calc(100% + 15px); 
             width: 80px; 
             height: 8px;
             background-color: var(--win);
