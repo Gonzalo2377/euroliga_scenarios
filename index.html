@@ -2383,7 +2383,12 @@
                 }
                 
                 const buildTeam = (teamObj, seedNum) => {
-                    if (!teamObj) return `<div class="matchup-team disabled"><span class="seed-badge">${seedNum}</span> <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span></div>`;
+                    // Le añadimos un span con la clase 'bracket-logo' vacío para que reserve el espacio del escudo
+                    if (!teamObj) return `<div class="matchup-team disabled">
+                                <span class="seed-badge">${seedNum}</span>
+                                <span class="bracket-logo" style="display:inline-block;"></span>
+                                <span class="team-name-bracket" style="color:#888; font-style:italic;">${txtTBD}</span>
+                            </div>`;
                     
                     let isWin = winner === teamObj.name;
                     let isLoser = winner && winner !== teamObj.name;
