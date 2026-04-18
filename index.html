@@ -501,9 +501,11 @@
         .matchup { 
             background: #1e293b; border-radius: 8px; border: 1px solid #334155; 
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); overflow: visible; 
-            transition: transform 0.2s, border-color 0.2s; position: relative; z-index: 2; 
+            /* Quitamos el transform de aquí para que la caja (y sus líneas) sean inamovibles */
+            transition: box-shadow 0.2s, border-color 0.2s; position: relative; z-index: 2; 
         }
-        .matchup:hover { border-color: #64748b; transform: translateY(-2px); }
+        /* Solo le damos un ligero brillo al borde y sombra a la caja principal */
+        .matchup:hover { border-color: #64748b; box-shadow: 0 8px 15px rgba(0,0,0,0.4); }
         
         .matchup-header { 
             background: #0f172a; font-size: 0.75rem; text-align: center; padding: 6px; 
@@ -513,13 +515,27 @@
         
         .matchup-team { 
             display: flex; align-items: center; padding: 10px 12px; font-size: 1rem; 
-            cursor: pointer; transition: background 0.2s; 
+            cursor: pointer; 
+            /* Añadimos 'all' para que anime tanto el fondo como el movimiento */
+            transition: all 0.2s ease; 
             border-left: 4px solid transparent; background: transparent; 
         }
         .matchup-team:last-child { border-bottom-left-radius: 7px; border-bottom-right-radius: 7px; }
         .matchup-team:not(:last-child) { border-bottom: 1px solid #334155; }
         
-        .matchup-team:hover:not(.disabled) { background: #334155; }
+        /* 1. EL HOVER: La fila se aclara y pega un saltito hacia arriba */
+        .matchup-team:hover:not(.disabled) { 
+            background: #334155; 
+            transform: translateY(-2px); 
+        }
+
+        /* 2. EL CLIC: Al pulsar, baja de golpe dando sensación de botón real */
+        .matchup-team:active:not(.disabled) { 
+            transform: translateY(0); 
+            background: #475569; 
+        }
+        
+        /* Tu estética intacta */
         .matchup-team.winner { background: #172554; border-left: 4px solid var(--primary); font-weight: bold; }
         .matchup-team.loser { opacity: 0.5; }
         .matchup-team.disabled { cursor: not-allowed; opacity: 0.5; }
