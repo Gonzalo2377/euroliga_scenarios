@@ -498,10 +498,16 @@
         
         .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 250px; position: relative; z-index: 2;}
         
-        .matchup { 
-            background: #1e293b; border-radius: 8px; border: 1px solid #334155; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); overflow: visible; 
-            transition: transform 0.2s, border-color 0.2s; position: relative; z-index: 2; 
+        .matchup {
+            /* Añade o asegúrate de tener un width fijo. Ajusta el 240px al tamaño que te guste */
+            width: 240px !important; 
+            box-sizing: border-box;
+            background: var(--card-bg); /* Mantenlo como lo tuvieras */
+            border-radius: 12px; /* Mantenlo como lo tuvieras */
+            padding: 8px; /* Mantenlo como lo tuvieras */
+            position: relative;
+            z-index: 2;
+            overflow: visible !important;
         }
         .matchup:hover { border-color: #64748b; transform: translateY(-2px); }
         
@@ -511,10 +517,16 @@
             font-weight: bold; border-top-left-radius: 7px; border-top-right-radius: 7px; 
         }
         
-        .matchup-team { 
-            display: flex; align-items: center; padding: 10px 12px; font-size: 1rem; 
-            cursor: pointer; transition: background 0.2s; 
-            border-left: 4px solid transparent; background: transparent; 
+        .matchup-team {
+            display: flex; align-items: center; padding: 10px 12px; gap: 12px;
+            cursor: pointer; transition: all 0.2s ease;
+            position: relative; overflow: hidden;
+            border-radius: 8px; margin: 4px; 
+            border: 1px solid transparent;
+            
+            /* NUEVO: Altura fija inamovible (aprox 44px, ajústala si tus logos son más grandes) */
+            height: 44px; 
+            box-sizing: border-box;
         }
         .matchup-team:last-child { border-bottom-left-radius: 7px; border-bottom-right-radius: 7px; }
         .matchup-team:not(:last-child) { border-bottom: 1px solid #334155; }
@@ -525,7 +537,15 @@
         .matchup-team.disabled { cursor: not-allowed; opacity: 0.5; }
         
         .seed-badge { font-size: 0.75rem; font-weight: bold; color: #f8fafc; background: #475569; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin-right: 10px; }
-        .team-name-bracket { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f8fafc; }
+        .team-name-bracket {
+            font-size: 0.95rem; /* El tamaño que tuvieras */
+            
+            /* NUEVO: Truncar texto largo */
+            white-space: nowrap; /* Impide que el texto baje a una segunda línea */
+            overflow: hidden; /* Oculta lo que sobra */
+            text-overflow: ellipsis; /* Pone "..." si el nombre es muy largo */
+            flex-grow: 1; /* Ocupa el espacio disponible de forma segura */
+        }
         .bracket-logo { width: 26px; height: 26px; border-radius: 50%; background: white; margin-right: 10px; object-fit: contain; border: 1px solid #cbd5e1;}
         
         .bracket-label { text-align: center; color: var(--primary); font-weight: 800; font-size: 1.1rem; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid #334155; padding-bottom: 8px; z-index: 2; position: relative;}
