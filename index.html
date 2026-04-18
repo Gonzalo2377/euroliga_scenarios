@@ -499,16 +499,23 @@
         .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 250px; position: relative; z-index: 2;}
         
         .matchup {
-            width: 260px !important; /* Subimos de 240 a 260 */
+            width: 260px !important; 
             box-sizing: border-box;
             background: var(--card-bg);
+            border: 1px solid var(--border); /* <- RECUPERADO EL BORDE DE LA CAJA */
             border-radius: 12px;
             padding: 8px;
+            display: flex;               /* <- RECUPERADO PARA QUE QUEDE BIEN ALINEADO */
+            flex-direction: column;
             position: relative;
             z-index: 2;
             overflow: visible !important;
+            transition: all 0.2s ease;
         }
-        .matchup:hover { border-color: #64748b; transform: translateY(-2px); }
+
+        .matchup:hover {
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
         
         .matchup-header { 
             background: #0f172a; font-size: 0.75rem; text-align: center; padding: 6px; 
@@ -521,21 +528,29 @@
             cursor: pointer; transition: all 0.2s ease;
             position: relative; overflow: hidden;
             border-radius: 8px; margin: 4px; 
-            height: 44px; 
+            height: 44px; /* Mantiene la caja congelada para que no salten las líneas */
             box-sizing: border-box;
             
-            /* Reservamos espacio para un borde más grueso */
-            border: 2px solid transparent; 
+            /* Borde invisible de 1px. Así cuando gane y se ponga verde no cambia de tamaño */
+            border: 1px solid transparent; 
+        }
+
+        .matchup-team.winner {
+            background-color: var(--win-bg);
+            border: 1px solid var(--win) !important; /* Recuperado el grosor fino original */
         }
         .matchup-team:last-child { border-bottom-left-radius: 7px; border-bottom-right-radius: 7px; }
         .matchup-team:not(:last-child) { border-bottom: 1px solid #334155; }
         
-        .matchup-team:hover:not(.disabled) { background: #334155; }
-        .matchup-team.winner {
-            background-color: var(--win-bg);
-            /* Borde más marcado para que se vea bien el ganador */
-            border: 2px solid var(--win) !important; 
+        ..matchup-team:hover:not(.disabled) {
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
         }
+        .matchup-team:active:not(.disabled) {
+            transform: translateY(0);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        
         .matchup-team.loser { opacity: 0.5; }
         .matchup-team.disabled { cursor: not-allowed; opacity: 0.5; }
         
@@ -546,8 +561,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             flex-grow: 1;
-            /* Aseguramos que el texto tenga espacio suficiente */
-            max-width: 170px; 
         }
         .bracket-logo { width: 26px; height: 26px; border-radius: 50%; background: white; margin-right: 10px; object-fit: contain; border: 1px solid #cbd5e1;}
         
