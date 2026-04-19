@@ -2467,20 +2467,34 @@
             
             let champion = bracketState.final ? getT(bracketState.final) : null;
 
-            // Creador de cajas de partidos
             window.editingScoreFor = window.editingScoreFor || null;
+            window.editingWinnerName = window.editingWinnerName || null; // <- NUEVO CEREBRO
+            
             window.handleQFClick = window.handleQFClick || function(id, teamName, opponentName) {
                 advanceBracket(id, teamName, opponentName);
-                window.editingScoreFor = id; // Abrimos el menú al hacer clic
+                window.editingScoreFor = id; 
+                window.editingWinnerName = teamName; // Guardamos quién ha ganado
                 if (typeof renderBracket === 'function') renderBracket();
             };
             window.saveScore = window.saveScore || function(id, games) {
-                bracketState[id + '_score'] = games; // Guardamos si es 3, 4 o 5
-                window.editingScoreFor = null; // Cerramos el menú
+                bracketState[id + '_score'] = games; 
+                window.editingScoreFor = null; 
+                window.editingWinnerName = null;
                 if (typeof renderBracket === 'function') renderBracket();
             };
 
-            // Creador de cajas de partidos (Con Series al Mejor de 5 y H2H)
+            // --- PALETA DE COLORES DE LOS EQUIPOS (Oscurecidos para que el texto blanco se lea perfecto) ---
+            const teamColors = {
+                "Fenerbahçe": "#032b5e", "Real Madrid": "#3730a3", "Olympiacos": "#9f1239",
+                "Valencia Basket": "#c2410a", "Zalgiris Kaunas": "#14532d", "Panathinaikos": "#065f46",
+                "Hapoel Tel-Aviv": "#be123c", "Barcelona": "#831843", "Monaco": "#991b1b",
+                "Crvena Zvezda": "#b91c1c", "Dubai": "#854d0e", "Olimpia Milano": "#b91c1c",
+                "Maccabi Tel Aviv": "#1e3a8a", "Anadolu Efes": "#1d4ed8", "Virtus Bolonia": "#262626",
+                "Partizan": "#171717", "Bayern": "#9f1239", "Paris": "#171717",
+                "Baskonia": "#9f1239", "Asvel Basket": "#171717"
+            };
+
+            // Creador de cajas de partidos (Con colores vivos y Menú Personalizado)
             const buildMatchup = (id, title, teamA, teamB, seedA, seedB) => {
                 let winner = bracketState[id];
                 
@@ -2512,12 +2526,10 @@
                     let opponentObj = teamObj === teamA ? teamB : teamA;
                     let opponentName = opponentObj ? opponentObj.name : '';
 
-                    // --- CÁLCULO DEL MARCADOR DIGITAL ---
                     let scoreHtml = '';
-                    // Solo dibujamos los números si es Cuartos ('qf'), si hay ganador, y si hemos elegido resultado
                     if (id.startsWith('qf') && winner && bracketState[id + '_score']) {
-                        let totalGames = bracketState[id + '_score']; // Será 3, 4 o 5
-                        let loserWins = totalGames - 3; // Matemáticas: 3-3=0, 4-3=1, 5-3=2
+                        let totalGames = bracketState[id + '_score']; 
+                        let loserWins = totalGames - 3; 
                         let displayScore = isWin ? 3 : (isLoser ? loserWins : '');
                         
                         if (isWin || isLoser) {
@@ -2525,13 +2537,16 @@
                         }
                     }
 
-                    // --- INTERCEPTAR CLIC PARA ABRIR MENÚ (Solo en Cuartos) ---
                     let onClickCode = `advanceBracket('${id}', '${teamObj.name}', '${opponentName}')`;
                     if (id.startsWith('qf')) {
                         onClickCode = `handleQFClick('${id}', '${teamObj.name}', '${opponentName}')`;
                     }
                     
-                    return `<div class="matchup-team ${isWin ? 'winner' : ''} ${isLoser ? 'loser' : ''}" onclick="${onClickCode}">
+                    // --- APLICAMOS EL COLOR DEL EQUIPO AL GANADOR ---
+                    let bgColor = isWin ? (teamColors[teamObj.name] || '#172554') : '';
+                    let inlineStyle = isWin ? `style="background-color: ${bgColor} !important; border-left-color: ${bgColor} !important;"` : '';
+
+                    return `<div class="matchup-team ${isWin ? 'winner' : ''} ${isLoser ? 'loser' : ''}" onclick="${onClickCode}" ${inlineStyle}>
                                 <span class="seed-badge">${seedNum}</span>
                                 <img src="${getLogo(teamObj.name)}" class="bracket-logo">
                                 <span class="team-name-bracket">${tName(teamObj.name)}</span>
@@ -2539,12 +2554,14 @@
                             </div>`;
                 };
 
-                // --- MENÚ FLOTANTE SUPERPUESTO ---
                 let overlayHtml = '';
                 if (window.editingScoreFor === id) {
+                    // Traducimos el nombre para que salga en el idioma elegido (ej: Zalgiris vs Žalgiris)
+                    let wNameTranslated = window.editingWinnerName ? tName(window.editingWinnerName) : 'Ganador';
+                    
                     overlayHtml = `
                     <div class="qf-overlay" onclick="window.editingScoreFor = null; renderBracket();">
-                        <div class="qf-overlay-title">Total partidos (Gana en...)</div>
+                        <div class="qf-overlay-title" style="color: white; font-size: 0.95rem;">${wNameTranslated} gana en...</div>
                         <div class="qf-overlay-buttons">
                             <button onclick="event.stopPropagation(); saveScore('${id}', 3)">3</button>
                             <button onclick="event.stopPropagation(); saveScore('${id}', 4)">4</button>
@@ -2563,7 +2580,6 @@
                             ${buildTeam(teamB, seedB)}
                         </div>`;
             };
-
             container.innerHTML = `
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
