@@ -2485,7 +2485,7 @@
 
             // --- PALETA DE COLORES DE LOS EQUIPOS (Oscurecidos para que el texto blanco se lea perfecto) ---
             const teamColors = {
-                "Fenerbahçe": "#032b5e", "Real Madrid": "#3730a3", "Olympiacos": "#9f1239",
+                "Fenerbahçe": "#ca8a04", "Real Madrid": "#3730a3", "Olympiacos": "#9f1239",
                 "Valencia Basket": "#c2410a", "Zalgiris Kaunas": "#14532d", "Panathinaikos": "#065f46",
                 "Hapoel Tel-Aviv": "#be123c", "Barcelona": "#831843", "Monaco": "#991b1b",
                 "Crvena Zvezda": "#b91c1c", "Dubai": "#854d0e", "Olimpia Milano": "#b91c1c",
@@ -3206,6 +3206,8 @@
 
             // 2. Vaciamos el bracket antes de empezar para que esté limpio
             bracketState = {};
+            window.editingScoreFor = null; // Cerramos cualquier menú abierto
+            window.editingWinnerName = null;
             if(typeof renderBracket === 'function') renderBracket();
 
             const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -3216,16 +3218,27 @@
                 // Cogemos TODOS los equipos clickeables del bracket
                 const allTeams = document.querySelectorAll('.matchup-team:not(.disabled)');
                 
-                // Filtramos solo los 2 equipos que pertenecen al partido que toca (ej: 'pi1')
+                // Filtramos solo los 2 equipos que pertenecen al partido que toca 
+                // AÑADIDO: Ahora busca tanto advanceBracket (normal) como handleQFClick (cuartos)
                 const teams = Array.from(allTeams).filter(team => {
                     const onclickAttr = team.getAttribute('onclick');
-                    return onclickAttr && onclickAttr.includes(`advanceBracket('${matchupId}'`);
+                    return onclickAttr && (onclickAttr.includes(`advanceBracket('${matchupId}'`) || onclickAttr.includes(`handleQFClick('${matchupId}'`));
                 });
 
                 // Si ha encontrado los 2 rivales, lanza la moneda
                 if (teams.length === 2) {
                     const randomWinnerIndex = Math.floor(Math.random() * 2);
                     teams[randomWinnerIndex].click(); // Clic real simulado
+                    
+                    // --- NUEVO: SI ES CUARTOS DE FINAL, ELEGIMOS LOS PARTIDOS AL AZAR ---
+                    if (matchupId.startsWith('qf')) {
+                        // Inventamos 3, 4 o 5
+                        const randomGames = Math.floor(Math.random() * 3) + 3; 
+                        // Usamos la función del menú para guardarlo y que se cierre
+                        if (typeof window.saveScore === 'function') {
+                            window.saveScore(matchupId, randomGames);
+                        }
+                    }
                     
                     // ⏱️ Esperamos medio segundo para que el CSS dibuje las líneas y el ganador
                     await sleep(400); 
@@ -3252,7 +3265,11 @@
             // Fase 4: Final
             await clickRandom('final');
 
-            // 5. Hemos terminado, restauramos el botón
+            // 5. Hemos terminado, nos aseguramos de que ningún menú quede abierto y restauramos
+            window.editingScoreFor = null;
+            window.editingWinnerName = null;
+            if(typeof renderBracket === 'function') renderBracket(); // Último render de seguridad
+            
             btn.disabled = false;
             btn.innerHTML = '🎲 Aleatorio';
             btn.style.opacity = '1';
