@@ -633,8 +633,8 @@
             content: 'W';
             position: absolute;
             /* ⚠️ El 'top' debe ser 100% + la misma 'height' que la tubería (40px) */
-            top: calc(100% + 40px); 
-            left: 50%; 
+            top: calc(100% + 45px); 
+            left: 51%; 
             
             /* Centramos la W exactamente en ese punto */
             transform: translate(-50%, -50%); 
@@ -788,7 +788,7 @@
             position: absolute;
             /* ⚠️ Matemáticas exactas: bottom + la subida (140) y left + la salida (40) */
             bottom: calc(45% + 235px); 
-            left: calc(100% + 8px); 
+            left: calc(100% + 15px); 
             
             /* Centramos la W exactamente en ese vértice */
             transform: translate(-50%, 50%); 
@@ -813,8 +813,8 @@
             position: absolute;
             top: 50%; 
             /* ⬅️ Cuánto avanza hacia la izquierda buscando la W */
-            left: -8px; 
-            width: 8px; 
+            left: -10px; 
+            width: 10px; 
             
             height: 8px; /* Grosor idéntico al resto de la línea */
             background-color: var(--win);
@@ -872,7 +872,7 @@
         #qf2-wrap .matchup::after, #qf4-wrap .matchup::after {
             content: ''; position: absolute;
             bottom: 50%; left: 100%;
-            width: 15px; height: 65px; /* Igualado a 75px para que sea simétrico */
+            width: 15px; height: 62px; /* Igualado a 75px para que sea simétrico */
             border-bottom: 8px solid var(--win);  
             border-right: 8px solid var(--win);   
             border-bottom-right-radius: 6px;      
