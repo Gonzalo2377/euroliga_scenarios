@@ -283,10 +283,8 @@
             flex-direction: column;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
-            cursor: default;
-            position: relative;
         }
-        .po-card:hover { border-color: #4b5563; background: #273345; }
+        .po-card:hover { border-color: #ea580c; background: #273345; }
 
         .po-header {
             font-size: 0.65rem;
@@ -295,52 +293,31 @@
             font-weight: bold;
             text-align: center;
             margin-bottom: 6px;
-            letter-spacing: 0.5px;
         }
-        .po-phase { color: #ea580c; }
-        .po-phase-reg { color: #3b82f6; }
+        .phase-badge { padding: 2px 5px; border-radius: 3px; font-size: 0.6rem; margin-right: 5px; }
+        .bg-orange { background: #ea580c; color: white; }
+        .bg-blue { background: #2563eb; color: white; }
 
         .po-body {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            width: 100%;
             font-size: 0.9rem;
             font-weight: 600;
             color: #f3f4f6;
         }
 
-        .score-final {
-            color: #facc15;
-            font-size: 1.1rem;
-            font-weight: 900;
-            margin: 0 10px;
-            font-family: monospace;
-        }
-        .ot-badge { font-size: 0.55rem; color: #ef4444; vertical-align: top; margin-left: 2px;}
+        .score-val { color: #facc15; font-size: 1.1rem; font-weight: 900; font-family: monospace; }
+        .time-val { color: #9ca3af; font-size: 0.75rem; font-weight: normal; }
 
-        .time-upcoming {
-            color: #9ca3af;
-            font-size: 0.75rem;
-            font-weight: normal;
-            margin: 0 10px;
-            text-align: center;
-        }
-
-        /* --- DETALLE DE CUARTOS (OCULTO POR DEFECTO) --- */
         .quarters-detail {
             display: none;
             margin-top: 8px;
             padding-top: 8px;
             border-top: 1px solid #374151;
             font-size: 0.7rem;
-            color: #9ca3af;
-            text-align: center;
-            letter-spacing: 1px;
         }
-        .po-card:hover .quarters-detail {
-            display: block;
-        }
+        .po-card:hover .quarters-detail { display: block; }
 
         .standings-legend {
             background: #fff; border: 1px solid var(--border); border-radius: 8px;
@@ -3442,89 +3419,81 @@
         }
         const universalGames = [
             "Play In | Panathinaikos | Monaco Basket | GAME 1 | 21/4/26 - 20:00",
-            "Play In | Barça | Crvena zvezda | GAME 1 | 21/4/26 - 20:45",
-            "Play Off | Fenerbahçe | Žalgiris | GAME 1 | 28/4/26 - 19:45",
-            "Play Off | Real Madrid | Hapoel TA | GAME 1 | 29/4/26 - 19:45",
+            "Play In| Barça | Crvena Zvezda | GAME 1 | 21/4/26 - 20:45",
             "Play Off | Fenerbahçe | Žalgiris | GAME 2 | 30/4/26 - 19:45",
             "Play Off | Real Madrid | Hapoel TA | GAME 2 | 1/5/26 - 20:45",
             "Play Off | Hapoel TA | Real Madrid | GAME 3 | 4/5/26 - 20:00",
-            "Play Off | Žalgiris | Fenerbahçe | GAME 3 | 4/5/26 - 20:00"
         ];
 
         function renderUniversalBanner() {
             const container = document.getElementById("results-banner-container");
             if (!container) return;
 
+            let combinedData = [];
+
+            // 1. EXTRAER ÚLTIMOS RESULTADOS DEL ARRAY PRINCIPAL (Últimos 4)
+            // Asumimos que rawResultsArray ya existe en tu código
+            const lastResults = rawResultsArray.slice(-4).reverse();
+            
+            lastResults.forEach(raw => {
+                const p = raw.split('|').map(s => s.trim());
+                combinedData.push({
+                    phase: isNaN(p[0]) ? p[0] : `Jornada ${p[0]}`,
+                    isPlayoff: isNaN(p[0]),
+                    teamA: p[1],
+                    teamB: p[2],
+                    scoreA: p[3],
+                    scoreB: p[4],
+                    info: p[5] || "Final",
+                    qA: p[6] || "",
+                    qB: p[7] || "",
+                    isFinished: true
+                });
+            });
+
+            // 2. AÑADIR LA AGENDA (PRÓXIMOS PARTIDOS)
+            universalGames.forEach(raw => {
+                const p = raw.split('|').map(s => s.trim());
+                combinedData.push({
+                    phase: p[0],
+                    isPlayoff: isNaN(p[0]),
+                    teamA: p[1],
+                    teamB: p[2],
+                    info: p[3],
+                    time: p[4],
+                    isFinished: false
+                });
+            });
+
+            // 3. DIBUJAR TODO
             let html = '<div class="el-playoff-banner">';
-
-            universalGames.forEach(game => {
-                const parts = game.split('|').map(s => s.trim());
-                const type = parts[0];
-                const isPlayoff = isNaN(type); 
+            combinedData.forEach(game => {
+                const badgeClass = game.isPlayoff ? 'bg-orange' : 'bg-blue';
+                const centerText = game.isFinished 
+                    ? `<span class="score-val">${game.scoreA} - ${game.scoreB}</span>`
+                    : `<span class="time-val">${game.time}</span>`;
                 
-                let phaseLabel, phaseClass, teamA, teamB, info, time, scoreA, scoreB, ot, qA, qB;
-                let isFinished = false;
-
-                if (isPlayoff) {
-                    phaseLabel = type;
-                    phaseClass = "po-phase"; 
-                    teamA = parts[1];
-                    teamB = parts[2];
-                    info = ` • ${parts[3]}`; 
-                    
-                    if (parts.length === 5) { 
-                        time = parts[4];
-                    } else if (parts.length >= 6) { 
-                        isFinished = true;
-                        scoreA = parts[4];
-                        scoreB = parts[5];
-                        ot = parts[6] ? `<span class="ot-badge">${parts[6]}</span>` : "";
-                        qA = parts[7] || "";
-                        qB = parts[8] || "";
-                    }
-                } else {
-                    phaseLabel = `Jornada ${type}`;
-                    phaseClass = "po-phase-reg"; 
-                    teamA = parts[1];
-                    teamB = parts[2];
-                    info = ""; 
-                    
-                    if (parts.length === 4) { 
-                        time = parts[3];
-                    } else if (parts.length >= 5) { 
-                        isFinished = true;
-                        scoreA = parts[3];
-                        scoreB = parts[4];
-                        ot = parts[5] ? `<span class="ot-badge">${parts[5]}</span>` : "";
-                        qA = parts[6] || "";
-                        qB = parts[7] || "";
-                    }
-                }
-
-                let centerElement = isFinished 
-                    ? `<span class="score-final">${scoreA} - ${scoreB}${ot}</span>`
-                    : `<span class="time-upcoming">${time}</span>`;
-
-                let quartersHtml = (isFinished && qA && qB) 
+                const quarters = (game.isFinished && game.qA) 
                     ? `<div class="quarters-detail">
-                        <div style="color:white; margin-bottom:2px;">${tName(teamA)}: <span style="color:#facc15">${qA.replace(/,/g, ' | ')}</span></div>
-                        <div style="color:white">${tName(teamB)}: <span style="color:#facc15">${qB.replace(/,/g, ' | ')}</span></div>
-                       </div>`
-                    : ``;
+                        <div style="color:white; margin-bottom:2px;">${game.teamA}: <span style="color:#facc15">${game.qA.replace(/,/g, ' | ')}</span></div>
+                        <div style="color:white">${game.teamB}: <span style="color:#facc15">${game.qB.replace(/,/g, ' | ')}</span></div>
+                       </div>` 
+                    : '';
 
                 html += `
                     <div class="po-card">
-                        <div class="po-header"><span class="${phaseClass}">${phaseLabel}</span>${info}</div>
-                        <div class="po-body">
-                            <span>${tName(teamA)}</span>
-                            ${centerElement}
-                            <span>${tName(teamB)}</span>
+                        <div class="po-header">
+                            <span class="phase-badge ${badgeClass}">${game.phase}</span> ${game.isFinished ? game.info : game.info}
                         </div>
-                        ${quartersHtml}
+                        <div class="po-body">
+                            <span>${game.teamA}</span>
+                            ${centerText}
+                            <span>${game.teamB}</span>
+                        </div>
+                        ${quarters}
                     </div>
                 `;
             });
-
             html += '</div>';
             container.innerHTML = html;
         }
