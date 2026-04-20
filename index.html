@@ -252,118 +252,157 @@
             background-color: var(--light);
             border-color: var(--primary);
         }
-        #results-banner-container {
-            width: 100%;
-            background: #111827;
-            border-bottom: 2px solid #ea580c;
-            height: 105px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-        }
-
         .el-results-banner {
             display: flex;
             align-items: center;
             width: 100%;
-            height: 100%;
+            height: 110px;
+            background: linear-gradient(90deg, #111827 0%, #1f2937 100%);
+            position: relative;
+            border-bottom: 3px solid var(--primary);
         }
-
+        .btn-win.selected {
+            background-color: var(--primary) !important;
+            color: var(--white) !important;
+            border-color: var(--primary) !important;
+        }
         .el-ticker-wrap {
-            flex-grow: 1;
-            overflow: hidden;
-            white-space: nowrap;
+            width: calc(100% - 180px);
             height: 100%;
             display: flex;
             align-items: center;
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         }
-
-        .el-ticker-content {
-            display: inline-flex;
+        .el-ticker-track {
+            display: flex;
             gap: 20px;
-            padding-left: 20px;
-            animation: ticker 50s linear infinite; /* Ajusta la velocidad aquí */
+            padding: 0 20px;
+            animation: el-scroll 50s linear infinite;
+            white-space: nowrap;
+            align-items: center;
+        }
+        .el-ticker-track:hover { animation-play-state: paused; }
+        
+        .el-game-card {
+            background: rgba(255, 255, 255, 0.08); 
+            border: 1px solid rgba(255, 255, 255, 0.85) !important; 
+            border-radius: 8px;
+            padding: 8px 15px;
+            min-width: 240px; 
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            cursor: default;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7), 0px 1px 3px rgba(0, 0, 0, 0.9);
+        }
+        
+        .el-game-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px); 
+            border-color: var(--primary) !important; 
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.9), 0px 2px 4px rgba(0, 0, 0, 1);
+        }
+        
+        .el-game-status {
+            font-size: 10px; color: #9ca3af;
+            display: flex; justify-content: space-between;
+            margin-bottom: 6px; width: 100%; font-weight: bold; text-transform: uppercase;
+            transition: opacity 0.2s ease, visibility 0.2s ease; 
+        }
+        .el-game-card:hover .el-game-status {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .el-game-main {
+            display: flex; align-items: center; justify-content: space-between; gap: 15px; width: 100%;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+        .el-game-card:hover .el-game-main {
+            opacity: 0;
+            visibility: hidden;
         }
 
-        .el-ticker-content:hover { animation-play-state: paused; }
+        .el-team-col {
+            display: flex; flex-direction: column; align-items: center; gap: 4px; width: 60px;
+        }
+        .el-team-col img { width: 32px; height: 32px; object-fit: contain; }
+        .el-team-name { font-size: 11px; color: #d1d5db; font-weight: bold; }
+        
+        .el-score-center {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 22px; font-weight: 900; color: white;
+        }
+        .el-score-center .win { color: var(--primary); }
+        .el-score-divider { font-size: 16px; color: #6b7280; font-weight: normal; }
 
-        @keyframes ticker {
+        .el-quarters-tooltip {
+            position: absolute;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%; 
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 10;
+            background: transparent; 
+            border-radius: 8px;
+        }
+        .el-game-card:hover .el-quarters-tooltip { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+        
+        .q-table { 
+            color: #ffffff; border-collapse: collapse; width: 95%; margin: 0 auto; border: none !important; background: transparent !important;
+        }
+        .q-table tr, .q-table tr:nth-child(even), .q-table tr:nth-child(odd) {
+            background-color: transparent !important; border: none !important;
+        }
+        .q-table th { 
+            padding: 4px 3px; color: #e5e7eb !important; font-size: 13px !important; font-weight: 800 !important;
+            text-align: center; border: none !important; background: transparent !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); 
+        }
+        .q-table td { 
+            padding: 4px 3px; text-align: center; font-size: 15px !important; font-weight: 800; color: #ffffff !important; 
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9); border: none !important; background: transparent !important;
+        }
+        
+        .q-table th:first-child, .q-table td:first-child { text-align: left; width: 26px; border: none !important; }
+        .q-table td:first-child img { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
+        
+        @keyframes el-scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
 
-        /* TARJETAS CON LOGOS */
-        .game-card {
-            background: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 8px;
-            padding: 10px 15px;
-            min-width: 280px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .game-header {
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            color: #9ca3af;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .team-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #f3f4f6;
-        }
-
-        .team-info { display: flex; align-items: center; gap: 8px; }
-        .team-logo { width: 22px; height: 22px; object-fit: contain; }
-        
-        .game-score { color: #facc15; font-family: monospace; font-size: 1.1rem; }
-        .game-time { color: #9ca3af; font-size: 0.8rem; font-weight: 400; }
-
-        /* BOTÓN FIJO A LA DERECHA */
         .el-banner-action {
-            width: 140px;
-            background: #111827;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            box-shadow: -15px 0 25px rgba(0,0,0,0.8);
-            border-left: 1px solid #374151;
+            position: absolute; right: 0; top: 0; width: 180px; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(270deg, #111827 80%, transparent 100%);
+            z-index: 10;
         }
-
         .el-btn-view {
-            background: #ea580c;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            cursor: pointer;
-            text-transform: uppercase;
+            background: var(--white); color: var(--dark); border: none; padding: 8px 16px;
+            border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
+        .el-btn-view:hover { transform: scale(1.05); background: var(--light); color: var(--primary); }
 
-        /* TOOLTIP DE CUARTOS */
-        .q-details {
-            display: none;
-            font-size: 0.6rem;
-            color: #9ca3af;
-            border-top: 1px solid #374151;
-            margin-top: 4px;
-            padding-top: 4px;
+        @media (max-width: 768px) {
+            .el-ticker-wrap { width: calc(100% - 120px); }
+            .el-banner-action { width: 120px; }
+            .el-btn-view { font-size: 11px; padding: 6px 12px; }
+            .el-results-banner { height: 100px; }
         }
-        .game-card:hover .q-details { display: block; }
 
         .standings-legend {
             background: #fff; border: 1px solid var(--border); border-radius: 8px;
@@ -2049,7 +2088,7 @@
                 renderAnalysis();
                 if (document.getElementById('select-myteam')?.value) renderMyTeam();
                 // AÑADE ESTA LÍNEA 👇 PARA QUE ARRANQUE EL BANNER
-                renderUniversalBanner(); 
+                renderBanner(); 
             }, 0);
         }
 
@@ -3463,90 +3502,67 @@
                 });
             });
         }
-        const universalGames = [
-            "Play Off | Panathinaikos | Monaco Basket | GAME 1 | 21/4/26 - 20:00",
-            "Play Off | Barça | Crvena Zvezda | GAME 1 | 21/4/26 - 20:45",
-            "Play Off | Fenerbahçe | Žalgiris | GAME 1 | 28/4/26 - 19:45"
-        ];
-
-        function renderUniversalBanner() {
+        function renderBanner() {
             const container = document.getElementById("results-banner-container");
-            if (!container) return;
+            if(!container) return;
+            const t = i18n[currentLang] || i18n['es'];
+            
+            const lastRound = Math.max(...pastMatches.map(m => m.jornada));
+            const latestGames = pastMatches.filter(m => m.jornada === lastRound);
+            
+            if (latestGames.length === 0) return;
 
-            let combinedData = [];
+            // Conseguimos la clasificación en tiempo real para poner las posiciones (Ej: VAL (2))
+            let currentStandings = sortTeamsWithH2H(getLiveTeams());
+            const getPos = (teamName) => currentStandings.findIndex(t => t.name === teamName) + 1;
 
-            // 1. OBTENER LOS ÚLTIMOS RESULTADOS (4 partidos de la última jornada jugada)
-            if (typeof rawResultsArray !== 'undefined') {
-                const lastFour = rawResultsArray.slice(-4).reverse();
-                lastFour.forEach(raw => {
-                    const p = raw.split('|').map(s => s.trim());
-                    combinedData.push({
-                        phase: isNaN(p[0]) ? p[0] : `Jornada ${p[0]}`,
-                        teamA: p[1], teamB: p[2],
-                        scoreA: p[3], scoreB: p[4],
-                        info: p[5] || "Final",
-                        qA: p[6], qB: p[7],
-                        isFinished: true
-                    });
-                });
-            }
-
-            // 2. AÑADIR TU AGENDA (Próximos partidos)
-            if (typeof universalGames !== 'undefined') {
-                universalGames.forEach(raw => {
-                    const p = raw.split('|').map(s => s.trim());
-                    combinedData.push({
-                        phase: p[0], teamA: p[1], teamB: p[2],
-                        info: p[3], time: p[4],
-                        isFinished: false
-                    });
-                });
-            }
-
-            // 3. GENERAR EL HTML CON LOGOS
-            let cardsHtml = "";
-            combinedData.forEach(g => {
-                const centerContent = g.isFinished 
-                    ? `<span class="game-score">${g.scoreA} - ${g.scoreB}</span>`
-                    : `<span class="game-time">${g.time}</span>`;
+            const displayGames = [...latestGames, ...latestGames];
+            
+            let gamesHTML = displayGames.map(g => {
+                let winH = g.scoreH > g.scoreA ? 'win' : '';
+                let winA = g.scoreA > g.scoreH ? 'win' : '';
+                let posH = getPos(g.home);
+                let posA = getPos(g.away);
                 
-                const quarters = (g.isFinished && g.qA) 
-                    ? `<div class="q-details">${g.qA} | ${g.qB}</div>` : "";
+                let qTable = "";
+                if(g.qH && g.qA) {
+                    qTable = `<div class="el-quarters-tooltip"><table class="q-table">
+                        <tr><th></th><th>${t.q1}</th><th>${t.q2}</th><th>${t.q3}</th><th>${t.q4}</th>${g.isOT ? `<th>${t.ot}</th>` : ''}</tr>
+                        <tr><td><img src="${getLogo(g.home)}" width="14" style="vertical-align:middle;"></td>${g.qH.map(q => `<td>${q}</td>`).join('')}</tr>
+                        <tr><td><img src="${getLogo(g.away)}" width="14" style="vertical-align:middle;"></td>${g.qA.map(q => `<td>${q}</td>`).join('')}</tr>
+                    </table></div>`;
+                }
 
-                cardsHtml += `
-                    <div class="game-card">
-                        <div class="game-header">
-                            <span style="color:${g.isFinished ? '#9ca3af' : '#ea580c'}">${g.phase}</span>
-                            <span>${g.info}</span>
-                        </div>
-                        <div class="team-row">
-                            <div class="team-info">
-                                <img src="logos/${g.teamA}.png" class="team-logo" onerror="this.style.display='none'">
-                                <span>${tName(g.teamA)}</span>
+                // Diseño Foto 2 Integrado
+                return `
+                    <div class="el-game-card">
+                        <div class="el-game-status"><span>${t.round} ${g.jornada}</span><span style="color:var(--primary);">${t.final}</span></div>
+                        <div class="el-game-main">
+                            <div class="el-team-col">
+                                <img src="${getLogo(g.home)}">
+                                <span class="el-team-name">${getTeamAbrev(g.home)} (${posH})</span>
                             </div>
-                            ${g.isFinished ? `<span class="game-score">${g.scoreA}</span>` : ''}
-                        </div>
-                        <div class="team-row">
-                            <div class="team-info">
-                                <img src="logos/${g.teamB}.png" class="team-logo" onerror="this.style.display='none'">
-                                <span>${tName(g.teamB)}</span>
+                            <div class="el-score-center">
+                                <span class="${winH}">${g.scoreH}</span>
+                                <span class="el-score-divider">-</span>
+                                <span class="${winA}">${g.scoreA}</span>
                             </div>
-                            ${g.isFinished ? `<span class="game-score">${g.scoreB}</span>` : ''}
+                            <div class="el-team-col">
+                                <img src="${getLogo(g.away)}">
+                                <span class="el-team-name">${getTeamAbrev(g.away)} (${posA})</span>
+                            </div>
                         </div>
-                        ${!g.isFinished ? `<div style="text-align:center; margin-top:5px;">${centerContent}</div>` : quarters}
+                        ${qTable}
                     </div>`;
-            });
+            }).join('');
 
-            // 4. INYECTAR CON EL TICKER DUPLICADO (Bucle infinito)
             container.innerHTML = `
-                <div class="el-results-banner">
+                <div class="el-results-banner" style="direction: ltr;">
                     <div class="el-ticker-wrap">
-                        <div class="el-ticker-content">
-                            ${cardsHtml}
-                            ${cardsHtml} </div>
+                        <div class="el-ticker-track">${gamesHTML}</div>
                     </div>
                     <div class="el-banner-action">
-                        <button class="el-btn-view" onclick="openTab(null, 'resultados')">Ver resultados</button>
+                        <button class="el-btn-view" onclick="openTab(null, 'resultados')">${t.view_all_games}</button>
                     </div>
                 </div>`;
         }
