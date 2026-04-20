@@ -256,47 +256,65 @@
             width: 100%;
             background: #111827;
             border-bottom: 2px solid #ea580c;
-            padding: 10px 0;
-            display: flex;
-            justify-content: center;
+            overflow: hidden;
+            position: relative;
         }
 
-        .el-playoff-banner {
+        .el-results-banner {
             display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            max-width: 1200px;
+            align-items: center;
             width: 100%;
-            padding: 0 15px;
-            scrollbar-width: none;
+            height: 100px;
         }
-        .el-playoff-banner::-webkit-scrollbar { display: none; }
+
+        .el-ticker-wrap {
+            flex-grow: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .el-ticker-content {
+            display: inline-flex;
+            gap: 20px;
+            padding-left: 20px;
+            animation: ticker 40s linear infinite;
+        }
+
+        /* Pausar al pasar el ratón para poder ver los cuartos con calma */
+        .el-ticker-content:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
 
         .po-card {
             background: #1f2937;
             border: 1px solid #374151;
             border-radius: 6px;
             padding: 8px 15px;
-            min-width: 270px;
-            flex-shrink: 0;
+            min-width: 260px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
         }
-        .po-card:hover { border-color: #ea580c; background: #273345; }
 
         .po-header {
             font-size: 0.65rem;
             color: #9ca3af;
             text-transform: uppercase;
             font-weight: bold;
-            text-align: center;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
-        .phase-badge { padding: 2px 5px; border-radius: 3px; font-size: 0.6rem; margin-right: 5px; }
-        .bg-orange { background: #ea580c; color: white; }
-        .bg-blue { background: #2563eb; color: white; }
+        .phase-badge { padding: 1px 4px; border-radius: 3px; font-size: 0.6rem; margin-right: 4px; color: white; }
+        .bg-orange { background: #ea580c; }
+        .bg-blue { background: #2563eb; }
 
         .po-body {
             display: flex;
@@ -307,17 +325,45 @@
             color: #f3f4f6;
         }
 
-        .score-val { color: #facc15; font-size: 1.1rem; font-weight: 900; font-family: monospace; }
+        .score-val { color: #facc15; font-size: 1.1rem; font-family: monospace; }
         .time-val { color: #9ca3af; font-size: 0.75rem; font-weight: normal; }
 
-        .quarters-detail {
-            display: none;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid #374151;
-            font-size: 0.7rem;
+        /* Botón fijo a la derecha */
+        .el-banner-action {
+            width: 140px;
+            background: #111827;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: -10px 0 20px rgba(0,0,0,0.5);
+            border-left: 1px solid #374151;
         }
-        .po-card:hover .quarters-detail { display: block; }
+
+        .el-btn-view {
+            background: #ea580c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .el-btn-view:hover { background: #f97316; }
+
+        /* Tooltip de cuartos al pasar el ratón */
+        .quarters-popup {
+            display: none;
+            font-size: 0.65rem;
+            color: #facc15;
+            margin-top: 4px;
+            border-top: 1px solid #374151;
+            padding-top: 4px;
+        }
+        .po-card:hover .quarters-popup { display: block; }
 
         .standings-legend {
             background: #fff; border: 1px solid var(--border); border-radius: 8px;
@@ -3418,11 +3464,9 @@
             });
         }
         const universalGames = [
-            "Play In | Panathinaikos | Monaco Basket | GAME 1 | 21/4/26 - 20:00",
-            "Play In| Barça | Crvena Zvezda | GAME 1 | 21/4/26 - 20:45",
-            "Play Off | Fenerbahçe | Žalgiris | GAME 2 | 30/4/26 - 19:45",
-            "Play Off | Real Madrid | Hapoel TA | GAME 2 | 1/5/26 - 20:45",
-            "Play Off | Hapoel TA | Real Madrid | GAME 3 | 4/5/26 - 20:00",
+            "Play Off | Panathinaikos | Monaco Basket | GAME 1 | 21/4/26 - 20:00",
+            "Play Off | Barça | Crvena Zvezda | GAME 1 | 21/4/26 - 20:45",
+            "Play Off | Fenerbahçe | Žalgiris | GAME 1 | 28/4/26 - 19:45"
         ];
 
         function renderUniversalBanner() {
@@ -3431,71 +3475,72 @@
 
             let combinedData = [];
 
-            // 1. EXTRAER ÚLTIMOS RESULTADOS DEL ARRAY PRINCIPAL (Últimos 4)
-            // Asumimos que rawResultsArray ya existe en tu código
-            const lastResults = rawResultsArray.slice(-4).reverse();
-            
-            lastResults.forEach(raw => {
-                const p = raw.split('|').map(s => s.trim());
-                combinedData.push({
-                    phase: isNaN(p[0]) ? p[0] : `Jornada ${p[0]}`,
-                    isPlayoff: isNaN(p[0]),
-                    teamA: p[1],
-                    teamB: p[2],
-                    scoreA: p[3],
-                    scoreB: p[4],
-                    info: p[5] || "Final",
-                    qA: p[6] || "",
-                    qB: p[7] || "",
-                    isFinished: true
+            // 1. Extraer últimos resultados reales (los 4 últimos)
+            if (typeof rawResultsArray !== 'undefined') {
+                const lastResults = rawResultsArray.slice(-4).reverse();
+                lastResults.forEach(raw => {
+                    const p = raw.split('|').map(s => s.trim());
+                    combinedData.push({
+                        phase: isNaN(p[0]) ? p[0] : `Jornada ${p[0]}`,
+                        isPlayoff: isNaN(p[0]),
+                        teamA: p[1], teamB: p[2],
+                        scoreA: p[3], scoreB: p[4],
+                        info: p[5] || "Final",
+                        qA: p[6] || "", qB: p[7] || "",
+                        isFinished: true
+                    });
                 });
-            });
+            }
 
-            // 2. AÑADIR LA AGENDA (PRÓXIMOS PARTIDOS)
+            // 2. Añadir agenda de próximos partidos
             universalGames.forEach(raw => {
                 const p = raw.split('|').map(s => s.trim());
                 combinedData.push({
                     phase: p[0],
                     isPlayoff: isNaN(p[0]),
-                    teamA: p[1],
-                    teamB: p[2],
-                    info: p[3],
-                    time: p[4],
+                    teamA: p[1], teamB: p[2],
+                    info: p[3], time: p[4],
                     isFinished: false
                 });
             });
 
-            // 3. DIBUJAR TODO
-            let html = '<div class="el-playoff-banner">';
+            // 3. Generar el HTML de las tarjetas
+            let itemsHtml = "";
             combinedData.forEach(game => {
                 const badgeClass = game.isPlayoff ? 'bg-orange' : 'bg-blue';
-                const centerText = game.isFinished 
-                    ? `<span class="score-val">${game.scoreA} - ${game.scoreB}</span>`
+                const centerPart = game.isFinished 
+                    ? `<span class="score-val">${game.scoreA}-${game.scoreB}</span>`
                     : `<span class="time-val">${game.time}</span>`;
                 
                 const quarters = (game.isFinished && game.qA) 
-                    ? `<div class="quarters-detail">
-                        <div style="color:white; margin-bottom:2px;">${game.teamA}: <span style="color:#facc15">${game.qA.replace(/,/g, ' | ')}</span></div>
-                        <div style="color:white">${game.teamB}: <span style="color:#facc15">${game.qB.replace(/,/g, ' | ')}</span></div>
-                       </div>` 
-                    : '';
+                    ? `<div class="quarters-popup">${game.qA} | ${game.qB}</div>` : "";
 
-                html += `
+                itemsHtml += `
                     <div class="po-card">
                         <div class="po-header">
-                            <span class="phase-badge ${badgeClass}">${game.phase}</span> ${game.isFinished ? game.info : game.info}
+                            <span class="phase-badge ${badgeClass}">${game.phase}</span> ${game.info}
                         </div>
                         <div class="po-body">
-                            <span>${game.teamA}</span>
-                            ${centerText}
-                            <span>${game.teamB}</span>
+                            <span>${tName(game.teamA)}</span>
+                            ${centerPart}
+                            <span>${tName(game.teamB)}</span>
                         </div>
                         ${quarters}
-                    </div>
-                `;
+                    </div>`;
             });
-            html += '</div>';
-            container.innerHTML = html;
+
+            // 4. Montar la estructura con el ticker duplicado para el bucle y el botón fijo
+            container.innerHTML = `
+                <div class="el-results-banner">
+                    <div class="el-ticker-wrap">
+                        <div class="el-ticker-content">
+                            ${itemsHtml}
+                            ${itemsHtml} </div>
+                    </div>
+                    <div class="el-banner-action">
+                        <button class="el-btn-view" onclick="openTab(null, 'resultados')">Ver resultados</button>
+                    </div>
+                </div>`;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
