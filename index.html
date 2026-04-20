@@ -252,156 +252,94 @@
             background-color: var(--light);
             border-color: var(--primary);
         }
-        .el-results-banner {
-            display: flex;
-            align-items: center;
+        #results-banner-container {
             width: 100%;
-            height: 110px;
-            background: linear-gradient(90deg, #111827 0%, #1f2937 100%);
-            position: relative;
-            border-bottom: 3px solid var(--primary);
-        }
-        .btn-win.selected {
-            background-color: var(--primary) !important;
-            color: var(--white) !important;
-            border-color: var(--primary) !important;
-        }
-        .el-ticker-wrap {
-            width: calc(100% - 180px);
-            height: 100%;
+            background: #111827;
+            border-bottom: 2px solid #ea580c;
+            padding: 10px 0;
             display: flex;
-            align-items: center;
-            overflow: hidden;
-            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            justify-content: center;
         }
-        .el-ticker-track {
+
+        .el-playoff-banner {
             display: flex;
-            gap: 20px;
-            padding: 0 20px;
-            animation: el-scroll 50s linear infinite;
-            white-space: nowrap;
-            align-items: center;
+            gap: 15px;
+            overflow-x: auto;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 15px;
+            scrollbar-width: none;
         }
-        .el-ticker-track:hover { animation-play-state: paused; }
-        
-        .el-game-card {
-            background: rgba(255, 255, 255, 0.08); 
-            border: 1px solid rgba(255, 255, 255, 0.85) !important; 
-            border-radius: 8px;
+        .el-playoff-banner::-webkit-scrollbar { display: none; }
+
+        .po-card {
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 6px;
             padding: 8px 15px;
-            min-width: 240px; 
-            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            cursor: default;
-            position: relative;
+            min-width: 270px;
+            flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7), 0px 1px 3px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: default;
+            position: relative;
         }
-        
-        .el-game-card:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-3px); 
-            border-color: var(--primary) !important; 
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.9), 0px 2px 4px rgba(0, 0, 0, 1);
-        }
-        
-        .el-game-status {
-            font-size: 10px; color: #9ca3af;
-            display: flex; justify-content: space-between;
-            margin-bottom: 6px; width: 100%; font-weight: bold; text-transform: uppercase;
-            transition: opacity 0.2s ease, visibility 0.2s ease; 
-        }
-        .el-game-card:hover .el-game-status {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        .el-game-main {
-            display: flex; align-items: center; justify-content: space-between; gap: 15px; width: 100%;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-        }
-        .el-game-card:hover .el-game-main {
-            opacity: 0;
-            visibility: hidden;
-        }
+        .po-card:hover { border-color: #4b5563; background: #273345; }
 
-        .el-team-col {
-            display: flex; flex-direction: column; align-items: center; gap: 4px; width: 60px;
+        .po-header {
+            font-size: 0.65rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
         }
-        .el-team-col img { width: 32px; height: 32px; object-fit: contain; }
-        .el-team-name { font-size: 11px; color: #d1d5db; font-weight: bold; }
-        
-        .el-score-center {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 22px; font-weight: 900; color: white;
-        }
-        .el-score-center .win { color: var(--primary); }
-        .el-score-divider { font-size: 16px; color: #6b7280; font-weight: normal; }
+        .po-phase { color: #ea580c; }
+        .po-phase-reg { color: #3b82f6; }
 
-        .el-quarters-tooltip {
-            position: absolute;
-            top: 0; 
-            left: 0;
-            width: 100%;
-            height: 100%; 
+        .po-body {
             display: flex;
-            align-items: center; 
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-            z-index: 10;
-            background: transparent; 
-            border-radius: 8px;
-        }
-        .el-game-card:hover .el-quarters-tooltip { 
-            opacity: 1; 
-            visibility: visible; 
-        }
-        
-        .q-table { 
-            color: #ffffff; border-collapse: collapse; width: 95%; margin: 0 auto; border: none !important; background: transparent !important;
-        }
-        .q-table tr, .q-table tr:nth-child(even), .q-table tr:nth-child(odd) {
-            background-color: transparent !important; border: none !important;
-        }
-        .q-table th { 
-            padding: 4px 3px; color: #e5e7eb !important; font-size: 13px !important; font-weight: 800 !important;
-            text-align: center; border: none !important; background: transparent !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); 
-        }
-        .q-table td { 
-            padding: 4px 3px; text-align: center; font-size: 15px !important; font-weight: 800; color: #ffffff !important; 
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.9); border: none !important; background: transparent !important;
-        }
-        
-        .q-table th:first-child, .q-table td:first-child { text-align: left; width: 26px; border: none !important; }
-        .q-table td:first-child img { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
-        
-        @keyframes el-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #f3f4f6;
         }
 
-        .el-banner-action {
-            position: absolute; right: 0; top: 0; width: 180px; height: 100%;
-            display: flex; justify-content: center; align-items: center;
-            background: linear-gradient(270deg, #111827 80%, transparent 100%);
-            z-index: 10;
+        .score-final {
+            color: #facc15;
+            font-size: 1.1rem;
+            font-weight: 900;
+            margin: 0 10px;
+            font-family: monospace;
         }
-        .el-btn-view {
-            background: var(--white); color: var(--dark); border: none; padding: 8px 16px;
-            border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer;
-            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .el-btn-view:hover { transform: scale(1.05); background: var(--light); color: var(--primary); }
+        .ot-badge { font-size: 0.55rem; color: #ef4444; vertical-align: top; margin-left: 2px;}
 
-        @media (max-width: 768px) {
-            .el-ticker-wrap { width: calc(100% - 120px); }
-            .el-banner-action { width: 120px; }
-            .el-btn-view { font-size: 11px; padding: 6px 12px; }
-            .el-results-banner { height: 100px; }
+        .time-upcoming {
+            color: #9ca3af;
+            font-size: 0.75rem;
+            font-weight: normal;
+            margin: 0 10px;
+            text-align: center;
+        }
+
+        /* --- DETALLE DE CUARTOS (OCULTO POR DEFECTO) --- */
+        .quarters-detail {
+            display: none;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #374151;
+            font-size: 0.7rem;
+            color: #9ca3af;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .po-card:hover .quarters-detail {
+            display: block;
         }
 
         .standings-legend {
@@ -2088,7 +2026,7 @@
                 renderAnalysis();
                 if (document.getElementById('select-myteam')?.value) renderMyTeam();
                 // AÑADE ESTA LÍNEA 👇 PARA QUE ARRANQUE EL BANNER
-                renderBanner(); 
+                renderUniversalBanner(); 
             }, 0);
         }
 
@@ -3502,69 +3440,89 @@
                 });
             });
         }
-        function renderBanner() {
+        const universalGames = [
+            "Play In | Barcelona | Crvena Zvezda | GAME 1 | 21/4/26 - 20:45",
+            "Play Off| Olympiakos| Crvena Zvezda | GAME 1 |85|79|OT|26,27,15,17|28,17,16,18",
+            "38|Zalgiris Kaunas|Paris| 21/4/26 - 20:45",
+            "38|Zalgiris Kaunas|Paris|85|79||26,27,15,17|28,17,16,18"
+        ];
+
+        function renderUniversalBanner() {
             const container = document.getElementById("results-banner-container");
-            if(!container) return;
-            const t = i18n[currentLang] || i18n['es'];
-            
-            const lastRound = Math.max(...pastMatches.map(m => m.jornada));
-            const latestGames = pastMatches.filter(m => m.jornada === lastRound);
-            
-            if (latestGames.length === 0) return;
+            if (!container) return;
 
-            // Conseguimos la clasificación en tiempo real para poner las posiciones (Ej: VAL (2))
-            let currentStandings = sortTeamsWithH2H(getLiveTeams());
-            const getPos = (teamName) => currentStandings.findIndex(t => t.name === teamName) + 1;
+            let html = '<div class="el-playoff-banner">';
 
-            const displayGames = [...latestGames, ...latestGames];
-            
-            let gamesHTML = displayGames.map(g => {
-                let winH = g.scoreH > g.scoreA ? 'win' : '';
-                let winA = g.scoreA > g.scoreH ? 'win' : '';
-                let posH = getPos(g.home);
-                let posA = getPos(g.away);
+            universalGames.forEach(game => {
+                const parts = game.split('|').map(s => s.trim());
+                const type = parts[0];
+                const isPlayoff = isNaN(type); 
                 
-                let qTable = "";
-                if(g.qH && g.qA) {
-                    qTable = `<div class="el-quarters-tooltip"><table class="q-table">
-                        <tr><th></th><th>${t.q1}</th><th>${t.q2}</th><th>${t.q3}</th><th>${t.q4}</th>${g.isOT ? `<th>${t.ot}</th>` : ''}</tr>
-                        <tr><td><img src="${getLogo(g.home)}" width="14" style="vertical-align:middle;"></td>${g.qH.map(q => `<td>${q}</td>`).join('')}</tr>
-                        <tr><td><img src="${getLogo(g.away)}" width="14" style="vertical-align:middle;"></td>${g.qA.map(q => `<td>${q}</td>`).join('')}</tr>
-                    </table></div>`;
+                let phaseLabel, phaseClass, teamA, teamB, info, time, scoreA, scoreB, ot, qA, qB;
+                let isFinished = false;
+
+                if (isPlayoff) {
+                    phaseLabel = type;
+                    phaseClass = "po-phase"; 
+                    teamA = parts[1];
+                    teamB = parts[2];
+                    info = ` • ${parts[3]}`; 
+                    
+                    if (parts.length === 5) { 
+                        time = parts[4];
+                    } else if (parts.length >= 6) { 
+                        isFinished = true;
+                        scoreA = parts[4];
+                        scoreB = parts[5];
+                        ot = parts[6] ? `<span class="ot-badge">${parts[6]}</span>` : "";
+                        qA = parts[7] || "";
+                        qB = parts[8] || "";
+                    }
+                } else {
+                    phaseLabel = `Jornada ${type}`;
+                    phaseClass = "po-phase-reg"; 
+                    teamA = parts[1];
+                    teamB = parts[2];
+                    info = ""; 
+                    
+                    if (parts.length === 4) { 
+                        time = parts[3];
+                    } else if (parts.length >= 5) { 
+                        isFinished = true;
+                        scoreA = parts[3];
+                        scoreB = parts[4];
+                        ot = parts[5] ? `<span class="ot-badge">${parts[5]}</span>` : "";
+                        qA = parts[6] || "";
+                        qB = parts[7] || "";
+                    }
                 }
 
-                // Diseño Foto 2 Integrado
-                return `
-                    <div class="el-game-card">
-                        <div class="el-game-status"><span>${t.round} ${g.jornada}</span><span style="color:var(--primary);">${t.final}</span></div>
-                        <div class="el-game-main">
-                            <div class="el-team-col">
-                                <img src="${getLogo(g.home)}">
-                                <span class="el-team-name">${getTeamAbrev(g.home)} (${posH})</span>
-                            </div>
-                            <div class="el-score-center">
-                                <span class="${winH}">${g.scoreH}</span>
-                                <span class="el-score-divider">-</span>
-                                <span class="${winA}">${g.scoreA}</span>
-                            </div>
-                            <div class="el-team-col">
-                                <img src="${getLogo(g.away)}">
-                                <span class="el-team-name">${getTeamAbrev(g.away)} (${posA})</span>
-                            </div>
-                        </div>
-                        ${qTable}
-                    </div>`;
-            }).join('');
+                let centerElement = isFinished 
+                    ? `<span class="score-final">${scoreA} - ${scoreB}${ot}</span>`
+                    : `<span class="time-upcoming">${time}</span>`;
 
-            container.innerHTML = `
-                <div class="el-results-banner" style="direction: ltr;">
-                    <div class="el-ticker-wrap">
-                        <div class="el-ticker-track">${gamesHTML}</div>
+                let quartersHtml = (isFinished && qA && qB) 
+                    ? `<div class="quarters-detail">
+                        <div style="color:white; margin-bottom:2px;">${tName(teamA)}: <span style="color:#facc15">${qA.replace(/,/g, ' | ')}</span></div>
+                        <div style="color:white">${tName(teamB)}: <span style="color:#facc15">${qB.replace(/,/g, ' | ')}</span></div>
+                       </div>`
+                    : ``;
+
+                html += `
+                    <div class="po-card">
+                        <div class="po-header"><span class="${phaseClass}">${phaseLabel}</span>${info}</div>
+                        <div class="po-body">
+                            <span>${tName(teamA)}</span>
+                            ${centerElement}
+                            <span>${tName(teamB)}</span>
+                        </div>
+                        ${quartersHtml}
                     </div>
-                    <div class="el-banner-action">
-                        <button class="el-btn-view" onclick="openTab(null, 'resultados')">${t.view_all_games}</button>
-                    </div>
-                </div>`;
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
