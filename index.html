@@ -256,22 +256,24 @@
             width: 100%;
             background: #111827;
             border-bottom: 2px solid #ea580c;
-            overflow: hidden;
+            height: 105px;
             position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
         }
 
         .el-results-banner {
             display: flex;
             align-items: center;
             width: 100%;
-            height: 100px;
+            height: 100%;
         }
 
         .el-ticker-wrap {
             flex-grow: 1;
             overflow: hidden;
             white-space: nowrap;
-            position: relative;
             height: 100%;
             display: flex;
             align-items: center;
@@ -281,54 +283,53 @@
             display: inline-flex;
             gap: 20px;
             padding-left: 20px;
-            animation: ticker 40s linear infinite;
+            animation: ticker 50s linear infinite; /* Ajusta la velocidad aquí */
         }
 
-        /* Pausar al pasar el ratón para poder ver los cuartos con calma */
-        .el-ticker-content:hover {
-            animation-play-state: paused;
-        }
+        .el-ticker-content:hover { animation-play-state: paused; }
 
         @keyframes ticker {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
 
-        .po-card {
+        /* TARJETAS CON LOGOS */
+        .game-card {
             background: #1f2937;
             border: 1px solid #374151;
-            border-radius: 6px;
-            padding: 8px 15px;
-            min-width: 260px;
+            border-radius: 8px;
+            padding: 10px 15px;
+            min-width: 280px;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s ease;
+            gap: 5px;
         }
 
-        .po-header {
+        .game-header {
             font-size: 0.65rem;
-            color: #9ca3af;
+            font-weight: 800;
             text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 4px;
+            color: #9ca3af;
+            display: flex;
+            justify-content: space-between;
         }
-        .phase-badge { padding: 1px 4px; border-radius: 3px; font-size: 0.6rem; margin-right: 4px; color: white; }
-        .bg-orange { background: #ea580c; }
-        .bg-blue { background: #2563eb; }
 
-        .po-body {
+        .team-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #f3f4f6;
         }
 
-        .score-val { color: #facc15; font-size: 1.1rem; font-family: monospace; }
-        .time-val { color: #9ca3af; font-size: 0.75rem; font-weight: normal; }
+        .team-info { display: flex; align-items: center; gap: 8px; }
+        .team-logo { width: 22px; height: 22px; object-fit: contain; }
+        
+        .game-score { color: #facc15; font-family: monospace; font-size: 1.1rem; }
+        .game-time { color: #9ca3af; font-size: 0.8rem; font-weight: 400; }
 
-        /* Botón fijo a la derecha */
+        /* BOTÓN FIJO A LA DERECHA */
         .el-banner-action {
             width: 140px;
             background: #111827;
@@ -336,8 +337,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
-            box-shadow: -10px 0 20px rgba(0,0,0,0.5);
+            z-index: 100;
+            box-shadow: -15px 0 25px rgba(0,0,0,0.8);
             border-left: 1px solid #374151;
         }
 
@@ -345,25 +346,24 @@
             background: #ea580c;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 10px 15px;
+            border-radius: 6px;
             font-size: 0.75rem;
-            font-weight: bold;
+            font-weight: 800;
             cursor: pointer;
-            transition: background 0.2s;
+            text-transform: uppercase;
         }
-        .el-btn-view:hover { background: #f97316; }
 
-        /* Tooltip de cuartos al pasar el ratón */
-        .quarters-popup {
+        /* TOOLTIP DE CUARTOS */
+        .q-details {
             display: none;
-            font-size: 0.65rem;
-            color: #facc15;
-            margin-top: 4px;
+            font-size: 0.6rem;
+            color: #9ca3af;
             border-top: 1px solid #374151;
+            margin-top: 4px;
             padding-top: 4px;
         }
-        .po-card:hover .quarters-popup { display: block; }
+        .game-card:hover .q-details { display: block; }
 
         .standings-legend {
             background: #fff; border: 1px solid var(--border); border-radius: 8px;
@@ -3475,67 +3475,75 @@
 
             let combinedData = [];
 
-            // 1. Extraer últimos resultados reales (los 4 últimos)
+            // 1. OBTENER LOS ÚLTIMOS RESULTADOS (4 partidos de la última jornada jugada)
             if (typeof rawResultsArray !== 'undefined') {
-                const lastResults = rawResultsArray.slice(-4).reverse();
-                lastResults.forEach(raw => {
+                const lastFour = rawResultsArray.slice(-4).reverse();
+                lastFour.forEach(raw => {
                     const p = raw.split('|').map(s => s.trim());
                     combinedData.push({
                         phase: isNaN(p[0]) ? p[0] : `Jornada ${p[0]}`,
-                        isPlayoff: isNaN(p[0]),
                         teamA: p[1], teamB: p[2],
                         scoreA: p[3], scoreB: p[4],
                         info: p[5] || "Final",
-                        qA: p[6] || "", qB: p[7] || "",
+                        qA: p[6], qB: p[7],
                         isFinished: true
                     });
                 });
             }
 
-            // 2. Añadir agenda de próximos partidos
-            universalGames.forEach(raw => {
-                const p = raw.split('|').map(s => s.trim());
-                combinedData.push({
-                    phase: p[0],
-                    isPlayoff: isNaN(p[0]),
-                    teamA: p[1], teamB: p[2],
-                    info: p[3], time: p[4],
-                    isFinished: false
+            // 2. AÑADIR TU AGENDA (Próximos partidos)
+            if (typeof universalGames !== 'undefined') {
+                universalGames.forEach(raw => {
+                    const p = raw.split('|').map(s => s.trim());
+                    combinedData.push({
+                        phase: p[0], teamA: p[1], teamB: p[2],
+                        info: p[3], time: p[4],
+                        isFinished: false
+                    });
                 });
-            });
+            }
 
-            // 3. Generar el HTML de las tarjetas
-            let itemsHtml = "";
-            combinedData.forEach(game => {
-                const badgeClass = game.isPlayoff ? 'bg-orange' : 'bg-blue';
-                const centerPart = game.isFinished 
-                    ? `<span class="score-val">${game.scoreA}-${game.scoreB}</span>`
-                    : `<span class="time-val">${game.time}</span>`;
+            // 3. GENERAR EL HTML CON LOGOS
+            let cardsHtml = "";
+            combinedData.forEach(g => {
+                const centerContent = g.isFinished 
+                    ? `<span class="game-score">${g.scoreA} - ${g.scoreB}</span>`
+                    : `<span class="game-time">${g.time}</span>`;
                 
-                const quarters = (game.isFinished && game.qA) 
-                    ? `<div class="quarters-popup">${game.qA} | ${game.qB}</div>` : "";
+                const quarters = (g.isFinished && g.qA) 
+                    ? `<div class="q-details">${g.qA} | ${g.qB}</div>` : "";
 
-                itemsHtml += `
-                    <div class="po-card">
-                        <div class="po-header">
-                            <span class="phase-badge ${badgeClass}">${game.phase}</span> ${game.info}
+                cardsHtml += `
+                    <div class="game-card">
+                        <div class="game-header">
+                            <span style="color:${g.isFinished ? '#9ca3af' : '#ea580c'}">${g.phase}</span>
+                            <span>${g.info}</span>
                         </div>
-                        <div class="po-body">
-                            <span>${tName(game.teamA)}</span>
-                            ${centerPart}
-                            <span>${tName(game.teamB)}</span>
+                        <div class="team-row">
+                            <div class="team-info">
+                                <img src="logos/${g.teamA}.png" class="team-logo" onerror="this.style.display='none'">
+                                <span>${tName(g.teamA)}</span>
+                            </div>
+                            ${g.isFinished ? `<span class="game-score">${g.scoreA}</span>` : ''}
                         </div>
-                        ${quarters}
+                        <div class="team-row">
+                            <div class="team-info">
+                                <img src="logos/${g.teamB}.png" class="team-logo" onerror="this.style.display='none'">
+                                <span>${tName(g.teamB)}</span>
+                            </div>
+                            ${g.isFinished ? `<span class="game-score">${g.scoreB}</span>` : ''}
+                        </div>
+                        ${!g.isFinished ? `<div style="text-align:center; margin-top:5px;">${centerContent}</div>` : quarters}
                     </div>`;
             });
 
-            // 4. Montar la estructura con el ticker duplicado para el bucle y el botón fijo
+            // 4. INYECTAR CON EL TICKER DUPLICADO (Bucle infinito)
             container.innerHTML = `
                 <div class="el-results-banner">
                     <div class="el-ticker-wrap">
                         <div class="el-ticker-content">
-                            ${itemsHtml}
-                            ${itemsHtml} </div>
+                            ${cardsHtml}
+                            ${cardsHtml} </div>
                     </div>
                     <div class="el-banner-action">
                         <button class="el-btn-view" onclick="openTab(null, 'resultados')">Ver resultados</button>
