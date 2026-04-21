@@ -1539,6 +1539,8 @@
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
         const rawResultsArray = [
+            "Play Off|Zalgiris Kaunas|Paris|85|79|OT|26,27,15,17|28,17,16,18",
+            "Play In|Zalgiris Kaunas|Paris|85|79||26,27,15,17|28,17,16,18",
             "38|Zalgiris Kaunas|Paris|85|79||26,27,15,17|28,17,16,18",
             "38|Monaco|Hapoel Tel-Aviv|105|85||27,31,25,22|17,24,20,24",
             "38|Dubai|Valencia Basket|85|95||19,28,20,18|24,21,34,16",
@@ -1924,7 +1926,8 @@
         let pastMatches = [];
         rawResultsArray.forEach(match => {
             let data = match.split('|');
-            pastMatches.push({ 
+            if (isNaN(parseInt(data[0]))) return; // 🛡️ ESCUDO: Si no es un número (ej: "Play In"), ignóralo para la clasificación.
+            pastMatches.push({
                 jornada: parseInt(data[0]), 
                 home: data[1], 
                 away: data[2], 
@@ -3506,63 +3509,69 @@
             const container = document.getElementById("results-banner-container");
             if(!container) return;
             const t = i18n[currentLang] || i18n['es'];
-            
-            const lastRound = Math.max(...pastMatches.map(m => m.jornada));
-            const latestGames = pastMatches.filter(m => m.jornada === lastRound);
-            
-            if (latestGames.length === 0) return;
 
-            // Conseguimos la clasificación en tiempo real para poner las posiciones (Ej: VAL (2))
-            let currentStandings = sortTeamsWithH2H(getLiveTeams());
-            const getPos = (teamName) => currentStandings.findIndex(t => t.name === teamName) + 1;
-
-            const displayGames = [...latestGames, ...latestGames];
+            // 1. Extraemos los últimos 6 partidos que hayas escrito en rawResultsArray
+            const displayGames = rawResultsArray.slice(-6).reverse();
             
-            let gamesHTML = displayGames.map(g => {
-                let winH = g.scoreH > g.scoreA ? 'win' : '';
-                let winA = g.scoreA > g.scoreH ? 'win' : '';
-                let posH = getPos(g.home);
-                let posA = getPos(g.away);
-                
-                let qTable = "";
-                if(g.qH && g.qA) {
-                    qTable = `<div class="el-quarters-tooltip"><table class="q-table">
-                        <tr><th></th><th>${t.q1}</th><th>${t.q2}</th><th>${t.q3}</th><th>${t.q4}</th>${g.isOT ? `<th>${t.ot}</th>` : ''}</tr>
-                        <tr><td><img src="${getLogo(g.home)}" width="14" style="vertical-align:middle;"></td>${g.qH.map(q => `<td>${q}</td>`).join('')}</tr>
-                        <tr><td><img src="${getLogo(g.away)}" width="14" style="vertical-align:middle;"></td>${g.qA.map(q => `<td>${q}</td>`).join('')}</tr>
-                    </table></div>`;
-                }
+            let cardsHtml = "";
+            displayGames.forEach(raw => {
+                const p = raw.split('|').map(s => s.trim());
+                const phase = p[0];
+                const teamA = p[1];
+                const teamB = p[2];
+                const scoreA = p[3] || "-";
+                const scoreB = p[4] || "-";
+                const ot = p[5] ? `<span style="font-size:0.6rem; color:#ef4444; margin-left:4px; font-weight:bold;">${p[5]}</span>` : "";
+                const qA = p[6] || "";
+                const qB = p[7] || "";
 
-                // Diseño Foto 2 Integrado
-                return `
+                // Si no es número, es naranja (Playoff). Si es número, es azul (Jornada)
+                const isPlayoff = isNaN(parseInt(phase));
+                const badgeColor = isPlayoff ? '#ea580c' : '#3b82f6';
+                const label = isPlayoff ? phase : `${t.round || 'Jornada'} ${phase}`;
+
+                // Formateo de la tablita de cuartos oculta
+                const quarters = (qA && qB)
+                    ? `<div class="el-quarters-tooltip"><table class="q-table">
+                        <tr><td><img src="${getLogo(teamA)}" width="14" style="vertical-align:middle;"></td><td>${qA.replace(/,/g, '</td><td>')}</td></tr>
+                        <tr><td><img src="${getLogo(teamB)}" width="14" style="vertical-align:middle;"></td><td>${qB.replace(/,/g, '</td><td>')}</td></tr>
+                    </table></div>`
+                    : "";
+
+                cardsHtml += `
                     <div class="el-game-card">
-                        <div class="el-game-status"><span>${t.round} ${g.jornada}</span><span style="color:var(--primary);">${t.final}</span></div>
+                        <div class="el-game-status">
+                            <span style="color:${badgeColor}; font-weight:900;">${label}</span>
+                            <span style="color:var(--primary);">${(scoreA === "-") ? "PRÓXIMO" : (t.final || "FINAL")}</span>
+                        </div>
                         <div class="el-game-main">
                             <div class="el-team-col">
-                                <img src="${getLogo(g.home)}">
-                                <span class="el-team-name">${getTeamAbrev(g.home)} (${posH})</span>
+                                <img src="${getLogo(teamA)}">
+                                <span class="el-team-name">${getTeamAbrev(teamA)}</span>
                             </div>
                             <div class="el-score-center">
-                                <span class="${winH}">${g.scoreH}</span>
+                                <span class="${scoreA > scoreB ? 'win' : ''}">${scoreA}${ot}</span>
                                 <span class="el-score-divider">-</span>
-                                <span class="${winA}">${g.scoreA}</span>
+                                <span class="${scoreB > scoreA ? 'win' : ''}">${scoreB}</span>
                             </div>
                             <div class="el-team-col">
-                                <img src="${getLogo(g.away)}">
-                                <span class="el-team-name">${getTeamAbrev(g.away)} (${posA})</span>
+                                <img src="${getLogo(teamB)}">
+                                <span class="el-team-name">${getTeamAbrev(teamB)}</span>
                             </div>
                         </div>
-                        ${qTable}
+                        ${quarters}
                     </div>`;
-            }).join('');
+            });
 
             container.innerHTML = `
                 <div class="el-results-banner" style="direction: ltr;">
                     <div class="el-ticker-wrap">
-                        <div class="el-ticker-track">${gamesHTML}</div>
+                        <div class="el-ticker-track">
+                            ${cardsHtml}
+                            ${cardsHtml} </div>
                     </div>
                     <div class="el-banner-action">
-                        <button class="el-btn-view" onclick="openTab(null, 'resultados')">${t.view_all_games}</button>
+                        <button class="el-btn-view" onclick="openTab(null, 'resultados')">${t.view_all_games || 'Ver Resultados'}</button>
                     </div>
                 </div>`;
         }
