@@ -1539,7 +1539,7 @@
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
         const rawResultsArray = [
-            "Play Off|Zalgiris Kaunas|Paris|85|79|OT|26,27,15,17|28,17,16,18",
+            "Play Off|Zalgiris Kaunas|Paris|85|79|OT|26,27,15,17,4|28,17,16,18,8",
             "Play In|Zalgiris Kaunas|Paris|85|79||26,27,15,17|28,17,16,18",
             "38|Zalgiris Kaunas|Paris|85|79||26,27,15,17|28,17,16,18",
             "38|Monaco|Hapoel Tel-Aviv|105|85||27,31,25,22|17,24,20,24",
@@ -3510,8 +3510,20 @@
             if(!container) return;
             const t = i18n[currentLang] || i18n['es'];
 
-            // 1. Extraemos los últimos 6 partidos que hayas escrito en rawResultsArray (del final de la lista)
-            const displayGames = rawResultsArray.slice(0, 8);
+            // 1. Coge los primeros 6 partidos de tu lista
+            const displayGames = rawResultsArray.slice(0, 6);
+
+            // FUNCIÓN TRUCO: Leer la posición y devolverla entre paréntesis (ej: "(1)")
+            const getTeamRank = (teamName) => {
+                const abrev = getTeamAbrev(teamName);
+                const rows = document.querySelectorAll('#standings-body tr');
+                for (let i = 0; i < rows.length; i++) {
+                    if (rows[i].textContent.includes(teamName) || rows[i].textContent.includes(abrev)) {
+                        return `(${i + 1})`;
+                    }
+                }
+                return ''; 
+            };
             
             let cardsHtml = "";
             displayGames.forEach(raw => {
@@ -3525,12 +3537,11 @@
                 const qA = p[6] || "";
                 const qB = p[7] || "";
 
-                // Si no es número, es naranja (Playoff). Si es número, es gris neutro (Jornada)
                 const isPlayoff = isNaN(parseInt(phase));
-                const badgeColor = isPlayoff ? '#ea580c' : '#9ca3af'; // <-- AQUÍ ESTÁ EL CAMBIO A GRIS
+                const badgeColor = isPlayoff ? '#ea580c' : '#9ca3af';
                 const label = isPlayoff ? phase : `${t.round || 'Jornada'} ${phase}`;
 
-                // Formateo de la tablita de cuartos oculta
+                // Tooltip de cuartos formateado
                 const quarters = (qA && qB)
                     ? `<div class="el-quarters-tooltip"><table class="q-table">
                         <tr><td><img src="${getLogo(teamA)}" width="14" style="vertical-align:middle;"></td><td>${qA.replace(/,/g, '</td><td>')}</td></tr>
@@ -3547,7 +3558,7 @@
                         <div class="el-game-main">
                             <div class="el-team-col">
                                 <img src="${getLogo(teamA)}">
-                                <span class="el-team-name">${getTeamAbrev(teamA)}</span>
+                                <span class="el-team-name">${getTeamAbrev(teamA)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(teamA)}</span></span>
                             </div>
                             <div class="el-score-center">
                                 <span class="${scoreA > scoreB ? 'win' : ''}">${scoreA}${ot}</span>
@@ -3556,7 +3567,7 @@
                             </div>
                             <div class="el-team-col">
                                 <img src="${getLogo(teamB)}">
-                                <span class="el-team-name">${getTeamAbrev(teamB)}</span>
+                                <span class="el-team-name">${getTeamAbrev(teamB)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(teamB)}</span></span>
                             </div>
                         </div>
                         ${quarters}
@@ -3568,7 +3579,8 @@
                     <div class="el-ticker-wrap">
                         <div class="el-ticker-track">
                             ${cardsHtml}
-                            ${cardsHtml} </div>
+                            ${cardsHtml}
+                        </div>
                     </div>
                     <div class="el-banner-action">
                         <button class="el-btn-view" onclick="openTab(null, 'resultados')">${t.view_all_games || 'Ver Resultados'}</button>
