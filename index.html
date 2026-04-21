@@ -1539,8 +1539,6 @@
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
         const rawResultsArray = [
-            "Play Off|Zalgiris Kaunas|Paris|85|79|OT|26,27,15,17,4|28,17,16,18,8",
-            "Play In|Zalgiris Kaunas|Paris|85|79||26,27,15,17|28,17,16,18",
             "38|Zalgiris Kaunas|Paris|85|79||26,27,15,17|28,17,16,18",
             "38|Monaco|Hapoel Tel-Aviv|105|85||27,31,25,22|17,24,20,24",
             "38|Dubai|Valencia Basket|85|95||19,28,20,18|24,21,34,16",
@@ -3508,10 +3506,10 @@
         function renderBanner() {
             const container = document.getElementById("results-banner-container");
             if(!container) return;
-            const t = i18n[currentLang] || i18n['es'];
+            const t = i18n[currentLang] || i18n['gb'];
 
             // 1. Coge los primeros 6 partidos de tu lista
-            const displayGames = rawResultsArray.slice(0, 6);
+            const displayGames = rawResultsArray.slice(0, 10);
 
             // FUNCIÓN TRUCO: Leer la posición y devolverla entre paréntesis (ej: "(1)")
             const getTeamRank = (teamName) => {
