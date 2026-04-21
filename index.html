@@ -3510,8 +3510,8 @@
             if(!container) return;
             const t = i18n[currentLang] || i18n['es'];
 
-            // 1. Extraemos los últimos 6 partidos que hayas escrito en rawResultsArray
-            const displayGames = rawResultsArray.slice(-6).reverse();
+            // 1. Extraemos los últimos 6 partidos que hayas escrito en rawResultsArray (del final de la lista)
+            const displayGames = rawResultsArray.slice(0, 8);
             
             let cardsHtml = "";
             displayGames.forEach(raw => {
@@ -3525,9 +3525,9 @@
                 const qA = p[6] || "";
                 const qB = p[7] || "";
 
-                // Si no es número, es naranja (Playoff). Si es número, es azul (Jornada)
+                // Si no es número, es naranja (Playoff). Si es número, es gris neutro (Jornada)
                 const isPlayoff = isNaN(parseInt(phase));
-                const badgeColor = isPlayoff ? '#ea580c' : '#3b82f6';
+                const badgeColor = isPlayoff ? '#ea580c' : '#9ca3af'; // <-- AQUÍ ESTÁ EL CAMBIO A GRIS
                 const label = isPlayoff ? phase : `${t.round || 'Jornada'} ${phase}`;
 
                 // Formateo de la tablita de cuartos oculta
