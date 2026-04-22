@@ -3681,13 +3681,14 @@
 
             container.innerHTML = `
                 <div class="el-results-banner" style="direction: ltr;">
-                    <div class="el-ticker-wrap">
+                    <div class="el-ticker-wrap" style="width: 100%;">
                         <div class="el-ticker-track">
                             ${cardsHtml}
                             ${cardsHtml}
                         </div>
                     </div>
-                </div>`;
+                </div>
+            `;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
