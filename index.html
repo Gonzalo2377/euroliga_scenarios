@@ -2434,20 +2434,48 @@
         }
 
         function renderBracket() {
-            // --- 1. EL RADAR (Busca los resultados en tu lista principal) ---
-            const getWinnerFromResults = (teamA, teamB) => {
+            // --- 1. EL NUEVO RADAR INTELIGENTE (Filtra Liga Regular y cuenta series) ---
+            const getSeriesWinner = (teamA, teamB, mode) => {
                 if (!teamA || !teamB) return null;
-                const match = rawResultsArray.find(raw => {
-                    const p = raw.split('|');
-                    return (p[1].trim() === teamA && p[2].trim() === teamB) || 
-                           (p[1].trim() === teamB && p[2].trim() === teamA);
+                let winsA = 0; let winsB = 0; let totalGames = 0;
+
+                rawResultsArray.forEach(raw => {
+                    const p = raw.split('|').map(s => s.trim());
+                    const phase = p[0].toLowerCase();
+                    
+                    // ESCUDO: Ignoramos cualquier partido de la Jornada Regular (que empiece por número)
+                    if (!isNaN(parseInt(p[0]))) return; 
+                    
+                    // Filtramos por la fase para no mezclar un choque de Play-In con uno de Final Four
+                    if (mode === 'PI' && !phase.includes('play in') && !phase.includes('playin')) return;
+                    if (mode === 'QF' && !phase.includes('play off') && !phase.includes('playoff')) return;
+                    if (mode === 'F4' && !phase.includes('sf') && !phase.includes('final four') && !phase.includes('final')) return;
+
+                    const tA = p[1]; const tB = p[2];
+                    const sA = parseInt(p[3]); const sB = parseInt(p[4]);
+
+                    // Si no hay puntos (ej. solo pone "PRÓXIMO"), no cuenta como jugado
+                    if (isNaN(sA) || isNaN(sB)) return;
+
+                    // Si el partido es entre estos dos equipos, sumamos victorias
+                    if ((tA === teamA && tB === teamB) || (tA === teamB && tB === teamA)) {
+                        totalGames++;
+                        if (tA === teamA) { sA > sB ? winsA++ : winsB++; } 
+                        else { sA > sB ? winsB++ : winsA++; }
+                    }
                 });
-                if (!match) return null;
-                const d = match.split('|');
-                const sA = parseInt(d[3]);
-                const sB = parseInt(d[4]);
-                if (isNaN(sA) || isNaN(sB)) return null;
-                return (sA > sB) ? d[1].trim() : d[2].trim();
+
+                if (mode === 'QF') {
+                    // En Cuartos, el ganador es el primero en llegar a 3 victorias
+                    if (winsA >= 3) return { winner: teamA, games: totalGames };
+                    if (winsB >= 3) return { winner: teamB, games: totalGames };
+                    return null; // Aún están jugando la serie (1-0, 2-2, etc)
+                } else {
+                    // En Play-In o Final Four, el que gane el partido avanza
+                    if (winsA > winsB) return { winner: teamA, games: 1 };
+                    if (winsB > winsA) return { winner: teamB, games: 1 };
+                    return null;
+                }
             };
             
             const container = document.getElementById("bracket-ui");
@@ -2465,51 +2493,77 @@
             const txtFIN = t.championship || "CHAMPIONSHIP";
             const txtTBD = t.tbd || "TBD";
             const txtChamp = t.champion || "CHAMPION";
-            const txtLoser = t.loser_drops || "Loser plays here";
 
-            // --- 2. ASIGNAMOS EL PLAY-IN Y LEEMOS RESULTADOS REALES AUTOMÁTICAMENTE ---
+            // --- 2. ASIGNAMOS EL PLAY-IN ---
             let p_pi1_A = tBase(7), p_pi1_B = tBase(8);
             let p_pi2_A = tBase(9), p_pi2_B = tBase(10);
 
-            // ¡MAGIA! Si PI1 (7vs8) ya se ha jugado, guardamos el ganador y mandamos al perdedor al PI3
             if (p_pi1_A && p_pi1_B) {
-                let winPI1 = getWinnerFromResults(p_pi1_A.name, p_pi1_B.name);
-                if (winPI1) {
-                    bracketState.pi1 = winPI1;
-                    bracketState.pi1Loser = (winPI1 === p_pi1_A.name) ? p_pi1_B.name : p_pi1_A.name;
+                let res = getSeriesWinner(p_pi1_A.name, p_pi1_B.name, 'PI');
+                if (res) {
+                    bracketState.pi1 = res.winner;
+                    bracketState.pi1Loser = (res.winner === p_pi1_A.name) ? p_pi1_B.name : p_pi1_A.name;
                 }
             }
 
-            // Si PI2 (9vs10) ya se ha jugado, guardamos al ganador para que avance
             if (p_pi2_A && p_pi2_B) {
-                let winPI2 = getWinnerFromResults(p_pi2_A.name, p_pi2_B.name);
-                if (winPI2) bracketState.pi2 = winPI2;
+                let res = getSeriesWinner(p_pi2_A.name, p_pi2_B.name, 'PI');
+                if (res) bracketState.pi2 = res.winner;
             }
 
-            // Asignamos el PI3 con los equipos que hayan sobrevivido (Perdedor del 7/8 vs Ganador del 9/10)
             let p_pi3_A = bracketState.pi1Loser ? getT(bracketState.pi1Loser) : null;
             let p_pi3_B = bracketState.pi2 ? getT(bracketState.pi2) : null;
 
-            // Si el PI3 también se ha jugado ya en la vida real, lo avanza
             if (p_pi3_A && p_pi3_B) {
-                let winPI3 = getWinnerFromResults(p_pi3_A.name, p_pi3_B.name);
-                if (winPI3) bracketState.pi3 = winPI3;
+                let res = getSeriesWinner(p_pi3_A.name, p_pi3_B.name, 'PI');
+                if (res) bracketState.pi3 = res.winner;
             }
             
-            // --- 3. CREAMOS EL RESTO DEL CUADRO CON LOS SOBREVIVIENTES ---
+            // --- 3. CREAMOS EL RESTO DEL CUADRO Y LEEMOS PLAYOFFS ---
             let p_qf1_A = tBase(1), p_qf1_B = bracketState.pi3 ? getT(bracketState.pi3) : null;
             let p_qf2_A = tBase(4), p_qf2_B = tBase(5);
-            let p_qf3_A = tBase(3), p_qf3_B = tBase(6); // 3º vs 6º
-            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null; // 2º vs 7º
+            let p_qf3_A = tBase(3), p_qf3_B = tBase(6);
+            let p_qf4_A = tBase(2), p_qf4_B = bracketState.pi1 ? getT(bracketState.pi1) : null;
 
+            // Detección automática de Playoffs (Cuartos)
+            const checkQF = (teamA, teamB, stateKey) => {
+                if (teamA && teamB) {
+                    let res = getSeriesWinner(teamA.name, teamB.name, 'QF');
+                    if (res) {
+                        bracketState[stateKey] = res.winner;
+                        bracketState[stateKey + '_score'] = res.games; // Guarda si han sido 3, 4 o 5 partidos
+                    }
+                }
+            };
+            checkQF(p_qf1_A, p_qf1_B, 'qf1');
+            checkQF(p_qf2_A, p_qf2_B, 'qf2');
+            checkQF(p_qf3_A, p_qf3_B, 'qf3');
+            checkQF(p_qf4_A, p_qf4_B, 'qf4');
+
+            // --- 4. SEMIFINALES Y FINAL ---
             let p_sf1_A = bracketState.qf1 ? getT(bracketState.qf1) : null;
             let p_sf1_B = bracketState.qf2 ? getT(bracketState.qf2) : null;
             let p_sf2_A = bracketState.qf4 ? getT(bracketState.qf4) : null; 
             let p_sf2_B = bracketState.qf3 ? getT(bracketState.qf3) : null; 
 
+            // Detección de Final Four
+            if (p_sf1_A && p_sf1_B) {
+                let res = getSeriesWinner(p_sf1_A.name, p_sf1_B.name, 'F4');
+                if (res) bracketState.sf1 = res.winner;
+            }
+            if (p_sf2_A && p_sf2_B) {
+                let res = getSeriesWinner(p_sf2_A.name, p_sf2_B.name, 'F4');
+                if (res) bracketState.sf2 = res.winner;
+            }
+
             let p_fin_A = bracketState.sf1 ? getT(bracketState.sf1) : null;
             let p_fin_B = bracketState.sf2 ? getT(bracketState.sf2) : null;
             
+            if (p_fin_A && p_fin_B) {
+                let res = getSeriesWinner(p_fin_A.name, p_fin_B.name, 'F4');
+                if (res) bracketState.final = res.winner;
+            }
+
             let champion = bracketState.final ? getT(bracketState.final) : null;
 
             window.editingScoreFor = window.editingScoreFor || null;
