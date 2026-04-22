@@ -2434,6 +2434,22 @@
         }
 
         function renderBracket() {
+            // --- 1. EL RADAR (Busca los resultados en tu lista principal) ---
+            const getWinnerFromResults = (teamA, teamB) => {
+                if (!teamA || !teamB) return null;
+                const match = rawResultsArray.find(raw => {
+                    const p = raw.split('|');
+                    return (p[1].trim() === teamA && p[2].trim() === teamB) || 
+                           (p[1].trim() === teamB && p[2].trim() === teamA);
+                });
+                if (!match) return null;
+                const d = match.split('|');
+                const sA = parseInt(d[3]);
+                const sB = parseInt(d[4]);
+                if (isNaN(sA) || isNaN(sB)) return null;
+                return (sA > sB) ? d[1].trim() : d[2].trim();
+            };
+            
             const container = document.getElementById("bracket-ui");
             if (!container) return;
 
@@ -2441,7 +2457,7 @@
             const getT = (name) => st.find(x => x.name === name);
             const tBase = (seed) => st[seed - 1]; 
 
-            // Textos traducidos dinámicamente desde el diccionario i18n
+            // Textos traducidos dinámicamente
             const t = i18n[currentLang] || i18n['es'];
             const txtPI = t.playin || "PLAY-IN";
             const txtQF = t.quarterfinals || "QUARTERFINALS";
@@ -2451,12 +2467,36 @@
             const txtChamp = t.champion || "CHAMPION";
             const txtLoser = t.loser_drops || "Loser plays here";
 
-            // Asignación de participantes según el avance de la simulación
+            // --- 2. ASIGNAMOS EL PLAY-IN Y LEEMOS RESULTADOS REALES AUTOMÁTICAMENTE ---
             let p_pi1_A = tBase(7), p_pi1_B = tBase(8);
             let p_pi2_A = tBase(9), p_pi2_B = tBase(10);
+
+            // ¡MAGIA! Si PI1 (7vs8) ya se ha jugado, guardamos el ganador y mandamos al perdedor al PI3
+            if (p_pi1_A && p_pi1_B) {
+                let winPI1 = getWinnerFromResults(p_pi1_A.name, p_pi1_B.name);
+                if (winPI1) {
+                    bracketState.pi1 = winPI1;
+                    bracketState.pi1Loser = (winPI1 === p_pi1_A.name) ? p_pi1_B.name : p_pi1_A.name;
+                }
+            }
+
+            // Si PI2 (9vs10) ya se ha jugado, guardamos al ganador para que avance
+            if (p_pi2_A && p_pi2_B) {
+                let winPI2 = getWinnerFromResults(p_pi2_A.name, p_pi2_B.name);
+                if (winPI2) bracketState.pi2 = winPI2;
+            }
+
+            // Asignamos el PI3 con los equipos que hayan sobrevivido (Perdedor del 7/8 vs Ganador del 9/10)
             let p_pi3_A = bracketState.pi1Loser ? getT(bracketState.pi1Loser) : null;
             let p_pi3_B = bracketState.pi2 ? getT(bracketState.pi2) : null;
+
+            // Si el PI3 también se ha jugado ya en la vida real, lo avanza
+            if (p_pi3_A && p_pi3_B) {
+                let winPI3 = getWinnerFromResults(p_pi3_A.name, p_pi3_B.name);
+                if (winPI3) bracketState.pi3 = winPI3;
+            }
             
+            // --- 3. CREAMOS EL RESTO DEL CUADRO CON LOS SOBREVIVIENTES ---
             let p_qf1_A = tBase(1), p_qf1_B = bracketState.pi3 ? getT(bracketState.pi3) : null;
             let p_qf2_A = tBase(4), p_qf2_B = tBase(5);
             let p_qf3_A = tBase(3), p_qf3_B = tBase(6); // 3º vs 6º
@@ -2464,7 +2504,6 @@
 
             let p_sf1_A = bracketState.qf1 ? getT(bracketState.qf1) : null;
             let p_sf1_B = bracketState.qf2 ? getT(bracketState.qf2) : null;
-            // INTERCAMBIO: QF4 va arriba en la Semi 2, QF3 va abajo
             let p_sf2_A = bracketState.qf4 ? getT(bracketState.qf4) : null; 
             let p_sf2_B = bracketState.qf3 ? getT(bracketState.qf3) : null; 
 
@@ -2474,12 +2513,12 @@
             let champion = bracketState.final ? getT(bracketState.final) : null;
 
             window.editingScoreFor = window.editingScoreFor || null;
-            window.editingWinnerName = window.editingWinnerName || null; // <- NUEVO CEREBRO
+            window.editingWinnerName = window.editingWinnerName || null; 
             
             window.handleQFClick = window.handleQFClick || function(id, teamName, opponentName) {
                 advanceBracket(id, teamName, opponentName);
                 window.editingScoreFor = id; 
-                window.editingWinnerName = teamName; // Guardamos quién ha ganado
+                window.editingWinnerName = teamName; 
                 if (typeof renderBracket === 'function') renderBracket();
             };
             window.saveScore = window.saveScore || function(id, games) {
@@ -2488,8 +2527,8 @@
                 window.editingWinnerName = null;
                 if (typeof renderBracket === 'function') renderBracket();
             };
-
-            // --- PALETA DE COLORES DE LOS EQUIPOS (Oscurecidos para que el texto blanco se lea perfecto) ---
+            
+            // Paleta de colores
             const teamColors = {
                 "Fenerbahçe": "#ca8a04", "Real Madrid": "#3730a3", "Olympiacos": "#9f1239",
                 "Valencia Basket": "#c2410a", "Zalgiris Kaunas": "#14532d", "Panathinaikos": "#065f46",
@@ -2500,11 +2539,9 @@
                 "Baskonia": "#9f1239", "Asvel Basket": "#171717"
             };
 
-            // Creador de cajas de partidos (Con colores vivos y Menú Personalizado)
             const buildMatchup = (id, title, teamA, teamB, seedA, seedB) => {
                 let winner = bracketState[id];
                 
-                // --- CÁLCULO H2H EN VIVO ---
                 let h2hContent = "";
                 if (teamA && teamB && teamA.name && teamB.name) {
                     let stats = calculateH2HStats(teamA.name, teamB.name);
@@ -2548,7 +2585,6 @@
                         onClickCode = `handleQFClick('${id}', '${teamObj.name}', '${opponentName}')`;
                     }
                     
-                    // --- APLICAMOS EL COLOR DEL EQUIPO AL GANADOR ---
                     let bgColor = isWin ? (teamColors[teamObj.name] || '#172554') : '';
                     let inlineStyle = isWin ? `style="background-color: ${bgColor} !important; border-left-color: ${bgColor} !important;"` : '';
 
@@ -2562,9 +2598,7 @@
 
                 let overlayHtml = '';
                 if (window.editingScoreFor === id) {
-                    // Traducimos el nombre para que salga en el idioma elegido (ej: Zalgiris vs Žalgiris)
                     let wNameTranslated = window.editingWinnerName ? tName(window.editingWinnerName) : 'Ganador';
-                    
                     overlayHtml = `
                     <div class="qf-overlay" onclick="window.editingScoreFor = null; renderBracket();">
                         <div class="qf-overlay-title" style="color: white; font-size: 0.95rem;">${wNameTranslated} gana en...</div>
@@ -2586,6 +2620,7 @@
                             ${buildTeam(teamB, seedB)}
                         </div>`;
             };
+            
             container.innerHTML = `
                 <div class="bracket-col" id="col-pi">
                     <div class="bracket-label">${txtPI}</div>
