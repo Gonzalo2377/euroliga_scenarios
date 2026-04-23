@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>EuroLeague Calculator 25/26 | Bracket & Simulator</title>
-    <meta name="description" content="Simulador interactivo de los Playoffs de la Euroliga 25/26. Calcula desempates H2H automáticamente, probabilidades matemáticas para el Top 4, Top 6 y Play-In.">
+    <meta name="description" content="Interactive EuroLeague 2025-26 Standings, Playoff Bracket & Monte Carlo Simulator. Calculates H2H tiebreakers automatically. Probabilidades matemáticas para el Top 6 y Play-In.">
     <meta name="keywords" content="euroliga, euroleague, calculadora, calculator, standings, simulador, playoffs, play-in, clasificacion, desempates, h2h, baloncesto, predicciones, monte carlo">
     <link rel="canonical" href="https://euroleaguecalculator.online/">
+    <link rel="alternate" hreflang="es" href="https://euroleaguecalculator.online/">
+    <link rel="alternate" hreflang="en" href="https://euroleaguecalculator.online/?lang=en">
+    <link rel="alternate" hreflang="fr" href="https://euroleaguecalculator.online/?lang=fr">
+    <link rel="alternate" hreflang="tr" href="https://euroleaguecalculator.online/?lang=tr">
+    <link rel="alternate" hreflang="el" href="https://euroleaguecalculator.online/?lang=gr">
+    <link rel="alternate" hreflang="sr" href="https://euroleaguecalculator.online/?lang=sr">
+    <link rel="alternate" hreflang="lt" href="https://euroleaguecalculator.online/?lang=lt">
+    <link rel="alternate" hreflang="he" href="https://euroleaguecalculator.online/?lang=he">
+    <link rel="alternate" hreflang="x-default" href="https://euroleaguecalculator.online/">
 
     <link rel="icon" type="image/png" sizes="32x32" href="https://euroleaguecalculator.online/favicon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://euroleaguecalculator.online/favicon.png">
@@ -18,6 +27,8 @@
     <meta property="og:title" content="EuroLeague Calculator 25/26 | Bracket & Simulator">
     <meta property="og:description" content="Simulate the Euroleague rounds, discover tiebreakers, odds with Monte Carlo scenario and see the Play-In/Playoff Bracket.">
     <meta property="og:image" content="https://euroleaguecalculator.online/portada.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://euroleaguecalculator.online/">
@@ -25,15 +36,28 @@
     <meta name="twitter:description" content="Simula el final de la Euroliga, calcula desempates y mira las probabilidades de Play-In y Top 6 con nuestro simulador Monte Carlo.">
     <meta name="twitter:image" content="https://euroleaguecalculator.online/portada.png">
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Calculadora EuroLeague Ultimate 25/26",
-      "url": "https://euroleaguecalculator.online/",
-      "description": "Simulador interactivo para predecir la clasificación de la EuroLeague, desempates H2H y opciones de Playoffs.",
-      "applicationCategory": "SportsApplication",
-      "operatingSystem": "All"
-    }
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "EuroLeague Calculator 2025-26",
+        "url": "https://euroleaguecalculator.online/",
+        "description": "Interactive standings, playoff bracket & Monte Carlo simulator for EuroLeague 2025-26. Calculates H2H tiebreakers automatically.",
+        "applicationCategory": "SportsApplication",
+        "operatingSystem": "All",
+        "inLanguage": ["es","en","fr","tr","el","sr","lt","he"],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "SportsEvent",
+        "name": "EuroLeague Basketball 2025-26",
+        "sport": "Basketball",
+        "startDate": "2025-10-01",
+        "endDate": "2026-06-01",
+        "url": "https://euroleaguecalculator.online/"
+      }
+    ]
     </script>
     <link rel="icon" type="image/png" href="https://euroleaguecalculator.online/favicon.png">
 
@@ -44,9 +68,10 @@
       gtag('js', new Date());
       gtag('config', 'G-7QJ4NGV13R');
     </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421" crossorigin="anonymous"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
         :root {
             --primary: #ea580c; 
             --dark: #111827;
@@ -501,30 +526,6 @@
         .bracket-col { display: flex; flex-direction: column; gap: 20px; width: 250px; position: relative; z-index: 2;}
         
         .matchup { 
-            background: #1e293b; border-radius: 8px; border: 1px solid #334155; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); overflow: visible; 
-            /* Quitamos el transform de aquí para que la caja (y sus líneas) sean inamovibles */
-            transition: box-shadow 0.2s, border-color 0.2s; position: relative; z-index: 2; 
-        }
-        /* Solo le damos un ligero brillo al borde y sombra a la caja principal */
-        .matchup:hover { border-color: #64748b; box-shadow: 0 8px 15px rgba(0,0,0,0.4); }
-        
-        .matchup { 
-            background: #1e293b; border-radius: 8px; border: 1px solid #334155; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); overflow: visible; 
-            /* Quitamos el transform de aquí para que la caja (y sus líneas) sean inamovibles */
-            transition: box-shadow 0.2s, border-color 0.2s; position: relative; z-index: 2; 
-        }
-        /* Solo le damos un ligero brillo al borde y sombra a la caja principal */
-        .matchup:hover { border-color: #64748b; box-shadow: 0 8px 15px rgba(0,0,0,0.4); }
-        
-        .matchup-header { 
-            background: #0f172a; font-size: 0.75rem; text-align: center; padding: 6px; 
-            color: #94a3b8; text-transform: uppercase; border-bottom: 1px solid #334155; 
-            font-weight: bold; border-top-left-radius: 7px; border-top-right-radius: 7px; 
-        }
-        
-        .matchup { 
             /* -- RECUPERAMOS EL ANCHO IDEAL (260px) -- */
             width: 260px !important; 
             box-sizing: border-box;
@@ -973,7 +974,6 @@
         }
 
         
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
         /* 2. DISEÑO DEL MARCADOR ROJO LED */
         .series-score {
@@ -1510,6 +1510,64 @@
             { id: "EFE", name: "Anadolu Efes", flag: "🇹🇷", initialWins: 10, initialLosses: 25, diff: -141 },
             { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 27, diff: -258 }
         ];
+
+
+        // ============================================================
+        // PERF: Pre-built caches (computed once on load, O(1) lookups)
+        // ============================================================
+        const h2hPastCache = {};  // key: "teamA|||teamB"
+        let formCache = null;     // computed after autoUpdateData()
+
+        function buildH2HCache() {
+            pastMatches.forEach(m => {
+                ['AB', 'BA'].forEach(order => {
+                    const [teamA, teamB] = order === 'AB' ? [m.home, m.away] : [m.away, m.home];
+                    const key = teamA + '|||' + teamB;
+                    if (!h2hPastCache[key]) h2hPastCache[key] = { winsA: 0, winsB: 0, played: 0, diffA: 0 };
+                    const c = h2hPastCache[key];
+                    c.played++;
+
+                    let regH = m.scoreH, regA = m.scoreA;
+                    if (m.isOT) {
+                        if (m.qH && m.qA && m.qH.length >= 4) {
+                            regH = m.qH.slice(0,4).reduce((a,b)=>a+parseInt(b),0);
+                            regA = m.qA.slice(0,4).reduce((a,b)=>a+parseInt(b),0);
+                        } else {
+                            let ms = Math.min(m.scoreH, m.scoreA);
+                            regH = ms; regA = ms;
+                        }
+                    }
+                    const margin = regH - regA;
+                    const homeWon = m.scoreH > m.scoreA;
+
+                    if (order === 'AB') { // teamA=home
+                        if (homeWon) c.winsA++; else c.winsB++;
+                        c.diffA += margin;
+                    } else { // teamA=away
+                        if (!homeWon) c.winsA++; else c.winsB++;
+                        c.diffA -= margin;
+                    }
+                });
+            });
+        }
+
+        function buildFormCache() {
+            formCache = {};
+            teamsBase.forEach(team => {
+                const tm = pastMatches
+                    .filter(m => m.home === team.name || m.away === team.name)
+                    .sort((a, b) => b.jornada - a.jornada)
+                    .slice(0, 5);
+                formCache[team.name] = tm;
+            });
+        }
+
+        // Pre-built rank map for the results banner (avoid live DOM queries)
+        let rankMap = {};
+        function buildRankMap(sortedTeams) {
+            rankMap = {};
+            sortedTeams.forEach((t, i) => { rankMap[t.name] = i + 1; });
+        }
 
         function getLogo(teamName) {
             const logos = {
@@ -2077,8 +2135,9 @@
 
             let pHead = document.getElementById("prob-head-row");
             if(pHead) {
-                pHead.innerHTML = `<th class="t-team" style="text-align:left;">${t.team}</th>`;
-                for(let i=1; i<=20; i++) pHead.innerHTML += `<th>${i}</th>`;
+                let headHtml = `<th class="t-team" style="text-align:left;">${t.team}</th>`;
+                for(let i=1; i<=20; i++) headHtml += `<th>${i}</th>`;
+                pHead.innerHTML = headHtml;
             }
 
             // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
@@ -2096,9 +2155,12 @@
         }
 
         function getFormHTML(teamName) {
-            let teamMatches = pastMatches.filter(m => m.home === teamName || m.away === teamName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
+            // Use pre-built formCache for O(1) lookup
+            let teamMatches = (formCache && formCache[teamName]) 
+                ? [...formCache[teamName]]
+                : pastMatches.filter(m => m.home === teamName || m.away === teamName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
             let html = '<div class="form-dots">';
-            teamMatches.reverse().forEach(m => {
+            [...teamMatches].reverse().forEach(m => {
                 let won = (m.home === teamName && m.scoreH > m.scoreA) || (m.away === teamName && m.scoreA > m.scoreH);
                 html += `<span class="dot ${won ? 'w' : 'l'}" title="J${m.jornada}"></span>`;
             });
@@ -2152,34 +2214,12 @@
         }
 
         function calculateH2HStats(teamA, teamB, customPicks = simulatedPicks) {
-            let winsA = 0; let winsB = 0; let played = 0; let diffA = 0;
-            
-            pastMatches.forEach(m => {
-                let hIsA = m.home === teamA && m.away === teamB;
-                let aIsA = m.away === teamA && m.home === teamB;
+            // Use pre-built cache for past matches (O(1) instead of O(n))
+            const cacheKey = teamA + '|||' + teamB;
+            const cached = h2hPastCache[cacheKey] || { winsA: 0, winsB: 0, played: 0, diffA: 0 };
+            let winsA = cached.winsA, winsB = cached.winsB, played = cached.played, diffA = cached.diffA;
 
-                if (hIsA || aIsA) { 
-                    played++; 
-                    if(m.scoreH > m.scoreA) { if(hIsA) winsA++; else winsB++; } 
-                    else { if(hIsA) winsB++; else winsA++; } 
-                    
-                    // Extraer resultado reglamentario sin prórroga
-                    let regH = m.scoreH; let regA = m.scoreA;
-                    if (m.isOT) {
-                        if (m.qH && m.qA && m.qH.length >= 4) {
-                            regH = m.qH.slice(0,4).reduce((a,b)=>a+parseInt(b),0);
-                            regA = m.qA.slice(0,4).reduce((a,b)=>a+parseInt(b),0);
-                        } else {
-                            let minS = Math.min(m.scoreH, m.scoreA);
-                            regH = minS; regA = minS;
-                        }
-                    }
-                    
-                    let margin = regH - regA;
-                    if (hIsA) diffA += margin; else diffA -= margin;
-                }
-            });
-        
+            // Add simulated/user picks on top
             Object.values(customPicks).forEach(m => {
                 let margin = parseInt(m.diff) || 1; 
                 if (m.home === teamA && m.away === teamB) { 
@@ -2212,7 +2252,8 @@
             let aPct = aGames > 0 ? (awayTeam.initialWins / aGames) : 0.5;
             
             function getForm(tName) {
-                let m = pastMatches.filter(x => x.home === tName || x.away === tName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
+                let m = (formCache && formCache[tName]) ? formCache[tName] : 
+                    pastMatches.filter(x => x.home === tName || x.away === tName).sort((a,b) => b.jornada - a.jornada).slice(0, 5);
                 if (!m.length) return 0.5;
                 let w = m.filter(x => (x.home === tName && x.scoreH > x.scoreA) || (x.away === tName && x.scoreA > x.scoreH)).length;
                 return w / m.length; 
@@ -2644,7 +2685,7 @@
 
                     return `<div class="matchup-team ${isWin ? 'winner' : ''} ${isLoser ? 'loser' : ''}" onclick="${onClickCode}" ${inlineStyle}>
                                 <span class="seed-badge">${seedNum}</span>
-                                <img src="${getLogo(teamObj.name)}" class="bracket-logo">
+                                <img src="${getLogo(teamObj.name)}" class="bracket-logo" width="26" height="26" loading="lazy">
                                 <span class="team-name-bracket">${tName(teamObj.name)}</span>
                                 ${scoreHtml}
                             </div>`;
@@ -2805,7 +2846,8 @@
             const tbodySim = document.getElementById("sim-standings-body");
             if (!tbodyMain || !tbodySim) return;
 
-            tbodyMain.innerHTML = ""; tbodySim.innerHTML = "";
+            // PERF: Build strings first, then set once — avoids repeated full DOM re-parse
+            let htmlMain = "", htmlSim = "";
             
             teams.forEach((team, index) => {
                 let currentRank = index + 1;
@@ -2824,10 +2866,9 @@
                     trendHTML = `<span class="trend-flat">-</span>`;
                 }
                 
-                // Tabla Desktop
-                tbodyMain.innerHTML += `<tr>
+                htmlMain += `<tr>
                     <td class="${rowClass}"><strong>${currentRank}</strong></td>
-                    <td><div class="team-cell"><span>${team.flag}</span><img src="${getLogo(team.name)}" class="team-logo">${tName(team.name)}</div></td>
+                    <td><div class="team-cell"><span>${team.flag}</span><img src="${getLogo(team.name)}" class="team-logo" width="24" height="24" loading="lazy">${tName(team.name)}</div></td>
                     <td>${games}</td><td><strong>${team.wins}</strong></td><td>${team.losses}</td><td>${pct}</td>
                     <td>${getFormHTML(team.name)}</td>
                     <td>${team.diff > 0 ? '+' : ''}${team.diff}</td>
@@ -2835,13 +2876,15 @@
                     <td style="font-weight:bold; color:#4b5563;">${getSOS(team.name)}</td>
                 </tr>`;
                 
-                // Tabla Móvil (Persiana) con flechas
-                tbodySim.innerHTML += `<tr>
+                htmlSim += `<tr>
                     <td class="${rowClass}"><div class="rank-cell"><strong>${currentRank}</strong>${trendHTML}</div></td>
-                    <td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo">${tName(team.name)}</div></td>
+                    <td><div class="team-cell"><img src="${getLogo(team.name)}" class="team-logo" width="24" height="24" loading="lazy">${tName(team.name)}</div></td>
                     <td><strong>${team.wins}</strong></td><td>${team.losses}</td>
                 </tr>`;
             });
+            tbodyMain.innerHTML = htmlMain;
+            tbodySim.innerHTML = htmlSim;
+            buildRankMap(teams);
 
             // Leyenda
             const legendContainer = document.getElementById("standings-legend-container");
@@ -2967,7 +3010,7 @@
                 let asterisco = stats.played < 2 ? '*' : ''; 
                 
                 html += `<div class="rival-row">
-                    <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo">${tName(rival.name)}</div>
+                    <div class="team-cell"><strong>${rival.initialWins}V</strong> - <img src="${getLogo(rival.name)}" class="team-logo" width="24" height="24" loading="lazy">${tName(rival.name)}</div>
                     <div>H2H: <strong>${stats.winsA} - ${stats.winsB}</strong> <span style="color:#6b7280; font-size:0.9rem;">(${diffStr}${asterisco})</span></div>
                 </div>`;
             });
@@ -3030,13 +3073,14 @@
                 }
 
                 // Generar la tabla visual (esto queda exactamente igual que lo tenías)
+                // PERF: Build HTML string first, then set once
                 let sortedTeams = Object.keys(tRes).sort((a,b) => tRes[a].avg - tRes[b].avg);
                 const tbody = document.getElementById("prob-body");
                 if(tbody) {
-                    tbody.innerHTML = "";
+                    let tableHtml = "";
                     sortedTeams.forEach(team => {
                         let maxVal = Math.max(...tRes[team].positions); 
-                        let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
+                        let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo" width="24" height="24" loading="lazy"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
                         for(let i=0; i<20; i++) {
                             let pct = Math.round((tRes[team].positions[i] / iterations) * 100);
                             let isMax = (tRes[team].positions[i] === maxVal && maxVal > 0);
@@ -3044,8 +3088,10 @@
                             let style = isMax ? 'font-weight:bold; color:var(--dark); font-size:1.05rem; text-decoration:underline;' : (pct === 0 ? 'color:#ccc;' : '');
                             tr += `<td class="${bgClass}" style="${style}">${pct === 0 ? '-' : pct+'%'}</td>`;
                         }
-                        tr += "</tr>"; tbody.innerHTML += tr;
+                        tr += "</tr>";
+                        tableHtml += tr;
                     });
+                    tbody.innerHTML = tableHtml;
                 }
                 
                 document.getElementById('prob-loading').style.display = 'none';
@@ -3054,11 +3100,131 @@
             }, 50);
         }
 
+        // ============================================================
+        // PERF: Web Worker — runs Monte Carlo off the main thread
+        // so the UI never freezes during the 2,000-iteration simulation.
+        // ============================================================
+        const _mcWorkerSrc = `
+            function calcH2HW(tA,tB,ph,vp){
+                const k=tA+'|||'+tB,c=ph[k]||{winsA:0,winsB:0,played:0,diffA:0};
+                let wA=c.winsA,wB=c.winsB,pl=c.played,dA=c.diffA;
+                Object.values(vp).forEach(m=>{
+                    let mg=parseInt(m.diff)||1;
+                    if(m.home===tA&&m.away===tB){pl++;if(m.winner===tA){wA++;dA+=mg;}else{wB++;dA-=mg;}}
+                    if(m.home===tB&&m.away===tA){pl++;if(m.winner===tB){wB++;dA-=mg;}else{wA++;dA+=mg;}}
+                });
+                return{winsA:wA,winsB:wB,played:pl,diffA:dA};
+            }
+            function sortW(arr,ph,vp){
+                function rt(g){
+                    if(g.length<=1)return g;
+                    g.forEach(t=>{t._hw=0;g.forEach(o=>{if(t.name!==o.name)t._hw+=calcH2HW(t.name,o.name,ph,vp).winsA;});});
+                    g.sort((a,b)=>b._hw-a._hw);
+                    if(g[0]._hw!==g[g.length-1]._hw){let r=[],i=0;while(i<g.length){let sg=[g[i]],j=i+1;while(j<g.length&&g[i]._hw===g[j]._hw)sg.push(g[j++]);r.push(...rt(sg));i=j;}return r;}
+                    g.forEach(t=>{t._hd=0;g.forEach(o=>{if(t.name!==o.name)t._hd+=calcH2HW(t.name,o.name,ph,vp).diffA;});});
+                    g.sort((a,b)=>b._hd-a._hd);
+                    if(g[0]._hd!==g[g.length-1]._hd){let r=[],i=0;while(i<g.length){let sg=[g[i]],j=i+1;while(j<g.length&&g[i]._hd===g[j]._hd)sg.push(g[j++]);r.push(...rt(sg));i=j;}return r;}
+                    g.sort((a,b)=>{if(a.diff!==b.diff)return b.diff-a.diff;if(a.pf!==b.pf)return b.pf-a.pf;let gA=a.pa?(a.pf/a.pa):0,gB=b.pa?(b.pf/b.pa):0;return gB-gA;});
+                    return g;
+                }
+                arr.sort((a,b)=>b.wins-a.wins);
+                let out=[],idx=0;
+                while(idx<arr.length){let cw=arr[idx].wins,tg=[];while(idx<arr.length&&arr[idx].wins===cw)tg.push(arr[idx++]);out.push(...(tg.length>1?rt(tg):tg));}
+                return out;
+            }
+            self.onmessage=function(e){
+                const{tb,sp,up,it,ph}=e.data;
+                let tR={};tb.forEach(t=>{tR[t.name]={p:new Array(20).fill(0),a:0};});
+                for(let i=0;i<it;i++){
+                    let tmp=tb.map(t=>({...t,wins:t.initialWins,losses:t.initialLosses}));
+                    let vp={...sp};
+                    Object.values(sp).forEach(pick=>{
+                        let w=tmp.find(t=>t.name===pick.winner),l=tmp.find(t=>t.name===(pick.winner===pick.home?pick.away:pick.home));
+                        if(w)w.wins++;if(l)l.losses++;
+                    });
+                    up.forEach(g=>{
+                        let hw=Math.random()<g.hp,wn=hw?g.home:g.away,ln=hw?g.away:g.home;
+                        tmp.find(t=>t.name===wn).wins++;tmp.find(t=>t.name===ln).losses++;
+                        vp[g.id]={home:g.home,away:g.away,winner:wn,diff:1};
+                    });
+                    sortW(tmp,ph,vp).forEach((t,ix)=>{tR[t.name].p[ix]++;tR[t.name].a+=(ix+1);});
+                }
+                self.postMessage(tR);
+            };
+        `;
+
+        let _mcWorker = null;
+
+        function runProbabilitiesWorker() {
+            document.getElementById('prob-loading').style.display = 'block';
+            document.getElementById('prob-results').style.display = 'none';
+            document.getElementById('btn-run-prob').innerText = i18n[currentLang].computing;
+            document.getElementById('btn-run-prob').disabled = true;
+
+            const iterations = 2000;
+            let unplayed = [];
+            schedule.forEach(j => j.games.forEach(g => {
+                if (!g.played && !simulatedPicks[g.id]) {
+                    let odds = calculateWinOdds(g.home, g.away);
+                    unplayed.push({ id: g.id, home: g.home, away: g.away, hp: odds.homeDecimal });
+                }
+            }));
+
+            if (_mcWorker) { _mcWorker.terminate(); _mcWorker = null; }
+            const blob = new Blob([_mcWorkerSrc], { type: 'application/javascript' });
+            const workerUrl = URL.createObjectURL(blob);
+            _mcWorker = new Worker(workerUrl);
+
+            _mcWorker.onmessage = function(ev) {
+                URL.revokeObjectURL(workerUrl);
+                const tRes = ev.data;
+                const tbody = document.getElementById("prob-body");
+                if (tbody) {
+                    const sortedTeams = Object.keys(tRes).sort((a,b) => tRes[a].a - tRes[b].a);
+                    let tableHtml = "";
+                    sortedTeams.forEach(team => {
+                        let maxVal = Math.max(...tRes[team].p);
+                        let tr = `<tr><td style="text-align:left;"><div class="team-cell"><img src="${getLogo(team)}" class="team-logo" width="24" height="24" loading="lazy"> <strong>${getTeamAbrev(team)}</strong></div></td>`;
+                        for (let i = 0; i < 20; i++) {
+                            let pct = Math.round((tRes[team].p[i] / iterations) * 100);
+                            let isMax = tRes[team].p[i] === maxVal && maxVal > 0;
+                            let bgClass = i < 6 ? 'bg-t6' : (i < 10 ? 'bg-pi' : 'bg-out');
+                            let style = isMax ? 'font-weight:bold;color:var(--dark);font-size:1.05rem;text-decoration:underline;' : (pct === 0 ? 'color:#ccc;' : '');
+                            tr += `<td class="${bgClass}" style="${style}">${pct === 0 ? '-' : pct + '%'}</td>`;
+                        }
+                        tableHtml += tr + "</tr>";
+                    });
+                    tbody.innerHTML = tableHtml;
+                }
+                document.getElementById('prob-loading').style.display = 'none';
+                document.getElementById('btn-run-prob').innerText = i18n[currentLang].run_prob;
+                document.getElementById('btn-run-prob').disabled = false;
+                document.getElementById('prob-results').style.display = 'block';
+                _mcWorker = null;
+            };
+
+            _mcWorker.onerror = function(err) {
+                console.error('Worker error, fallback to main thread:', err.message);
+                URL.revokeObjectURL(workerUrl);
+                _mcWorker = null;
+                document.getElementById('btn-run-prob').disabled = false;
+                runProbabilities(); // graceful fallback
+            };
+
+            _mcWorker.postMessage({ tb: teamsBase, sp: simulatedPicks, up: unplayed, it: iterations, ph: h2hPastCache });
+        }
+
+        // Override button onclick after DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('btn-run-prob');
+            if (btn) btn.onclick = runProbabilitiesWorker;
+        });
+
         function renderMatches() {
             const container = document.getElementById("matches-container");
             if(!container) return;
             const t = i18n[currentLang] || i18n['es'];
-            container.innerHTML = "";
+            let outerHtml = "";
             
             schedule.forEach(jornada => {
                 // 1. Comprobamos si quedan partidos por jugar en esta jornada
@@ -3108,8 +3274,9 @@
                         </div>`;
                     }
                 });
-                container.innerHTML += jHeader + jGames + `</div>`;
+                outerHtml += jHeader + jGames + `</div>`;
             });
+            container.innerHTML = outerHtml;
         }
 
         function pickWinner(matchId, homeName, awayName, side) {
@@ -3263,15 +3430,16 @@
                 return html;
             }
 
+            let matrixHtml = "";
             winKeys.forEach(wins => {
                 let tiedTeams = grouped[wins];
                 if(tiedTeams.length > 1) {
                     hasTies = true;
                     let mainTitle = `${t.tied_at || 'Empate a'} ${wins} ${t.victories || 'victorias'}`;
-                    container.innerHTML += generateTiebreakerUI(tiedTeams, mainTitle, false);
+                    matrixHtml += generateTiebreakerUI(tiedTeams, mainTitle, false);
                 }
             });
-            if(!hasTies) container.innerHTML = `<p>${t.no_ties || 'No hay empates actuales.'}</p>`;
+            container.innerHTML = hasTies ? matrixHtml : `<p>${t.no_ties || 'No hay empates actuales.'}</p>`;
         }
 
         function renderResultados() {
@@ -3282,10 +3450,12 @@
             let valJ = document.getElementById("filter-jornada")?.value || "ALL";
             let valE = document.getElementById("filter-equipo")?.value || "ALL";
             let filtrados = pastMatches.filter(m => (valJ === "ALL" || m.jornada.toString() === valJ) && (valE === "ALL" || m.home === valE || m.away === valE));
+            let trRows = "";
             filtrados.forEach(m => {
                 let winnerHome = m.scoreH > m.scoreA;
-                tbody.innerHTML += `<tr><td>${t.round} ${m.jornada}</td><td style="${winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${tName(m.home)}</td><td style="font-weight:bold; background:#f3f4f6;">${m.scoreH} - ${m.scoreA}</td><td style="${!winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${tName(m.away)}</td></tr>`;
+                trRows += `<tr><td>${t.round} ${m.jornada}</td><td style="${winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${tName(m.home)}</td><td style="font-weight:bold; background:#f3f4f6;">${m.scoreH} - ${m.scoreA}</td><td style="${!winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${tName(m.away)}</td></tr>`;
             });
+            tbody.innerHTML = trRows;
         }
 
         async function randomizeBracket() {
@@ -3496,15 +3666,21 @@
             eSelect.innerHTML = `<option value="ALL">${t.all_teams}</option>`;
             mtSelect.innerHTML = `<option value="">${t.select_team}</option>`;
             
+            let jOpts = `<option value="ALL">${t.all_rounds}</option>`;
             [...new Set(pastMatches.map(m => m.jornada))].sort((a,b)=>b-a).forEach(j => { 
-                jSelect.innerHTML += `<option value="${j}">${t.round} ${j}</option>`; 
+                jOpts += `<option value="${j}">${t.round} ${j}</option>`; 
             });
-            
+            jSelect.innerHTML = jOpts;
+
             let eqCopy = [...teamsBase].sort((a,b) => tName(a.name).localeCompare(tName(b.name)));
+            let eOpts = `<option value="ALL">${t.all_teams}</option>`;
+            let mtOpts = `<option value="">${t.select_team}</option>`;
             eqCopy.forEach(team => { 
-                eSelect.innerHTML += `<option value="${team.name}">${tName(team.name)}</option>`; 
-                mtSelect.innerHTML += `<option value="${team.name}">${tName(team.name)}</option>`;
+                eOpts += `<option value="${team.name}">${tName(team.name)}</option>`;
+                mtOpts += `<option value="${team.name}">${tName(team.name)}</option>`;
             });
+            eSelect.innerHTML = eOpts;
+            mtSelect.innerHTML = mtOpts;
         }
 
         function openTab(evt, tabName) {
@@ -3593,6 +3769,10 @@
                     }
                 });
             });
+
+            // Build performance caches after data is finalised
+            buildH2HCache();
+            buildFormCache();
         }
         function renderBanner() {
             const container = document.getElementById("results-banner-container");
@@ -3602,16 +3782,9 @@
             // 1. Coge los primeros 6 partidos de tu lista
             const displayGames = rawResultsArray.slice(0, 10);
 
-            // FUNCIÓN TRUCO: Leer la posición y devolverla entre paréntesis (ej: "(1)")
+            // PERF: Use pre-built rankMap instead of live DOM queries
             const getTeamRank = (teamName) => {
-                const abrev = getTeamAbrev(teamName);
-                const rows = document.querySelectorAll('#standings-body tr');
-                for (let i = 0; i < rows.length; i++) {
-                    if (rows[i].textContent.includes(teamName) || rows[i].textContent.includes(abrev)) {
-                        return `(${i + 1})`;
-                    }
-                }
-                return ''; 
+                return rankMap[teamName] ? `(${rankMap[teamName]})` : '';
             };
             
             let cardsHtml = "";
@@ -3681,14 +3854,16 @@
 
             container.innerHTML = `
                 <div class="el-results-banner" style="direction: ltr;">
-                    <div class="el-ticker-wrap" style="width: 100%;">
+                    <div class="el-ticker-wrap">
                         <div class="el-ticker-track">
                             ${cardsHtml}
                             ${cardsHtml}
                         </div>
                     </div>
-                </div>
-            `;
+                    <div class="el-banner-action">
+                        <button class="el-btn-view" onclick="openTab(null, 'resultados')">${t.view_all_games || 'Ver Resultados'}</button>
+                    </div>
+                </div>`;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -3763,5 +3938,6 @@
     </script>
     <script defer data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="TheBenchTalk" data-description="Support me on Buy me a coffee!" data-message="Love the calculator? Fuel the developer with a coffee! ⚡☕" data-color="#FF813F" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </main>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421" crossorigin="anonymous"></script>
 </body>
 </html>
