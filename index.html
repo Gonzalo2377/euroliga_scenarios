@@ -3554,36 +3554,40 @@
         async function fetchLiveStandings() {
             try {
                 const apiUrl = "https://euroleague-advanced-api.eu/Euroleague/standings?season=2025&round_number=38&standings_type=basicstandings";
-                const url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(apiUrl);
+                
+                // Usamos el endpoint /get, que empaqueta todo para saltarse el CORS sí o sí
+                const url = "https://api.allorigins.win/get?url=" + encodeURIComponent(apiUrl);
                 
                 const response = await fetch(url);
-                if (!response.ok) throw new Error("Error en la API");
+                if (!response.ok) throw new Error("Error al conectar con el Proxy");
                 
-                const data = await response.json();
-        
+                // Extraemos el paquete del proxy y lo descodificamos
+                const proxyData = await response.json();
+                const data = JSON.parse(proxyData.contents);
+
+                // Inyectamos los datos en tu simulador
                 data.forEach(apiTeam => {
                     let miNombre = apiCodeMap[apiTeam["club.code"]];
                     if (miNombre) {
                         let miEquipo = teamsBase.find(t => t.name === miNombre);
                         if (miEquipo) {
-                            // Actualizamos victorias, derrotas y average
                             miEquipo.initialWins = apiTeam.gamesWon;
                             miEquipo.initialLosses = apiTeam.gamesLost;
                             miEquipo.diff = parseInt(apiTeam.pointsDifference.replace('+', ''));
                         }
                     }
                 });
-        
-                console.log("Datos de la API inyectados con éxito.");
+
+                console.log("¡Clasificación actualizada desde la API!");
                 
-                // Forzamos el refresco visual de la web
+                // Forzamos a la web a repintar la clasificación
                 snapshotOfficialRanks = null; 
                 renderStandings();
                 if (typeof renderMatrices === 'function') renderMatrices();
                 if (typeof renderBracket === 'function') renderBracket();
-        
+
             } catch (error) {
-                console.error("Fallo al conectar con la API. Usando datos locales.", error);
+                console.error("Usando datos locales. No se pudo cargar la API:", error);
             }
         }
        
