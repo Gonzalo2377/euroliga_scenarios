@@ -3936,7 +3936,9 @@
         // --- 2. FUNCIÓN ASÍNCRONA PARA CARGAR LA CLASIFICACIÓN ---
         async function fetchLiveStandings() {
             try {
-                const url = "https://euroleague-advanced-api.eu/Euroleague/standings?season=2025&round_number=38&standings_type=basicstandings";
+                const apiUrl = "https://euroleague-advanced-api.eu/Euroleague/standings?season=2025&round_number=38&standings_type=basicstandings";
+                const url = "https://api.allorigins.win/raw?url=" + encodeURIComponent(apiUrl);
+                
                 const response = await fetch(url);
                 if (!response.ok) throw new Error("Error en la API");
                 
