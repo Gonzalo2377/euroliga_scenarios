@@ -2833,7 +2833,12 @@
             // --- NUEVO: CAPTURAR LA FOTO ORIGINAL SOLO UNA VEZ ---
             // Si es la primera vez que se carga y no hay simulaciones, guardamos los rangos oficiales
             if (!snapshotOfficialRanks) {
-                let baseTeams = JSON.parse(JSON.stringify(teamsBase)).map(t => ({...t, wins: t.initialWins, losses: t.initialLosses}));
+                // Generamos la clasificación base con los datos inyectados de la API
+                let baseTeams = JSON.parse(JSON.stringify(teamsBase)).map(t => ({
+                    ...t, 
+                    wins: t.initialWins || 0, 
+                    losses: t.initialLosses || 0
+                }));
                 let sortedBase = sortTeamsWithH2H(baseTeams);
                 snapshotOfficialRanks = {};
                 sortedBase.forEach((t, i) => snapshotOfficialRanks[t.name] = i + 1);
@@ -3902,8 +3907,66 @@
             if (hash && document.getElementById(hash)) {
                 openTab(null, hash);
             }
+            fetchLiveStandings(); // <--- AÑADE ESTO AQUÍ
         });
 
+        const apiCodeMap = {
+            "OLY": "Olympiacos",
+            "PAM": "Valencia Basket",
+            "MAD": "Real Madrid",
+            "ULK": "Fenerbahçe",
+            "ZAL": "Zalgiris Kaunas",
+            "HTA": "Hapoel Tel-Aviv",
+            "PAN": "Panathinaikos",
+            "MCO": "Monaco",
+            "BAR": "Barcelona",
+            "RED": "Crvena Zvezda",
+            "DUB": "Dubai",
+            "TEL": "Maccabi Tel Aviv",
+            "MUN": "Bayern",
+            "MIL": "Olimpia Milano",
+            "PAR": "Partizan",
+            "PRS": "Paris",
+            "VIR": "Virtus Bolonia",
+            "BAS": "Baskonia",
+            "IST": "Anadolu Efes",
+            "ASV": "Asvel Basket"
+        };
+        
+        // --- 2. FUNCIÓN ASÍNCRONA PARA CARGAR LA CLASIFICACIÓN ---
+        async function fetchLiveStandings() {
+            try {
+                const url = "https://euroleague-advanced-api.eu/Euroleague/standings?season=2025&round_number=38&standings_type=basicstandings";
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Error en la API");
+                
+                const data = await response.json();
+        
+                data.forEach(apiTeam => {
+                    let miNombre = apiCodeMap[apiTeam["club.code"]];
+                    if (miNombre) {
+                        let miEquipo = teamsBase.find(t => t.name === miNombre);
+                        if (miEquipo) {
+                            // Actualizamos victorias, derrotas y average
+                            miEquipo.initialWins = apiTeam.gamesWon;
+                            miEquipo.initialLosses = apiTeam.gamesLost;
+                            miEquipo.diff = parseInt(apiTeam.pointsDifference.replace('+', ''));
+                        }
+                    }
+                });
+        
+                console.log("Datos de la API inyectados con éxito.");
+                
+                // Forzamos el refresco visual de la web
+                snapshotOfficialRanks = null; 
+                renderStandings();
+                if (typeof renderMatrices === 'function') renderMatrices();
+                if (typeof renderBracket === 'function') renderBracket();
+        
+            } catch (error) {
+                console.error("Fallo al conectar con la API. Usando datos locales.", error);
+            }
+        }
        
     </script>
     <div id="footer-methodology" style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px; color: #374151; font-size: 0.95rem; line-height: 1.6; max-width: 1200px; margin-left: auto; margin-right: auto; transition: all 0.3s;">
