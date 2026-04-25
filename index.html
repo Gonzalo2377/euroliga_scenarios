@@ -460,6 +460,145 @@
         @keyframes pulse-dot {
             0%,100% { opacity: 1; } 50% { opacity: 0.2; }
         }
+
+        .el-game-card.playoff-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            min-width: 265px;
+            max-width: 265px;
+            padding: 0;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
+            cursor: default;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transition: box-shadow 0.2s, border-color 0.2s;
+            overflow: visible;
+        }
+        .el-game-card.playoff-card:hover {
+            border-color: #64748b;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            transform: translateY(-3px);
+        }
+
+        /* Header tipo .matchup-header */
+        .pc-header {
+            background: #0f172a;
+            font-size: 0.72rem;
+            text-align: center;
+            padding: 5px 8px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            border-bottom: 1px solid #334155;
+            font-weight: 800;
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .pc-header .pc-badge {
+            color: #f59e0b;
+        }
+        .pc-header .pc-date {
+            color: #64748b;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        .pc-header .pc-live {
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .pc-live-dot {
+            width: 7px; height: 7px;
+            background: #ef4444; border-radius: 50%;
+            animation: pulse-dot 1.2s infinite;
+            display: inline-block;
+        }
+        @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.15;} }
+
+        /* Filas de equipo tipo .matchup-team */
+        .pc-team {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            height: 36px;
+            box-sizing: border-box;
+            border-left: 4px solid transparent;
+            transition: background 0.2s;
+            gap: 0;
+        }
+        .pc-team:not(:last-of-type) { border-bottom: 1px solid #334155; }
+        .pc-team .pc-seed {
+            font-size: 0.72rem; font-weight: 800; color: #f8fafc;
+            background: #475569; width: 20px; height: 20px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 4px; margin-right: 8px; flex-shrink: 0;
+        }
+        .pc-team img {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: white; margin-right: 8px; object-fit: contain;
+            border: 1px solid #cbd5e1; flex-shrink: 0;
+        }
+        .pc-team .pc-name {
+            flex: 1; font-size: 0.88rem; font-weight: 700;
+            color: #f8fafc; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+        .pc-team .pc-series-wins {
+            font-size: 1rem; font-weight: 900;
+            color: #f8fafc; margin-left: 6px; flex-shrink: 0;
+        }
+        .pc-team.pc-winner {
+            font-weight: 900;
+        }
+        .pc-team.pc-loser { opacity: 0.45; }
+
+        /* Fila H2H + diff */
+        .pc-h2h {
+            background: #0f172a;
+            font-size: 0.72rem;
+            color: #cbd5e1;
+            text-align: center;
+            padding: 4px 8px;
+            border-top: 1px solid #334155;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .pc-h2h strong { color: #f8fafc; font-size: 0.8rem; }
+        .pc-h2h .pc-diff-pos { color: #4ade80; font-weight: 700; }
+        .pc-h2h .pc-diff-neg { color: #f87171; font-weight: 700; }
+
+        /* Barra de prob */
+        .pc-prob-bar-wrap {
+            padding: 5px 8px 6px;
+            background: #1e293b;
+            border-top: 1px solid #334155;
+            border-bottom-left-radius: 7px;
+            border-bottom-right-radius: 7px;
+        }
+        .pc-prob-labels {
+            display: flex; justify-content: space-between;
+            font-size: 0.72rem; font-weight: 700; color: #e2e8f0;
+            margin-bottom: 3px;
+        }
+        .pc-prob-labels .pc-label-center {
+            font-size: 0.6rem; color: #475569;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .pc-prob-bar {
+            width: 100%; height: 6px; background: #334155;
+            border-radius: 3px; overflow: hidden; display: flex;
+        }
+        .pc-prob-t1, .pc-prob-t2 { height: 100%; transition: width 0.3s; }
         
         @keyframes el-scroll {
             0% { transform: translateX(0); }
@@ -1653,34 +1792,48 @@
         }
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
 
+        const teamColors = {
+            "Fenerbahçe": "#ca8a04", "Real Madrid": "#3730a3", "Olympiacos": "#9f1239",
+            "Valencia Basket": "#c2410a", "Zalgiris Kaunas": "#14532d", "Panathinaikos": "#065f46",
+            "Hapoel Tel-Aviv": "#be123c", "Barcelona": "#831843", "Monaco": "#991b1b",
+            "Crvena Zvezda": "#b91c1c", "Dubai": "#854d0e", "Olimpia Milano": "#b91c1c",
+            "Maccabi Tel Aviv": "#1e3a8a", "Anadolu Efes": "#1d4ed8", "Virtus Bolonia": "#3f3f46",
+            "Partizan": "#3f3f46", "Bayern": "#9f1239", "Paris": "#3f3f46",
+            "Baskonia": "#9f1239", "Asvel Basket": "#3f3f46"
+        };
+        function getTeamColor(name) { return teamColors[name] || "#334155"; }
+
+        // ── PARTIDOS PLAYOFF ─────────────────────────────────────────
+        // Actualiza: date (ISO UTC), series "W1-W2", prob1/prob2, isLive, isFinished, score1/score2
+        // H2H y +/- se calculan SOLOS desde calculateH2HStats()
         const playoffMatchesArray = [
             {
-                team1: "Fenerbahçe", team2: "Zalgiris Kaunas",
-                date: "2026-04-30T17:45:00Z",
-                series: "0-0", h2h: "2-0", prob1: 72, prob2: 28,
-                isLive: false, isFinished: false, score1: 0, score2: 0,
-                leg: "Partido 1"
+                team1: "Fenerbahçe",      seed1: 1, team2: "Zalgiris Kaunas", seed2: 8,
+                date: "2026-04-30T17:45:00Z", leg: "Cuartos · P1",
+                series1: 0, series2: 0,        // victorias en la serie (actualiza tras cada partido)
+                prob1: 72, prob2: 28,
+                isLive: false, isFinished: false, score1: 0, score2: 0
             },
             {
-                team1: "Valencia Basket", team2: "Panathinaikos",
-                date: "2026-04-30T19:00:00Z",
-                series: "0-0", h2h: "2-1", prob1: 58, prob2: 42,
-                isLive: false, isFinished: false, score1: 0, score2: 0,
-                leg: "Partido 1"
+                team1: "Valencia Basket", seed1: 4, team2: "Panathinaikos",   seed2: 5,
+                date: "2026-04-30T19:00:00Z", leg: "Cuartos · P1",
+                series1: 0, series2: 0,
+                prob1: 58, prob2: 42,
+                isLive: false, isFinished: false, score1: 0, score2: 0
             },
             {
-                team1: "Real Madrid", team2: "Hapoel Tel-Aviv",
-                date: "2026-05-01T18:45:00Z",
-                series: "0-0", h2h: "2-0", prob1: 75, prob2: 25,
-                isLive: false, isFinished: false, score1: 0, score2: 0,
-                leg: "Partido 1"
+                team1: "Real Madrid",     seed1: 2, team2: "Hapoel Tel-Aviv", seed2: 7,
+                date: "2026-05-01T18:45:00Z", leg: "Cuartos · P1",
+                series1: 0, series2: 0,
+                prob1: 75, prob2: 25,
+                isLive: false, isFinished: false, score1: 0, score2: 0
             },
             {
-                team1: "Olympiacos", team2: "Monaco",
-                date: "2026-05-01T20:00:00Z",
-                series: "0-0", h2h: "1-1", prob1: 55, prob2: 45,
-                isLive: false, isFinished: false, score1: 0, score2: 0,
-                leg: "Partido 1"
+                team1: "Olympiacos",      seed1: 3, team2: "Monaco",          seed2: 6,
+                date: "2026-05-01T20:00:00Z", leg: "Cuartos · P1",
+                series1: 0, series2: 0,
+                prob1: 55, prob2: 45,
+                isLive: false, isFinished: false, score1: 0, score2: 0
             }
         ];
 
@@ -3869,80 +4022,101 @@
             const container = document.getElementById("results-banner-container");
             if (!container) return;
             const t = i18n[currentLang] || i18n['gb'];
+            const getTeamRank = (n) => rankMap[n] ? `(${rankMap[n]})` : '';
 
-            const getTeamRank = (teamName) => rankMap[teamName] ? `(${rankMap[teamName]})` : '';
-
-            // ── Tarjetas de PLAYOFF (próximos / en vivo / terminados) ──
+            // ── TARJETAS PLAYOFF ─────────────────────────────────────
             let playoffHtml = "";
             playoffMatchesArray.forEach(m => {
-                const mDate = new Date(m.date);
+                const mDate  = new Date(m.date);
                 const dateStr = `${mDate.getDate()}/${mDate.getMonth()+1} ${mDate.getHours().toString().padStart(2,'0')}:${mDate.getMinutes().toString().padStart(2,'0')}`;
 
-                let statusLeft, statusRight;
+                // H2H calculado del código (victorias en temporada regular + Play-In)
+                const h2h   = calculateH2HStats(m.team1, m.team2);
+                const diffStr = h2h.diffA > 0 ? `+${h2h.diffA}` : `${h2h.diffA}`;
+                const diffClass = h2h.diffA > 0 ? 'pc-diff-pos' : (h2h.diffA < 0 ? 'pc-diff-neg' : '');
+                const h2hLine = h2h.played > 0
+                    ? `H2H: <strong>${h2h.winsA}-${h2h.winsB}</strong> &nbsp;|&nbsp; +/-: <span class="${diffClass}">${diffStr}</span>`
+                    : `<span style="color:#475569">Sin H2H previo</span>`;
+
+                // Colores equipo
+                const c1 = getTeamColor(m.team1);
+                const c2 = getTeamColor(m.team2);
+
+                // Header
+                let headerLeft, headerRight;
                 if (m.isLive) {
-                    statusLeft = `<span class="playoff-badge"><span class="live-dot"></span>EN VIVO</span>`;
-                    statusRight = `<span style="color:#fbbf24; font-weight:900;">${m.series}</span>`;
-                } else if (m.isFinished) {
-                    statusLeft = `<span class="playoff-badge" style="color:#9ca3af;">PLAYOFF · FINAL</span>`;
-                    statusRight = `<span style="color:#fbbf24; font-weight:900;">${m.series}</span>`;
+                    headerLeft  = `<span class="pc-live"><span class="pc-live-dot"></span>EN VIVO</span>`;
+                    headerRight = `<span class="pc-badge">${m.leg}</span>`;
                 } else {
-                    statusLeft = `<span class="playoff-badge">🏀 PLAYOFF</span>`;
-                    statusRight = `<span style="color:#9ca3af; font-size:9px;">${dateStr}</span>`;
+                    headerLeft  = `<span class="pc-badge">${m.leg}</span>`;
+                    headerRight = `<span class="pc-date">${dateStr}</span>`;
                 }
 
-                const scoreHtml = m.isFinished || m.isLive
-                    ? `<span class="${m.score1 > m.score2 ? 'win' : ''}">${m.score1}</span>
-                       <span class="el-score-divider">-</span>
-                       <span class="${m.score2 > m.score1 ? 'win' : ''}">${m.score2}</span>`
-                    : `<span style="font-size:13px; color:#6b7280; font-weight:600;">${m.leg}</span>`;
+                // Filas de equipo
+                const team1Won = m.series1 > m.series2;
+                const team2Won = m.series2 > m.series1;
+                const t1Style = team1Won ? `style="background-color:${c1}22; border-left-color:${c1};"` : '';
+                const t2Style = team2Won ? `style="background-color:${c2}22; border-left-color:${c2};"` : '';
+                const t1Class = team1Won ? 'pc-winner' : (team2Won ? 'pc-loser' : '');
+                const t2Class = team2Won ? 'pc-winner' : (team1Won ? 'pc-loser' : '');
+
+                // Marcador / texto central de serie
+                const seriesLabel = (m.isFinished || m.isLive)
+                    ? `<span style="font-size:1rem;font-weight:900;color:#f8fafc;">${m.score1}</span>
+                       <span style="color:#6b7280;font-size:0.8rem;margin:0 4px;">-</span>
+                       <span style="font-size:1rem;font-weight:900;color:#f8fafc;">${m.score2}</span>`
+                    : `<span style="font-size:0.7rem;font-weight:800;color:#fbbf24;letter-spacing:0.5px;">
+                           ${m.series1}-${m.series2}
+                       </span>`;
+
+                // Wins de serie junto al nombre (si hay alguna)
+                const s1Html = m.series1 > 0 ? `<span class="pc-series-wins" style="color:${c1};">${m.series1}</span>` : '';
+                const s2Html = m.series2 > 0 ? `<span class="pc-series-wins" style="color:${c2};">${m.series2}</span>` : '';
 
                 playoffHtml += `
-                    <div class="el-game-card playoff-card">
-                        <div class="el-game-status">
-                            ${statusLeft}
-                            ${statusRight}
+                <div class="el-game-card playoff-card">
+                    <div class="pc-header">
+                        ${headerLeft}
+                        ${headerRight}
+                    </div>
+                    <div class="pc-team ${t1Class}" ${t1Style}>
+                        <span class="pc-seed">${m.seed1}</span>
+                        <img src="${getLogo(m.team1)}" loading="lazy">
+                        <span class="pc-name">${getTeamAbrev(m.team1)} <span style="color:#94a3b8;font-weight:400;font-size:0.7rem;">${getTeamRank(m.team1)}</span></span>
+                        ${s1Html}
+                    </div>
+                    <div class="pc-team ${t2Class}" ${t2Style}>
+                        <span class="pc-seed">${m.seed2}</span>
+                        <img src="${getLogo(m.team2)}" loading="lazy">
+                        <span class="pc-name">${getTeamAbrev(m.team2)} <span style="color:#94a3b8;font-weight:400;font-size:0.7rem;">${getTeamRank(m.team2)}</span></span>
+                        ${s2Html}
+                    </div>
+                    <div class="pc-h2h">${h2hLine}</div>
+                    <div class="pc-prob-bar-wrap">
+                        <div class="pc-prob-labels">
+                            <span>${m.prob1}%</span>
+                            <span class="pc-label-center">Win Prob</span>
+                            <span>${m.prob2}%</span>
                         </div>
-                        <div class="el-game-main">
-                            <div class="el-team-col">
-                                <img src="${getLogo(m.team1)}" loading="lazy">
-                                <span class="el-team-name">${getTeamAbrev(m.team1)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(m.team1)}</span></span>
-                            </div>
-                            <div class="el-score-center">${scoreHtml}</div>
-                            <div class="el-team-col">
-                                <img src="${getLogo(m.team2)}" loading="lazy">
-                                <span class="el-team-name">${getTeamAbrev(m.team2)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(m.team2)}</span></span>
-                            </div>
+                        <div class="pc-prob-bar">
+                            <div class="pc-prob-t1" style="width:${m.prob1}%; background:${c1};"></div>
+                            <div class="pc-prob-t2" style="width:${m.prob2}%; background:${c2};"></div>
                         </div>
-                        <div class="playoff-hover-info">
-                            <div class="playoff-series-txt">Serie ${m.series}</div>
-                            <div class="playoff-detail-txt">H2H temporada: <span>${m.h2h}</span></div>
-                            <div class="playoff-detail-txt" style="color:#9ca3af;">${dateStr}</div>
-                            <div class="prob-bar-wrap">
-                                <div class="prob-bar-labels">
-                                    <span>${getTeamAbrev(m.team1)} ${m.prob1}%</span>
-                                    <span style="font-size:9px; color:#64748b;">Win Prob</span>
-                                    <span>${m.prob2}% ${getTeamAbrev(m.team2)}</span>
-                                </div>
-                                <div class="prob-bar">
-                                    <div class="prob-bar-t1" style="width:${m.prob1}%"></div>
-                                    <div class="prob-bar-t2" style="width:${m.prob2}%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
+                    </div>
+                </div>`;
             });
 
-            // ── Tarjetas de RESULTADOS normales ──
+            // ── TARJETAS RESULTADOS NORMALES ─────────────────────────
             let resultsHtml = "";
             rawResultsArray.slice(0, 10).forEach(raw => {
-                const p = raw.split('|').map(s => s.trim());
-                const phase = p[0], teamA = p[1], teamB = p[2];
+                const p      = raw.split('|').map(s => s.trim());
+                const phase  = p[0], teamA = p[1], teamB = p[2];
                 const scoreA = p[3] || "-", scoreB = p[4] || "-";
-                const ot = p[5] ? `<span style="font-size:0.6rem; color:#ef4444; margin-left:4px; font-weight:bold;">${p[5]}</span>` : "";
+                const ot     = p[5] ? `<span style="font-size:0.6rem;color:#ef4444;margin-left:4px;font-weight:bold;">${p[5]}</span>` : "";
                 const qA = p[6] || "", qB = p[7] || "";
-                const isPlayoff = isNaN(parseInt(phase));
+                const isPlayoff  = isNaN(parseInt(phase));
                 const badgeColor = isPlayoff ? '#ea580c' : '#9ca3af';
-                const label = isPlayoff ? phase : `${t.round || 'Jornada'} ${phase}`;
+                const label      = isPlayoff ? phase : `${t.round || 'Jornada'} ${phase}`;
 
                 let quarters = "";
                 if (qA && qB) {
@@ -3950,8 +4124,8 @@
                     let headerRow = '<tr><th></th>';
                     for (let i = 0; i < numPeriods; i++) {
                         headerRow += i < 4
-                            ? `<th style="color:#9ca3af !important; font-size:11px !important;">Q${i+1}</th>`
-                            : `<th style="color:#ef4444 !important; font-size:11px !important;">${numPeriods===5?'OT':'OT'+(i-3)}</th>`;
+                            ? `<th style="color:#9ca3af !important;font-size:11px !important;">Q${i+1}</th>`
+                            : `<th style="color:#ef4444 !important;font-size:11px !important;">${numPeriods===5?'OT':'OT'+(i-3)}</th>`;
                     }
                     headerRow += '</tr>';
                     quarters = `<div class="el-quarters-tooltip"><table class="q-table">
@@ -3962,37 +4136,35 @@
                 }
 
                 resultsHtml += `
-                    <div class="el-game-card">
-                        <div class="el-game-status">
-                            <span style="color:${badgeColor}; font-weight:900;">${label}</span>
-                            <span style="color:var(--primary);">${scoreA === "-" ? "PRÓXIMO" : (t.final || "FINAL")}</span>
+                <div class="el-game-card">
+                    <div class="el-game-status">
+                        <span style="color:${badgeColor};font-weight:900;">${label}</span>
+                        <span style="color:var(--primary);">${scoreA==="-" ? "PRÓXIMO" : (t.final||"FINAL")}</span>
+                    </div>
+                    <div class="el-game-main">
+                        <div class="el-team-col">
+                            <img src="${getLogo(teamA)}" loading="lazy">
+                            <span class="el-team-name">${getTeamAbrev(teamA)} <span style="color:#9ca3af;font-weight:normal;">${getTeamRank(teamA)}</span></span>
                         </div>
-                        <div class="el-game-main">
-                            <div class="el-team-col">
-                                <img src="${getLogo(teamA)}" loading="lazy">
-                                <span class="el-team-name">${getTeamAbrev(teamA)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(teamA)}</span></span>
-                            </div>
-                            <div class="el-score-center">
-                                <span class="${scoreA > scoreB ? 'win' : ''}">${scoreA}${ot}</span>
-                                <span class="el-score-divider">-</span>
-                                <span class="${scoreB > scoreA ? 'win' : ''}">${scoreB}</span>
-                            </div>
-                            <div class="el-team-col">
-                                <img src="${getLogo(teamB)}" loading="lazy">
-                                <span class="el-team-name">${getTeamAbrev(teamB)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(teamB)}</span></span>
-                            </div>
+                        <div class="el-score-center">
+                            <span class="${scoreA>scoreB?'win':''}">${scoreA}${ot}</span>
+                            <span class="el-score-divider">-</span>
+                            <span class="${scoreB>scoreA?'win':''}">${scoreB}</span>
                         </div>
-                        ${quarters}
-                    </div>`;
+                        <div class="el-team-col">
+                            <img src="${getLogo(teamB)}" loading="lazy">
+                            <span class="el-team-name">${getTeamAbrev(teamB)} <span style="color:#9ca3af;font-weight:normal;">${getTeamRank(teamB)}</span></span>
+                        </div>
+                    </div>
+                    ${quarters}
+                </div>`;
             });
 
-            const allCards = playoffHtml + resultsHtml;
+            const all = playoffHtml + resultsHtml;
             container.innerHTML = `
                 <div class="el-results-banner" style="direction:ltr;">
                     <div class="el-ticker-wrap" style="width:100%;">
-                        <div class="el-ticker-track">
-                            ${allCards}${allCards}
-                        </div>
+                        <div class="el-ticker-track">${all}${all}</div>
                     </div>
                 </div>`;
         }
