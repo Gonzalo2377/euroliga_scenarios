@@ -3958,7 +3958,7 @@
 
             // ── TARJETAS RESULTADOS NORMALES ─────────────────────────
             let resultsHtml = "";
-            rawResultsArray.slice(0, 10).forEach(raw => {
+            rawResultsArray.filter(raw => isNaN(parseInt(raw.split('|')[0]))).forEach(raw => {
                 const p      = raw.split('|').map(s => s.trim());
                 const phase  = p[0], teamA = p[1], teamB = p[2];
                 const scoreA = p[3] || "-", scoreB = p[4] || "-";
