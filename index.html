@@ -403,6 +403,63 @@
         
         .q-table th:first-child, .q-table td:first-child { text-align: left; width: 26px; border: none !important; }
         .q-table td:first-child img { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
+
+        .el-game-card.playoff-card {
+            border-color: #f59e0b !important;
+            background: rgba(245, 158, 11, 0.08);
+            min-width: 260px;
+        }
+        .el-game-card.playoff-card:hover {
+            border-color: #f59e0b !important;
+            background: rgba(245, 158, 11, 0.15);
+        }
+        .playoff-badge {
+            font-size: 9px; font-weight: 900; letter-spacing: 1px;
+            color: #f59e0b; text-transform: uppercase;
+        }
+        .playoff-hover-info {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 4px; padding: 6px 10px; box-sizing: border-box;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 10; border-radius: 8px;
+        }
+        .el-game-card:hover .playoff-hover-info {
+            opacity: 1; visibility: visible;
+        }
+        .prob-bar-wrap {
+            width: 100%; display: flex; flex-direction: column; gap: 2px;
+        }
+        .prob-bar-labels {
+            display: flex; justify-content: space-between;
+            font-size: 10px; font-weight: 700; color: #e2e8f0;
+        }
+        .prob-bar {
+            width: 100%; height: 5px; background: #334155;
+            border-radius: 3px; overflow: hidden; display: flex;
+        }
+        .prob-bar-t1 { height: 100%; background: #3b82f6; }
+        .prob-bar-t2 { height: 100%; background: #f59e0b; }
+        .playoff-series-txt {
+            font-size: 11px; font-weight: 800; color: #fbbf24;
+            letter-spacing: 0.5px;
+        }
+        .playoff-detail-txt {
+            font-size: 10px; color: #94a3b8; text-align: center;
+        }
+        .playoff-detail-txt span { color: #f87171; font-weight: 700; }
+        .live-dot {
+            display: inline-block; width: 7px; height: 7px;
+            background: #ef4444; border-radius: 50%;
+            animation: pulse-dot 1.2s infinite;
+            margin-right: 4px; vertical-align: middle;
+        }
+        @keyframes pulse-dot {
+            0%,100% { opacity: 1; } 50% { opacity: 0.2; }
+        }
         
         @keyframes el-scroll {
             0% { transform: translateX(0); }
@@ -1595,6 +1652,39 @@
             return logos[teamName] || "logo.png";
         }
         function getTeamAbrev(name) { let t = teamsBase.find(team => team.name === name); return t ? t.id : name.substring(0,3).toUpperCase(); }
+
+        const playoffMatchesArray = [
+            {
+                team1: "Fenerbahçe", team2: "Zalgiris Kaunas",
+                date: "2026-04-30T17:45:00Z",
+                series: "0-0", h2h: "2-0", prob1: 72, prob2: 28,
+                isLive: false, isFinished: false, score1: 0, score2: 0,
+                leg: "Partido 1"
+            },
+            {
+                team1: "Valencia Basket", team2: "Panathinaikos",
+                date: "2026-04-30T19:00:00Z",
+                series: "0-0", h2h: "2-1", prob1: 58, prob2: 42,
+                isLive: false, isFinished: false, score1: 0, score2: 0,
+                leg: "Partido 1"
+            },
+            {
+                team1: "Real Madrid", team2: "Hapoel Tel-Aviv",
+                date: "2026-05-01T18:45:00Z",
+                series: "0-0", h2h: "2-0", prob1: 75, prob2: 25,
+                isLive: false, isFinished: false, score1: 0, score2: 0,
+                leg: "Partido 1"
+            },
+            {
+                team1: "Olympiacos", team2: "Monaco",
+                date: "2026-05-01T20:00:00Z",
+                series: "0-0", h2h: "1-1", prob1: 55, prob2: 45,
+                isLive: false, isFinished: false, score1: 0, score2: 0,
+                leg: "Partido 1"
+            }
+        ];
+
+        
 
         const rawResultsArray = [
             "Play In|Monaco|Barcelona|79|70||26,23,9,21|14,21,18,17",
@@ -3777,66 +3867,109 @@
         }
         function renderBanner() {
             const container = document.getElementById("results-banner-container");
-            if(!container) return;
+            if (!container) return;
             const t = i18n[currentLang] || i18n['gb'];
 
-            // 1. Coge los primeros 6 partidos de tu lista
-            const displayGames = rawResultsArray.slice(0, 10);
+            const getTeamRank = (teamName) => rankMap[teamName] ? `(${rankMap[teamName]})` : '';
 
-            // PERF: Use pre-built rankMap instead of live DOM queries
-            const getTeamRank = (teamName) => {
-                return rankMap[teamName] ? `(${rankMap[teamName]})` : '';
-            };
-            
-            let cardsHtml = "";
-            displayGames.forEach(raw => {
+            // ── Tarjetas de PLAYOFF (próximos / en vivo / terminados) ──
+            let playoffHtml = "";
+            playoffMatchesArray.forEach(m => {
+                const mDate = new Date(m.date);
+                const dateStr = `${mDate.getDate()}/${mDate.getMonth()+1} ${mDate.getHours().toString().padStart(2,'0')}:${mDate.getMinutes().toString().padStart(2,'0')}`;
+
+                let statusLeft, statusRight;
+                if (m.isLive) {
+                    statusLeft = `<span class="playoff-badge"><span class="live-dot"></span>EN VIVO</span>`;
+                    statusRight = `<span style="color:#fbbf24; font-weight:900;">${m.series}</span>`;
+                } else if (m.isFinished) {
+                    statusLeft = `<span class="playoff-badge" style="color:#9ca3af;">PLAYOFF · FINAL</span>`;
+                    statusRight = `<span style="color:#fbbf24; font-weight:900;">${m.series}</span>`;
+                } else {
+                    statusLeft = `<span class="playoff-badge">🏀 PLAYOFF</span>`;
+                    statusRight = `<span style="color:#9ca3af; font-size:9px;">${dateStr}</span>`;
+                }
+
+                const scoreHtml = m.isFinished || m.isLive
+                    ? `<span class="${m.score1 > m.score2 ? 'win' : ''}">${m.score1}</span>
+                       <span class="el-score-divider">-</span>
+                       <span class="${m.score2 > m.score1 ? 'win' : ''}">${m.score2}</span>`
+                    : `<span style="font-size:13px; color:#6b7280; font-weight:600;">${m.leg}</span>`;
+
+                playoffHtml += `
+                    <div class="el-game-card playoff-card">
+                        <div class="el-game-status">
+                            ${statusLeft}
+                            ${statusRight}
+                        </div>
+                        <div class="el-game-main">
+                            <div class="el-team-col">
+                                <img src="${getLogo(m.team1)}" loading="lazy">
+                                <span class="el-team-name">${getTeamAbrev(m.team1)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(m.team1)}</span></span>
+                            </div>
+                            <div class="el-score-center">${scoreHtml}</div>
+                            <div class="el-team-col">
+                                <img src="${getLogo(m.team2)}" loading="lazy">
+                                <span class="el-team-name">${getTeamAbrev(m.team2)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(m.team2)}</span></span>
+                            </div>
+                        </div>
+                        <div class="playoff-hover-info">
+                            <div class="playoff-series-txt">Serie ${m.series}</div>
+                            <div class="playoff-detail-txt">H2H temporada: <span>${m.h2h}</span></div>
+                            <div class="playoff-detail-txt" style="color:#9ca3af;">${dateStr}</div>
+                            <div class="prob-bar-wrap">
+                                <div class="prob-bar-labels">
+                                    <span>${getTeamAbrev(m.team1)} ${m.prob1}%</span>
+                                    <span style="font-size:9px; color:#64748b;">Win Prob</span>
+                                    <span>${m.prob2}% ${getTeamAbrev(m.team2)}</span>
+                                </div>
+                                <div class="prob-bar">
+                                    <div class="prob-bar-t1" style="width:${m.prob1}%"></div>
+                                    <div class="prob-bar-t2" style="width:${m.prob2}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            // ── Tarjetas de RESULTADOS normales ──
+            let resultsHtml = "";
+            rawResultsArray.slice(0, 10).forEach(raw => {
                 const p = raw.split('|').map(s => s.trim());
-                const phase = p[0];
-                const teamA = p[1];
-                const teamB = p[2];
-                const scoreA = p[3] || "-";
-                const scoreB = p[4] || "-";
+                const phase = p[0], teamA = p[1], teamB = p[2];
+                const scoreA = p[3] || "-", scoreB = p[4] || "-";
                 const ot = p[5] ? `<span style="font-size:0.6rem; color:#ef4444; margin-left:4px; font-weight:bold;">${p[5]}</span>` : "";
-                const qA = p[6] || "";
-                const qB = p[7] || "";
-
+                const qA = p[6] || "", qB = p[7] || "";
                 const isPlayoff = isNaN(parseInt(phase));
                 const badgeColor = isPlayoff ? '#ea580c' : '#9ca3af';
                 const label = isPlayoff ? phase : `${t.round || 'Jornada'} ${phase}`;
 
-                // Tooltip de cuartos formateado
                 let quarters = "";
                 if (qA && qB) {
                     const numPeriods = qA.split(',').length;
-                    let headerRow = '<tr><th></th>'; // Hueco vacío encima de la columna de los logos
-                    
+                    let headerRow = '<tr><th></th>';
                     for (let i = 0; i < numPeriods; i++) {
-                        if (i < 4) {
-                            headerRow += `<th style="color:#9ca3af !important; font-size:11px !important;">Q${i+1}</th>`;
-                        } else {
-                            // Detecta si hay una prórroga (OT) o múltiples (OT1, OT2)
-                            let otLabel = (numPeriods === 5) ? 'OT' : `OT${i-3}`;
-                            headerRow += `<th style="color:#ef4444 !important; font-size:11px !important;">${otLabel}</th>`;
-                        }
+                        headerRow += i < 4
+                            ? `<th style="color:#9ca3af !important; font-size:11px !important;">Q${i+1}</th>`
+                            : `<th style="color:#ef4444 !important; font-size:11px !important;">${numPeriods===5?'OT':'OT'+(i-3)}</th>`;
                     }
                     headerRow += '</tr>';
-
                     quarters = `<div class="el-quarters-tooltip"><table class="q-table">
                         ${headerRow}
-                        <tr><td><img src="${getLogo(teamA)}" width="14" style="vertical-align:middle;"></td><td>${qA.replace(/,/g, '</td><td>')}</td></tr>
-                        <tr><td><img src="${getLogo(teamB)}" width="14" style="vertical-align:middle;"></td><td>${qB.replace(/,/g, '</td><td>')}</td></tr>
+                        <tr><td><img src="${getLogo(teamA)}" width="14" style="vertical-align:middle;"></td><td>${qA.replace(/,/g,'</td><td>')}</td></tr>
+                        <tr><td><img src="${getLogo(teamB)}" width="14" style="vertical-align:middle;"></td><td>${qB.replace(/,/g,'</td><td>')}</td></tr>
                     </table></div>`;
                 }
 
-                cardsHtml += `
+                resultsHtml += `
                     <div class="el-game-card">
                         <div class="el-game-status">
                             <span style="color:${badgeColor}; font-weight:900;">${label}</span>
-                            <span style="color:var(--primary);">${(scoreA === "-") ? "PRÓXIMO" : (t.final || "FINAL")}</span>
+                            <span style="color:var(--primary);">${scoreA === "-" ? "PRÓXIMO" : (t.final || "FINAL")}</span>
                         </div>
                         <div class="el-game-main">
                             <div class="el-team-col">
-                                <img src="${getLogo(teamA)}">
+                                <img src="${getLogo(teamA)}" loading="lazy">
                                 <span class="el-team-name">${getTeamAbrev(teamA)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(teamA)}</span></span>
                             </div>
                             <div class="el-score-center">
@@ -3845,7 +3978,7 @@
                                 <span class="${scoreB > scoreA ? 'win' : ''}">${scoreB}</span>
                             </div>
                             <div class="el-team-col">
-                                <img src="${getLogo(teamB)}">
+                                <img src="${getLogo(teamB)}" loading="lazy">
                                 <span class="el-team-name">${getTeamAbrev(teamB)} <span style="color:#9ca3af; font-weight:normal;">${getTeamRank(teamB)}</span></span>
                             </div>
                         </div>
@@ -3853,16 +3986,15 @@
                     </div>`;
             });
 
+            const allCards = playoffHtml + resultsHtml;
             container.innerHTML = `
-                <div class="el-results-banner" style="direction: ltr;">
-                    <div class="el-ticker-wrap" style="width: 100%;">
+                <div class="el-results-banner" style="direction:ltr;">
+                    <div class="el-ticker-wrap" style="width:100%;">
                         <div class="el-ticker-track">
-                            ${cardsHtml}
-                            ${cardsHtml}
+                            ${allCards}${allCards}
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         window.addEventListener('DOMContentLoaded', () => {
