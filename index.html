@@ -1073,6 +1073,23 @@
                 right: 20px !important;
             }
         }
+
+        /* API live data status badge */
+        .api-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            padding: 2px 9px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 10px;
+            vertical-align: middle;
+            transition: background 0.4s, color 0.4s;
+            cursor: default;
+        }
+        .api-badge.loading { background:#fef3c7; color:#92400e; }
+        .api-badge.ok      { background:#d1fae5; color:#065f46; }
+        .api-badge.error   { background:#fee2e2; color:#991b1b; }
+
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -1111,7 +1128,7 @@
     <div id="results-banner-container"></div>
     <div class="container">
         <div id="clasificacion" class="tab-content active">
-            <h2 id="title-standings">Clasificación Oficial</h2>
+            <h2 id="title-standings">Clasificación Oficial <span id="api-status" class="api-badge loading" title="Estado datos live">⏳</span></h2>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -3898,8 +3915,11 @@
                 btnDrawer.addEventListener("click", toggleDrawer);
                 overlay.addEventListener("click", toggleDrawer);
             }
-            autoUpdateData(); 
-            
+            autoUpdateData();
+
+            // Carga datos live de la API (async, no bloquea UI)
+            loadLiveStandings();
+
             initFilters();
             updateUI(); // Forzamos una carga inicial para aplicar idioma default
             
@@ -3908,6 +3928,142 @@
                 openTab(null, hash);
             }
         });
+
+
+        // ============================================================
+        // LIVE API — euroleague-advanced-api.eu (via proxy sin CORS)
+        // El proxy es una Cloudflare Pages Function en /functions/api/
+        // Docs: https://euroleague-advanced-api.eu/docs
+        // ============================================================
+
+        const API_CODE_MAP = {
+            "OLY": "Olympiacos Piraeus",
+            "PAM": "Valencia Basket",
+            "MAD": "Real Madrid",
+            "ULK": "Fenerbahce Beko Istanbul",
+            "ZAL": "Zalgiris Kaunas",
+            "HTA": "Hapoel IBI Tel Aviv",
+            "PAN": "Panathinaikos AKTOR Athens",
+            "MCO": "AS Monaco",
+            "BAR": "FC Barcelona",
+            "RED": "Crvena Zvezda Meridianbet Belgrade",
+            "DUB": "Dubai Basketball",
+            "TEL": "Maccabi Rapyd Tel Aviv",
+            "MUN": "FC Bayern Munich",
+            "MIL": "EA7 Emporio Armani Milan",
+            "PAR": "Partizan Mozzart Bet Belgrade",
+            "PRS": "Paris Basketball",
+            "VIR": "Virtus Bologna",
+            "BAS": "Kosner Baskonia Vitoria-Gasteiz",
+            "IST": "Anadolu Efes Istanbul",
+            "ASV": "LDLC ASVEL Villeurbanne"
+        };
+
+        const API_LOGO_CACHE = {};   // teamName → CDN URL oficial
+        const API_FORM_CACHE = {};   // teamName → ["W","L","W","W","L"]
+
+        // ← Actualiza solo este número cada temporada (2025 = EL 25/26)
+        const API_SEASON = 2025;
+
+        // Proxy en tu mismo dominio (Cloudflare Pages Function)
+        // El archivo está en: /functions/api/standings.js del repo
+        const API_PROXY = "/api/standings";
+
+        function setApiStatus(msg, cls) {
+            const el = document.getElementById('api-status');
+            if (el) { el.textContent = msg; el.className = 'api-badge ' + cls; }
+        }
+
+        // Detecta la última jornada con datos disponibles (busca de 34 a 1)
+        async function detectLatestRound() {
+            for (let r = 34; r >= 1; r--) {
+                try {
+                    const res = await fetch(
+                        `${API_PROXY}?season=${API_SEASON}&round_number=${r}&standings_type=basicstandings`,
+                        { cache: 'default' }
+                    );
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0 && data[0].gamesPlayed > 0) return r;
+                } catch(e) { continue; }
+            }
+            return null;
+        }
+
+        // Carga clasificación live y parcheaa teamsBase
+        async function loadLiveStandings(forceRound = null) {
+            setApiStatus('⏳', 'loading');
+            try {
+                const round = forceRound ?? await detectLatestRound();
+                if (round === null) throw new Error('No round found');
+
+                const res = await fetch(
+                    `${API_PROXY}?season=${API_SEASON}&round_number=${round}&standings_type=basicstandings`
+                );
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                data.forEach(apiTeam => {
+                    const name = API_CODE_MAP[apiTeam["club.code"]];
+                    if (!name) return;
+                    const team = teamsBase.find(t => t.name === name);
+                    if (!team) return;
+
+                    // Actualiza stats con datos oficiales
+                    team.wins          = apiTeam.gamesWon;
+                    team.losses        = apiTeam.gamesLost;
+                    team.initialWins   = apiTeam.gamesWon;
+                    team.initialLosses = apiTeam.gamesLost;
+                    team.pf            = apiTeam.pointsFor;
+                    team.pa            = apiTeam.pointsAgainst;
+                    // "+262" → 262  |  "-100" → -100
+                    team.diff = parseInt((apiTeam.pointsDifference || "0").replace("+","")) || 0;
+
+                    // Logo CDN oficial
+                    if (apiTeam["club.images.crest"])
+                        API_LOGO_CACHE[name] = apiTeam["club.images.crest"];
+
+                    // Últimos 5: API devuelve newest-first ["L","W","W","W","W"]
+                    if (apiTeam.last5Form && apiTeam.last5Form.length)
+                        API_FORM_CACHE[name] = apiTeam.last5Form;
+                });
+
+                // Rebuild caches y re-render con datos live
+                buildH2HCache();
+                buildFormCache();
+                buildRankMap(sortTeamsWithH2H(teamsBase));
+                renderStandings();
+                if (typeof renderBracket === 'function') renderBracket();
+
+                setApiStatus(`✅ Live · J${round}`, 'ok');
+                console.log(`[EL-API] Loaded season ${API_SEASON}, round ${round}`);
+
+            } catch (err) {
+                console.warn('[EL-API] Failed:', err.message, '— using local data');
+                setApiStatus('⚠️ Local', 'error');
+            }
+        }
+
+        // Monkey-patch getLogo → prefiere logo CDN oficial si existe
+        const _getLogo_orig = getLogo;
+        getLogo = function(teamName) {
+            return API_LOGO_CACHE[teamName] || _getLogo_orig(teamName);
+        };
+
+        // Monkey-patch getFormHTML → usa last5Form de la API si existe
+        const _getFormHTML_orig = getFormHTML;
+        getFormHTML = function(teamName) {
+            const f = API_FORM_CACHE[teamName];
+            if (f && f.length) {
+                // Reverse: API es newest-first, mostramos oldest→newest (izq→der)
+                let h = '<div class="form-dots">';
+                [...f].reverse().forEach(r => {
+                    h += `<span class="dot ${r === 'W' ? 'w' : 'l'}" title="${r}"></span>`;
+                });
+                return h + '</div>';
+            }
+            return _getFormHTML_orig(teamName);
+        };
 
        
     </script>
