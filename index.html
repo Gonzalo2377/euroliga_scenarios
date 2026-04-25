@@ -404,201 +404,56 @@
         .q-table th:first-child, .q-table td:first-child { text-align: left; width: 26px; border: none !important; }
         .q-table td:first-child img { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
 
-        .el-game-card.playoff-card {
-            border-color: #f59e0b !important;
-            background: rgba(245, 158, 11, 0.08);
-            min-width: 260px;
-        }
-        .el-game-card.playoff-card:hover {
-            border-color: #f59e0b !important;
-            background: rgba(245, 158, 11, 0.15);
-        }
-        .playoff-badge {
-            font-size: 9px; font-weight: 900; letter-spacing: 1px;
-            color: #f59e0b; text-transform: uppercase;
-        }
-        .playoff-hover-info {
-            position: absolute; top: 0; left: 0;
+        /* Playoff cards — misma estética que .el-game-card, hover muestra info */
+        .el-playoff-tooltip {
+            position: absolute;
+            top: 0; left: 0;
             width: 100%; height: 100%;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            gap: 4px; padding: 6px 10px; box-sizing: border-box;
+            gap: 7px; padding: 10px 14px; box-sizing: border-box;
             opacity: 0; visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
             z-index: 10; border-radius: 8px;
         }
-        .el-game-card:hover .playoff-hover-info {
+        .el-game-card:hover .el-playoff-tooltip {
             opacity: 1; visibility: visible;
         }
-        .prob-bar-wrap {
-            width: 100%; display: flex; flex-direction: column; gap: 2px;
-        }
-        .prob-bar-labels {
-            display: flex; justify-content: space-between;
-            font-size: 10px; font-weight: 700; color: #e2e8f0;
-        }
-        .prob-bar {
-            width: 100%; height: 5px; background: #334155;
-            border-radius: 3px; overflow: hidden; display: flex;
-        }
-        .prob-bar-t1 { height: 100%; background: #3b82f6; }
-        .prob-bar-t2 { height: 100%; background: #f59e0b; }
-        .playoff-series-txt {
-            font-size: 11px; font-weight: 800; color: #fbbf24;
-            letter-spacing: 0.5px;
-        }
-        .playoff-detail-txt {
-            font-size: 10px; color: #94a3b8; text-align: center;
-        }
-        .playoff-detail-txt span { color: #f87171; font-weight: 700; }
-        .live-dot {
-            display: inline-block; width: 7px; height: 7px;
-            background: #ef4444; border-radius: 50%;
-            animation: pulse-dot 1.2s infinite;
-            margin-right: 4px; vertical-align: middle;
-        }
-        @keyframes pulse-dot {
-            0%,100% { opacity: 1; } 50% { opacity: 0.2; }
-        }
-
-        .el-game-card.playoff-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            min-width: 265px;
-            max-width: 265px;
-            padding: 0;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
-            cursor: default;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            transition: box-shadow 0.2s, border-color 0.2s;
-            overflow: visible;
-        }
-        .el-game-card.playoff-card:hover {
-            border-color: #64748b;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            transform: translateY(-3px);
-        }
-
-        /* Header tipo .matchup-header */
-        .pc-header {
-            background: #0f172a;
-            font-size: 0.72rem;
-            text-align: center;
-            padding: 5px 8px;
-            color: #94a3b8;
-            text-transform: uppercase;
-            border-bottom: 1px solid #334155;
-            font-weight: 800;
-            border-top-left-radius: 7px;
-            border-top-right-radius: 7px;
-            letter-spacing: 0.5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .pc-header .pc-badge {
-            color: #f59e0b;
-        }
-        .pc-header .pc-date {
-            color: #64748b;
-            font-size: 0.65rem;
-            font-weight: 600;
-        }
-        .pc-header .pc-live {
-            color: #ef4444;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .pc-live-dot {
-            width: 7px; height: 7px;
-            background: #ef4444; border-radius: 50%;
-            animation: pulse-dot 1.2s infinite;
-            display: inline-block;
-        }
-        @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.15;} }
-
-        /* Filas de equipo tipo .matchup-team */
-        .pc-team {
-            display: flex;
-            align-items: center;
-            padding: 5px 10px;
-            height: 36px;
-            box-sizing: border-box;
-            border-left: 4px solid transparent;
-            transition: background 0.2s;
-            gap: 0;
-        }
-        .pc-team:not(:last-of-type) { border-bottom: 1px solid #334155; }
-        .pc-team .pc-seed {
-            font-size: 0.72rem; font-weight: 800; color: #f8fafc;
-            background: #475569; width: 20px; height: 20px;
+        .el-playoff-tooltip .ept-row {
             display: flex; align-items: center; justify-content: center;
-            border-radius: 4px; margin-right: 8px; flex-shrink: 0;
+            gap: 6px; width: 100%;
         }
-        .pc-team img {
-            width: 24px; height: 24px; border-radius: 50%;
-            background: white; margin-right: 8px; object-fit: contain;
-            border: 1px solid #cbd5e1; flex-shrink: 0;
+        .el-playoff-tooltip .ept-label {
+            font-size: 10px; color: #9ca3af; text-transform: uppercase;
+            font-weight: 700; letter-spacing: 0.5px; white-space: nowrap;
         }
-        .pc-team .pc-name {
-            flex: 1; font-size: 0.88rem; font-weight: 700;
-            color: #f8fafc; white-space: nowrap;
-            overflow: hidden; text-overflow: ellipsis;
+        .el-playoff-tooltip .ept-val {
+            font-size: 13px; font-weight: 900; color: #f8fafc;
         }
-        .pc-team .pc-series-wins {
-            font-size: 1rem; font-weight: 900;
-            color: #f8fafc; margin-left: 6px; flex-shrink: 0;
+        .el-playoff-tooltip .ept-val.pos { color: #4ade80; }
+        .el-playoff-tooltip .ept-val.neg { color: #f87171; }
+        .el-playoff-tooltip .ept-prob-wrap {
+            width: 100%; display: flex; flex-direction: column; gap: 3px;
         }
-        .pc-team.pc-winner {
-            font-weight: 900;
-        }
-        .pc-team.pc-loser { opacity: 0.45; }
-
-        /* Fila H2H + diff */
-        .pc-h2h {
-            background: #0f172a;
-            font-size: 0.72rem;
-            color: #cbd5e1;
-            text-align: center;
-            padding: 4px 8px;
-            border-top: 1px solid #334155;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-        .pc-h2h strong { color: #f8fafc; font-size: 0.8rem; }
-        .pc-h2h .pc-diff-pos { color: #4ade80; font-weight: 700; }
-        .pc-h2h .pc-diff-neg { color: #f87171; font-weight: 700; }
-
-        /* Barra de prob */
-        .pc-prob-bar-wrap {
-            padding: 5px 8px 6px;
-            background: #1e293b;
-            border-top: 1px solid #334155;
-            border-bottom-left-radius: 7px;
-            border-bottom-right-radius: 7px;
-        }
-        .pc-prob-labels {
+        .el-playoff-tooltip .ept-prob-labels {
             display: flex; justify-content: space-between;
-            font-size: 0.72rem; font-weight: 700; color: #e2e8f0;
-            margin-bottom: 3px;
+            font-size: 11px; font-weight: 800; color: #e2e8f0;
         }
-        .pc-prob-labels .pc-label-center {
-            font-size: 0.6rem; color: #475569;
-            text-transform: uppercase; letter-spacing: 0.5px;
+        .el-playoff-tooltip .ept-prob-labels span:nth-child(2) {
+            font-size: 9px; color: #475569; text-transform: uppercase;
         }
-        .pc-prob-bar {
+        .el-playoff-tooltip .ept-prob-bar {
             width: 100%; height: 6px; background: #334155;
             border-radius: 3px; overflow: hidden; display: flex;
         }
-        .pc-prob-t1, .pc-prob-t2 { height: 100%; transition: width 0.3s; }
+        .ept-bar-t1, .ept-bar-t2 { height: 100%; }
+        @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.15;} }
+        .el-live-dot {
+            display: inline-block; width: 7px; height: 7px;
+            background: #ef4444; border-radius: 50%;
+            animation: pulse-dot 1.2s infinite; vertical-align: middle;
+            margin-right: 3px;
+        }
         
         @keyframes el-scroll {
             0% { transform: translateX(0); }
@@ -2867,16 +2722,7 @@
                 if (typeof renderBracket === 'function') renderBracket();
             };
             
-            // Paleta de colores
-            const teamColors = {
-                "Fenerbahçe": "#ca8a04", "Real Madrid": "#3730a3", "Olympiacos": "#9f1239",
-                "Valencia Basket": "#c2410a", "Zalgiris Kaunas": "#14532d", "Panathinaikos": "#065f46",
-                "Hapoel Tel-Aviv": "#be123c", "Barcelona": "#831843", "Monaco": "#991b1b",
-                "Crvena Zvezda": "#b91c1c", "Dubai": "#854d0e", "Olimpia Milano": "#b91c1c",
-                "Maccabi Tel Aviv": "#1e3a8a", "Anadolu Efes": "#1d4ed8", "Virtus Bolonia": "#262626",
-                "Partizan": "#171717", "Bayern": "#9f1239", "Paris": "#171717",
-                "Baskonia": "#9f1239", "Asvel Basket": "#171717"
-            };
+            // Paleta de colores — usa el objeto global teamColors
 
             const buildMatchup = (id, title, teamA, teamB, seedA, seedB) => {
                 let winner = bracketState[id];
@@ -4024,85 +3870,89 @@
             const t = i18n[currentLang] || i18n['gb'];
             const getTeamRank = (n) => rankMap[n] ? `(${rankMap[n]})` : '';
 
-            // ── TARJETAS PLAYOFF ─────────────────────────────────────
+            // ── TARJETAS PLAYOFF — mismo estilo que resultados ────────
             let playoffHtml = "";
             playoffMatchesArray.forEach(m => {
-                const mDate  = new Date(m.date);
-                const dateStr = `${mDate.getDate()}/${mDate.getMonth()+1} ${mDate.getHours().toString().padStart(2,'0')}:${mDate.getMinutes().toString().padStart(2,'0')}`;
+                const mDate   = new Date(m.date);
+                const dateStr = `${mDate.getDate()}/${mDate.getMonth()+1} ${String(mDate.getHours()).padStart(2,'0')}:${String(mDate.getMinutes()).padStart(2,'0')}`;
 
-                // H2H calculado del código (victorias en temporada regular + Play-In)
-                const h2h   = calculateH2HStats(m.team1, m.team2);
+                // H2H real calculado del historial de partidos
+                const h2h     = calculateH2HStats(m.team1, m.team2);
                 const diffStr = h2h.diffA > 0 ? `+${h2h.diffA}` : `${h2h.diffA}`;
-                const diffClass = h2h.diffA > 0 ? 'pc-diff-pos' : (h2h.diffA < 0 ? 'pc-diff-neg' : '');
-                const h2hLine = h2h.played > 0
-                    ? `H2H: <strong>${h2h.winsA}-${h2h.winsB}</strong> &nbsp;|&nbsp; +/-: <span class="${diffClass}">${diffStr}</span>`
-                    : `<span style="color:#475569">Sin H2H previo</span>`;
+                const diffCls = h2h.diffA > 0 ? 'pos' : (h2h.diffA < 0 ? 'neg' : '');
 
-                // Colores equipo
+                // Colores representativos de cada equipo
                 const c1 = getTeamColor(m.team1);
                 const c2 = getTeamColor(m.team2);
 
-                // Header
-                let headerLeft, headerRight;
+                // Status top: izquierda = fase, derecha = estado
+                let statusLeft, statusRight;
                 if (m.isLive) {
-                    headerLeft  = `<span class="pc-live"><span class="pc-live-dot"></span>EN VIVO</span>`;
-                    headerRight = `<span class="pc-badge">${m.leg}</span>`;
+                    statusLeft  = `<span style="color:#ef4444;font-weight:900;"><span class="el-live-dot"></span>EN VIVO</span>`;
+                    statusRight = `<span style="color:#fbbf24;">${m.series1}-${m.series2}</span>`;
+                } else if (m.isFinished) {
+                    statusLeft  = `<span style="color:#ea580c;font-weight:900;">${m.leg}</span>`;
+                    statusRight = `<span style="color:#9ca3af;">FINAL · ${m.series1}-${m.series2}</span>`;
                 } else {
-                    headerLeft  = `<span class="pc-badge">${m.leg}</span>`;
-                    headerRight = `<span class="pc-date">${dateStr}</span>`;
+                    statusLeft  = `<span style="color:#ea580c;font-weight:900;">${m.leg}</span>`;
+                    statusRight = `<span style="color:#9ca3af;">${dateStr}</span>`;
                 }
 
-                // Filas de equipo
-                const team1Won = m.series1 > m.series2;
-                const team2Won = m.series2 > m.series1;
-                const t1Style = team1Won ? `style="background-color:${c1}22; border-left-color:${c1};"` : '';
-                const t2Style = team2Won ? `style="background-color:${c2}22; border-left-color:${c2};"` : '';
-                const t1Class = team1Won ? 'pc-winner' : (team2Won ? 'pc-loser' : '');
-                const t2Class = team2Won ? 'pc-winner' : (team1Won ? 'pc-loser' : '');
+                // Centro: si hay resultado lo muestra, si no muestra la hora grande
+                let centerHtml;
+                if (m.isFinished || m.isLive) {
+                    centerHtml = `
+                        <span class="${m.score1 > m.score2 ? 'win' : ''}">${m.score1}</span>
+                        <span class="el-score-divider">-</span>
+                        <span class="${m.score2 > m.score1 ? 'win' : ''}">${m.score2}</span>`;
+                } else {
+                    centerHtml = `<span style="font-size:13px; color:#fbbf24; font-weight:900; letter-spacing:1px;">${dateStr}</span>`;
+                }
 
-                // Marcador / texto central de serie
-                const seriesLabel = (m.isFinished || m.isLive)
-                    ? `<span style="font-size:1rem;font-weight:900;color:#f8fafc;">${m.score1}</span>
-                       <span style="color:#6b7280;font-size:0.8rem;margin:0 4px;">-</span>
-                       <span style="font-size:1rem;font-weight:900;color:#f8fafc;">${m.score2}</span>`
-                    : `<span style="font-size:0.7rem;font-weight:800;color:#fbbf24;letter-spacing:0.5px;">
-                           ${m.series1}-${m.series2}
-                       </span>`;
-
-                // Wins de serie junto al nombre (si hay alguna)
-                const s1Html = m.series1 > 0 ? `<span class="pc-series-wins" style="color:${c1};">${m.series1}</span>` : '';
-                const s2Html = m.series2 > 0 ? `<span class="pc-series-wins" style="color:${c2};">${m.series2}</span>` : '';
+                // Tooltip hover: H2H + +/- + % + hora
+                const tooltipHtml = `
+                    <div class="el-playoff-tooltip">
+                        <div class="ept-row">
+                            <span class="ept-label">H2H</span>
+                            <span class="ept-val">${h2h.played > 0 ? `${h2h.winsA} – ${h2h.winsB}` : '—'}</span>
+                            <span class="ept-label" style="margin-left:6px;">+/-</span>
+                            <span class="ept-val ${diffCls}">${h2h.played > 0 ? diffStr : '—'}</span>
+                        </div>
+                        <div class="ept-row">
+                            <span class="ept-label">🕐</span>
+                            <span class="ept-val" style="font-size:12px;">${dateStr}</span>
+                        </div>
+                        <div class="ept-prob-wrap">
+                            <div class="ept-prob-labels">
+                                <span>${getTeamAbrev(m.team1)} ${m.prob1}%</span>
+                                <span>Win Prob</span>
+                                <span>${m.prob2}% ${getTeamAbrev(m.team2)}</span>
+                            </div>
+                            <div class="ept-prob-bar">
+                                <div class="ept-bar-t1" style="width:${m.prob1}%;background:${c1};"></div>
+                                <div class="ept-bar-t2" style="width:${m.prob2}%;background:${c2};"></div>
+                            </div>
+                        </div>
+                    </div>`;
 
                 playoffHtml += `
-                <div class="el-game-card playoff-card">
-                    <div class="pc-header">
-                        ${headerLeft}
-                        ${headerRight}
+                <div class="el-game-card">
+                    <div class="el-game-status">
+                        ${statusLeft}
+                        ${statusRight}
                     </div>
-                    <div class="pc-team ${t1Class}" ${t1Style}>
-                        <span class="pc-seed">${m.seed1}</span>
-                        <img src="${getLogo(m.team1)}" loading="lazy">
-                        <span class="pc-name">${getTeamAbrev(m.team1)} <span style="color:#94a3b8;font-weight:400;font-size:0.7rem;">${getTeamRank(m.team1)}</span></span>
-                        ${s1Html}
-                    </div>
-                    <div class="pc-team ${t2Class}" ${t2Style}>
-                        <span class="pc-seed">${m.seed2}</span>
-                        <img src="${getLogo(m.team2)}" loading="lazy">
-                        <span class="pc-name">${getTeamAbrev(m.team2)} <span style="color:#94a3b8;font-weight:400;font-size:0.7rem;">${getTeamRank(m.team2)}</span></span>
-                        ${s2Html}
-                    </div>
-                    <div class="pc-h2h">${h2hLine}</div>
-                    <div class="pc-prob-bar-wrap">
-                        <div class="pc-prob-labels">
-                            <span>${m.prob1}%</span>
-                            <span class="pc-label-center">Win Prob</span>
-                            <span>${m.prob2}%</span>
+                    <div class="el-game-main">
+                        <div class="el-team-col">
+                            <img src="${getLogo(m.team1)}" loading="lazy">
+                            <span class="el-team-name">${getTeamAbrev(m.team1)} <span style="color:#9ca3af;font-weight:normal;">${getTeamRank(m.team1)}</span></span>
                         </div>
-                        <div class="pc-prob-bar">
-                            <div class="pc-prob-t1" style="width:${m.prob1}%; background:${c1};"></div>
-                            <div class="pc-prob-t2" style="width:${m.prob2}%; background:${c2};"></div>
+                        <div class="el-score-center">${centerHtml}</div>
+                        <div class="el-team-col">
+                            <img src="${getLogo(m.team2)}" loading="lazy">
+                            <span class="el-team-name">${getTeamAbrev(m.team2)} <span style="color:#9ca3af;font-weight:normal;">${getTeamRank(m.team2)}</span></span>
                         </div>
                     </div>
+                    ${tooltipHtml}
                 </div>`;
             });
 
