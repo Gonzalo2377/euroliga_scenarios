@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>EuroLeague Calculator 25/26 | Bracket & Simulator</title>
-    <meta name="description" content="Interactive EuroLeague 2025-26 Standings, Playoff Bracket & Monte Carlo Simulator. Calculates H2H tiebreakers automatically. Probabilities to reach each position. Sceanrios of every team. Analysis of team evolution.">
+    <meta name="description" content="Interactive EuroLeague 2025-26 Standings, Playoff Bracket & Monte Carlo Simulator. Calculates H2H tiebreakers automatically. Probabilities to reach each position. Scenarios of every team. Analysis of team evolution.">
     <meta name="keywords" content="euroliga, euroleague, calculadora, calculator, standings, simulador, playoffs, play-in, clasificacion, desempates, h2h, baloncesto, predicciones, monte carlo">
     <link rel="canonical" href="https://euroleaguecalculator.online/">
     <link rel="alternate" hreflang="es" href="https://euroleaguecalculator.online/?lang=es">
@@ -1131,7 +1131,7 @@
 <main>
 
     <header>
-        <h1 id="main-title">Calculadora EuroLeague Ultimate 25/26</h1>
+        <h1 id="main-title">EuroLeague 2025-26 Standings &amp; Playoff Simulator</h1>
         <div class="lang-switcher">
             <button class="lang-btn active" onclick="changeLang('es')" title="Español">🇪🇸</button>
             <button class="lang-btn" onclick="changeLang('en')" title="English">🇬🇧</button>
@@ -2152,9 +2152,23 @@
                     footerMeth.style.direction = 'ltr';
                     footerMeth.style.textAlign = 'left';
                     footerMeth.innerHTML = `
-                        <h3 style="color: #1f2937; border-bottom: 2px solid #d1d5db; padding-bottom: 5px;">How does the EuroLeague Calculator work?</h3>
-                        <p>Our <strong>EuroLeague Calculator and Simulator</strong> is an advanced mathematical tool designed to predict Playoff and Play-In scenarios. By using the head-to-head (H2H) history, official tiebreaker rules, and current season statistics, we generate real-time standings.</p>
-                        <p>The predictive engine includes a <strong>Monte Carlo</strong> simulation model. By running 2,000 simulations of the regular season, the algorithm processes the teams' form (last 5 games), home-court advantage, and weighted win percentages using the Log5 formula. This allows us to provide accurate statistical probabilities on which teams will clinch the coveted Top 6, who will fall into the Play-In, and who will be eliminated.</p>
+                        <h2 style="color: #1f2937; border-bottom: 2px solid #3b82f6; padding-bottom: 8px; font-size:1.3rem;">EuroLeague 2025-26 Standings, Simulator &amp; Playoff Calculator</h2>
+
+                        <h3 style="color: #1f2937; margin-top:20px;">How does the EuroLeague Calculator work?</h3>
+                        <p>The <strong>EuroLeague Calculator</strong> is a free, fan-made interactive tool that lets you simulate every remaining game of the EuroLeague 2025-26 season. Pick the winners of any unplayed match and the standings table updates instantly, applying the official H2H (head-to-head) tiebreaker rules used by EuroLeague Basketball — win count, point differential in mutual games, overall point differential, and points scored.</p>
+                        <p>Unlike simpler tools, this calculator resolves multi-team ties correctly. When three or more teams finish level on wins, the algorithm calculates H2H records within the tied group, then H2H point differential, and finally overall point differential — exactly as the official regulations specify. The bracket updates automatically based on your simulated standings, so you can instantly see who advances to the Top 6, who enters the Play-In, and who goes home.</p>
+
+                        <h3 style="color: #1f2937; margin-top:20px;">Monte Carlo Probability Engine</h3>
+                        <p>The <strong>Probabilities tab</strong> runs a Monte Carlo simulation: 2,000 full season simulations are executed in a background Web Worker (so the page never freezes) to calculate the statistical probability of each team finishing in every position from 1st to 20th. Each simulated game uses a Log5-based win probability model that accounts for each team's last 5 games (recent form), home-court advantage, and their head-to-head record. The result is a colour-coded matrix showing which outcomes are most and least likely for each club.</p>
+
+                        <h3 style="color: #1f2937; margin-top:20px;">Playoff &amp; Play-In Bracket</h3>
+                        <p>The interactive bracket reflects the current simulated standings. The top 6 teams qualify directly for the EuroLeague Playoffs (best-of-5 series). Teams ranked 7th through 10th enter the Play-In tournament: 7 vs 10 and 8 vs 9, with the winners advancing and the losers of the 7-10 and 8-9 games playing each other for the last two playoff spots. The bracket is fully clickable — you can pick winners at every stage and see the full path to the championship.</p>
+
+                        <h3 style="color: #1f2937; margin-top:20px;">Net Rating &amp; Team Analysis</h3>
+                        <p>The <strong>Analysis tab</strong> tracks the evolution of each team's Net Rating (offensive rating minus defensive rating per 100 possessions) across the season, as well as the animated race chart showing how the standings have changed week by week since Round 1. These charts help identify which teams are improving or declining heading into the most critical games of the season.</p>
+
+                        <h3 style="color: #1f2937; margin-top:20px;">About this tool</h3>
+                        <p>This calculator is a free, independent fan project — not affiliated with or endorsed by Euroleague Basketball. It is built and maintained by a basketball fan to give the EuroLeague community accurate, real-time scenario analysis. Data is updated manually after each round. All tiebreaker logic follows the <a href="https://www.euroleaguebasketball.net/euroleague/news/regulations/" target="_blank" rel="noopener" style="color:#3b82f6;">official EuroLeague regulations</a>.</p>
                     `;
                 }
             }
@@ -4064,6 +4078,16 @@
     <div id="footer-methodology" style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px; color: #374151; font-size: 0.95rem; line-height: 1.6; max-width: 1200px; margin-left: auto; margin-right: auto; transition: all 0.3s;">
         </div>
 
+    <!-- AdSense display ad — rendered only after cookie consent -->
+    <div id="adsense-slot" style="max-width:970px; margin:30px auto; text-align:center; min-height:90px;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-3729208482213421"
+             data-ad-slot="auto"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
     <footer style="text-align:center; padding:20px; margin-top:40px; border-top:1px solid #e5e7eb; font-size:0.85rem; color:#6b7280;">
         <p>© 2026 EuroLeague Ultimate Calculator. All rights reserved.</p>
         <p>
@@ -4074,23 +4098,47 @@
         <p style="font-size:0.75rem; margin-top:10px;">This website is not officially affiliated with Euroleague Basketball. It is a tool created by fans for fans.</p>
     </footer>
 
-    <div id="cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; background:#1f2937; color:white; padding:15px; text-align:center; z-index:9999; display:none; font-family:sans-serif;">
-        <p style="margin:0 0 10px 0; font-size:0.9rem;">
-            Usamos cookies (y simulaciones de Monte Carlo) para mejorar tu experiencia y mostrar anuncios relevantes. Al usar la web, aceptas nuestra política.
+    <div id="cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; background:#1f2937; color:white; padding:15px 20px; text-align:center; z-index:9999; display:none; font-family:sans-serif; box-shadow:0 -4px 12px rgba(0,0,0,0.4);">
+        <p style="margin:0 0 8px 0; font-size:0.88rem; color:#d1d5db; max-width:800px; margin-left:auto; margin-right:auto;">
+            🍪 We use cookies to improve your experience and show relevant ads. See our 
+            <a href="privacidad.html" style="color:#60a5fa;">Privacy Policy</a> for details.
         </p>
-        <button onclick="acceptCookies()" style="background:#10b981; color:white; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">Aceptar</button>
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <button onclick="acceptCookies()" style="background:#10b981; color:white; border:none; padding:8px 22px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:0.88rem;">✓ Accept all</button>
+            <button onclick="rejectCookies()" style="background:#374151; color:#d1d5db; border:1px solid #4b5563; padding:8px 22px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:0.88rem;">✗ Essential only</button>
+        </div>
     </div>
     <script>
-        if(!localStorage.getItem('cookiesAceptadas')) {
-            document.getElementById('cookie-banner').style.display = 'block';
-        }
+        (function() {
+            var consent = localStorage.getItem('cookieConsent');
+            if (!consent) {
+                document.getElementById('cookie-banner').style.display = 'block';
+            }
+            // Load AdSense only if accepted
+            if (consent === 'accepted') {
+                var s = document.createElement('script');
+                s.async = true;
+                s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421';
+                s.crossOrigin = 'anonymous';
+                document.head.appendChild(s);
+            }
+        })();
         function acceptCookies() {
-            localStorage.setItem('cookiesAceptadas', 'true');
+            localStorage.setItem('cookieConsent', 'accepted');
+            document.getElementById('cookie-banner').style.display = 'none';
+            // Load AdSense now that user accepted
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421';
+            s.crossOrigin = 'anonymous';
+            document.head.appendChild(s);
+        }
+        function rejectCookies() {
+            localStorage.setItem('cookieConsent', 'essential');
             document.getElementById('cookie-banner').style.display = 'none';
         }
     </script>
     <script defer data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="TheBenchTalk" data-description="Support me on Buy me a coffee!" data-message="Love the calculator? Fuel the developer with a coffee! ⚡☕" data-color="#FF813F" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </main>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421" crossorigin="anonymous"></script>
 </body>
 </html>
