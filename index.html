@@ -309,6 +309,8 @@
             align-items: center;
         }
         .el-ticker-track:hover { animation-play-state: paused; }
+        .el-ticker-wrap.is-dragging { cursor: grabbing !important; }
+        .el-ticker-wrap { cursor: grab; }
         
         .el-game-card {
             background: rgba(255, 255, 255, 0.08); 
@@ -428,7 +430,7 @@
             font-weight: 700; letter-spacing: 0.5px; white-space: nowrap;
         }
         .el-playoff-tooltip .ept-val {
-            font-size: 13px; font-weight: 900; color: #f8fafc;
+            font-size: 16px; font-weight: 900; color: #f8fafc;
         }
         .el-playoff-tooltip .ept-val.pos { color: #4ade80; }
         .el-playoff-tooltip .ept-val.neg { color: #f87171; }
@@ -443,10 +445,26 @@
             font-size: 9px; color: #475569; text-transform: uppercase;
         }
         .el-playoff-tooltip .ept-prob-bar {
-            width: 100%; height: 6px; background: #334155;
-            border-radius: 3px; overflow: hidden; display: flex;
+            width: 100%; height: 9px; background: #334155;
+            border-radius: 5px; overflow: hidden; display: flex;
         }
         .ept-bar-t1, .ept-bar-t2 { height: 100%; }
+        /* Hover hint — pulsing info icon for upcoming games */
+        .el-hover-hint {
+            position: absolute; bottom: 4px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px; color: #475569; font-weight: 700;
+            letter-spacing: 0.5px; display: flex; align-items: center;
+            gap: 3px; pointer-events: none;
+            animation: hint-pulse 2.5s ease-in-out infinite;
+        }
+        .el-hover-hint::before {
+            content: "ℹ"; font-size: 9px; color: #ea580c;
+        }
+        .el-game-card:hover .el-hover-hint { opacity: 0; }
+        @keyframes hint-pulse {
+            0%,100% { opacity: 0.35; } 60% { opacity: 0.9; }
+        }
         @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.15;} }
         .el-live-dot {
             display: inline-block; width: 7px; height: 7px;
@@ -3909,7 +3927,7 @@
                     statusRight = `<span style="color:#9ca3af;">FINAL · ${m.series1}-${m.series2}</span>`;
                 } else {
                     statusLeft  = `<span style="color:#ea580c;font-weight:900;">${m.leg}</span>`;
-                    statusRight = `<span style="color:#9ca3af;">${dateStr}</span>`;
+                    statusRight = `<span style="color:#475569; font-size:9px;">Serie ${m.series1}–${m.series2}</span>`;
                 }
 
                 // Centro: si hay resultado lo muestra, si no muestra la hora grande
@@ -3967,6 +3985,7 @@
                         </div>
                     </div>
                     ${tooltipHtml}
+                    ${(!m.isFinished && !m.isLive) ? '<div class="el-hover-hint">INFO</div>' : ''}
                 </div>`;
             });
 
@@ -4072,6 +4091,98 @@
                 openTab(null, hash);
             }
         });
+
+        // ── Drag-to-scroll banner (mantiene animación al soltar) ──────
+        (function() {
+            function initBannerDrag() {
+                const wrap  = document.querySelector('.el-ticker-wrap');
+                const track = document.querySelector('.el-ticker-track');
+                if (!wrap || !track) return;
+
+                let isDragging = false;
+                let startX = 0;
+                let scrollStart = 0;
+                let animOffset = 0;  // accumulated manual offset
+                let resumeTimer = null;
+
+                function getTrackX() {
+                    const st = window.getComputedStyle(track);
+                    const matrix = new DOMMatrix(st.transform);
+                    return matrix.m41;
+                }
+
+                function pauseAnim(x) {
+                    track.style.animationPlayState = 'paused';
+                    animOffset = x !== undefined ? x : getTrackX();
+                    track.style.transform = `translateX(${animOffset}px)`;
+                    track.style.animation = 'none';
+                }
+
+                function resumeAnim() {
+                    // Calculate where in the loop we are (half = one set of cards)
+                    const halfW = track.scrollWidth / 2;
+                    // Normalize offset into 0..-halfW range
+                    let norm = animOffset % halfW;
+                    if (norm > 0) norm -= halfW;
+                    const pct = Math.abs(norm / halfW);
+                    const dur = 50; // must match el-scroll duration
+                    const delay = -(pct * dur);
+                    track.style.animation = '';
+                    track.style.transform = '';
+                    // Force a specific delay so it starts from where we left off
+                    track.style.animationDelay = `${delay}s`;
+                    track.style.animationPlayState = 'running';
+                }
+
+                // Mouse events
+                wrap.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.clientX;
+                    scrollStart = getTrackX();
+                    pauseAnim(scrollStart);
+                    wrap.classList.add('is-dragging');
+                    clearTimeout(resumeTimer);
+                    e.preventDefault();
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const dx = e.clientX - startX;
+                    animOffset = scrollStart + dx;
+                    track.style.transform = `translateX(${animOffset}px)`;
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    wrap.classList.remove('is-dragging');
+                    resumeTimer = setTimeout(resumeAnim, 1200);
+                });
+
+                // Touch events
+                wrap.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    scrollStart = getTrackX();
+                    pauseAnim(scrollStart);
+                    clearTimeout(resumeTimer);
+                }, { passive: true });
+
+                wrap.addEventListener('touchmove', (e) => {
+                    const dx = e.touches[0].clientX - startX;
+                    animOffset = scrollStart + dx;
+                    track.style.transform = `translateX(${animOffset}px)`;
+                }, { passive: true });
+
+                wrap.addEventListener('touchend', () => {
+                    resumeTimer = setTimeout(resumeAnim, 1200);
+                });
+            }
+
+            // Run after renderBanner has been called
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(initBannerDrag, 300);
+            });
+        })();
 
        
     </script>
