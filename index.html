@@ -421,6 +421,9 @@
         .el-game-card:hover .el-playoff-tooltip {
             opacity: 1; visibility: visible;
         }
+        .el-game-card.show-tooltip .el-playoff-tooltip {
+            opacity: 1; visibility: visible;
+        }
         .el-playoff-tooltip .ept-row {
             display: flex; align-items: center; justify-content: center;
             gap: 6px; width: 100%;
@@ -453,7 +456,7 @@
         .el-hover-hint {
             position: absolute; bottom: 4px; left: 50%;
             transform: translateX(-50%);
-            font-size: 9px; color: #475569; font-weight: 700;
+            font-size: 9px; color: #f8fafc; font-weight: 700;
             letter-spacing: 0.5px; display: flex; align-items: center;
             gap: 3px; pointer-events: none;
             animation: hint-pulse 2.5s ease-in-out infinite;
@@ -3927,7 +3930,7 @@
                     statusRight = `<span style="color:#9ca3af;">FINAL · ${m.series1}-${m.series2}</span>`;
                 } else {
                     statusLeft  = `<span style="color:#ea580c;font-weight:900;">${m.leg}</span>`;
-                    statusRight = `<span style="color:#f8fafc; font-size:9px; font-weight:700;">Serie ${m.series1}–${m.series2}</span>`;
+                    statusRight = `<span style="color:#f8fafc; font-size:11px; font-weight:900;">Serie ${m.series1}–${m.series2}</span>`;
                 }
 
                 // Centro: si hay resultado lo muestra, si no muestra la hora grande
@@ -3974,7 +3977,7 @@
                     </div>`;
 
                 playoffHtml += `
-                <div class="el-game-card">
+                <div class="el-game-card" onclick="this.classList.toggle('show-tooltip')">
                     <div class="el-game-status">
                         ${statusLeft}
                         ${statusRight}
@@ -3991,7 +3994,7 @@
                         </div>
                     </div>
                     ${tooltipHtml}
-                    ${(!m.isFinished && !m.isLive) ? '<div class="el-hover-hint">INFO</div>' : ''}
+                    ${(!m.isFinished && !m.isLive) ? '<div class="el-hover-hint">CLICK FOR INFO</div>' : ''}
                 </div>`;
             });
 
