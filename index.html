@@ -424,6 +424,9 @@
         .el-game-card.show-tooltip .el-playoff-tooltip {
             opacity: 1; visibility: visible;
         }
+        .el-game-card.show-tooltip .el-quarters-tooltip {
+            opacity: 1; visibility: visible; pointer-events: auto;
+        }
         .el-playoff-tooltip .ept-row {
             display: flex; align-items: center; justify-content: center;
             gap: 6px; width: 100%;
@@ -4028,7 +4031,7 @@
                 }
 
                 resultsHtml += `
-                <div class="el-game-card">
+                <div class="el-game-card" onclick="this.classList.toggle('show-tooltip')">
                     <div class="el-game-status">
                         <span style="color:${badgeColor};font-weight:900;">${label}</span>
                         <span style="color:var(--primary);">${scoreA==="-" ? "PRÓXIMO" : (t.final||"FINAL")}</span>
