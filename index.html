@@ -440,7 +440,7 @@
         
         .el-score-center {
             display: flex; align-items: center; gap: 8px;
-            font-size: 22px; font-weight: 900; color: white;
+            font-size: 22px; font-weight: 900; color: white; margin-top: -12px;
         }
         .el-score-center .win { color: var(--primary); }
         .el-score-divider { font-size: 16px; color: #6b7280; font-weight: normal; }
@@ -1260,10 +1260,13 @@
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section-label" id="side-main">Principal</div>
+        <div class="sidebar-section-label" id="side-stats">Estadísticas</div>
+        <div class="sidebar-section-label" id="side-content">Contenido</div>
         <div class="sidebar-header">
             <span>🏀 EuroLeague Calculator</span>
         </div>
-
+        
         <div class="sidebar-section">
             <div class="sidebar-section-label">Principal</div>
             <button class="tab-link active" onclick="openTab(event, 'clasificacion')" id="tab-standings">
@@ -1317,16 +1320,16 @@
                 <table>
                     <thead>
                         <tr id="table-head">
-                            <th>Pos</th>
+                            <th id="th-pos">Pos</th>
                             <th style="text-align: left;" class="t-team">Equipo</th>
                             <th>J</th>
                             <th class="t-w">V</th>
                             <th class="t-l">D</th>
-                            <th>% Vict.</th>
+                            <th id="th-pct">% Vict.</th>
                             <th class="t-form" title="Últimos 5 partidos">Racha</th>
                             <th>+/-</th>
                             <th class="t-schedule">Calendario</th>
-                            <th>SOS</th>
+                            <th id="th-sos">SOS</th>
                         </tr>
                     </thead>
                     <tbody id="standings-body"></tbody>
@@ -1526,7 +1529,11 @@
                 view_all_games: "Ver todos los juegos", latest_round: "Última Jornada", final: "Final", q1: "1C", q2: "2C", q3: "3C", q4: "4C", ot: "PR",
                 legend_title: "Leyenda de la Clasificación", leg_playoff: "Clasificación directa a Playoffs", leg_playin: "Clasificación a Play-In", leg_out: "Eliminados", leg_sos: "Fuerza del Calendario (dificultad de los rivales restantes)", leg_diff: "Diferencia de puntos (Basket Average)",
                 first_leg: "Ida:", not_played: "No jugado", diff_short: "Dif:", view_standings: "📊 Ver Clasificación", close_standings: "❌ Cerrar Tabla",
-                direct_tie: "🔄 Desempate Directo", season_evolution: "📈 Evolución de la Temporada Regular"
+                direct_tie: "🔄 Desempate Directo", season_evolution: "📈 Evolución de la Temporada Regular",
+                // NUEVAS CLAVES
+                side_main: "Principal", side_stats: "Estadísticas", side_content: "Contenido",
+                th_pos: "Pos", th_pct: "% Vict.", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*Pulsa el botón de play arriba a la izquierda para ver la carrera animada."
             },
             en: {
                 title: "🏆 EuroLeague Ultimate Calculator 25/26", standings: "📊 Standings", my_team: "🎯 My Team", prob: "🎲 Probabilities", simulator: "🎮 Simulator", ties: "⚔️ Tiebreakers", results: "🏀 Results", news: "📰 Analysis", bracket: "🏆 Bracket",
@@ -1549,7 +1556,11 @@
                 view_all_games: "View all games", latest_round: "Latest Round", final: "Final", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "OT",
                 legend_title: "Standings Legend", leg_playoff: "Direct Playoff Qualification", leg_playin: "Play-In Qualification", leg_out: "Eliminated", leg_sos: "Strength of Schedule (combined difficulty of remaining opponents)", leg_diff: "Point Differential (Basket Average)",
                 first_leg: "1st Leg:", not_played: "Not played", diff_short: "Diff:", view_standings: "📊 View Standings", close_standings: "❌ Close Table",
-                direct_tie: "🔄 Direct Tiebreaker", season_evolution: "📈 Regular Season Evolution"
+                direct_tie: "🔄 Direct Tiebreaker", season_evolution: "📈 Regular Season Evolution",
+                // NUEVAS CLAVES
+                side_main: "Main", side_stats: "Statistics", side_content: "Content",
+                th_pos: "Rank", th_pct: "Win %", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*Press the play button in the upper left to see the animated race."
             },
             it: {
                 title: "🏆 Calcolatore EuroLeague Ultimate 25/26", standings: "📊 Classifica", my_team: "🎯 La Mia Squadra", prob: "🎲 Probabilità", simulator: "🎮 Simulatore", ties: "⚔️ Spareggi", results: "🏀 Risultati", news: "📰 Analisi", bracket: "🏆 Tabellone",
@@ -1572,7 +1583,11 @@
                 view_all_games: "Vedi tutte le partite", latest_round: "Ultima Giornata", final: "Finale", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "TS",
                 legend_title: "Legenda Classifica", leg_playoff: "Qualificazione diretta ai Playoff", leg_playin: "Qualificazione ai Play-In", leg_out: "Eliminate", leg_sos: "Forza del Calendario (difficoltà avversari rimanenti)", leg_diff: "Differenza punti (Basket Average)",
                 first_leg: "Andata:", not_played: "Non giocata", diff_short: "Diff:", view_standings: "📊 Vedi Classifica", close_standings: "❌ Chiudi Tabella",
-                direct_tie: "🔄 Scontro Diretto", season_evolution: "📈 Evoluzione della Stagione Regolare"
+                direct_tie: "🔄 Scontro Diretto", season_evolution: "📈 Evoluzione della Stagione Regolare",
+                // NUEVAS CLAVES
+                side_main: "Principale", side_stats: "Statistiche", side_content: "Contenuto",
+                th_pos: "Pos", th_pct: "% Vitt.", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*Premi il tasto play in alto a sinistra per vedere la corsa animata."
             },
             fr: {
                 title: "🏆 Calculatrice EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
@@ -1595,7 +1610,11 @@
                 view_all_games: "Voir tous les matchs", latest_round: "Dernière journée", final: "Terminé", q1: "Q1", q2: "Q2", q3: "Q3", q4: "Q4", ot: "PR",
                 legend_title: "Légende du Classement", leg_playoff: "Qualification directe en Playoffs", leg_playin: "Qualification en Play-In", leg_out: "Éliminés", leg_sos: "Force du calendrier (difficulté combinée des adversaires)", leg_diff: "Différence de points (Basket Average)",
                 first_leg: "Aller :", not_played: "Non joué", diff_short: "Diff :", view_standings: "📊 Voir Classement", close_standings: "❌ Fermer le tableau",
-                direct_tie: "🔄 Départage Direct", season_evolution: "📈 Évolution de la Saison Régulière"
+                direct_tie: "🔄 Départage Direct", season_evolution: "📈 Évolution de la Saison Régulière",
+                // NUEVAS CLAVES
+                side_main: "Principal", side_stats: "Statistiques", side_content: "Contenu",
+                th_pos: "Pos", th_pct: "% Vict.", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*Appuyez sur le bouton lecture en haut à gauche pour voir la course animée."
             },
             tr: {
                 title: "🏆 EuroLeague Ultimate Hesaplayıcı 25/26", standings: "📊 Puan Durumu", my_team: "🎯 Takımım", prob: "🎲 İhtimaller", simulator: "🎮 Simülatör", ties: "⚔️ Averajlar", results: "🏀 Sonuçlar", news: "📰 Analiz", bracket: "🏆 Eşleşmeler",
@@ -1618,7 +1637,11 @@
                 view_all_games: "Tüm maçları gör", latest_round: "Son Hafta", final: "Bitti", q1: "1Ç", q2: "2Ç", q3: "3Ç", q4: "4Ç", ot: "UZ",
                 legend_title: "Puan Durumu Lejantı", leg_playoff: "Doğrudan Playoff Katılımı", leg_playin: "Play-In Katılımı", leg_out: "Elendi", leg_sos: "Fikstür Zorluğu (kalan rakiplerin zorluk derecesi)", leg_diff: "Sayı Farkı (Averaj)",
                 first_leg: "İlk Maç:", not_played: "Oynanmadı", diff_short: "Fark:", view_standings: "📊 Puan Durumu", close_standings: "❌ Tabloyu Kapat",
-                direct_tie: "🔄 İkili Averaj", season_evolution: "📈 Normal Sezon Gelişimi"
+                direct_tie: "🔄 İkili Averaj", season_evolution: "📈 Normal Sezon Gelişimi",
+                // NUEVAS CLAVES
+                side_main: "Ana Sayfa", side_stats: "İstatistikler", side_content: "İçerik",
+                th_pos: "Sıra", th_pct: "Gal. %", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*Animasyonlu yarışı görmek için sol üstteki oynat düğmesine basın."
             },
             gr: {
                 title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26", standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
@@ -1641,7 +1664,11 @@
                 view_all_games: "Όλοι οι αγώνες", latest_round: "Τελευταία", final: "Τελικό", q1: "1ο", q2: "2ο", q3: "3ο", q4: "4ο", ot: "ΠΡ",
                 legend_title: "Υπόμνημα Βαθμολογίας", leg_playoff: "Απευθείας Πρόκριση στα Playoffs", leg_playin: "Πρόκριση στο Play-In", leg_out: "Αποκλεισμός", leg_sos: "Δυναμικότητα Προγράμματος (δυσκολία εναπομεινάντων αντιπάλων)", leg_diff: "Διαφορά Πόντων (Basket Average)",
                 first_leg: "1ος Γύρος:", not_played: "Δεν παίχτηκε", diff_short: "Διαφ:", view_standings: "📊 Βαθμολογία", close_standings: "❌ Κλείσιμο Πίνακα",
-                direct_tie: "🔄 Άμεση Ισοβαθμία", season_evolution: "📈 Εξέλιξη Κανονικής Περιόδου"
+                direct_tie: "🔄 Άμεση Ισοβαθμία", season_evolution: "📈 Εξέλιξη Κανονικής Περιόδου",
+                // NUEVAS CLAVES
+                side_main: "Αρχική", side_stats: "Στατιστικά", side_content: "Περιεχόμενο",
+                th_pos: "Θέση", th_pct: "% Νικών", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*Πατήστε το κουμπί play πάνω αριστερά για να δείτε τον αγώνα με κινούμενα σχέδια."
             },
             sr: {
                 title: "🏆 Evroliga Ultimate Kalkulator 25/26", standings: "📊 Tabela", my_team: "🎯 Moj Tim", prob: "🎲 Verovatnoće", simulator: "🎮 Simulator", ties: "⚔️ Tajbrejkeri", results: "🏀 Rezultati", news: "📰 Analiza", bracket: "🏆 Kostur",
@@ -1664,7 +1691,11 @@
                 view_all_games: "Sve utakmice", latest_round: "Poslednje Kolo", final: "Kraj", q1: "1Č", q2: "2Č", q3: "3Č", q4: "4Č", ot: "PR",
                 legend_title: "Legenda Tabele", leg_playoff: "Direktan plasman u Plej-of", leg_playin: "Plasman u Plej-in", leg_out: "Eliminisani", leg_sos: "Težina rasporeda (težina preostalih protivnika)", leg_diff: "Koš razlika (Basket Average)",
                 first_leg: "Prvi meč:", not_played: "Nije odigrano", diff_short: "Razl:", view_standings: "📊 Vidi Tabelu", close_standings: "❌ Zatvori Tabelu",
-                direct_tie: "🔄 Direktan Tajbrejker", season_evolution: "📈 Evolucija Regularne Sezone"
+                direct_tie: "🔄 Direktan Tajbrejker", season_evolution: "📈 Evolucija Regularne Sezone",
+                // NUEVAS CLAVES
+                side_main: "Glavna", side_stats: "Statistika", side_content: "Sadržaj",
+                th_pos: "Poz", th_pct: "% Pob", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*Pritisnite dugme za reprodukciju u gornjem levom uglu da vidite animiranu trku."
             },
             lt: {
                 title: "🏆 Eurolygos Ultimate Skaičiuoklė 25/26", standings: "📊 Lentelė", my_team: "🎯 Mano Komanda", prob: "🎲 Tikimybės", simulator: "🎮 Simuliatorius", ties: "⚔️ Pranašumai", results: "🏀 Rezultatai", news: "📰 Analizė", bracket: "🏆 Medis",
@@ -1687,7 +1718,11 @@
                 view_all_games: "Visi mačai", latest_round: "Paskutinis turas", final: "Pabaiga", q1: "1K", q2: "2K", q3: "3K", q4: "4K", ot: "PR",
                 legend_title: "Lentelės Paaiškinimai", leg_playoff: "Tiesioginis patekimas į atkrintamąsias", leg_playin: "Patekimas į įkrintamąsias", leg_out: "Eliminuoti", leg_sos: "Tvarkaraščio sunkumas (likusių varžovų pajėgumas)", leg_diff: "Taškų skirtumas (Basket Average)",
                 first_leg: "1-as mačas:", not_played: "Nežaista", diff_short: "Skirt:", view_standings: "📊 Žiūrėti Lentelę", close_standings: "❌ Uždaryti Lentelę",
-                direct_tie: "🔄 Tiesioginis Pranašumas", season_evolution: "📈 Reguliariojo Sezono Eiga"
+                direct_tie: "🔄 Tiesioginis Pranašumas", season_evolution: "📈 Reguliariojo Sezono Eiga",
+                // NUEVAS CLAVES
+                side_main: "Pagrindinis", side_stats: "Statistika", side_content: "Turinys",
+                th_pos: "Poz", th_pct: "Perg. %", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*Paspauskite atkūrimo mygtuką viršuje kairėje, kad pamatytumėte animuotas lenktynes."
             },
             he: {
                 title: "🏆 מחשבון יורוליג 25/26", standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
@@ -1714,7 +1749,11 @@
                 view_all_games: "לכל המשחקים", latest_round: "מחזור אחרון", final: "סיום", q1: "רבע 1", q2: "רבע 2", q3: "רבע 3", q4: "רבע 4", ot: "הארכה",
                 legend_title: "מקרא טבלה", leg_playoff: "העפלה ישירה לפלייאוף", leg_playin: "העפלה לפליי-אין", leg_out: "הודחו", leg_sos: "חוזק לוח המשחקים (רמת הקושי של היריבות שנותרו)", leg_diff: "הפרש סלים כללי",
                 first_leg: "משחק ראשון:", not_played: "לא שוחק", diff_short: "הפרש:", view_standings: "📊 צפה בטבלה", close_standings: "❌ סגור טבלה",
-                direct_tie: "🔄 שובר שוויון ישיר", season_evolution: "📈 התפתחות העונה הסדירה"
+                direct_tie: "🔄 שובר שוויון ישיר", season_evolution: "📈 התפתחות העונה הסדירה",
+                // NUEVAS CLAVES
+                side_main: "ראשי", side_stats: "סטטיסטיקה", side_content: "תוכן",
+                th_pos: "מיקום", th_pct: "% ניצחונות", th_diff: "+/-", th_sos: "SOS",
+                analysis_note: "*לחץ על כפתור ההפעלה בפינה השמאלית העליונה כדי לראות את המירוץ המונפש."
             }
         };
         // 1. Miramos si la URL fuerza un idioma 
@@ -2379,6 +2418,26 @@
                     `;
                 }
             }
+
+            let sideMain = document.getElementById('side-main');
+            if (sideMain) sideMain.textContent = t.side_main;
+            
+            let sideStats = document.getElementById('side-stats');
+            if (sideStats) sideStats.textContent = t.side_stats;
+            
+            let sideContent = document.getElementById('side-content');
+            if (sideContent) sideContent.textContent = t.side_content;
+
+            // Nuevas traducciones de la Tabla
+            let thPos = document.getElementById('th-pos');
+            if (thPos) thPos.textContent = t.th_pos;
+            
+            let thPct = document.getElementById('th-pct');
+            if (thPct) thPct.textContent = t.th_pct;
+
+            // Nuevas traducciones de Análisis
+            let anSub = document.getElementById('season-evolution-title');
+            if (anSub) anSub.textContent = t.analysis_subtitle;
 
             // --- NUEVO: Textos del Menú y Títulos del Bracket ---
             let tabBracket = document.getElementById('tab-bracket');
