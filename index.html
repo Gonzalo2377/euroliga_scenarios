@@ -1236,7 +1236,7 @@
     <header>
         <h1 id="main-title">EuroLeague 2025-26 Standings &amp; Playoff Simulator</h1>
         <div class="lang-switcher">
-        <select id="language-select" onchange="changeLanguage(this.value)" class="lang-dropdown">
+        <select id="language-select" onchange="changeLang(this.value)" class="lang-dropdown">
             <option value="es">🇪🇸 ES</option>
             <option value="en">🇬🇧 EN</option>
             <option value="fr">🇫🇷 FR</option>
@@ -1246,6 +1246,7 @@
             <option value="lt">🇱🇹 LT</option>
             <option value="he">🇮🇱 HE</option>
         </select>
+    </div>
     </div>
     </header>
 
@@ -2310,12 +2311,19 @@
             currentLang = lang;
             localStorage.setItem('euroLang', lang);
             
-            // Cambio visual de la bandera instantáneo
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            let btn = document.querySelector(`[onclick="changeLang('${lang}')"]`);
-            if (btn) btn.classList.add('active');
+            // 1. Mantiene el desplegable visualmente sincronizado (útil si carga desde caché o URL)
+            const select = document.getElementById('language-select');
+            if (select) select.value = lang;
             
-            // Retraso de la recarga del texto pesado
+            // 2. Soporte RTL para Hebreo (para que se alinee a la derecha)
+            if (lang === 'he') {
+                document.documentElement.dir = 'rtl';
+            } else {
+                document.documentElement.dir = 'ltr';
+            }
+            document.documentElement.lang = lang;
+            
+            // 3. Retraso de la recarga del texto pesado (Tu lógica original)
             setTimeout(() => {
                 initFilters();
                 updateUI();
