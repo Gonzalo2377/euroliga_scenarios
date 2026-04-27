@@ -308,7 +308,7 @@
             white-space: nowrap;
             align-items: center;
         }
-        .el-ticker-track:hover { animation-play-state: paused; }
+        /* hover pause handled in JS to work correctly after drag */
         .el-ticker-wrap.is-dragging { cursor: grabbing !important; }
         .el-ticker-wrap { cursor: grab; }
         
@@ -3921,13 +3921,13 @@
                 let statusLeft, statusRight;
                 if (m.isLive) {
                     statusLeft  = `<span style="color:#ef4444;font-weight:900;"><span class="el-live-dot"></span>EN VIVO</span>`;
-                    statusRight = `<span style="color:#fbbf24;">${m.series1}-${m.series2}</span>`;
+                    statusRight = `<span style="color:#f8fafc; font-weight:900;">${m.series1}–${m.series2}</span>`;
                 } else if (m.isFinished) {
                     statusLeft  = `<span style="color:#ea580c;font-weight:900;">${m.leg}</span>`;
                     statusRight = `<span style="color:#9ca3af;">FINAL · ${m.series1}-${m.series2}</span>`;
                 } else {
                     statusLeft  = `<span style="color:#ea580c;font-weight:900;">${m.leg}</span>`;
-                    statusRight = `<span style="color:#475569; font-size:9px;">Serie ${m.series1}–${m.series2}</span>`;
+                    statusRight = `<span style="color:#f8fafc; font-size:9px; font-weight:700;">Serie ${m.series1}–${m.series2}</span>`;
                 }
 
                 // Centro: si hay resultado lo muestra, si no muestra la hora grande
@@ -3938,7 +3938,13 @@
                         <span class="el-score-divider">-</span>
                         <span class="${m.score2 > m.score1 ? 'win' : ''}">${m.score2}</span>`;
                 } else {
-                    centerHtml = `<span style="font-size:13px; color:#fbbf24; font-weight:900; letter-spacing:1px;">${dateStr}</span>`;
+                    const datePart = `${mDate.getDate()}/${mDate.getMonth()+1}`;
+                    const timePart = `${String(mDate.getHours()).padStart(2,'0')}:${String(mDate.getMinutes()).padStart(2,'0')}`;
+                    centerHtml = `
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.2;">
+                            <span style="font-size:11px;color:#f8fafc;font-weight:700;letter-spacing:0.5px;">${datePart}</span>
+                            <span style="font-size:16px;color:#f8fafc;font-weight:900;letter-spacing:1px;">${timePart}</span>
+                        </div>`;
                 }
 
                 // Tooltip hover: H2H + +/- + % + hora
@@ -4118,10 +4124,13 @@
                     track.style.animation = 'none';
                 }
 
+                // Track if hovering (so resume doesn't restart while mouse is over)
+                let isHovering = false;
+
                 function resumeAnim() {
-                    // Calculate where in the loop we are (half = one set of cards)
+                    // Don't resume if user is hovering over the banner
+                    if (isHovering || isDragging) return;
                     const halfW = track.scrollWidth / 2;
-                    // Normalize offset into 0..-halfW range
                     let norm = animOffset % halfW;
                     if (norm > 0) norm -= halfW;
                     const pct = Math.abs(norm / halfW);
@@ -4129,17 +4138,33 @@
                     const delay = -(pct * dur);
                     track.style.animation = '';
                     track.style.transform = '';
-                    // Force a specific delay so it starts from where we left off
                     track.style.animationDelay = `${delay}s`;
                     track.style.animationPlayState = 'running';
                 }
 
-                // Mouse events
+                // Hover pause — JS-controlled so it works after drag too
+                wrap.addEventListener('mouseenter', () => {
+                    isHovering = true;
+                    clearTimeout(resumeTimer);
+                    // Capture current position before pausing
+                    if (track.style.animation !== 'none') {
+                        animOffset = getTrackX();
+                    }
+                    pauseAnim(animOffset);
+                });
+
+                wrap.addEventListener('mouseleave', () => {
+                    isHovering = false;
+                    if (!isDragging) {
+                        resumeTimer = setTimeout(resumeAnim, 400);
+                    }
+                });
+
+                // Mouse drag events
                 wrap.addEventListener('mousedown', (e) => {
                     isDragging = true;
                     startX = e.clientX;
-                    scrollStart = getTrackX();
-                    pauseAnim(scrollStart);
+                    scrollStart = animOffset; // already paused from mouseenter
                     wrap.classList.add('is-dragging');
                     clearTimeout(resumeTimer);
                     e.preventDefault();
@@ -4156,14 +4181,21 @@
                     if (!isDragging) return;
                     isDragging = false;
                     wrap.classList.remove('is-dragging');
-                    resumeTimer = setTimeout(resumeAnim, 1200);
+                    // Only schedule resume if mouse has left the banner
+                    if (!isHovering) {
+                        resumeTimer = setTimeout(resumeAnim, 1200);
+                    }
                 });
 
                 // Touch events
                 wrap.addEventListener('touchstart', (e) => {
+                    isHovering = true;
                     startX = e.touches[0].clientX;
-                    scrollStart = getTrackX();
-                    pauseAnim(scrollStart);
+                    if (track.style.animation !== 'none') {
+                        animOffset = getTrackX();
+                    }
+                    scrollStart = animOffset;
+                    pauseAnim(animOffset);
                     clearTimeout(resumeTimer);
                 }, { passive: true });
 
@@ -4174,6 +4206,7 @@
                 }, { passive: true });
 
                 wrap.addEventListener('touchend', () => {
+                    isHovering = false;
                     resumeTimer = setTimeout(resumeAnim, 1200);
                 });
             }
