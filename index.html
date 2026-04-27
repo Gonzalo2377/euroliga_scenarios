@@ -121,31 +121,112 @@
             transform: scale(1.3);
             filter: grayscale(0);
         }
-        nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            background-color: var(--white);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        /* ── HAMBURGER SIDEBAR ────────────────────────────── */
+        .ham-btn {
+            position: fixed;
+            top: 14px; left: 14px;
+            width: 42px; height: 42px;
+            background: var(--primary);
+            border: none; border-radius: 10px;
+            cursor: pointer; z-index: 1001;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: background 0.2s;
         }
-        nav button {
-            background: none;
-            border: none;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--dark);
-            border-bottom: 3px solid transparent;
+        .ham-btn:hover { background: #c2410c; }
+        .ham-btn span {
+            display: block; width: 22px; height: 2px;
+            background: white; border-radius: 2px;
             transition: all 0.3s;
         }
-        nav button:hover, nav button.active {
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
+        .ham-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .ham-btn.open span:nth-child(2) { opacity: 0; }
+        .ham-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .sidebar-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999; opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
         }
+        .sidebar-overlay.open { opacity: 1; visibility: visible; }
+
+        .sidebar {
+            position: fixed;
+            top: 0; left: -280px;
+            width: 260px; height: 100%;
+            background: var(--dark);
+            z-index: 1000;
+            display: flex; flex-direction: column;
+            padding: 0;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+            transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
+            overflow-y: auto;
+        }
+        .sidebar.open { left: 0; }
+
+        .sidebar-header {
+            background: var(--primary);
+            padding: 18px 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .sidebar-header span {
+            color: white; font-weight: 900;
+            font-size: 1rem; letter-spacing: 0.5px;
+        }
+
+        .sidebar-section {
+            padding: 8px 0;
+            border-bottom: 1px solid #374151;
+        }
+        .sidebar-section-label {
+            font-size: 0.65rem; font-weight: 800;
+            color: #6b7280; text-transform: uppercase;
+            letter-spacing: 1.5px; padding: 10px 20px 4px;
+        }
+
+        .tab-link {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 13px 20px;
+            background: none; border: none;
+            color: #d1d5db; font-size: 0.95rem;
+            font-weight: 600; cursor: pointer;
+            text-align: left;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-link:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border-left-color: #ea580c;
+        }
+        .tab-link.active {
+            background: rgba(234,88,12,0.15);
+            color: #fb923c;
+            border-left-color: var(--primary);
+            font-weight: 700;
+        }
+        .tab-link .tab-icon { font-size: 1.1rem; width: 22px; text-align: center; flex-shrink: 0; }
+
+        .sidebar-footer {
+            margin-top: auto; padding: 16px 20px;
+            border-top: 1px solid #374151;
+            font-size: 0.75rem; color: #6b7280; text-align: center;
+        }
+        .sidebar-footer a { color: #ea580c; text-decoration: none; }
+
+        /* Active tab indicator in header bar */
+        .active-tab-bar {
+            background: var(--dark);
+            padding: 10px 20px 10px 70px;
+            font-size: 0.85rem; font-weight: 700;
+            color: #fb923c; border-bottom: 2px solid var(--primary);
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; gap: 8px;
+        }
+        #active-tab-label { color: white; font-weight: 800; font-size: 0.95rem; }
         .container {
             max-width: 1300px;
             margin: 2rem auto;
@@ -467,7 +548,9 @@
         .el-hover-hint::before {
             content: "ℹ"; font-size: 9px; color: #ea580c;
         }
-        .el-game-card:hover .el-hover-hint { opacity: 0; }
+        .el-game-card:hover .el-hover-hint { opacity: 0 !important; }
+        .el-game-card.show-tooltip .el-hover-hint { opacity: 0 !important; }
+        .el-game-card.show-tooltip .el-hover-hint { opacity: 0; }
         @keyframes hint-pulse {
             0%,100% { opacity: 0.35; } 60% { opacity: 0.9; }
         }
@@ -574,8 +657,7 @@
             header { padding: 3rem 1rem 1rem 1rem; } 
             header h1 { font-size: 1.3rem; margin: 0; line-height: 1.2; }
             .lang-switcher { top: 10px; left: 50%; transform: translateX(-50%); right: auto; width: max-content; background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-            nav { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0.5rem; }
-            nav button { white-space: nowrap; padding: 0.7rem 0.8rem; font-size: 0.85rem; flex: 0 0 auto; }
+            .sidebar { width: 240px; }
             .container { margin: 1rem auto; padding: 0 0.5rem; }
             .tab-content { padding: 1rem 0.5rem; }
             th, td { padding: 8px 3px; font-size: 0.8rem; }
@@ -1150,6 +1232,7 @@
         }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </head>
 <body>
 <main>
@@ -1169,16 +1252,69 @@
         </div>
     </header>
 
-    <nav>
-        <button class="tab-link active" onclick="openTab(event, 'clasificacion')" id="tab-standings">📊 Clasificación</button>
-        <button class="tab-link" onclick="openTab(event, 'bracket')" id="tab-bracket">🏆 Bracket</button>
-        <button class="tab-link" onclick="openTab(event, 'analisis')" id="tab-news">📰 Análisis</button>
-        <button class="tab-link" onclick="openTab(event, 'simulador')" id="tab-simulator">🎮 Simulador</button>
-        <button class="tab-link" onclick="openTab(event, 'desempates')" id="tab-ties">⚔️ Desempates</button>
-        <button class="tab-link" onclick="openTab(event, 'miequipo')" id="tab-myteam">🎯 Mi Equipo</button>
-        <button class="tab-link" onclick="openTab(event, 'probabilidades')" id="tab-prob">🎲 Probabilidades</button>
-        <button class="tab-link" onclick="openTab(event, 'resultados')" id="tab-results">🏀 Resultados</button>
-    </nav>
+    <!-- Hamburger button -->
+    <button class="ham-btn" id="ham-btn" aria-label="Menu" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+    </button>
+
+    <!-- Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span>🏀 EuroLeague Calculator</span>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Principal</div>
+            <button class="tab-link active" onclick="openTab(event, 'clasificacion')" id="tab-standings">
+                <span class="tab-icon">📊</span> Clasificación
+            </button>
+            <button class="tab-link" onclick="openTab(event, 'bracket')" id="tab-bracket">
+                <span class="tab-icon">🏆</span> Bracket
+            </button>
+            <button class="tab-link" onclick="openTab(event, 'simulador')" id="tab-simulator">
+                <span class="tab-icon">🎮</span> Simulador
+            </button>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Estadísticas</div>
+            <button class="tab-link" onclick="openTab(event, 'probabilidades')" id="tab-prob">
+                <span class="tab-icon">🎲</span> Probabilidades
+            </button>
+            <button class="tab-link" onclick="openTab(event, 'miequipo')" id="tab-myteam">
+                <span class="tab-icon">🎯</span> Mi Equipo
+            </button>
+            <button class="tab-link" onclick="openTab(event, 'desempates')" id="tab-ties">
+                <span class="tab-icon">⚔️</span> Desempates
+            </button>
+            <button class="tab-link" onclick="openTab(event, 'resultados')" id="tab-results">
+                <span class="tab-icon">🏀</span> Resultados
+            </button>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Contenido</div>
+            <button class="tab-link" onclick="openTab(event, 'analisis')" id="tab-news">
+                <span class="tab-icon">📈</span> Análisis
+            </button>
+            <button class="tab-link" onclick="openTab(event, 'noticias')" id="tab-noticias">
+                <span class="tab-icon">📰</span> Noticias
+            </button>
+        </div>
+
+        <div class="sidebar-footer">
+            Made with ❤️ by <a href="https://x.com/_TheBenchTalk_" target="_blank">@_TheBenchTalk_</a><br>
+            <a href="privacidad.html">Privacy</a> · <a href="terminos.html">Terms</a>
+        </div>
+    </aside>
+
+    <!-- Active tab indicator bar -->
+    <div class="active-tab-bar">
+        ☰ &nbsp;<span id="active-tab-label">📊 Clasificación</span>
+    </div>
     <div id="results-banner-container"></div>
     <div class="container">
         <div id="clasificacion" class="tab-content active">
@@ -1307,6 +1443,72 @@
             </div>
         </div>
 
+
+        <div id="noticias" class="tab-content">
+            <div style="display:grid; grid-template-columns:1fr 340px; gap:30px; align-items:start;">
+
+                <!-- Artículos -->
+                <div>
+                    <h2 style="color:var(--dark); border-bottom:3px solid var(--primary); padding-bottom:10px; margin-bottom:24px;">
+                        📰 The Bench Talk — Noticias & Análisis
+                    </h2>
+
+                    <!-- Artículo 1 -->
+                    <article style="background:#fff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <div style="background:linear-gradient(135deg,#1f2937 0%,#374151 100%); padding:20px 24px; border-left:5px solid var(--primary);">
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                                <span style="background:var(--primary); color:white; font-size:0.7rem; font-weight:800; padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:1px;">🏀 Playoffs 25/26</span>
+                                <span style="color:#9ca3af; font-size:0.8rem;">29 Abril 2026</span>
+                            </div>
+                            <h3 style="color:white; margin:0; font-size:1.2rem; line-height:1.4;">
+                                Cuartos de Final: Todo lo que necesitas saber antes del tip-off
+                            </h3>
+                        </div>
+                        <div style="padding:20px 24px; color:#374151; line-height:1.8; font-size:0.95rem;">
+                            <p>Los Playoffs de la EuroLeague 2025-26 arrancan esta semana con cuatro series al mejor de cinco que prometen ser épicas. Tras 38 jornadas de temporada regular, los diez equipos que han sobrevivido a la fase regular y el Play-In se dividen en dos grupos: los seis que van directos a cuartos y los cuatro que pasaron por el Play-In.</p>
+
+                            <h4 style="color:var(--dark); margin:16px 0 8px;">🔥 El cruce más caliente: Fenerbahçe vs Zalgiris</h4>
+                            <p>El número 1 recibe al equipo que más creció en el tramo final de la temporada. Zalgiris llega con <strong>12-6 en H2H entre los equipos del Top 10</strong> — el mejor registro de todos — y con una defensa que concede solo 76 puntos de media en los últimos 8 partidos. Fenerbahçe, pese a ser cabeza de serie, perdió dos de sus últimos tres en casa. El factor cancha podría no ser tan determinante como parece.</p>
+
+                            <h4 style="color:var(--dark); margin:16px 0 8px;">👑 Real Madrid, el favorito silencioso</h4>
+                            <p>Los de Madrid enfrentan a Hapoel Tel-Aviv con un H2H de 2-0 en la temporada regular y un diferencial de +28 puntos entre ambos encuentros. Sin embargo, Hapoel es el equipo más impredecible de los playoffs: capaz de ganar de 20 en un partido y perder de 15 en el siguiente. Si consiguen robarle un partido al Madrid en casa, la serie se complica.</p>
+
+                            <h4 style="color:var(--dark); margin:16px 0 8px;">⚡ Valencia vs Panathinaikos: la sorpresa del año</h4>
+                            <p>Nadie esperaba a Valencia en cuartos a estas alturas de temporada. Con un 10-8 H2H entre los diez equipos de playoffs y el tercer mejor diferencial de puntos del grupo (+32), los taronja han demostrado ser mucho más que un equipo de transición. Panathinaikos llega como favorito, pero el Pabellón de La Fuente de San Luis puede ser un factor decisivo.</p>
+
+                            <h4 style="color:var(--dark); margin:16px 0 8px;">🎭 Olympiacos vs Monaco: el duelo imprevisible</h4>
+                            <p>Con un H2H de 1-1 en la temporada regular y solo 5 puntos de diferencial acumulado entre ambos, esta serie se decidirá en los detalles. Monaco llega con la mejor anotación del grupo en el tramo final (105 puntos de media en febrero), mientras Olympiacos confía en su defensa y en el apoyo del Piraeus. Pronóstico: imposible.</p>
+
+                            <div style="background:#f0fdf4; border-left:4px solid #22c55e; padding:12px 16px; border-radius:0 8px 8px 0; margin-top:16px;">
+                                <p style="margin:0; font-size:0.88rem; color:#166534;"><strong>🎲 Usa el Simulador</strong> para predecir tus series favoritas y ver cómo quedaría la Final Four según tu predicción. Y no olvides el <strong>Monte Carlo</strong> para ver las probabilidades matemáticas de cada campeón.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+
+                <!-- Twitter Widget -->
+                <div style="position:sticky; top:10px;">
+                    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <div style="background:var(--dark); padding:14px 18px; display:flex; align-items:center; gap:10px;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            <span style="color:white; font-weight:800; font-size:0.9rem;">@_TheBenchTalk_</span>
+                        </div>
+                        <div style="padding:0;">
+                            <a class="twitter-timeline"
+                               data-height="600"
+                               data-theme="light"
+                               data-chrome="noheader nofooter noborders"
+                               data-tweet-limit="5"
+                               href="https://twitter.com/_TheBenchTalk_">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <div id="analisis" class="tab-content">
             <h2 id="title-news">Insights del Laboratorio de Análisis</h2>
             
@@ -1330,7 +1532,7 @@
     <script>
         const i18n = {
             es: {
-                title: "🏆 Calculadora EuroLeague Ultimate 25/26", standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Análisis", bracket: "🏆 Bracket",
+                title: "🏆 Calculadora EuroLeague Ultimate 25/26", standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Análisis", noticias: "📰 Noticias", bracket: "🏆 Bracket",
                 bracket_title: "Playoffs & Play-In Bracket", bracket_desc: "Haz clic en los equipos para simular tu camino hacia el campeonato.",
                 playin: "PLAY-IN", quarterfinals: "CUARTOS DE FINAL", finalfour: "FINAL FOUR", championship: "CAMPEONATO", tbd: "Por decidir", champion: "CAMPEÓN", loser_drops: "El perdedor cae aquí",
                 official_standings: "Clasificación Oficial", live_standings: "Clasificación en Vivo", sim_desc: "Selecciona los ganadores para actualizar la tabla.",
@@ -3814,6 +4016,14 @@
         function openTab(evt, tabName) {
             document.querySelectorAll(".tab-content").forEach(tab => tab.style.display = "none");
             document.querySelectorAll(".tab-link").forEach(link => link.classList.remove("active"));
+            // Update active tab label in bar
+            const activeBtn = evt ? evt.currentTarget : document.querySelector(`button[onclick*="${tabName}"]`);
+            if (activeBtn) {
+                const label = document.getElementById('active-tab-label');
+                if (label) label.textContent = activeBtn.textContent.trim();
+            }
+            // Close sidebar on mobile after selecting
+            closeSidebar();
             
             let tab = document.getElementById(tabName);
             if(tab) tab.style.display = "block";
@@ -4052,6 +4262,7 @@
                         </div>
                     </div>
                     ${quarters}
+                    ${quarters ? '<div class="el-hover-hint">CLICK FOR INFO</div>' : ''}
                 </div>`;
             });
 
@@ -4223,6 +4434,21 @@
             });
         })();
 
+        // ── SIDEBAR HAMBURGER ──────────────────────────────────────
+        function toggleSidebar() {
+            const sidebar  = document.getElementById('sidebar');
+            const overlay  = document.getElementById('sidebar-overlay');
+            const hamBtn   = document.getElementById('ham-btn');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            hamBtn.classList.toggle('open');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('open');
+            document.getElementById('ham-btn').classList.remove('open');
+        }
+
        
     </script>
     <div id="footer-methodology" style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px; color: #374151; font-size: 0.95rem; line-height: 1.6; max-width: 1200px; margin-left: auto; margin-right: auto; transition: all 0.3s;">
@@ -4238,14 +4464,22 @@
              data-full-width-responsive="true"></ins>
     </div>
 
-    <footer style="text-align:center; padding:20px; margin-top:40px; border-top:1px solid #e5e7eb; font-size:0.85rem; color:#6b7280;">
-        <p>© 2026 EuroLeague Ultimate Calculator. All rights reserved.</p>
-        <p>
-            <a href="privacidad.html" style="color:#3b82f6; text-decoration:none;">Privacy Policy</a> | 
-            <a href="terminos.html" style="color:#3b82f6; text-decoration:none;">Terms of Use</a> | 
+    <footer style="text-align:center; padding:28px 20px; margin-top:40px; border-top:1px solid #e5e7eb; font-size:0.85rem; color:#6b7280;">
+        <p style="font-size:1rem; font-weight:700; color:#1f2937; margin-bottom:6px;">
+            🏀 EuroLeague Ultimate Calculator
+        </p>
+        <p style="font-size:0.82rem; margin-bottom:10px;">
+            Made with ❤️ by <strong style="color:#1f2937;">Gonzalo</strong> · 
+            <a href="mailto:gonzalogig23@gmail.com" style="color:#3b82f6; text-decoration:none;">gonzalogig23@gmail.com</a>
+        </p>
+        <p style="margin-bottom:8px;">
+            <a href="privacidad.html" style="color:#3b82f6; text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp;
+            <a href="terminos.html" style="color:#3b82f6; text-decoration:none;">Terms of Use</a> &nbsp;·&nbsp;
             <a href="mailto:gonzalogig23@gmail.com" style="color:#3b82f6; text-decoration:none;">Contact</a>
         </p>
-        <p style="font-size:0.75rem; margin-top:10px;">This website is not officially affiliated with Euroleague Basketball. It is a tool created by fans for fans.</p>
+        <p style="font-size:0.72rem; margin-top:10px; color:#9ca3af;">
+            © 2026 EuroLeague Ultimate Calculator · Not affiliated with Euroleague Basketball · Fan-made tool
+        </p>
     </footer>
 
     <div id="cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; background:#1f2937; color:white; padding:15px 20px; text-align:center; z-index:9999; display:none; font-family:sans-serif; box-shadow:0 -4px 12px rgba(0,0,0,0.4);">
