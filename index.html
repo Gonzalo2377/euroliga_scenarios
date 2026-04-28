@@ -90,39 +90,13 @@
             padding: 0;
         }
         header {
-            background: #080d14;
+            background-color: var(--dark);
             color: var(--white);
-            padding: 1.4rem 1.5rem 1.2rem;
+            padding: 1rem 1.5rem;
             text-align: center;
-            border-bottom: 3px solid var(--primary);
-            position: relative;
-            overflow: hidden;
-        }
-        /* Subtle grid texture like AllDataTennis */
-        header::before {
-            content: "";
-            position: absolute; inset: 0;
-            background-image: linear-gradient(rgba(234,88,12,0.04) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(234,88,12,0.04) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-        }
-        header h1 {
-            font-size: clamp(1.1rem, 3vw, 1.6rem);
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            margin: 0 0 4px;
+            border-bottom: 4px solid var(--primary);
             position: relative;
         }
-        .header-tagline {
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #6b7280;
-            position: relative;
-        }
-        .header-tagline span { color: var(--primary); }
         .lang-switcher { 
             position: absolute;
             top: 15px;
@@ -263,7 +237,6 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             animation: fadeIn 0.4s;
         }
-        #noticias.tab-content { background: #0d1117; color: #d1d5db; }
         .tab-content.active {
             display: block;
         }
@@ -1259,175 +1232,6 @@
                 right: 20px !important;
             }
         }
-
-        /* ── MODAL (noticias & tweets) ────────────────────────── */
-        .bench-modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.82);
-            z-index: 2000; opacity: 0; visibility: hidden;
-            transition: opacity 0.25s, visibility 0.25s;
-            display: flex; align-items: center; justify-content: center;
-            padding: 20px; box-sizing: border-box;
-        }
-        .bench-modal-overlay.open { opacity: 1; visibility: visible; }
-        .bench-modal {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 16px;
-            max-width: 720px; width: 100%;
-            max-height: 88vh; overflow-y: auto;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.7);
-            transform: translateY(24px);
-            transition: transform 0.25s;
-            position: relative;
-        }
-        .bench-modal-overlay.open .bench-modal { transform: translateY(0); }
-        .bench-modal-close {
-            position: sticky; top: 0;
-            display: flex; justify-content: flex-end;
-            padding: 14px 16px 0;
-            background: #111827;
-            z-index: 1;
-        }
-        .bench-modal-close button {
-            background: #1f2937; border: 1px solid #374151;
-            color: #9ca3af; font-size: 1.1rem; font-weight: 900;
-            width: 34px; height: 34px; border-radius: 8px;
-            cursor: pointer; line-height: 1;
-            transition: background 0.2s, color 0.2s;
-        }
-        .bench-modal-close button:hover { background: var(--primary); color: white; }
-        .bench-modal-body { padding: 8px 28px 28px; color: #d1d5db; }
-        .bench-modal-body h2 { color: white; font-size: 1.3rem; line-height: 1.4; margin-bottom: 16px; }
-        .bench-modal-body p { line-height: 1.85; margin-bottom: 14px; font-size: 0.96rem; }
-        .bench-modal-body h4 { color: #fb923c; margin: 20px 0 8px; font-size: 1rem; }
-        .bench-modal-body .modal-meta {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
-            border-bottom: 1px solid #1f2937; padding-bottom: 14px;
-        }
-        .bench-modal-body .modal-tag {
-            background: var(--primary); color: white;
-            font-size: 0.68rem; font-weight: 800; padding: 3px 10px;
-            border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .bench-modal-body .modal-date { color: #6b7280; font-size: 0.82rem; }
-        .bench-modal-body .modal-tip {
-            background: rgba(34,197,94,0.1); border-left: 3px solid #22c55e;
-            padding: 12px 16px; border-radius: 0 8px 8px 0; margin-top: 20px;
-            font-size: 0.88rem; color: #86efac;
-        }
-        /* Tweet modal */
-        .bench-modal-body .tweet-author {
-            display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
-            padding-bottom: 14px; border-bottom: 1px solid #1f2937;
-        }
-        .bench-modal-body .tweet-author img {
-            width: 44px; height: 44px; border-radius: 50%; border: 2px solid #374151;
-        }
-        .bench-modal-body .tweet-author-info strong { color: white; display: block; }
-        .bench-modal-body .tweet-author-info span { color: #6b7280; font-size: 0.85rem; }
-        .bench-modal-body .tweet-text {
-            font-size: 1.05rem; line-height: 1.75; color: #e5e7eb;
-            margin-bottom: 14px; white-space: pre-wrap;
-        }
-        .bench-modal-body .tweet-stats {
-            display: flex; gap: 20px; padding-top: 14px;
-            border-top: 1px solid #1f2937; color: #6b7280; font-size: 0.85rem;
-        }
-        .bench-modal-body .tweet-stats span strong { color: #d1d5db; }
-
-        /* ── NEWS CARDS ────────────────────────────────────────── */
-        .news-grid {
-            display: grid; grid-template-columns: 1fr 340px;
-            gap: 28px; align-items: start;
-        }
-        .news-card {
-            background: #111827; border: 1px solid #1f2937;
-            border-radius: 12px; overflow: hidden;
-            margin-bottom: 18px; cursor: pointer;
-            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-        }
-        .news-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(234,88,12,0.15);
-        }
-        .news-card-header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            padding: 18px 22px;
-            border-left: 4px solid var(--primary);
-        }
-        .news-card-meta {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
-        }
-        .news-tag {
-            background: var(--primary); color: white;
-            font-size: 0.65rem; font-weight: 800; padding: 3px 9px;
-            border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .news-date { color: #6b7280; font-size: 0.78rem; }
-        .news-card-header h3 {
-            color: white; margin: 0; font-size: 1.05rem; line-height: 1.4;
-        }
-        .news-card-preview {
-            padding: 14px 22px; color: #9ca3af; font-size: 0.88rem;
-            line-height: 1.6; display: flex; justify-content: space-between;
-            align-items: center;
-        }
-        .news-read-more {
-            color: var(--primary); font-size: 0.8rem; font-weight: 700;
-            white-space: nowrap; margin-left: 12px; flex-shrink: 0;
-        }
-        .news-loading, .tweets-loading {
-            display: flex; align-items: center; justify-content: center;
-            gap: 10px; padding: 40px; color: #6b7280; font-size: 0.9rem;
-        }
-        .news-loading::before, .tweets-loading::before {
-            content: ""; width: 18px; height: 18px;
-            border: 2px solid #374151; border-top-color: var(--primary);
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-            flex-shrink: 0;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ── TWEET CARDS ───────────────────────────────────────── */
-        .tweets-panel {
-            background: #0d1117; border: 1px solid #1f2937;
-            border-radius: 12px; overflow: hidden;
-            position: sticky; top: 10px;
-        }
-        .tweets-panel-header {
-            background: #080d14; padding: 14px 18px;
-            display: flex; align-items: center; gap: 10px;
-            border-bottom: 1px solid #1f2937;
-        }
-        .tweets-panel-header .x-icon { color: white; font-weight: 900; font-size: 1rem; }
-        .tweets-panel-header span { color: white; font-weight: 800; font-size: 0.88rem; }
-        .tweet-card {
-            padding: 16px 18px; border-bottom: 1px solid #111827;
-            cursor: pointer; transition: background 0.15s;
-        }
-        .tweet-card:last-child { border-bottom: none; }
-        .tweet-card:hover { background: #161b22; }
-        .tweet-card-text {
-            color: #e5e7eb; font-size: 0.88rem; line-height: 1.6;
-            margin-bottom: 8px;
-            display: -webkit-box; -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical; overflow: hidden;
-        }
-        .tweet-card-footer {
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .tweet-card-date { color: #6b7280; font-size: 0.75rem; }
-        .tweet-card-stats { color: #6b7280; font-size: 0.75rem; display: flex; gap: 12px; }
-        .tweet-card-stats span strong { color: #9ca3af; }
-
-        @media (max-width: 768px) {
-            .news-grid { grid-template-columns: 1fr; }
-            .tweets-panel { position: static; }
-        }
-
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -1436,7 +1240,6 @@
 
     <header>
         <h1 id="main-title">EuroLeague 2025-26 Standings &amp; Playoff Simulator</h1>
-        <div class="header-tagline">Analytics &amp; Simulator &nbsp;·&nbsp; <span>Season 25/26</span> &nbsp;·&nbsp; by @_TheBenchTalk_</div>
         <div class="lang-switcher">
         <select id="language-select" onchange="changeLang(this.value)" class="lang-dropdown">
             <option value="es">🇪🇸 ES</option>
@@ -1448,6 +1251,7 @@
             <option value="lt">🇱🇹 LT</option>
             <option value="he">🇮🇱 HE</option>
         </select>
+    </div>
     </div>
     </header>
 
@@ -1639,44 +1443,48 @@
         </div>
 
 
-        <div id="noticias" class="tab-content" style="background:#0d1117; border-radius:12px;">
+        <div id="noticias" class="tab-content">
+            <div style="display:grid; grid-template-columns:1fr 340px; gap:30px; align-items:start;">
 
-            <!-- Hero section -->
-            <div style="padding:32px 0 24px; border-bottom:1px solid #1f2937; margin-bottom:28px;">
-                <div style="font-size:0.7rem; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:var(--primary); margin-bottom:10px;">The Bench Talk</div>
-                <h2 style="color:white; font-size:clamp(1.4rem,4vw,2rem); font-weight:900; margin:0 0 8px; line-height:1.2;">
-                    EuroLeague.<br>Analizada.
-                </h2>
-                <p style="color:#6b7280; margin:0; font-size:0.9rem;">Análisis, datos y opinión sobre la mejor liga de baloncesto de Europa.</p>
-            </div>
-
-            <div class="news-grid">
-
-                <!-- ARTICLES col -->
-                <div id="news-articles-col">
-                    <div class="news-loading" id="news-loading">Cargando artículos desde Notion...</div>
-                    <div id="news-articles-container"></div>
-                </div>
-
-                <!-- TWEETS col -->
+                <!-- Artículos -->
                 <div>
-                    <div class="tweets-panel">
-                        <div class="tweets-panel-header">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white" class="x-icon"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                            <span>@_TheBenchTalk_</span>
-                        </div>
-                        <div id="tweets-container">
-                            <div class="tweets-loading">Cargando tweets...</div>
-                        </div>
-                        <div style="padding:12px 18px; border-top:1px solid #1f2937; text-align:center;">
-                            <a href="https://x.com/_TheBenchTalk_" target="_blank" rel="noopener"
-                               style="color:var(--primary); font-size:0.8rem; font-weight:700; text-decoration:none;">
-                                Ver todos los tweets →
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                    <h2 style="color:var(--dark); border-bottom:3px solid var(--primary); padding-bottom:10px; margin-bottom:24px;">
+                        📰 The Bench Talk — Noticias & Análisis
+                    </h2>
 
+                    <!-- Artículo 1 -->
+                    <article style="background:#fff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; margin-bottom:24px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                        <div style="background:linear-gradient(135deg,#1f2937 0%,#374151 100%); padding:20px 24px; border-left:5px solid var(--primary);">
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                                <span style="background:var(--primary); color:white; font-size:0.7rem; font-weight:800; padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:1px;">🏀 Playoffs 25/26</span>
+                                <span style="color:#9ca3af; font-size:0.8rem;">29 Abril 2026</span>
+                            </div>
+                            <h3 style="color:white; margin:0; font-size:1.2rem; line-height:1.4;">
+                                Cuartos de Final: Todo lo que necesitas saber antes del tip-off
+                            </h3>
+                        </div>
+                        <div style="padding:20px 24px; color:#374151; line-height:1.8; font-size:0.95rem;">
+                            <p>Los Playoffs de la EuroLeague 2025-26 arrancan esta semana con cuatro series al mejor de cinco que prometen ser épicas. Tras 38 jornadas de temporada regular, los diez equipos que han sobrevivido a la fase regular y el Play-In se dividen en dos grupos: los seis que van directos a cuartos y los cuatro que pasaron por el Play-In.</p>
+
+                            <h4 style="color:var(--dark); margin:16px 0 8px;">🔥 El cruce más caliente: Fenerbahçe vs Zalgiris</h4>
+                            <p>El número 1 recibe al equipo que más creció en el tramo final de la temporada. Zalgiris llega con <strong>12-6 en H2H entre los equipos del Top 10</strong> — el mejor registro de todos — y con una defensa que concede solo 76 puntos de media en los últimos 8 partidos. Fenerbahçe, pese a ser cabeza de serie, perdió dos de sus últimos tres en casa. El factor cancha podría no ser tan determinante como parece.</p>
+
+                            <h4 style="color:var(--dark); margin:16px 0 8px;">👑 Real Madrid, el favorito silencioso</h4>
+                            <p>Los de Madrid enfrentan a Hapoel Tel-Aviv con un H2H de 2-0 en la temporada regular y un diferencial de +28 puntos entre ambos encuentros. Sin embargo, Hapoel es el equipo más impredecible de los playoffs: capaz de ganar de 20 en un partido y perder de 15 en el siguiente. Si consiguen robarle un partido al Madrid en casa, la serie se complica.</p>
+
+                            <h4 style="color:var(--dark); margin:16px 0 8px;">⚡ Valencia vs Panathinaikos: la sorpresa del año</h4>
+                            <p>Nadie esperaba a Valencia en cuartos a estas alturas de temporada. Con un 10-8 H2H entre los diez equipos de playoffs y el tercer mejor diferencial de puntos del grupo (+32), los taronja han demostrado ser mucho más que un equipo de transición. Panathinaikos llega como favorito, pero el Pabellón de La Fuente de San Luis puede ser un factor decisivo.</p>
+
+                            <h4 style="color:var(--dark); margin:16px 0 8px;">🎭 Olympiacos vs Monaco: el duelo imprevisible</h4>
+                            <p>Con un H2H de 1-1 en la temporada regular y solo 5 puntos de diferencial acumulado entre ambos, esta serie se decidirá en los detalles. Monaco llega con la mejor anotación del grupo en el tramo final (105 puntos de media en febrero), mientras Olympiacos confía en su defensa y en el apoyo del Piraeus. Pronóstico: imposible.</p>
+
+                            <div style="background:#f0fdf4; border-left:4px solid #22c55e; padding:12px 16px; border-radius:0 8px 8px 0; margin-top:16px;">
+                                <p style="margin:0; font-size:0.88rem; color:#166534;"><strong>🎲 Usa el Bracket</strong> para predecir tus series favoritas y ver cómo quedaría la Final Four según tu predicción. Hazle captura y compartela con todo el mundo.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
             </div>
         </div>
 
@@ -2815,7 +2623,7 @@
             let awayTeam = teamsBase.find(t => t.name === awayTeamName);
             
             if (!homeTeam || !awayTeam) {
-                console.warn("🚨 Revisa este nombre...", homeTeamName, awayTeamName);
+                console.warn("🚨 Revisa este nombre en tu base de datos o calendario:", homeTeamName, "vs", awayTeamName);
                 return { home: 50, away: 50, homeDecimal: 0.5 };
             }
             
@@ -4683,183 +4491,6 @@
             document.getElementById('ham-btn').classList.remove('open');
         }
 
-        // ═══════════════════════════════════════════════════════
-        // MODAL — shared for news & tweets
-        // ═══════════════════════════════════════════════════════
-        function openBenchModal(html) {
-            document.getElementById('bench-modal-body').innerHTML = html;
-            document.getElementById('bench-modal-overlay').classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeBenchModal(e) {
-            if (e && e.target !== document.getElementById('bench-modal-overlay') && !e.target.closest('.bench-modal-close')) return;
-            document.getElementById('bench-modal-overlay').classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        // Close with Escape key
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('bench-modal-overlay').classList.remove('open'); document.body.style.overflow = ''; } });
-
-        // ═══════════════════════════════════════════════════════
-        // NOTION CMS
-        // Fetches from /api/notion (Cloudflare Pages Function)
-        // Falls back to static article if API unavailable
-        // ═══════════════════════════════════════════════════════
-        const STATIC_ARTICLES = [
-            {
-                id: 'cuartos-2026',
-                tag: '🏀 Playoffs 25/26',
-                date: '29 Abril 2026',
-                title: 'Cuartos de Final: Todo lo que necesitas saber antes del tip-off',
-                preview: 'Los Playoffs de la EuroLeague 2025-26 arrancan con cuatro series al mejor de cinco que prometen ser épicas...',
-                body: `
-                    <p>Los Playoffs de la EuroLeague 2025-26 arrancan esta semana con cuatro series al mejor de cinco que prometen ser épicas. Tras 38 jornadas de temporada regular, los diez equipos que han sobrevivido se dividen en dos grupos: los seis que van directos a cuartos y los cuatro que pasaron por el Play-In.</p>
-                    <h4>🔥 El cruce más caliente: Fenerbahçe vs Zalgiris</h4>
-                    <p>El número 1 recibe al equipo que más creció en el tramo final. Zalgiris llega con <strong>12-6 en H2H entre los equipos del Top 10</strong> y una defensa que concede solo 76 puntos de media en los últimos 8 partidos.</p>
-                    <h4>👑 Real Madrid, el favorito silencioso</h4>
-                    <p>Los de Madrid enfrentan a Hapoel Tel-Aviv con H2H de 2-0 y un diferencial de +28 puntos. Hapoel es el más imprevisible: capaz de ganar de 20 o perder de 15 en el partido siguiente.</p>
-                    <h4>⚡ Valencia vs Panathinaikos: la sorpresa del año</h4>
-                    <p>Nadie esperaba a Valencia en cuartos. Con 10-8 H2H entre los diez equipos de playoffs y el tercer mejor diferencial (+32), los taronja han demostrado ser mucho más que un equipo de transición.</p>
-                    <h4>🎭 Olympiacos vs Monaco: el duelo imprevisible</h4>
-                    <p>H2H de 1-1 en la temporada y solo 5 puntos de diferencial acumulado. Monaco llega con la mejor anotación del tramo final (105 puntos de media), Olympiacos confía en su defensa y en el Piraeus.</p>
-                    <div class="modal-tip"><strong>🎲 Usa el Bracket</strong> para predecir tus series y ver cómo quedaría la Final Four. ¡Captura y comparte tu predicción!</div>
-                `
-            }
-        ];
-
-        function renderNewsCard(article) {
-            const div = document.createElement('div');
-            div.className = 'news-card';
-            div.innerHTML = \`
-                <div class="news-card-header">
-                    <div class="news-card-meta">
-                        <span class="news-tag">\${article.tag}</span>
-                        <span class="news-date">\${article.date}</span>
-                    </div>
-                    <h3>\${article.title}</h3>
-                </div>
-                <div class="news-card-preview">
-                    <span>\${article.preview}</span>
-                    <span class="news-read-more">Leer más →</span>
-                </div>
-            \`;
-            div.onclick = () => openBenchModal(\`
-                <div class="modal-meta">
-                    <span class="modal-tag">\${article.tag}</span>
-                    <span class="modal-date">\${article.date}</span>
-                </div>
-                <h2>\${article.title}</h2>
-                \${article.body}
-            \`);
-            return div;
-        }
-
-        async function loadNotion() {
-            const container = document.getElementById('news-articles-container');
-            const loading   = document.getElementById('news-loading');
-            if (!container) return;
-
-            try {
-                const res = await fetch('/api/notion');
-                if (!res.ok) throw new Error('API not available');
-                const articles = await res.json();
-
-                loading.style.display = 'none';
-                articles.forEach(a => container.appendChild(renderNewsCard(a)));
-
-            } catch (e) {
-                // Graceful fallback to static articles
-                console.info('[Notion] Using static fallback:', e.message);
-                loading.style.display = 'none';
-                STATIC_ARTICLES.forEach(a => container.appendChild(renderNewsCard(a)));
-            }
-        }
-
-        // ═══════════════════════════════════════════════════════
-        // TWITTER / X — fetch from /api/tweets (CF Pages Function)
-        // Falls back to link if API unavailable
-        // ═══════════════════════════════════════════════════════
-        function formatTweetDate(iso) {
-            const d = new Date(iso);
-            return d.toLocaleDateString('es-ES', { day:'numeric', month:'short', year:'numeric' });
-        }
-        function formatTweetText(text) {
-            return text
-                .replace(/https?:\/\/\S+/g, '<a href="$&" target="_blank" rel="noopener" style="color:var(--primary);text-decoration:none;">$&</a>')
-                .replace(/#(\w+)/g, '<span style="color:#60a5fa;">#$1</span>')
-                .replace(/@(\w+)/g, '<span style="color:#a78bfa;">@$1</span>');
-        }
-
-        function renderTweetCard(tweet) {
-            const div = document.createElement('div');
-            div.className = 'tweet-card';
-            const dateStr = formatTweetDate(tweet.created_at || new Date().toISOString());
-            div.innerHTML = \`
-                <div class="tweet-card-text">\${tweet.text}</div>
-                <div class="tweet-card-footer">
-                    <span class="tweet-card-date">\${dateStr}</span>
-                    <div class="tweet-card-stats">
-                        <span>❤️ <strong>\${tweet.public_metrics?.like_count ?? 0}</strong></span>
-                        <span>🔁 <strong>\${tweet.public_metrics?.retweet_count ?? 0}</strong></span>
-                    </div>
-                </div>
-            \`;
-            div.onclick = () => openBenchModal(\`
-                <div class="tweet-author">
-                    <div class="tweet-author-info">
-                        <strong>The Bench Talk</strong>
-                        <span>@_TheBenchTalk_</span>
-                    </div>
-                </div>
-                <div class="tweet-text">\${formatTweetText(tweet.text)}</div>
-                <div class="tweet-stats">
-                    <span>❤️ <strong>\${tweet.public_metrics?.like_count ?? 0}</strong> Likes</span>
-                    <span>🔁 <strong>\${tweet.public_metrics?.retweet_count ?? 0}</strong> Retweets</span>
-                    <span>💬 <strong>\${tweet.public_metrics?.reply_count ?? 0}</strong> Replies</span>
-                </div>
-                <div style="margin-top:16px; padding-top:14px; border-top:1px solid #1f2937;">
-                    <a href="https://x.com/_TheBenchTalk_/status/\${tweet.id}" target="_blank" rel="noopener"
-                       style="color:var(--primary); font-size:0.85rem; font-weight:700; text-decoration:none;">
-                        Ver en X →
-                    </a>
-                </div>
-            \`);
-            return div;
-        }
-
-        async function loadTweets() {
-            const container = document.getElementById('tweets-container');
-            if (!container) return;
-            try {
-                const res = await fetch('/api/tweets');
-                if (!res.ok) throw new Error('Tweets API not available');
-                const tweets = await res.json();
-                container.innerHTML = '';
-                tweets.slice(0,6).forEach(t => container.appendChild(renderTweetCard(t)));
-            } catch(e) {
-                console.info('[Tweets] API not available:', e.message);
-                container.innerHTML = \`
-                    <div style="padding:20px 18px; text-align:center; color:#6b7280; font-size:0.85rem;">
-                        <p style="margin:0 0 10px;">Tweets disponibles en X</p>
-                        <a href="https://x.com/_TheBenchTalk_" target="_blank" rel="noopener"
-                           style="color:var(--primary); font-weight:700; text-decoration:none;">
-                            Seguir @_TheBenchTalk_ →
-                        </a>
-                    </div>\`;
-            }
-        }
-
-        // Load when noticias tab is opened
-        let _noticiasLoaded = false;
-        const _origOpenTab = openTab;
-        function openTab(evt, tabName) {
-            _origOpenTab(evt, tabName);
-            if (tabName === 'noticias' && !_noticiasLoaded) {
-                _noticiasLoaded = true;
-                loadNotion();
-                loadTweets();
-            }
-        }
-
        
     </script>
     <div id="footer-methodology" style="margin-top: 30px; padding: 20px; background: #f9fafb; border-radius: 8px; color: #374151; font-size: 0.95rem; line-height: 1.6; max-width: 1200px; margin-left: auto; margin-right: auto; transition: all 0.3s;">
@@ -4934,16 +4565,6 @@
         }
     </script>
     <script defer data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="TheBenchTalk" data-description="Support me on Buy me a coffee!" data-message="Love the calculator? Fuel the developer with a coffee! ⚡☕" data-color="#FF813F" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
-
-    <!-- ── BENCH MODAL (news + tweets) ───────────────────────── -->
-    <div class="bench-modal-overlay" id="bench-modal-overlay" onclick="closeBenchModal(event)">
-        <div class="bench-modal" id="bench-modal">
-            <div class="bench-modal-close">
-                <button onclick="closeBenchModal()" title="Cerrar">✕</button>
-            </div>
-            <div class="bench-modal-body" id="bench-modal-body"></div>
-        </div>
-    </div>
 </main>
 </body>
 </html>
