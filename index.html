@@ -4903,20 +4903,19 @@
 
             // Lazy load on tab open + re-render on lang change
             let _noticiasLoaded = false;
-            const _openTabOrig = typeof openTab === 'function' ? openTab : null;
-            function openTab(evt, tabName) {
-                if (_openTabOrig) _openTabOrig(evt, tabName);
+            const _openTabOriginal = openTab;
+            openTab = function(evt, tabName) {
+                _openTabOriginal(evt, tabName);
                 if (tabName === 'noticias') {
                     if (!_noticiasLoaded) {
                         _noticiasLoaded = true;
                         loadNoticias();
                         loadTweets();
                     } else {
-                        // Re-render news stickers in new language (tweets don't need translation)
                         loadNoticias();
                     }
                 }
-            }
+            };
 
         
         </script>
