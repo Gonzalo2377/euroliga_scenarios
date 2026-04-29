@@ -2680,6 +2680,10 @@
                     pHead.innerHTML = headHtml;
                 }
 
+                if (document.getElementById('noticias').style.display !== 'none') {
+                    loadNoticias();
+                }
+
                 // --- OPTIMIZACIÓN MÓVIL: Dividir el trabajo pesado para no bloquear el navegador ---
                 // AÑADIDO: renderBracket() para que se actualice junto a la clasificación
                 setTimeout(() => { renderStandings(); if(typeof renderBracket === 'function') renderBracket(); }, 0);
@@ -4856,31 +4860,53 @@
             function buildTweetSticker(tweet) {
                 const div = document.createElement('div');
                 div.className = 'tweet-sticker';
-                const lk = tweet.public_metrics?.like_count ?? 0;
-                const rt = tweet.public_metrics?.retweet_count ?? 0;
+                const lk  = tweet.public_metrics?.like_count ?? 0;
+                const rt  = tweet.public_metrics?.retweet_count ?? 0;
+                const rp  = tweet.public_metrics?.reply_count ?? 0;
+                const date = fmtDate(tweet.created_at);
+            
                 div.innerHTML = `
-                    <div class="tweet-sticker-header">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="#1d9bf0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                        <span class="tweet-sticker-handle">@_TheBenchTalk_</span>
+                    <div style="display:flex; align-items:center; gap:9px; margin-bottom:8px;">
+                        <div style="width:36px; height:36px; border-radius:50%; background:var(--primary);
+                                    display:flex; align-items:center; justify-content:center;
+                                    font-weight:900; color:white; font-size:14px; flex-shrink:0;">TB</div>
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-weight:800; color:#f8fafc; font-size:12px; line-height:1.2;">The Bench Talk</div>
+                            <div style="color:#6b7280; font-size:10px;">@_TheBenchTalk_</div>
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1d9bf0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     </div>
                     <div class="tweet-sticker-text">${tweet.text}</div>
-                    <div class="tweet-sticker-footer">
-                        <span>${fmtDate(tweet.created_at)}</span>
-                        <span>❤️ ${lk} · 🔁 ${rt}</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center;
+                                margin-top:8px; padding-top:7px; border-top:1px solid rgba(255,255,255,0.08);">
+                        <span style="font-size:10px; color:#6b7280;">${date}</span>
+                        <div style="display:flex; gap:10px; font-size:10px; color:#9ca3af;">
+                            <span>💬 ${rp}</span>
+                            <span>🔁 ${rt}</span>
+                            <span>❤️ ${lk}</span>
+                        </div>
                     </div>
                 `;
+            
                 div.onclick = () => openBenchModal('@_TheBenchTalk_', `
                     <div class="tweet-modal-handle">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1d9bf0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                        @_TheBenchTalk_ · ${fmtDate(tweet.created_at)}
+                        <div style="width:44px; height:44px; border-radius:50%; background:var(--primary);
+                                    display:flex; align-items:center; justify-content:center;
+                                    font-weight:900; color:white; font-size:18px; flex-shrink:0;">TB</div>
+                        <div>
+                            <div style="font-weight:800; color:white; font-size:0.95rem;">The Bench Talk</div>
+                            <div style="color:#6b7280; font-size:0.83rem;">@_TheBenchTalk_</div>
+                        </div>
                     </div>
                     <div class="tweet-modal-text">${fmtTweetText(tweet.text)}</div>
+                    <div style="font-size:0.8rem; color:#6b7280; margin-bottom:14px;">${date}</div>
                     <div class="tweet-modal-stats">
                         <span>❤️ <strong>${lk}</strong> Likes</span>
-                        <span>🔁 <strong>${rt}</strong> Retweets</span>
-                        <span>💬 <strong>${tweet.public_metrics?.reply_count ?? 0}</strong></span>
+                        <span>🔁 <strong>${rt}</strong> RTs</span>
+                        <span>💬 <strong>${rp}</strong> Replies</span>
                     </div>
-                    <a class="tweet-modal-link" href="https://x.com/_TheBenchTalk_/status/${tweet.id}" target="_blank" rel="noopener">Ver en X →</a>
+                    <a class="tweet-modal-link" href="https://x.com/_TheBenchTalk_/status/${tweet.id}"
+                       target="_blank" rel="noopener">Ver en X →</a>
                 `);
                 return div;
             }
