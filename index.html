@@ -89,125 +89,67 @@
                 margin: 0;
                 padding: 0;
             }
-            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800;900&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&display=swap');
 
+            /* ═══════════════════════════════════════════
+               HERO HEADER
+            ═══════════════════════════════════════════ */
             header {
-                background: #060b14;
-                border-bottom: 1px solid rgba(234,88,12,0.25);
+                background: #06090f;
+                border-bottom: 2px solid rgba(234,88,12,0.3);
                 position: sticky;
                 top: 0;
                 z-index: 500;
                 overflow: hidden;
             }
-            /* Dot grid texture */
+
+            /* Dot texture */
             header::before {
                 content: '';
                 position: absolute; inset: 0;
-                background-image: radial-gradient(rgba(234,88,12,0.18) 1px, transparent 1px);
-                background-size: 28px 28px;
+                background-image: radial-gradient(rgba(234,88,12,0.12) 1px, transparent 1px);
+                background-size: 24px 24px;
                 pointer-events: none;
             }
-            /* Left orange glow */
+            /* Dual-color bottom glow (like the reference) */
             header::after {
                 content: '';
                 position: absolute;
-                top: -40px; left: -60px;
-                width: 280px; height: 140px;
-                background: radial-gradient(ellipse, rgba(234,88,12,0.2) 0%, transparent 70%);
+                bottom: -30px; left: 50%; transform: translateX(-50%);
+                width: 80%; height: 80px;
+                background: radial-gradient(ellipse, rgba(234,88,12,0.22) 0%, rgba(234,88,12,0.05) 60%, transparent 80%);
                 pointer-events: none;
             }
-            .header-inner {
+
+            /* ── Utility bar (top thin row) ── */
+            .header-util {
                 position: relative;
                 display: flex;
                 align-items: center;
-                height: 64px;
-                padding: 0 20px 0 72px;
-                max-width: 1400px;
-                margin: 0 auto;
-                gap: 14px;
+                justify-content: space-between;
+                padding: 8px 16px 8px 66px;
+                border-bottom: 1px solid rgba(255,255,255,0.04);
             }
-            /* ── Brand block ── */
-            .header-brand {
-                flex: 1;
+            .header-util-left {
                 display: flex;
                 align-items: center;
-                gap: 14px;
-                min-width: 0;
+                gap: 16px;
             }
-            .header-icon {
-                width: 38px; height: 38px; flex-shrink: 0;
-                background: linear-gradient(135deg, var(--primary) 0%, #f97316 100%);
-                border-radius: 10px;
-                display: flex; align-items: center; justify-content: center;
-                font-size: 20px;
-                box-shadow: 0 0 20px rgba(234,88,12,0.5), 0 0 6px rgba(234,88,12,0.3);
-            }
-            .header-text-block { min-width: 0; }
-            .header-eyebrow {
+            .header-site-name {
                 font-family: 'Inter', sans-serif;
-                font-size: 10px;
-                font-weight: 800;
-                letter-spacing: 4px;
-                text-transform: uppercase;
-                color: var(--primary);
-                line-height: 1;
-                margin-bottom: 3px;
-                opacity: 0.9;
-            }
-            .header-title {
-                font-family: 'Bebas Neue', 'Impact', sans-serif !important;
-                font-size: clamp(1.5rem, 3vw, 2.1rem) !important;
-                font-weight: 400 !important;
-                letter-spacing: 2px !important;
-                line-height: 1 !important;
-                margin: 0 !important;
-                background: linear-gradient(90deg, #ffffff 0%, #cbd5e1 60%, #94a3b8 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                text-shadow: none;
-            }
-            /* ── Center season badge ── */
-            .header-season {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 2px;
-                flex-shrink: 0;
-            }
-            .header-season-num {
-                font-family: 'Bebas Neue', 'Impact', sans-serif;
-                font-size: 1.4rem;
-                letter-spacing: 3px;
-                color: white;
-                line-height: 1;
-                text-shadow: 0 0 20px rgba(255,255,255,0.2);
-            }
-            .header-season-label {
-                font-family: 'Inter', sans-serif;
-                font-size: 9px;
+                font-size: 11px;
                 font-weight: 700;
-                letter-spacing: 2.5px;
+                letter-spacing: 3px;
                 text-transform: uppercase;
                 color: #4b5563;
             }
-            /* ── Right side ── */
-            .header-right {
+            .header-live-pill {
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                flex-shrink: 0;
-            }
-            .header-playoffs-badge {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                padding: 5px 12px;
+                gap: 5px;
+                padding: 3px 10px;
                 background: rgba(234,88,12,0.1);
-                border: 1px solid rgba(234,88,12,0.35);
+                border: 1px solid rgba(234,88,12,0.3);
                 border-radius: 20px;
                 font-family: 'Inter', sans-serif;
                 font-size: 10px;
@@ -215,70 +157,142 @@
                 letter-spacing: 1.5px;
                 text-transform: uppercase;
                 color: #fb923c;
-                box-shadow: 0 0 12px rgba(234,88,12,0.15);
             }
-            .header-playoffs-dot {
-                width: 6px; height: 6px;
-                background: var(--primary);
+            .header-live-dot {
+                width: 5px; height: 5px;
+                background: #ea580c;
                 border-radius: 50%;
-                box-shadow: 0 0 6px rgba(234,88,12,0.8);
-                animation: badge-pulse 2s ease-in-out infinite;
+                box-shadow: 0 0 5px rgba(234,88,12,0.9);
+                animation: live-blink 1.6s ease-in-out infinite;
             }
-            @keyframes badge-pulse {
-                0%,100% { opacity: 1; transform: scale(1); }
-                50% { opacity: 0.4; transform: scale(0.8); }
-            }
-            /* ── Lang switcher ── */
+            @keyframes live-blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
             .lang-switcher { flex-shrink: 0; }
             .lang-dropdown {
                 appearance: none; -webkit-appearance: none;
-                background: rgba(255,255,255,0.05);
-                color: #d1d5db;
-                border: 1px solid rgba(255,255,255,0.12);
-                padding: 6px 28px 6px 12px;
-                border-radius: 8px;
+                background: rgba(255,255,255,0.04);
+                color: #9ca3af;
+                border: 1px solid rgba(255,255,255,0.1);
+                padding: 5px 26px 5px 10px;
+                border-radius: 7px;
                 font-family: 'Inter', sans-serif;
-                font-size: 0.8rem;
+                font-size: 11px;
                 font-weight: 700;
-                cursor: pointer;
                 letter-spacing: 0.5px;
-                backdrop-filter: blur(4px);
+                cursor: pointer;
                 background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
                 background-repeat: no-repeat;
-                background-position: right 4px center;
-                transition: border-color 0.2s, background 0.2s;
+                background-position: right 3px center;
+                transition: border-color 0.2s;
             }
             .lang-dropdown:hover { border-color: rgba(234,88,12,0.5); }
             .lang-dropdown:focus { outline: none; border-color: var(--primary); }
+
+            /* ── Hero title block ── */
+            .header-hero {
+                position: relative;
+                padding: 26px 28px 28px 28px;
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                gap: 20px;
+            }
+            .header-hero-left { flex: 1; min-width: 0; }
+
+            .header-headline {
+                font-family: 'Bebas Neue', 'Impact', sans-serif;
+                font-size: clamp(3rem, 7.5vw, 6rem);
+                font-weight: 400;
+                line-height: 0.9;
+                letter-spacing: 3px;
+                margin: 0;
+                color: #ffffff;
+                text-transform: uppercase;
+                text-shadow:
+                    0 0 40px rgba(255,255,255,0.12),
+                    0 2px 0 rgba(0,0,0,0.8);
+            }
+            .header-headline em {
+                font-style: normal;
+                display: block;
+                color: var(--primary);
+                text-shadow:
+                    0 0 20px rgba(234,88,12,0.9),
+                    0 0 50px rgba(234,88,12,0.5),
+                    0 0 100px rgba(234,88,12,0.2),
+                    0 2px 0 rgba(0,0,0,0.9);
+            }
+
+            .header-sub {
+                margin-top: 12px;
+                font-family: 'Inter', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 3px;
+                color: #374151;
+                text-transform: uppercase;
+            }
+
+            /* ── Right: stats pills ── */
+            .header-stats {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                flex-shrink: 0;
+            }
+            .header-stat {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 12px;
+                background: rgba(255,255,255,0.03);
+                border: 1px solid rgba(255,255,255,0.06);
+                border-radius: 8px;
+                white-space: nowrap;
+            }
+            .header-stat-num {
+                font-family: 'Bebas Neue', sans-serif;
+                font-size: 1.1rem;
+                letter-spacing: 1px;
+                color: var(--primary);
+                line-height: 1;
+            }
+            .header-stat-label {
+                font-family: 'Inter', sans-serif;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                color: #4b5563;
+            }
+
             /* ── Ham button ── */
             .ham-btn {
                 position: fixed;
-                top: 11px; left: 12px;
-                width: 42px; height: 42px;
-                background: rgba(234,88,12,0.15);
-                border: 1px solid rgba(234,88,12,0.4);
-                border-radius: 10px;
+                top: 9px; left: 10px;
+                width: 40px; height: 40px;
+                background: rgba(234,88,12,0.12);
+                border: 1px solid rgba(234,88,12,0.35);
+                border-radius: 9px;
                 cursor: pointer; z-index: 1001;
                 display: flex; flex-direction: column;
                 align-items: center; justify-content: center;
                 gap: 5px;
-                transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+                transition: background 0.2s, box-shadow 0.2s;
             }
             .ham-btn:hover {
                 background: var(--primary);
-                border-color: var(--primary);
                 box-shadow: 0 0 16px rgba(234,88,12,0.5);
             }
+
             /* ── Mobile ── */
             @media (max-width: 768px) {
-                .header-inner { padding: 0 10px 0 64px; height: 56px; gap: 8px; }
-                .header-season { display: none; }
-                .header-playoffs-badge { display: none; }
-                .header-title { font-size: 1.4rem !important; }
-                .ham-btn { top: 7px; left: 8px; width: 38px; height: 38px; }
+                .header-util { padding: 7px 12px 7px 58px; }
+                .header-hero  { padding: 14px 16px 16px; }
+                .header-stats { display: none; }
+                .header-headline { font-size: clamp(2.2rem, 11vw, 3.2rem); letter-spacing: 2px; }
+                .ham-btn { top: 6px; left: 8px; }
             }
-
-            /* lang-dropdown defined in header CSS above */
             /* ── HAMBURGER SIDEBAR ────────────────────────────── */
             /* ham-btn defined in header CSS above */
             .ham-btn span {
@@ -1553,41 +1567,57 @@
     <main>
 
         <header>
-            <div class="header-inner">
 
-                <div class="header-brand">
-                    <div class="header-icon">🏀</div>
-                    <div class="header-text-block">
-                        <div class="header-eyebrow">EuroLeague · Season 25/26</div>
-                        <h1 id="main-title" class="header-title">Ultimate Calculator</h1>
+            <!-- Util bar -->
+            <div class="header-util">
+                <div class="header-util-left">
+                    <span class="header-site-name">The Bench Talk</span>
+                    <div class="header-live-pill">
+                        <span class="header-live-dot"></span>
+                        Playoffs 25/26
                     </div>
                 </div>
-
-                <div class="header-season">
-                    <div class="header-season-num">25 · 26</div>
-                    <div class="header-season-label">Season</div>
+                <div class="lang-switcher">
+                    <select id="language-select" onchange="changeLang(this.value)" class="lang-dropdown">
+                        <option value="es">🇪🇸 ES</option>
+                        <option value="en">🇬🇧 EN</option>
+                        <option value="fr">🇫🇷 FR</option>
+                        <option value="tr">🇹🇷 TR</option>
+                        <option value="gr">🇬🇷 GR</option>
+                        <option value="sr">🇷🇸 SR</option>
+                        <option value="lt">🇱🇹 LT</option>
+                        <option value="he">🇮🇱 HE</option>
+                    </select>
                 </div>
-
-                <div class="header-right">
-                    <div class="header-playoffs-badge">
-                        <span class="header-playoffs-dot"></span>
-                        Playoffs
-                    </div>
-                    <div class="lang-switcher">
-                        <select id="language-select" onchange="changeLang(this.value)" class="lang-dropdown">
-                            <option value="es">🇪🇸 ES</option>
-                            <option value="en">🇬🇧 EN</option>
-                            <option value="fr">🇫🇷 FR</option>
-                            <option value="tr">🇹🇷 TR</option>
-                            <option value="gr">🇬🇷 GR</option>
-                            <option value="sr">🇷🇸 SR</option>
-                            <option value="lt">🇱🇹 LT</option>
-                            <option value="he">🇮🇱 HE</option>
-                        </select>
-                    </div>
-                </div>
-
             </div>
+
+            <!-- Hero -->
+            <div class="header-hero">
+                <div class="header-hero-left">
+                    <h1 id="main-title" class="header-headline">
+                        EUROLEAGUE 25/26.<br>
+                        <em>ANALIZADA.</em>
+                    </h1>
+                    <p class="header-sub">
+                        SIMULADOR · BRACKET · PROBABILIDADES
+                    </p>
+                </div>
+                <div class="header-stats">
+                    <div class="header-stat">
+                        <span class="header-stat-num">38</span>
+                        <span class="header-stat-label">Jornadas</span>
+                    </div>
+                    <div class="header-stat">
+                        <span class="header-stat-num">20</span>
+                        <span class="header-stat-label">Equipos</span>
+                    </div>
+                    <div class="header-stat">
+                        <span class="header-stat-num">2K</span>
+                        <span class="header-stat-label">Simulaciones</span>
+                    </div>
+                </div>
+            </div>
+
         </header>
 
         <!-- Hamburger button -->
@@ -1601,7 +1631,7 @@
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <span> EuroLeague Calculator</span>
+                <span>🏀 EuroLeague Calculator</span>
             </div>
             
             <div class="sidebar-section">
