@@ -89,212 +89,59 @@
                 margin: 0;
                 padding: 0;
             }
-            @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&display=swap');
-
-            /* ═══════════════════════════════════════════
-               HERO HEADER
-            ═══════════════════════════════════════════ */
             header {
-                background: #06090f;
-                border-bottom: 2px solid rgba(234,88,12,0.3);
-                position: sticky;
-                top: 0;
-                z-index: 500;
-                overflow: hidden;
+                background-color: var(--dark);
+                color: var(--white);
+                padding: 1rem 1.5rem;
+                text-align: center;
+                border-bottom: 4px solid var(--primary);
+                position: relative;
             }
-
-            /* Dot texture */
-            header::before {
-                content: '';
-                position: absolute; inset: 0;
-                background-image: radial-gradient(rgba(234,88,12,0.12) 1px, transparent 1px);
-                background-size: 24px 24px;
-                pointer-events: none;
-            }
-            /* Dual-color bottom glow (like the reference) */
-            header::after {
-                content: '';
+            .lang-switcher { 
                 position: absolute;
-                bottom: -30px; left: 50%; transform: translateX(-50%);
-                width: 80%; height: 80px;
-                background: radial-gradient(ellipse, rgba(234,88,12,0.22) 0%, rgba(234,88,12,0.05) 60%, transparent 80%);
-                pointer-events: none;
+                top: 15px;
+                right: 20px;
+                z-index: 1000;
             }
 
-            /* ── Utility bar (top thin row) ── */
-            .header-util {
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 8px 16px 8px 66px;
-                border-bottom: 1px solid rgba(255,255,255,0.04);
-            }
-            .header-util-left {
-                display: flex;
-                align-items: center;
-                gap: 16px;
-            }
-            .header-site-name {
-                font-family: 'Inter', sans-serif;
-                font-size: 11px;
-                font-weight: 700;
-                letter-spacing: 3px;
-                text-transform: uppercase;
-                color: #4b5563;
-            }
-            .header-live-pill {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                padding: 3px 10px;
-                background: rgba(234,88,12,0.1);
-                border: 1px solid rgba(234,88,12,0.3);
-                border-radius: 20px;
-                font-family: 'Inter', sans-serif;
-                font-size: 10px;
-                font-weight: 800;
-                letter-spacing: 1.5px;
-                text-transform: uppercase;
-                color: #fb923c;
-            }
-            .header-live-dot {
-                width: 5px; height: 5px;
-                background: #ea580c;
-                border-radius: 50%;
-                box-shadow: 0 0 5px rgba(234,88,12,0.9);
-                animation: live-blink 1.6s ease-in-out infinite;
-            }
-            @keyframes live-blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
-
-            .lang-switcher { flex-shrink: 0; }
             .lang-dropdown {
-                appearance: none; -webkit-appearance: none;
-                background: rgba(255,255,255,0.04);
-                color: #9ca3af;
-                border: 1px solid rgba(255,255,255,0.1);
-                padding: 5px 26px 5px 10px;
-                border-radius: 7px;
-                font-family: 'Inter', sans-serif;
-                font-size: 11px;
-                font-weight: 700;
-                letter-spacing: 0.5px;
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background-color: var(--dark);
+                color: var(--white);
+                border: 1px solid #374151;
+                padding: 6px 30px 6px 12px;
+                border-radius: 6px;
+                font-size: 0.9rem;
+                font-weight: bold;
                 cursor: pointer;
-                background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                /* Flecha blanca personalizada */
+                background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
                 background-repeat: no-repeat;
-                background-position: right 3px center;
-                transition: border-color 0.2s;
-            }
-            .lang-dropdown:hover { border-color: rgba(234,88,12,0.5); }
-            .lang-dropdown:focus { outline: none; border-color: var(--primary); }
-
-            /* ── Hero title block ── */
-            .header-hero {
-                position: relative;
-                padding: 26px 28px 28px 28px;
-                display: flex;
-                align-items: flex-end;
-                justify-content: space-between;
-                gap: 20px;
-            }
-            .header-hero-left { flex: 1; min-width: 0; }
-
-            .header-headline {
-                font-family: 'Bebas Neue', 'Impact', sans-serif;
-                font-size: clamp(3rem, 7.5vw, 6rem);
-                font-weight: 400;
-                line-height: 0.9;
-                letter-spacing: 3px;
-                margin: 0;
-                color: #ffffff;
-                text-transform: uppercase;
-                text-shadow:
-                    0 0 40px rgba(255,255,255,0.12),
-                    0 2px 0 rgba(0,0,0,0.8);
-            }
-            .header-headline em {
-                font-style: normal;
-                display: block;
-                color: var(--primary);
-                text-shadow:
-                    0 0 20px rgba(234,88,12,0.9),
-                    0 0 50px rgba(234,88,12,0.5),
-                    0 0 100px rgba(234,88,12,0.2),
-                    0 2px 0 rgba(0,0,0,0.9);
+                background-position: right 5px center;
+                transition: border-color 0.2s ease;
             }
 
-            .header-sub {
-                margin-top: 12px;
-                font-family: 'Inter', sans-serif;
-                font-size: 11px;
-                font-weight: 700;
-                letter-spacing: 3px;
-                color: #374151;
-                text-transform: uppercase;
+            .lang-dropdown:focus {
+                outline: none;
+                border-color: var(--primary);
             }
-
-            /* ── Right: stats pills ── */
-            .header-stats {
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-                flex-shrink: 0;
-            }
-            .header-stat {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 6px 12px;
-                background: rgba(255,255,255,0.03);
-                border: 1px solid rgba(255,255,255,0.06);
-                border-radius: 8px;
-                white-space: nowrap;
-            }
-            .header-stat-num {
-                font-family: 'Bebas Neue', sans-serif;
-                font-size: 1.1rem;
-                letter-spacing: 1px;
-                color: var(--primary);
-                line-height: 1;
-            }
-            .header-stat-label {
-                font-family: 'Inter', sans-serif;
-                font-size: 10px;
-                font-weight: 700;
-                letter-spacing: 1.5px;
-                text-transform: uppercase;
-                color: #4b5563;
-            }
-
-            /* ── Ham button ── */
+            /* ── HAMBURGER SIDEBAR ────────────────────────────── */
             .ham-btn {
                 position: fixed;
-                top: 9px; left: 10px;
-                width: 40px; height: 40px;
-                background: rgba(234,88,12,0.12);
-                border: 1px solid rgba(234,88,12,0.35);
-                border-radius: 9px;
+                top: 14px; left: 14px;
+                width: 42px; height: 42px;
+                background: var(--primary);
+                border: none; border-radius: 10px;
                 cursor: pointer; z-index: 1001;
                 display: flex; flex-direction: column;
                 align-items: center; justify-content: center;
-                gap: 5px;
-                transition: background 0.2s, box-shadow 0.2s;
+                gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                transition: background 0.2s;
             }
-            .ham-btn:hover {
-                background: var(--primary);
-                box-shadow: 0 0 16px rgba(234,88,12,0.5);
-            }
-
-            /* ── Mobile ── */
-            @media (max-width: 768px) {
-                .header-util { padding: 7px 12px 7px 58px; }
-                .header-hero  { padding: 14px 16px 16px; }
-                .header-stats { display: none; }
-                .header-headline { font-size: clamp(2.2rem, 11vw, 3.2rem); letter-spacing: 2px; }
-                .ham-btn { top: 6px; left: 8px; }
-            }
-            /* ── HAMBURGER SIDEBAR ────────────────────────────── */
-            /* ham-btn defined in header CSS above */
+            .ham-btn:hover { background: #c2410c; }
             .ham-btn span {
                 display: block; width: 22px; height: 2px;
                 background: white; border-radius: 2px;
@@ -809,7 +656,9 @@
             .bg-out { background-color: #fef2f2; }
             
             @media (max-width: 768px) {
-                /* mobile header handled in header CSS block */
+                header { padding: 3rem 1rem 1rem 1rem; } 
+                header h1 { font-size: 1.3rem; margin: 0; line-height: 1.2; }
+                .lang-switcher { top: 15px; right: 15px; left: auto; transform: none; background: transparent; box-shadow: none;}
                 .sidebar { width: 240px; }
                 .container { margin: 1rem auto; padding: 0 0.5rem; }
                 .tab-content { padding: 1rem 0.5rem; }
@@ -1567,57 +1416,20 @@
     <main>
 
         <header>
-
-            <!-- Util bar -->
-            <div class="header-util">
-                <div class="header-util-left">
-                    <span class="header-site-name">The Bench Talk</span>
-                    <div class="header-live-pill">
-                        <span class="header-live-dot"></span>
-                        Playoffs 25/26
-                    </div>
-                </div>
-                <div class="lang-switcher">
-                    <select id="language-select" onchange="changeLang(this.value)" class="lang-dropdown">
-                        <option value="es">🇪🇸 ES</option>
-                        <option value="en">🇬🇧 EN</option>
-                        <option value="fr">🇫🇷 FR</option>
-                        <option value="tr">🇹🇷 TR</option>
-                        <option value="gr">🇬🇷 GR</option>
-                        <option value="sr">🇷🇸 SR</option>
-                        <option value="lt">🇱🇹 LT</option>
-                        <option value="he">🇮🇱 HE</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Hero -->
-            <div class="header-hero">
-                <div class="header-hero-left">
-                    <h1 id="main-title" class="header-headline">
-                        EUROLEAGUE 25/26.<br>
-                        <em>ANALIZADA.</em>
-                    </h1>
-                    <p class="header-sub">
-                        SIMULADOR · BRACKET · PROBABILIDADES
-                    </p>
-                </div>
-                <div class="header-stats">
-                    <div class="header-stat">
-                        <span class="header-stat-num">38</span>
-                        <span class="header-stat-label">Jornadas</span>
-                    </div>
-                    <div class="header-stat">
-                        <span class="header-stat-num">20</span>
-                        <span class="header-stat-label">Equipos</span>
-                    </div>
-                    <div class="header-stat">
-                        <span class="header-stat-num">2K</span>
-                        <span class="header-stat-label">Simulaciones</span>
-                    </div>
-                </div>
-            </div>
-
+            <h1 id="main-title">EuroLeague 2025-26 Standings &amp; Playoff Simulator</h1>
+            <div class="lang-switcher">
+            <select id="language-select" onchange="changeLang(this.value)" class="lang-dropdown">
+                <option value="es">🇪🇸 ES</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="fr">🇫🇷 FR</option>
+                <option value="tr">🇹🇷 TR</option>
+                <option value="gr">🇬🇷 GR</option>
+                <option value="sr">🇷🇸 SR</option>
+                <option value="lt">🇱🇹 LT</option>
+                <option value="he">🇮🇱 HE</option>
+            </select>
+        </div>
+        </div>
         </header>
 
         <!-- Hamburger button -->
