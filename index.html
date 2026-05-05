@@ -1409,7 +1409,18 @@
                 font-weight: 700; text-decoration: none;
             }
 
-        </style>
+    
+        /* Ad slots */
+        .ad-slot-wrap {
+            min-height: 50px;
+            background: transparent;
+        }
+        .ad-slot-wrap ins { display: block; }
+        @media (max-width: 768px) {
+            .ad-slot-wrap { margin: 6px auto; }
+        }
+
+    </style>
         <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421"
              crossorigin="anonymous"></script>
@@ -1494,6 +1505,18 @@
         </aside>
 
         <div id="results-banner-container"></div>
+
+        <!-- AD SLOT A: Entre banner y clasificación (alta visibilidad) -->
+        <div class="ad-slot-wrap" style="max-width:970px; margin:8px auto 4px; text-align:center; min-height:50px;">
+            <ins class="adsbygoogle"
+             style="display:block;"
+             data-ad-client="ca-pub-3729208482213421"
+             data-ad-slot="9635096874"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
         <div class="container">
             <div id="clasificacion" class="tab-content active">
                 <h2 id="title-standings">Clasificación Oficial</h2>
@@ -1633,6 +1656,17 @@
                     </div>
                 </div>
 
+
+                <!-- AD SLOT B: Entre noticias y tweets (pestaña Noticias) -->
+                <div class="ad-slot-wrap" style="max-width:728px; margin:16px auto; text-align:center; min-height:90px;">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-3729208482213421"
+                         data-ad-slot="9635096874"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
                 <!-- TWEETS sticker row -->
                 <div class="bench-ticker-section">
                     <div class="bench-ticker-label">
