@@ -4921,7 +4921,8 @@
                         s.src = 'https://platform.twitter.com/widgets.js';
                         s.async = true;
                         document.head.appendChild(s);
-                    } else if (window.twttr?.widgets) {
+                    } 
+                    else if (window.twttr?.widgets) {
                         window.twttr.widgets.load(ticker);
                     }
             
