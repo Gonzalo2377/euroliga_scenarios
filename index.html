@@ -4502,9 +4502,9 @@
                                 <span class="el-team-name">${getTeamAbrev(teamA)} <span style="color:#9ca3af;font-weight:normal;">${getTeamRank(teamA)}</span></span>
                             </div>
                             <div class="el-score-center">
-                                <span class="${scoreA>scoreB?'win':''}">${scoreA}${ot}</span>
+                                <span class="${parseInt(scoreA,10)>parseInt(scoreB,10)?'win':''}">${scoreA}${ot}</span>
                                 <span class="el-score-divider">-</span>
-                                <span class="${scoreB>scoreA?'win':''}">${scoreB}</span>
+                                <span class="${parseInt(scoreB,10)>parseInt(scoreA,10)?'win':''}">${scoreB}</span>
                             </div>
                             <div class="el-team-col">
                                 <img src="${getLogo(teamB)}" loading="lazy">
@@ -4941,6 +4941,7 @@
 
             // Lazy load on tab open + re-render on lang change
             let _noticiasLoaded = false;
+            let _adSlotBPushed = false;
             const _openTabOriginal = openTab;
             openTab = function(evt, tabName) {
                 _openTabOriginal(evt, tabName);
@@ -4950,10 +4951,18 @@
                         loadNoticias();
                         loadTweets();
                     } else {
-                        loadNoticias();
-                    }
+                    loadNoticias();
                 }
-            };
+                // Push Slot B cuando el tab ya es visible (evita error width=0)
+                if (!_adSlotBPushed) {
+                    _adSlotBPushed = true;
+                    setTimeout(() => {
+                        try { (adsbygoogle = window.adsbygoogle || []).push({}); }
+                        catch(e) { console.warn('AdSlotB:', e.message); }
+                    }, 200);
+                }
+            }
+        };
 
         
         </script>
@@ -4968,7 +4977,6 @@
                  data-ad-slot="3142462834"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
         <footer style="text-align:center; padding:28px 20px; margin-top:40px; border-top:1px solid #e5e7eb; font-size:0.85rem; color:#6b7280;">
