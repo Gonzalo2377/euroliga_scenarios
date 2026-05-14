@@ -2102,10 +2102,17 @@
             // H2H y +/- se calculan SOLOS desde calculateH2HStats()
             const playoffMatchesArray = [
             {
-                team1: "Valencia Basket", seed1: 4, team2: "Panathinaikos",   seed2: 5,
-                date: "2026-05-13T19:00:00Z", leg: "QF2  G5",
+                team1: "Olympiacos", seed1: 1, team2: "Fenerbahçe",   seed2: 4,
+                date: "2026-05-22T15:00:00Z", leg: "SF1",
                 series1: 2, series2: 2,
-                prob1: 58, prob2: 42,
+                prob1: 70, prob2: 30,
+                isLive: false, isFinished: false, score1: 0, score2: 0
+            },
+            {
+                team1: "Valencia Basket", seed1: 2, team2: "Real Madrid",   seed2: 3,
+                date: "2026-05-22T18:00:00Z", leg: "QF2  G5",
+                series1: 0, series2: 0,
+                prob1: 55, prob2: 45,
                 isLive: false, isFinished: false, score1: 0, score2: 0
             },
         ];
@@ -2113,6 +2120,7 @@
         
 
         const rawResultsArray = [
+            "Play Off|Valencia Basket|Panathinaikos|81|64||14,21,21,25|10,13,27,14",
             "Play Off|Zalgiris Kaunas|Fenerbahçe|90|94|OT|20,22,20,18,10|25,22,14,19,14",
             "Play Off|Panathinaikos|Valencia Basket|86|89||15,22,19,30|26,18,16,29",
             "Play Off|Hapoel Tel-Aviv|Real Madrid|81|87||21,15,17,28|23,23,17,24",
