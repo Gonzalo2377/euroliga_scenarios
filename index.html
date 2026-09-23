@@ -4,8 +4,8 @@
         <meta charset="UTF-8"> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
         
-        <title>EuroLeague Calculator 25/26 | Bracket & Simulator</title> 
-        <meta name="description" content="Interactive EuroLeague 2025-26 Standings, Playoff Bracket & Monte Carlo Simulator. Calculates H2H tiebreakers automatically. Probabilities to reach each position. Scenarios of every team. Analysis of team evolution.">
+        <title>EuroLeague Calculator 26/27 | Bracket & Simulator</title> 
+        <meta name="description" content="Interactive EuroLeague 2026-27 Standings, Playoff Bracket & Monte Carlo Simulator. Calculates H2H tiebreakers automatically. Probabilities to reach each position. Scenarios of every team. Analysis of team evolution.">
         <meta name="keywords" content="euroliga, euroleague, calculadora, calculator, standings, simulador, playoffs, play-in, clasificacion, desempates, h2h, baloncesto, predicciones, monte carlo">
         <link rel="canonical" href="https://euroleaguecalculator.online/">
         <link rel="alternate" hreflang="es" href="https://euroleaguecalculator.online/?lang=es">
@@ -24,7 +24,7 @@
 
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://euroleaguecalculator.online/">
-        <meta property="og:title" content="EuroLeague Calculator 25/26 | Bracket & Simulator">
+        <meta property="og:title" content="EuroLeague Calculator 26/27 | Bracket & Simulator">
         <meta property="og:description" content="Simulate the Euroleague rounds, discover tiebreakers, odds with Monte Carlo scenario and see the Play-In/Playoff Bracket.">
         <meta property="og:image" content="https://euroleaguecalculator.online/portada.png">
         <meta property="og:image:width" content="1200">
@@ -32,7 +32,7 @@
 
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:url" content="https://euroleaguecalculator.online/">
-        <meta name="twitter:title" content="EuroLeague Calculator 25/26 | Bracket & Simulator">
+        <meta name="twitter:title" content="EuroLeague Calculator 26/27 | Bracket & Simulator">
         <meta name="twitter:description" content="Simula el final de la Euroliga, calcula desempates y mira las probabilidades de Play-In y Top 6 con nuestro simulador Monte Carlo.">
         <meta name="twitter:image" content="https://euroleaguecalculator.online/portada.png">
         <script type="application/ld+json">
@@ -40,9 +40,9 @@
         {
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": "EuroLeague Calculator 2025-26",
+            "name": "EuroLeague Calculator 2026-27",
             "url": "https://euroleaguecalculator.online/",
-            "description": "Interactive standings, playoff bracket & Monte Carlo simulator for EuroLeague 2025-26. Calculates H2H tiebreakers automatically.",
+            "description": "Interactive standings, playoff bracket & Monte Carlo simulator for EuroLeague 2026-27. Calculates H2H tiebreakers automatically.",
             "applicationCategory": "SportsApplication",
             "operatingSystem": "All",
             "inLanguage": ["es","en","fr","tr","el","sr","lt","he"],
@@ -51,10 +51,10 @@
         {
             "@context": "https://schema.org",
             "@type": "SportsEvent",
-            "name": "EuroLeague Basketball 2025-26",
+            "name": "EuroLeague Basketball 2026-27",
             "sport": "Basketball",
-            "startDate": "2025-10-01",
-            "endDate": "2026-06-01",
+            "startDate": "2026-09-24",
+            "endDate": "2027-05-30",
             "url": "https://euroleaguecalculator.online/"
         }
         ]
@@ -1420,6 +1420,28 @@
             .ad-slot-wrap { margin: 6px auto; }
         }
 
+        /* Estado de los datos + estados vacíos + simulador por tandas */
+        .data-status { max-width: 1200px; margin: 6px auto -6px; padding: 0 1rem; font-size: 0.78rem; color: #6b7280; text-align: right; min-height: 1em; }
+        .data-status.is-stale { color: #b45309; }
+        .data-status.is-error { color: #b91c1c; font-weight: 600; }
+        .empty-state { text-align: center; color: #6b7280; padding: 2rem 1rem !important; font-size: 0.95rem; }
+        .btn-more-rounds { display: block; margin: 1.5rem auto 0; padding: 12px 22px; border-radius: 8px; border: 2px solid var(--primary); background: transparent; color: var(--primary); font-weight: 700; font-size: 0.95rem; cursor: pointer; }
+        .btn-more-rounds:hover { background: var(--primary); color: #fff; }
+        .btn-more-rounds:focus-visible, .tab-link:focus-visible, .btn-win:focus-visible { outline: 3px solid #fdba74; outline-offset: 2px; }
+        .el-game-card.is-live { border-color: #ef4444 !important; }
+        .el-game-card.is-upcoming .el-vs { font-size: 0.95rem; font-weight: 700; color: #9ca3af; letter-spacing: 0.02em; }
+        header h1 { text-wrap: balance; }
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.15rem; }
+            .data-status { text-align: center; font-size: 0.72rem; }
+            th.t-schedule, td:has(> .schedule-cell) { display: none; }
+            .el-game-card { min-width: 200px; padding: 8px 10px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .el-ticker-track { animation: none !important; }
+            .el-game-card { transition: none; }
+        }
+
     </style>
         <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729208482213421"
@@ -1429,7 +1451,7 @@
     <main>
 
         <header>
-            <h1 id="main-title">EuroLeague 2025-26 Standings &amp; Playoff Simulator</h1>
+            <h1 id="main-title">EuroLeague 2026-27 Standings &amp; Playoff Simulator</h1>
             <div class="lang-switcher">
             <select id="language-select" onchange="changeLang(this.value)" class="lang-dropdown">
                 <option value="es">🇪🇸 ES</option>
@@ -1505,6 +1527,7 @@
         </aside>
 
         <div id="results-banner-container"></div>
+        <p id="data-status" class="data-status" role="status" aria-live="polite"></p>
 
         <!-- AD SLOT A: Entre banner y clasificación (alta visibilidad) -->
         <div class="ad-slot-wrap" style="max-width:970px; margin:8px auto 4px; text-align:center; min-height:50px;">
@@ -1708,7 +1731,7 @@
         <script>
             const i18n = {
                 es: {
-                    title: "🏆 Calculadora EuroLeague Ultimate 25/26", standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Análisis", noticias: "📰 Noticias", bracket: "🏆 Bracket",
+                    title: "🏆 Calculadora EuroLeague Ultimate 26/27", standings: "📊 Clasificación", my_team: "🎯 Mi Equipo", prob: "🎲 Probabilidades", simulator: "🎮 Simulador", ties: "⚔️ Desempates", results: "🏀 Resultados", news: "📰 Análisis", noticias: "📰 Noticias", bracket: "🏆 Bracket",
                     bracket_title: "Playoffs & Play-In Bracket", bracket_desc: "Haz clic en los equipos para simular tu camino hacia el campeonato.",
                     playin: "PLAY-IN", quarterfinals: "CUARTOS DE FINAL", finalfour: "FINAL FOUR", championship: "CAMPEONATO", tbd: "Por decidir", champion: "CAMPEÓN", loser_drops: "El perdedor cae aquí",
                     official_standings: "Clasificación Oficial", live_standings: "Clasificación en Vivo", sim_desc: "Selecciona los ganadores para actualizar la tabla.",
@@ -1762,7 +1785,7 @@
                     analysis_note: "*Press the play button in the upper left to see the animated race."
                 },
                 it: {
-                    title: "🏆 Calcolatore EuroLeague Ultimate 25/26", standings: "📊 Classifica", my_team: "🎯 La Mia Squadra", prob: "🎲 Probabilità", simulator: "🎮 Simulatore", ties: "⚔️ Spareggi", results: "🏀 Risultati", news: "📰 Analisi", bracket: "🏆 Tabellone",
+                    title: "🏆 Calcolatore EuroLeague Ultimate 26/27", standings: "📊 Classifica", my_team: "🎯 La Mia Squadra", prob: "🎲 Probabilità", simulator: "🎮 Simulatore", ties: "⚔️ Spareggi", results: "🏀 Risultati", news: "📰 Analisi", bracket: "🏆 Tabellone",
                     bracket_title: "Tabellone Playoffs & Play-In", bracket_desc: "Clicca sulle squadre per simulare il percorso verso il titolo.",
                     playin: "PLAY-IN", quarterfinals: "QUARTI DI FINALE", finalfour: "FINAL FOUR", championship: "CAMPIONATO", tbd: "Da dec.", champion: "CAMPIONE", loser_drops: "La perdente gioca qui",
                     official_standings: "Classifica Ufficiale", live_standings: "Classifica in Diretta", sim_desc: "Seleziona le vincenti per aggiornare la classifica.",
@@ -1789,7 +1812,7 @@
                     analysis_note: "*Premi il tasto play in alto a sinistra per vedere la corsa animata."
                 },
                 fr: {
-                    title: "🏆 Calculatrice EuroLeague Ultimate 25/26", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
+                    title: "🏆 Calculatrice EuroLeague Ultimate 26/27", standings: "📊 Classement", my_team: "🎯 Mon Équipe", prob: "🎲 Probabilités", simulator: "🎮 Simulateur", ties: "⚔️ Départages", results: "🏀 Résultats", news: "📰 Analyse", bracket: "🏆 Tableau",
                     bracket_title: "Tableau des Playoffs & Play-In", bracket_desc: "Cliquez sur les équipes pour simuler le chemin vers le titre.",
                     playin: "PLAY-IN", quarterfinals: "QUARTS DE FINALE", finalfour: "FINAL FOUR", championship: "CHAMPIONNAT", tbd: "À dét.", champion: "CHAMPION", loser_drops: "Le perdant joue ici",
                     official_standings: "Classement Officiel", live_standings: "Classement en Direct", sim_desc: "Sélectionnez les vainqueurs pour mettre à jour.",
@@ -1843,7 +1866,7 @@
                     analysis_note: "*Animasyonlu yarışı görmek için sol üstteki oynat düğmesine basın."
                 },
                 gr: {
-                    title: "🏆 Υπολογιστής EuroLeague Ultimate 25/26", standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
+                    title: "🏆 Υπολογιστής EuroLeague Ultimate 26/27", standings: "📊 Βαθμολογία", my_team: "🎯 Η Ομάδα Μου", prob: "🎲 Πιθανότητες", simulator: "🎮 Προσομοιωτής", ties: "⚔️ Ισοβαθμίες", results: "🏀 Αποτελέσματα", news: "📰 Ανάλυση", bracket: "🏆 Ταμπλό",
                     bracket_title: "Ταμπλό Playoffs & Play-In", bracket_desc: "Κάντε κλικ στις ομάδες για να προσομοιώσετε την πορεία προς τον τίτλο.",
                     playin: "PLAY-IN", quarterfinals: "ΠΡΟΗΜΙΤΕΛΙΚΑ", finalfour: "FINAL FOUR", championship: "ΤΕΛΙΚΟΣ", tbd: "Εκκρεμεί", champion: "ΠΡΩΤΑΘΛΗΤΗΣ", loser_drops: "Ο ηττημένος παίζει εδώ",
                     official_standings: "Επίσημη Βαθμολογία", live_standings: "Ζωντανή Βαθμολογία", sim_desc: "Επίλεξε νικητές για ενημέρωση.",
@@ -1924,7 +1947,7 @@
                     analysis_note: "*Paspauskite atkūrimo mygtuką viršuje kairėje, kad pamatytumėte animuotas lenktynes."
                 },
                 he: {
-                    title: "🏆 מחשבון יורוליג 25/26", standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
+                    title: "🏆 מחשבון יורוליג 26/27", standings: "📊 טבלה", my_team: "🎯 הקבוצה שלי", prob: "🎲 סיכויים", simulator: "🎮 סימולטור", ties: "⚔️ שוברי שוויון", results: "🏀 תוצאות", news: "📰 ניתוח", bracket: "🏆 בראקט",
                     bracket_title: "בראקט פלייאוף ופליי-אין", bracket_desc: "לחץ על הקבוצות כדי לדמות את הדרך לאליפות.",
                     playin: "פליי-אין", quarterfinals: "רבע גמר", finalfour: "פיינל פור", championship: "הגמר", tbd: "טרם נקבע", champion: "אלופה", loser_drops: "המפסידה יורדת לכאן",
                     official_standings: "טבלה רשמית", live_standings: "טבלה בזמן אמת", sim_desc: "בחר מנצחות כדי לעדכן את הטבלה למטה",
@@ -1942,7 +1965,7 @@
                     reset_sim: "נקה סימולטור 🔄", reset_bracket: "נקה בראקט 🔄", random_bracket: "🎲 אקראי", capture_bracket: "📸 צלם בראקט",
                     net_rating_desc: "מדד הנט (Net Rating) מודד את היעילות ההתקפית וההגנתית המשולבת.",
                     "Olympiacos": "אולימפיאקוס", "Fenerbahçe": "פנרבחצ'ה", "Real Madrid": "ריאל מדריד", "Valencia Basket": "ולנסיה", "Hapoel Tel-Aviv": "הפועל תל אביב",
-                    "Zalgiris Kaunas": "ז'לגיריס", "Panathinaikos": "פנאתינייקוס", "Barcelona": "ברצלונה", "Crvena Zvezda": "הכוכב האדום", "Monaco": "מונאקו",
+                    "Zalgiris Kaunas": "ז'לגיריס", "Panathinaikos": "פנאתינייקוס", "Barcelona": "ברצלונה", "Crvena Zvezda": "הכוכב האדום", "Beşiktaş": "בשיקטאש",
                     "Maccabi Tel Aviv": "מכבי תל אביב", "Dubai": "דובאי", "Olimpia Milano": "מילאנו", "Partizan": "פרטיזן", "Bayern": "באיירן מינכן",
                     "Paris": "פריז", "Virtus Bolonia": "וירטוס", "Baskonia": "באסקוניה", "Anadolu Efes": "אנדולו אפס", "Asvel Basket": "וילרבאן",
                     view_all_games: "לכל המשחקים", latest_round: "מחזור אחרון", final: "סיום", q1: "רבע 1", q2: "רבע 2", q3: "רבע 3", q4: "רבע 4", ot: "הארכה",
@@ -1978,26 +2001,26 @@
             let snapshotOfficialRanks = null; // Guardará la foto inamovible de la clasificación real
 
             const teamsBase = [
-                { id: "FEN", name: "Fenerbahçe", flag: "🇹🇷", initialWins: 23, initialLosses: 12, diff: 68 },
-                { id: "OLY", name: "Olympiacos", flag: "🇬🇷", initialWins: 23, initialLosses: 12, diff: 235 },
-                { id: "RMA", name: "Real Madrid", flag: "🇪🇸", initialWins: 22, initialLosses: 13, diff: 174 },
-                { id: "VAL", name: "Valencia Basket", flag: "🇪🇸", initialWins: 22, initialLosses: 13, diff: 135 },
-                { id: "ZAL", name: "Zalgiris Kaunas", flag: "🇱🇹", initialWins: 21, initialLosses: 14, diff: 176 },
-                { id: "HTA", name: "Hapoel Tel-Aviv", flag: "🇮🇱", initialWins: 21, initialLosses: 13, diff: 116 },
-                { id: "PAO", name: "Panathinaikos", flag: "🇬🇷", initialWins: 20, initialLosses: 15, diff: 55 },
-                { id: "BAR", name: "Barcelona", flag: "🇪🇸", initialWins: 20, initialLosses: 15, diff: 19 },
-                { id: "MON", name: "Monaco", flag: "🇲🇨", initialWins: 19, initialLosses: 16, diff: 103 },
-                { id: "CZV", name: "Crvena Zvezda", flag: "🇷🇸", initialWins: 19, initialLosses: 16, diff: 41 },
-                { id: "DUB", name: "Dubai", flag: "🇦🇪", initialWins: 18, initialLosses: 17, diff: 9 },
-                { id: "MAC", name: "Maccabi Tel Aviv", flag: "🇮🇱", initialWins: 18, initialLosses: 16, diff: -45 },
-                { id: "MIL", name: "Olimpia Milano", flag: "🇮🇹", initialWins: 17, initialLosses: 18, diff: -23 },
-                { id: "PAR", name: "Partizan", flag: "🇷🇸", initialWins: 15, initialLosses: 20, diff: -187 },
-                { id: "BAY", name: "Bayern", flag: "🇩🇪", initialWins: 15, initialLosses: 20, diff: -94 },
-                { id: "PRS", name: "Paris", flag: "🇫🇷", initialWins: 14, initialLosses: 21, diff: -48 },
-                { id: "VIR", name: "Virtus Bolonia", flag: "🇮🇹", initialWins: 13, initialLosses: 22, diff: -164 },
-                { id: "BAS", name: "Baskonia", flag: "🇪🇸", initialWins: 11, initialLosses: 24, diff: -171 },
-                { id: "EFE", name: "Anadolu Efes", flag: "🇹🇷", initialWins: 10, initialLosses: 25, diff: -141 },
-                { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 8,  initialLosses: 27, diff: -258 }
+                { id: "FEN", name: "Fenerbahçe", flag: "🇹🇷", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "OLY", name: "Olympiacos", flag: "🇬🇷", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "RMA", name: "Real Madrid", flag: "🇪🇸", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "VAL", name: "Valencia Basket", flag: "🇪🇸", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "ZAL", name: "Zalgiris Kaunas", flag: "🇱🇹", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "HTA", name: "Hapoel Tel-Aviv", flag: "🇮🇱", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "PAO", name: "Panathinaikos", flag: "🇬🇷", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "BAR", name: "Barcelona", flag: "🇪🇸", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "BES", name: "Beşiktaş", flag: "🇹🇷", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "CZV", name: "Crvena Zvezda", flag: "🇷🇸", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "DUB", name: "Dubai", flag: "🇦🇪", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "MAC", name: "Maccabi Tel Aviv", flag: "🇮🇱", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "MIL", name: "Olimpia Milano", flag: "🇮🇹", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "PAR", name: "Partizan", flag: "🇷🇸", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "BAY", name: "Bayern", flag: "🇩🇪", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "PRS", name: "Paris", flag: "🇫🇷", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "VIR", name: "Virtus Bolonia", flag: "🇮🇹", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "BAS", name: "Baskonia", flag: "🇪🇸", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "EFE", name: "Anadolu Efes", flag: "🇹🇷", initialWins: 0, initialLosses: 0, diff: 0 },
+                { id: "ASV", name: "Asvel Basket", flag: "🇫🇷", initialWins: 0, initialLosses: 0, diff: 0 }
             ];
 
 
@@ -2008,6 +2031,7 @@
             let formCache = null;     // computed after autoUpdateData()
 
             function buildH2HCache() {
+                Object.keys(h2hPastCache).forEach(k => delete h2hPastCache[k]);
                 pastMatches.forEach(m => {
                     ['AB', 'BA'].forEach(order => {
                         const [teamA, teamB] = order === 'AB' ? [m.home, m.away] : [m.away, m.home];
@@ -2068,7 +2092,7 @@
                     "Panathinaikos": "panathinaikos.png",
                     "Hapoel Tel-Aviv": "hapoel.png",
                     "Barcelona": "barcelona.png",
-                    "Monaco": "monaco.png",
+                    "Beşiktaş": "besiktas.png",
                     "Crvena Zvezda": "zvezda.png",
                     "Dubai": "dubai.png",
                     "Olimpia Milano": "milano.png",
@@ -2088,7 +2112,7 @@
             const teamColors = {
                 "Fenerbahçe": "#ca8a04", "Real Madrid": "#3730a3", "Olympiacos": "#9f1239",
                 "Valencia Basket": "#c2410a", "Zalgiris Kaunas": "#14532d", "Panathinaikos": "#065f46",
-                "Hapoel Tel-Aviv": "#be123c", "Barcelona": "#831843", "Monaco": "#b45309",
+                "Hapoel Tel-Aviv": "#be123c", "Barcelona": "#831843", "Beşiktaş": "#27272a",
                 "Crvena Zvezda": "#b91c1c", "Dubai": "#854d0e", "Olimpia Milano": "#b91c1c",
                 "Maccabi Tel Aviv": "#1e3a8a", "Anadolu Efes": "#1d4ed8", "Virtus Bolonia": "#3f3f46",
                 "Partizan": "#3f3f46", "Bayern": "#9f1239", "Paris": "#3f3f46",
@@ -2103,412 +2127,11 @@
 
         
 
-        const rawResultsArray = [
-            "Play Off|Olympiacos|Real Madrid|92|85||19,27,15,31|26,18,21,20",
-            "Play Off|Valencia Basket|Real Madrid|90|105||28,28,17,17|26,36,24,19",
-            "Play Off|Olympiacos|Fenerbahçe|79|61||18,15,23,23|12,12,17,20",
-            "Play Off|Valencia Basket|Panathinaikos|81|64||14,21,21,25|10,13,27,14",
-            "Play Off|Zalgiris Kaunas|Fenerbahçe|90|94|OT|20,22,20,18,10|25,22,14,19,14",
-            "Play Off|Panathinaikos|Valencia Basket|86|89||15,22,19,30|26,18,16,29",
-            "Play Off|Hapoel Tel-Aviv|Real Madrid|81|87||21,15,17,28|23,23,17,24",
-            "Play Off|Zalgiris Kaunas|Fenerbahçe|81|78||12,23,22,24|25,17,20,16",
-            "Play Off|Panathinaikos|Valencia Basket|87|91||18,21,27,21|24,28,23,16",
-            "Play Off|Monaco|Olympiacos|82|105||17,23,24,18|26,35,21,23",
-            "Play Off|Hapoel Tel-Aviv|Real Madrid|76|69||18,16,21,21|21,15,10,23",
-            "Play Off|Real Madrid|Hapoel Tel-Aviv|102|75||24,16,33,29|21,21,20,13",
-            "Play Off|Valencia Basket|Panathinaikos|105|107|OT|23,25,23,24,10|24,25,25,21,12",
-            "Play Off|Olympiacos|Monaco|94|64||28,31,13,22|23,8,22,11",
-            "Play Off|Fenerbahçe|Zalgiris Kaunas|86|74||26,25,15,20|14,19,14,27",
-            "Play Off|Real Madrid|Hapoel Tel-Aviv|86|82||27,21,22,16|18,15,22,27",
-            "Play Off|Valencia Basket|Panathinaikos|67|68||15,17,17,18|23,16,15,14",
-            "Play Off|Olympiacos|Monaco|91|70||19,26,21,25|20,16,15,19",
-            "Play Off|Fenerbahçe|Zalgiris Kaunas|89|78||22,25,18,24|20,9,28,21",
-            "Play In|Monaco|Barcelona|79|70||26,23,9,21|14,21,18,17",
-            "Play In|Panathinaikos|Monaco|87|79||23,26,17,21|14,20,23,22",
-            "Play In|Barcelona|Crvena Zvezda|80|72||29,18,16,17|21,12,18,21",
-            "38|Zalgiris Kaunas|Paris|85|79||26,27,15,17|28,17,16,18",
-            "38|Monaco|Hapoel Tel-Aviv|105|85||27,31,25,22|17,24,20,24",
-            "38|Dubai|Valencia Basket|85|95||19,28,20,18|24,21,34,16",
-            "38|Panathinaikos|Anadolu Efes|97|62||20,25,26,26|16,22,5,19",
-            "38|Barcelona|Bayern|95|69||20,22,26,27|19,12,17,21",
-            "38|Asvel Basket|Fenerbahçe|76|81||16,26,8,26|24,24,22,11",
-            "38|Maccabi Tel Aviv|Virtus Bolonia|85|89||14,22,26,23|16,24,29,20",
-            "38|Olympiacos|Olimpia Milano|85|76||26,21,21,17|23,22,10,21",
-            "38|Partizan|Baskonia|91|79||26,18,22,25|20,19,20,20",
-            "38|Real Madrid|Crvena Zvezda|103|82||27,29,21,26|25,19,19,19",
-            "30|Maccabi Tel Aviv|Hapoel Tel-Aviv|88|99||14,27,25,22|26,26,21,26",
-            "37|Monaco|Barcelona|93|86||18,28,26,21|26,18,23,19",
-            "37|Dubai|Anadolu Efes|69|85||20,13,21,15|24,27,13,21",
-            "37|Partizan|Zalgiris Kaunas|74|83||22,19,16,17|26,22,15,20",
-            "37|Virtus Bolonia|Baskonia|72|82||21,18,14,19|28,16,13,25",
-            "37|Asvel Basket|Crvena Zvezda|93|106||26,17,28,22|26,29,19,32",
-            "37|Hapoel Tel-Aviv|Olympiacos|85|89||18,30,19,18|22,29,22,16",
-            "37|Fenerbahçe|Real Madrid|69|74||21,13,24,11|19,21,14,20",
-            "37|Olimpia Milano|Bayern|84|94||20,14,21,29|20,32,22,20",
-            "37|Valencia Basket|Panathinaikos|102|84||27,29,26,20|23,24,22,15",
-            "37|Paris|Maccabi Tel Aviv|113|80||41,20,32,20|24,14,20,22",
-            "36|Anadolu Efes|Partizan|79|72|OT|15,9,19,22,14|13,23,14,15,7",
-            "36|Monaco|Asvel Basket|81|76||22,24,18,17|21,15,18,22",
-            "36|Hapoel Tel-Aviv|Fenerbahçe|95|80||25,26,24,20|17,21,18,24",
-            "36|Zalgiris Kaunas|Dubai|65|77||19,15,19,12|14,10,15,38",
-            "36|Crvena Zvezda|Paris|94|81||34,23,23,14|28,26,15,12",
-            "36|Olympiacos|Real Madrid|102|88||31,18,23,30|19,23,15,31",
-            "36|Barcelona|Panathinaikos|79|93||23,15,11,30|27,28,25,13",
-            "36|Valencia Basket|Olimpia Milano|102|96||27,24,27,24|24,30,29,13",
-            "36|Virtus Bolonia|Bayern|80|85||16,27,15,22|23,20,23,19",
-            "36|Baskonia|Maccabi Tel Aviv|101|98||28,16,40,17|36,17,19,26",
-            "35|Asvel Basket|Olympiacos|74|82",
-            "35|Baskonia|Real Madrid|98|96",
-            "35|Virtus Bolonia|Valencia Basket|81|94",
-            "35|Maccabi Tel Aviv|Anadolu Efes|103|89",
-            "35|Paris|Olimpia Milano|103|93",
-            "35|Dubai|Monaco|101|91",
-            "35|Crvena Zvezda|Partizan|82|89",
-            "35|Hapoel Tel-Aviv|Panathinaikos|92|88",
-            "35|Zalgiris Kaunas|Barcelona|83|71",
-            "35|Bayern|Fenerbahçe|85|76",
-            "33|Virtus Bolonia|Paris|82|103",
-            "34|Paris|Olympiacos|87|104", 
-            "34|Fenerbahçe|Zalgiris Kaunas|82|92", 
-            "34|Panathinaikos|Monaco|107|97", 
-            "34|Partizan|Valencia Basket|110|104|OT", 
-            "34|Baskonia|Hapoel Tel-Aviv|118|109", 
-            "34|Barcelona|Crvena Zvezda|92|88|OT", 
-            "34|Bayern|Asvel Basket|93|83", 
-            "34|Maccabi Tel Aviv|Dubai|104|100|OT", 
-            "34|Olimpia Milano|Virtus Bolonia|103|87", 
-            "34|Real Madrid|Anadolu Efes|82|71",
-            "33|Real Madrid|Hapoel Tel-Aviv|92|83", 
-            "33|Partizan|Asvel Basket|79|78", 
-            "33|Barcelona|Anadolu Efes|78|71", 
-            "33|Valencia Basket|Olympiacos|85|84", 
-            "33|Baskonia|Crvena Zvezda|100|108|OT", 
-            "33|Dubai|Panathinaikos|104|107", 
-            "33|Monaco|Olimpia Milano|90|85", 
-            "33|Zalgiris Kaunas|Bayern|78|71", 
-            "33|Maccabi Tel Aviv|Fenerbahçe|94|89",
-            "32|Asvel Basket|Maccabi Tel Aviv|85|89", 
-            "32|Panathinaikos|Crvena Zvezda|82|74", 
-            "32|Zalgiris Kaunas|Real Madrid|87|85", 
-            "32|Fenerbahçe|Olimpia Milano|79|75", 
-            "32|Paris|Partizan|81|90", 
-            "32|Bayern|Dubai|74|87", 
-            "32|Olympiacos|Baskonia|90|80", 
-            "32|Hapoel Tel-Aviv|Virtus Bolonia|109|91", 
-            "32|Anadolu Efes|Monaco|93|98", 
-            "32|Valencia Basket|Barcelona|62|66",
-            "31|Barcelona|Hapoel Tel-Aviv|75|80", 
-            "31|Olimpia Milano|Maccabi Tel Aviv|96|87", 
-            "31|Crvena Zvezda|Fenerbahçe|79|73", 
-            "31|Panathinaikos|Zalgiris Kaunas|92|88", 
-            "31|Paris|Asvel Basket|90|81", 
-            "31|Real Madrid|Valencia Basket|96|79", 
-            "31|Bayern|Anadolu Efes|80|81", 
-            "31|Dubai|Baskonia|100|94", 
-            "31|Monaco|Olympiacos|81|80", 
-            "31|Virtus Bolonia|Partizan|82|88",
-            "30|Partizan|Dubai|88|74", 
-            "30|Baskonia|Paris|81|97", 
-            "30|Olympiacos|Panathinaikos|86|80", 
-            "30|Crvena Zvezda|Bayern|80|85", 
-            "30|Anadolu Efes|Asvel Basket|88|91", 
-            "30|Real Madrid|Virtus Bolonia|92|84", 
-            "30|Olimpia Milano|Barcelona|87|84", 
-            "30|Valencia Basket|Zalgiris Kaunas|91|87", 
-            "30|Fenerbahçe|Monaco|88|70",
-            "29|Panathinaikos|Paris|99|104", 
-            "29|Real Madrid|Bayern|93|70", 
-            "29|Baskonia|Valencia Basket|79|108", 
-            "29|Hapoel Tel-Aviv|Olimpia Milano|92|86", 
-            "29|Monaco|Maccabi Tel Aviv|86|91", 
-            "29|Dubai|Asvel Basket|96|85", 
-            "29|Crvena Zvezda|Anadolu Efes|91|81", 
-            "29|Virtus Bolonia|Barcelona|85|80", 
-            "29|Zalgiris Kaunas|Olympiacos|99|94|OT", 
-            "29|Fenerbahçe|Partizan|81|78",
-            "28|Olimpia Milano|Dubai|78|96", 
-            "28|Partizan|Real Madrid|73|77", 
-            "28|Panathinaikos|Fenerbahçe|83|85", 
-            "28|Monaco|Baskonia|102|92", 
-            "28|Zalgiris Kaunas|Hapoel Tel-Aviv|93|82", 
-            "28|Barcelona|Paris|74|85", 
-            "28|Valencia Basket|Asvel Basket|82|67", 
-            "28|Olympiacos|Crvena Zvezda|92|86", 
-            "28|Maccabi Tel Aviv|Bayern|111|106|OT", 
-            "28|Anadolu Efes|Virtus Bolonia|91|60",
-            "27|Baskonia|Barcelona|91|97", 
-            "27|Olympiacos|Virtus Bolonia|109|77", 
-            "27|Asvel Basket|Olimpia Milano|76|77", 
-            "27|Crvena Zvezda|Maccabi Tel Aviv|82|83", 
-            "27|Anadolu Efes|Zalgiris Kaunas|92|82", 
-            "27|Paris|Fenerbahçe|90|92", 
-            "27|Bayern|Monaco|91|82", 
-            "27|Partizan|Panathinaikos|78|62", 
-            "27|Hapoel Tel-Aviv|Valencia Basket|99|104|OT", 
-            "27|Dubai|Real Madrid|93|85",
-            "26|Virtus Bolonia|Asvel Basket|70|80", 
-            "26|Barcelona|Fenerbahçe|78|82", 
-            "26|Bayern|Paris|81|75", 
-            "26|Olimpia Milano|Baskonia|109|89", 
-            "26|Panathinaikos|Real Madrid|82|81", 
-            "26|Maccabi Tel Aviv|Partizan|95|93", 
-            "26|Crvena Zvezda|Hapoel Tel-Aviv|87|75", 
-            "26|Zalgiris Kaunas|Monaco|104|87", 
-            "26|Anadolu Efes|Valencia Basket|107|90", 
-            "26|Dubai|Olympiacos|108|98|OT",
-            "25|Asvel Basket|Panathinaikos|78|79", 
-            "25|Baskonia|Zalgiris Kaunas|102|91", 
-            "25|Crvena Zvezda|Dubai|95|92", 
-            "25|Monaco|Virtus Bolonia|82|84", 
-            "25|Valencia Basket|Maccabi Tel Aviv|94|83", 
-            "25|Olimpia Milano|Partizan|85|79", 
-            "25|Olympiacos|Barcelona|87|75", 
-            "25|Hapoel Tel-Aviv|Bayern|64|79", 
-            "25|Fenerbahçe|Anadolu Efes|79|62", 
-            "25|Paris|Real Madrid|98|92",
-            "24|Asvel Basket|Barcelona|91|98", 
-            "24|Partizan|Hapoel Tel-Aviv|104|101|OT", 
-            "24|Virtus Bolonia|Crvena Zvezda|93|102", 
-            "24|Fenerbahçe|Baskonia|84|71", 
-            "24|Paris|Dubai|79|99", 
-            "24|Real Madrid|Monaco|90|78", 
-            "24|Bayern|Valencia Basket|93|89", 
-            "24|Olimpia Milano|Zalgiris Kaunas|82|86", 
-            "24|Maccabi Tel Aviv|Panathinaikos|75|71", 
-            "24|Anadolu Efes|Olympiacos|68|74",
-            "23|Virtus Bolonia|Fenerbahçe|80|85", 
-            "23|Real Madrid|Olimpia Milano|106|77", 
-            "23|Barcelona|Dubai|91|89", 
-            "23|Bayern|Partizan|63|67", 
-            "23|Valencia Basket|Paris|98|84", 
-            "23|Panathinaikos|Baskonia|93|74", 
-            "23|Asvel Basket|Zalgiris Kaunas|77|96", 
-            "23|Monaco|Crvena Zvezda|96|100|OT", 
-            "23|Hapoel Tel-Aviv|Anadolu Efes|71|66", 
-            "23|Olympiacos|Maccabi Tel Aviv|100|93",
-            "22|Real Madrid|Barcelona|80|61", 
-            "22|Asvel Basket|Hapoel Tel-Aviv|73|81", 
-            "22|Fenerbahçe|Valencia Basket|82|79", 
-            "22|Paris|Monaco|87|95", 
-            "22|Olimpia Milano|Crvena Zvezda|96|104", 
-            "22|Maccabi Tel Aviv|Zalgiris Kaunas|100|97", 
-            "22|Bayern|Panathinaikos|85|78", 
-            "22|Anadolu Efes|Baskonia|75|89", 
-            "22|Dubai|Virtus Bolonia|72|80", 
-            "22|Partizan|Olympiacos|66|104",
-            "21|Hapoel Tel-Aviv|Paris|93|82", 
-            "21|Barcelona|Partizan|88|70", 
-            "21|Baskonia|Asvel Basket|78|73", 
-            "21|Olimpia Milano|Anadolu Efes|87|74", 
-            "21|Olympiacos|Bayern|95|80", 
-            "21|Zalgiris Kaunas|Crvena Zvezda|99|67", 
-            "21|Real Madrid|Maccabi Tel Aviv|98|86", 
-            "21|Valencia Basket|Monaco|92|101", 
-            "21|Panathinaikos|Virtus Bolonia|84|71", 
-            "21|Dubai|Fenerbahçe|92|81",
-            "20|Bayern|Baskonia|96|89", 
-            "20|Anadolu Efes|Paris|79|84", 
-            "20|Barcelona|Maccabi Tel Aviv|93|83", 
-            "20|Virtus Bolonia|Zalgiris Kaunas|83|79", 
-            "20|Panathinaikos|Olimpia Milano|74|87", 
-            "20|Hapoel Tel-Aviv|Dubai|85|60", 
-            "20|Asvel Basket|Real Madrid|69|80", 
-            "20|Crvena Zvezda|Valencia Basket|89|106", 
-            "20|Monaco|Partizan|101|84", 
-            "20|Fenerbahçe|Olympiacos|88|80",
-            "19|Bayern|Maccabi Tel Aviv|95|71", 
-            "19|Real Madrid|Dubai|107|93", 
-            "19|Virtus Bolonia|Olimpia Milano|97|85", 
-            "19|Panathinaikos|Olympiacos|82|87", 
-            "19|Baskonia|Fenerbahçe|93|108", 
-            "19|Anadolu Efes|Crvena Zvezda|65|87", 
-            "19|Barcelona|Monaco|74|90", 
-            "19|Valencia Basket|Partizan|86|73", 
-            "19|Asvel Basket|Paris|94|89", 
-            "19|Hapoel Tel-Aviv|Zalgiris Kaunas|80|93|OT",
-            "18|Virtus Bolonia|Olympiacos|94|97", 
-            "18|Monaco|Real Madrid|100|95", 
-            "18|Partizan|Maccabi Tel Aviv|87|112", 
-            "18|Asvel Basket|Anadolu Efes|103|99|OT", 
-            "18|Paris|Crvena Zvezda|102|92", 
-            "18|Valencia Basket|Baskonia|91|81", 
-            "18|Bayern|Hapoel Tel-Aviv|72|82", 
-            "18|Zalgiris Kaunas|Panathinaikos|85|92", 
-            "18|Fenerbahçe|Barcelona|72|71", 
-            "18|Dubai|Olimpia Milano|99|92",
-            "17|Crvena Zvezda|Virtus Bolonia|90|89", 
-            "17|Barcelona|Baskonia|134|124|OT", 
-            "17|Olympiacos|Asvel Basket|107|84", 
-            "17|Monaco|Bayern|103|77", 
-            "17|Zalgiris Kaunas|Partizan|109|68", 
-            "17|Anadolu Efes|Dubai|76|80", 
-            "17|Real Madrid|Paris|95|90", 
-            "17|Olimpia Milano|Fenerbahçe|72|87", 
-            "17|Panathinaikos|Hapoel Tel-Aviv|93|82", 
-            "17|Maccabi Tel Aviv|Valencia Basket|85|82",
-            "16|Baskonia|Monaco|85|73", 
-            "16|Partizan|Virtus Bolonia|68|86", 
-            "16|Asvel Basket|Bayern|76|74", 
-            "16|Zalgiris Kaunas|Anadolu Efes|64|87", 
-            "16|Paris|Barcelona|69|85", 
-            "16|Olimpia Milano|Real Madrid|89|82", 
-            "16|Olympiacos|Valencia Basket|92|99", 
-            "16|Hapoel Tel-Aviv|Crvena Zvezda|84|78", 
-            "16|Fenerbahçe|Panathinaikos|77|81", 
-            "16|Dubai|Maccabi Tel Aviv|95|97",
-            "15|Barcelona|Olympiacos|98|85", 
-            "15|Partizan|Crvena Zvezda|79|76", 
-            "15|Virtus Bolonia|Hapoel Tel-Aviv|74|79", 
-            "15|Monaco|Fenerbahçe|86|92", 
-            "15|Dubai|Bayern|89|88", 
-            "15|Real Madrid|Baskonia|94|87", 
-            "15|Paris|Zalgiris Kaunas|105|108", 
-            "15|Olimpia Milano|Panathinaikos|96|89", 
-            "15|Valencia Basket|Anadolu Efes|94|82", 
-            "15|Maccabi Tel Aviv|Asvel Basket|92|84",
-            "14|Olympiacos|Fenerbahçe|104|87", 
-            "14|Baskonia|Olimpia Milano|88|78", 
-            "14|Virtus Bolonia|Dubai|79|78", 
-            "14|Panathinaikos|Valencia Basket|79|89", 
-            "14|Crvena Zvezda|Barcelona|79|89", 
-            "14|Partizan|Bayern|92|85", 
-            "14|Hapoel Tel-Aviv|Asvel Basket|87|80", 
-            "14|Monaco|Paris|125|104", 
-            "14|Zalgiris Kaunas|Maccabi Tel Aviv|65|83", 
-            "14|Anadolu Efes|Real Madrid|75|81",
-            "13|Barcelona|Asvel Basket|88|78", 
-            "13|Crvena Zvezda|Olympiacos|91|80", 
-            "13|Monaco|Anadolu Efes|102|66", 
-            "13|Maccabi Tel Aviv|Olimpia Milano|88|102", 
-            "13|Valencia Basket|Bayern|90|64", 
-            "13|Panathinaikos|Partizan|91|69", 
-            "13|Hapoel Tel-Aviv|Real Madrid|74|75", 
-            "13|Zalgiris Kaunas|Baskonia|82|67", 
-            "13|Fenerbahçe|Virtus Bolonia|66|64", 
-            "13|Dubai|Paris|90|89",
-            "12|Valencia Basket|Crvena Zvezda|76|73", 
-            "12|Baskonia|Bayern|95|73", 
-            "12|Partizan|Fenerbahçe|87|99", 
-            "12|Virtus Bolonia|Maccabi Tel Aviv|99|89", 
-            "12|Olympiacos|Paris|98|86", 
-            "12|Real Madrid|Zalgiris Kaunas|100|99", 
-            "12|Olimpia Milano|Hapoel Tel-Aviv|83|105", 
-            "12|Panathinaikos|Dubai|103|82", 
-            "12|Anadolu Efes|Barcelona|74|73", 
-            "12|Asvel Basket|Monaco|52|84",
-            "11|Barcelona|Virtus Bolonia|88|81", 
-            "11|Olimpia Milano|Olympiacos|88|87", 
-            "11|Asvel Basket|Partizan|88|87", 
-            "11|Anadolu Efes|Bayern|74|72", 
-            "11|Dubai|Zalgiris Kaunas|95|89", 
-            "11|Maccabi Tel Aviv|Baskonia|89|83", 
-            "11|Paris|Valencia Basket|90|86", 
-            "11|Real Madrid|Panathinaikos|77|87", 
-            "11|Crvena Zvezda|Monaco|91|79", 
-            "11|Fenerbahçe|Hapoel Tel-Aviv|74|68",
-            "10|Bayern|Barcelona|74|75", 
-            "10|Olimpia Milano|Asvel Basket|80|72", 
-            "10|Olympiacos|Zalgiris Kaunas|95|78", 
-            "10|Paris|Panathinaikos|95|101", 
-            "10|Partizan|Monaco|78|76", 
-            "10|Valencia Basket|Real Madrid|89|76", 
-            "10|Virtus Bolonia|Anadolu Efes|99|89", 
-            "10|Hapoel Tel-Aviv|Baskonia|114|89", 
-            "10|Fenerbahçe|Maccabi Tel Aviv|84|75", 
-            "10|Dubai|Crvena Zvezda|102|86",
-            "9|Barcelona|Real Madrid|92|101", 
-            "9|Olympiacos|Partizan|80|71", 
-            "9|Zalgiris Kaunas|Valencia Basket|86|77", 
-            "9|Anadolu Efes|Olimpia Milano|93|97|OT", 
-            "9|Maccabi Tel Aviv|Monaco|107|112|OT", 
-            "9|Paris|Bayern|82|86", 
-            "9|Baskonia|Virtus Bolonia|87|76", 
-            "9|Dubai|Hapoel Tel-Aviv|97|109", 
-            "9|Fenerbahçe|Asvel Basket|81|67", 
-            "9|Crvena Zvezda|Panathinaikos|86|68",
-            "8|Baskonia|Anadolu Efes|86|75", 
-            "8|Partizan|Barcelona|76|78", 
-            "8|Olympiacos|Hapoel Tel-Aviv|62|58", 
-            "8|Monaco|Panathinaikos|92|84", 
-            "8|Real Madrid|Fenerbahçe|84|58", 
-            "8|Bayern|Virtus Bolonia|86|70", 
-            "8|Olimpia Milano|Paris|86|77", 
-            "8|Valencia Basket|Dubai|80|78", 
-            "8|Maccabi Tel Aviv|Crvena Zvezda|92|99", 
-            "8|Zalgiris Kaunas|Asvel Basket|96|59",
-            "7|Olympiacos|Monaco|87|92", 
-            "7|Hapoel Tel-Aviv|Partizan|97|84", 
-            "7|Valencia Basket|Fenerbahçe|94|79", 
-            "7|Paris|Anadolu Efes|80|90", 
-            "7|Barcelona|Olimpia Milano|74|72", 
-            "7|Baskonia|Dubai|92|85", 
-            "7|Panathinaikos|Maccabi Tel Aviv|99|85", 
-            "7|Bayern|Real Madrid|90|84", 
-            "7|Crvena Zvezda|Asvel Basket|79|65", 
-            "7|Zalgiris Kaunas|Virtus Bolonia|86|65",
-            "6|Bayern|Olympiacos|71|96", 
-            "6|Partizan|Paris|83|101", 
-            "6|Virtus Bolonia|Panathinaikos|92|75", 
-            "6|Anadolu Efes|Fenerbahçe|69|79", 
-            "6|Crvena Zvezda|Baskonia|90|72", 
-            "6|Barcelona|Zalgiris Kaunas|73|88", 
-            "6|Olimpia Milano|Valencia Basket|100|103", 
-            "6|Hapoel Tel-Aviv|Monaco|85|77", 
-            "6|Asvel Basket|Dubai|85|79", 
-            "6|Maccabi Tel Aviv|Real Madrid|92|91",
-            "5|Baskonia|Partizan|79|91", 
-            "5|Paris|Hapoel Tel-Aviv|88|89", 
-            "5|Asvel Basket|Virtus Bolonia|83|90", 
-            "5|Anadolu Efes|Panathinaikos|81|95", 
-            "5|Monaco|Valencia Basket|90|84", 
-            "5|Crvena Zvezda|Real Madrid|90|75", 
-            "5|Maccabi Tel Aviv|Olympiacos|94|95", 
-            "5|Fenerbahçe|Bayern|88|73", 
-            "5|Zalgiris Kaunas|Olimpia Milano|78|89", 
-            "5|Dubai|Barcelona|83|78",
-            "4|Paris|Baskonia|105|87", 
-            "4|Real Madrid|Partizan|93|86", 
-            "4|Valencia Basket|Hapoel Tel-Aviv|93|100", 
-            "4|Virtus Bolonia|Monaco|77|73", 
-            "4|Panathinaikos|Asvel Basket|91|85", 
-            "4|Bayern|Olimpia Milano|64|53", 
-            "4|Olympiacos|Anadolu Efes|78|82", 
-            "4|Crvena Zvezda|Zalgiris Kaunas|88|79", 
-            "4|Fenerbahçe|Dubai|69|93", 
-            "4|Maccabi Tel Aviv|Barcelona|71|92",
-            "3|Barcelona|Valencia Basket|108|102", 
-            "3|Bayern|Zalgiris Kaunas|70|98", 
-            "3|Olympiacos|Dubai|86|67", 
-            "3|Fenerbahçe|Crvena Zvezda|81|86", 
-            "3|Real Madrid|Asvel Basket|85|72", 
-            "3|Paris|Virtus Bolonia|90|79", 
-            "3|Baskonia|Panathinaikos|84|86", 
-            "3|Olimpia Milano|Monaco|79|82", 
-            "3|Partizan|Anadolu Efes|93|87", 
-            "3|Hapoel Tel-Aviv|Maccabi Tel Aviv|90|103",
-            "2|Maccabi Tel Aviv|Paris|94|101", 
-            "2|Valencia Basket|Virtus Bolonia|103|94", 
-            "2|Panathinaikos|Barcelona|96|103", 
-            "2|Asvel Basket|Baskonia|102|95", 
-            "2|Anadolu Efes|Hapoel Tel-Aviv|81|87", 
-            "2|Monaco|Dubai|103|81", 
-            "2|Zalgiris Kaunas|Fenerbahçe|84|81", 
-            "2|Real Madrid|Olympiacos|89|77", 
-            "2|Bayern|Crvena Zvezda|97|88", 
-            "2|Partizan|Olimpia Milano|80|78",
-            "1|Asvel Basket|Valencia Basket|77|80", 
-            "1|Fenerbahçe|Paris|96|77", 
-            "1|Monaco|Zalgiris Kaunas|84|89", 
-            "1|Virtus Bolonia|Real Madrid|74|68", 
-            "1|Baskonia|Olympiacos|96|102", 
-            "1|Panathinaikos|Bayern|87|79", 
-            "1|Crvena Zvezda|Olimpia Milano|82|92", 
-            "1|Anadolu Efes|Maccabi Tel Aviv|85|78", 
-            "1|Dubai|Partizan|89|76", 
-            "1|Hapoel Tel-Aviv|Barcelona|103|87"
-        ];
+        const rawResultsArray = [];   // Se rellena solo desde la API (ver loadSeasonData)
 
             let pastMatches = [];
+            function rebuildPastMatches() {
+            pastMatches = [];
             rawResultsArray.forEach(match => {
                 let data = match.split('|');
                 if (isNaN(parseInt(data[0]))) return; // 🛡️ ESCUDO: Si no es un número (ej: "Play In"), ignóralo para la clasificación.
@@ -2524,13 +2147,238 @@
                     qA: data[7] ? data[7].split(',') : null
                 });
             });
+            }
+            rebuildPastMatches();
 
-            const schedule = [
-                { jornada: "Partidos Aplazados", games: [{ id: 301, home: "Maccabi Tel Aviv", away: "Hapoel Tel-Aviv" }] },
-                { jornada: "Jornada 36", games: [{ id: 361, home: "Hapoel Tel-Aviv", away: "Fenerbahçe" }, { id: 362, home: "Zalgiris Kaunas", away: "Dubai" }, { id: 363, home: "Crvena Zvezda", away: "Paris" }, { id: 364, home: "Olympiacos", away: "Real Madrid" }, { id: 365, home: "Barcelona", away: "Panathinaikos" }, { id: 366, home: "Valencia Basket", away: "Olimpia Milano" }, { id: 367, home: "Virtus Bolonia", away: "Bayern" }, { id: 368, home: "Baskonia", away: "Maccabi Tel Aviv" }, { id: 369, home: "Anadolu Efes", away: "Partizan" }, { id: 3610, home: "Monaco", away: "Asvel Basket" }] },
-                { jornada: "Jornada 37", games: [{ id: 371, home: "Hapoel Tel-Aviv", away: "Olympiacos" }, { id: 372, home: "Fenerbahçe", away: "Real Madrid" }, { id: 373, home: "Olimpia Milano", away: "Bayern" }, { id: 374, home: "Valencia Basket", away: "Panathinaikos" }, { id: 375, home: "Paris", away: "Maccabi Tel Aviv" }, { id: 376, home: "Monaco", away: "Barcelona" }, { id: 377, home: "Dubai", away: "Anadolu Efes" }, { id: 378, home: "Partizan", away: "Zalgiris Kaunas" }, { id: 379, home: "Virtus Bolonia", away: "Baskonia" }, { id: 3710, home: "Asvel Basket", away: "Crvena Zvezda" }] },
-                { jornada: "Jornada 38", games: [{ id: 381, home: "Asvel Basket", away: "Fenerbahçe" }, { id: 382, home: "Maccabi Tel Aviv", away: "Virtus Bolonia" }, { id: 383, home: "Olympiacos", away: "Olimpia Milano" }, { id: 384, home: "Partizan", away: "Baskonia" }, { id: 385, home: "Real Madrid", away: "Crvena Zvezda" }, { id: 386, home: "Dubai", away: "Valencia Basket" }, { id: 387, home: "Zalgiris Kaunas", away: "Paris" }, { id: 388, home: "Monaco", away: "Hapoel Tel-Aviv" }, { id: 389, home: "Panathinaikos", away: "Anadolu Efes" }, { id: 3810, home: "Barcelona", away: "Bayern" }] }
+            const schedule = [];   // Se rellena solo desde la API
+
+            // ============================================================
+            // DATOS EN VIVO — resultados y calendario desde la API oficial
+            // Orden de fuentes: /api/results (Cloudflare) → API directa → copia local
+            // ============================================================
+            const SEASON_CODE = "E2026";
+            const EL_DIRECT_URL = `https://api-live.euroleague.net/v2/competitions/E/seasons/${SEASON_CODE}/games`;
+            const EL_CACHE_KEY = `el_games_${SEASON_CODE}`;
+            let bannerGamesArray = [];   // tarjetas del banner (jornada actual + playoffs)
+            let dataSource = null;       // 'proxy' | 'direct' | 'cache' | null
+            let dataUpdatedAt = null;
+            let simVisibleRounds = 3;    // jornadas visibles en el simulador
+
+            // Palabras clave por equipo (nombre API normalizado) + código de club de respaldo
+            const TEAM_ALIASES = [
+                ["Real Madrid",      ["real madrid"],            ["MAD"]],
+                ["Barcelona",        ["barcelona"],              ["BAR"]],
+                ["Fenerbahçe",       ["fenerbahce"],             ["ULK"]],
+                ["Olympiacos",       ["olympiacos", "olympiakos"], ["OLY"]],
+                ["Panathinaikos",    ["panathinaikos"],          ["PAN"]],
+                ["Valencia Basket",  ["valencia"],               ["PAM"]],
+                ["Zalgiris Kaunas",  ["zalgiris"],               ["ZAL"]],
+                ["Hapoel Tel-Aviv",  ["hapoel"],                 ["HTA"]],
+                ["Maccabi Tel Aviv", ["maccabi"],                ["TEL"]],
+                ["Crvena Zvezda",    ["zvezda", "crvena"],       ["RED"]],
+                ["Partizan",         ["partizan"],               ["PAR"]],
+                ["Olimpia Milano",   ["milan"],                  ["MIL"]],
+                ["Anadolu Efes",     ["efes"],                   ["IST"]],
+                ["Virtus Bolonia",   ["virtus", "bologna"],      ["VIR"]],
+                ["Bayern",           ["bayern"],                 ["MUN"]],
+                ["Paris",            ["paris"],                  ["PRS"]],
+                ["Baskonia",         ["baskonia"],               ["BAS"]],
+                ["Asvel Basket",     ["asvel", "villeurbanne"],  ["ASV"]],
+                ["Dubai",            ["dubai"],                  ["DUB"]],
+                ["Beşiktaş",         ["besiktas"],               ["BES", "BJK"]]
             ];
+            const _normTxt = s => (s || "").toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ı/g, "i").toLowerCase();
+            const _unknownTeams = new Set();
+            function resolveTeam(apiName, apiCode) {
+                const n = _normTxt(apiName);
+                for (const [name, keys] of TEAM_ALIASES) if (keys.some(k => n.includes(k))) return name;
+                for (const [name, , codes] of TEAM_ALIASES) if (apiCode && codes.includes(apiCode)) return name;
+                if (!_unknownTeams.has(apiName)) { _unknownTeams.add(apiName); console.warn("[EL] Equipo sin mapear:", apiName, apiCode); }
+                return null;
+            }
+
+            // Misma normalización que functions/api/results.js (por si hay que ir directo a la API)
+            function normalizeApiGame(g) {
+                const side = s => {
+                    s = s || {};
+                    const p = s.partials || {};
+                    let q = [p.partials1, p.partials2, p.partials3, p.partials4];
+                    let ex = p.extraPeriods;
+                    if (ex && !Array.isArray(ex)) ex = Object.keys(ex).sort((a, b) => a - b).map(k => ex[k]);
+                    q = q.concat(ex || []).map(x => (x === null || x === undefined || x === "") ? null : Number(x));
+                    while (q.length && (q[q.length - 1] === null || (q.length > 4 && q[q.length - 1] === 0))) q.pop();
+                    return {
+                        name: (s.club && (s.club.name || s.club.abbreviatedName)) || "",
+                        code: (s.club && s.club.code) || "",
+                        score: (s.score === null || s.score === undefined) ? null : Number(s.score),
+                        q: q.every(x => x === null) ? [] : q.map(x => x || 0)
+                    };
+                };
+                const h = side(g.local), a = side(g.road);
+                const status = (g.gameStatus || "").toString().toLowerCase();
+                return {
+                    code: Number(g.gameCode),
+                    round: Number(g.round) || 0,
+                    phase: ((g.phaseType && g.phaseType.code) || "RS").toUpperCase(),
+                    date: g.utcDate || g.date || null,
+                    played: g.played === true,
+                    live: g.played !== true && (status.includes("live") || status.includes("progress") || ((h.score || 0) + (a.score || 0) > 0)),
+                    home: h, away: a
+                };
+            }
+
+            function _fetchJSON(url, ms) {
+                const ctrl = new AbortController();
+                const timer = setTimeout(() => ctrl.abort(), ms);
+                return fetch(url, { signal: ctrl.signal, cache: "no-store" })
+                    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+                    .finally(() => clearTimeout(timer));
+            }
+
+            async function fetchSeasonGames() {
+                if (location.protocol !== "file:") {
+                    try {
+                        const p = await _fetchJSON(`/api/results?season=${SEASON_CODE}`, 8000);
+                        if (p && Array.isArray(p.games) && p.games.length) return { games: p.games, updated: p.updated, source: "proxy" };
+                    } catch (e) { console.warn("[EL] /api/results falló:", e.message); }
+                }
+                try {
+                    const raw = await _fetchJSON(EL_DIRECT_URL, 12000);
+                    const rows = Array.isArray(raw) ? raw : (raw.data || raw.Data || []);
+                    if (rows.length) return { games: rows.map(normalizeApiGame), updated: new Date().toISOString(), source: "direct" };
+                } catch (e) { console.warn("[EL] API directa falló:", e.message); }
+                return null;
+            }
+
+            function _phaseLabel(ph) {
+                if (ph.includes("PI")) return "Play In";
+                if (ph.includes("PO")) return "Play Off";
+                if (ph.includes("FF")) return "Final Four";
+                return null; // RS
+            }
+
+            // Vuelca los partidos normalizados en las estructuras que ya usa la web
+            function applySeasonGames(games) {
+                rawResultsArray.length = 0;
+                schedule.length = 0;
+                bannerGamesArray = [];
+                const rs = [];
+                const byRound = {};
+
+                (games || []).forEach(g => {
+                    const home = resolveTeam(g.home.name, g.home.code);
+                    const away = resolveTeam(g.away.name, g.away.code);
+                    if (!home || !away) return;
+                    const phaseLbl = _phaseLabel(g.phase || "RS");
+                    const item = { ...g, homeName: home, awayName: away, phaseLbl };
+                    if (g.played && g.home.score !== null && g.away.score !== null) {
+                        const ot = (g.home.q.length > 4 || g.away.q.length > 4) ? "OT" : "";
+                        rawResultsArray.push([phaseLbl || g.round, home, away, g.home.score, g.away.score, ot, g.home.q.join(","), g.away.q.join(",")].join("|"));
+                    }
+                    if (!phaseLbl) {
+                        rs.push(item);
+                        (byRound[g.round] = byRound[g.round] || []).push(item);
+                    }
+                });
+
+                // Calendario del simulador: aplazados primero, después jornada a jornada
+                const rounds = Object.keys(byRound).map(Number).sort((a, b) => a - b);
+                const lastPlayedRound = rs.filter(g => g.played).reduce((m, g) => Math.max(m, g.round), 0);
+                const nowMs = Date.now();
+                const isPostponed = g => !g.played && !g.live && g.round < lastPlayedRound && (!g.date || new Date(g.date).getTime() < nowMs - 3 * 3600e3);
+                const postponed = rs.filter(isPostponed)
+                    .map(g => ({ id: g.code, home: g.homeName, away: g.awayName, date: g.date }));
+                if (postponed.length) schedule.push({ jornada: "Partidos Aplazados", games: postponed });
+                rounds.forEach(r => {
+                    const games = byRound[r]
+                        .filter(g => !isPostponed(g))
+                        .sort((a, b) => new Date(a.date) - new Date(b.date))
+                        .map(g => ({ id: g.code, home: g.homeName, away: g.awayName, date: g.date }));
+                    if (games.length) schedule.push({ jornada: `Jornada ${r}`, games });
+                });
+
+                // Banner: si hay postemporada, solo postemporada; si no, la jornada en curso
+                const post = (games || []).filter(g => _phaseLabel(g.phase || "RS"));
+                let pick = [];
+                if (post.length) {
+                    pick = post;
+                } else if (rs.length) {
+                    const activeRound = rs.some(g => g.played || g.live) ? Math.max(...rs.filter(g => g.played || g.live).map(g => g.round)) : Math.min(...rounds);
+                    pick = byRound[activeRound] || [];
+                    if (pick.every(g => g.played) && byRound[activeRound + 1]) pick = pick.concat(byRound[activeRound + 1]);
+                }
+                bannerGamesArray = pick
+                    .map(g => ({ ...g, homeName: resolveTeam(g.home.name, g.home.code), awayName: resolveTeam(g.away.name, g.away.code) }))
+                    .filter(g => g.homeName && g.awayName)
+                    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                rebuildPastMatches();
+            }
+
+            function setDataStatus() {
+                const el = document.getElementById("data-status");
+                if (!el) return;
+                const L = {
+                    es: { upd: "Resultados oficiales actualizados a las", old: "Sin conexión con la API: mostrando la última copia guardada del", none: "No se han podido cargar los resultados. Vuelve a intentarlo en unos minutos." },
+                    en: { upd: "Official results updated at", old: "API unreachable: showing the last saved copy from", none: "Results could not be loaded. Try again in a few minutes." }
+                }[currentLang === "es" ? "es" : "en"];
+                if (!dataSource) { el.textContent = L.none; el.className = "data-status is-error"; return; }
+                const d = dataUpdatedAt ? new Date(dataUpdatedAt) : new Date();
+                const hhmm = d.toLocaleTimeString(currentLang === "es" ? "es-ES" : [], { hour: "2-digit", minute: "2-digit", hour12: false });
+                if (dataSource === "cache") {
+                    el.textContent = `${L.old} ${d.toLocaleDateString()} ${hhmm}.`;
+                    el.className = "data-status is-stale";
+                } else {
+                    el.textContent = `${L.upd} ${hhmm}.`;
+                    el.className = "data-status";
+                }
+            }
+
+            function _gamesFingerprint(games) {
+                return (games || []).map(g => `${g.code}:${g.played ? 1 : 0}:${g.home.score}-${g.away.score}`).join(",");
+            }
+            let _lastFingerprint = "";
+
+            // 1) Copia guardada (pinta al instante)  2) Datos frescos
+            function loadCachedSeasonData() {
+                try {
+                    const c = JSON.parse(localStorage.getItem(EL_CACHE_KEY) || "null");
+                    if (c && Array.isArray(c.games) && c.games.length) {
+                        applySeasonGames(c.games);
+                        dataSource = "cache"; dataUpdatedAt = c.updated;
+                        _lastFingerprint = _gamesFingerprint(c.games);
+                        return true;
+                    }
+                } catch (e) {}
+                return false;
+            }
+
+            async function refreshSeasonData() {
+                const fresh = await fetchSeasonGames();
+                if (!fresh) { if (dataSource !== "cache") dataSource = null; setDataStatus(); return false; }
+                dataSource = fresh.source; dataUpdatedAt = fresh.updated;
+                try { localStorage.setItem(EL_CACHE_KEY, JSON.stringify({ games: fresh.games, updated: fresh.updated })); } catch (e) {}
+                const fp = _gamesFingerprint(fresh.games);
+                const changed = fp !== _lastFingerprint;
+                _lastFingerprint = fp;
+                if (changed) applySeasonGames(fresh.games);
+                setDataStatus();
+                return changed;
+            }
+
+            // Refresco automático: cada 60 s si hay partidos en juego o a punto de empezar, cada 10 min si no
+            function scheduleAutoRefresh() {
+                const now = Date.now();
+                const hot = bannerGamesArray.some(g => g.live || (!g.played && g.date && Math.abs(new Date(g.date) - now) < 3 * 3600e3));
+                setTimeout(async () => {
+                    if (document.visibilityState === "visible") {
+                        const changed = await refreshSeasonData();
+                        if (changed) { autoUpdateData(); initFilters(); updateUI(); document.dispatchEvent(new Event("el:data-ready")); }
+                    }
+                    scheduleAutoRefresh();
+                }, hot ? 60e3 : 600e3);
+            }
+
 
             let simulatedPicks = {};
 
@@ -2587,10 +2435,10 @@
                         footerMeth.style.direction = 'ltr';
                         footerMeth.style.textAlign = 'left';
                         footerMeth.innerHTML = `
-                            <h2 style="color: #1f2937; border-bottom: 2px solid #3b82f6; padding-bottom: 8px; font-size:1.3rem;">EuroLeague 2025-26 Standings, Simulator &amp; Playoff Calculator</h2>
+                            <h2 style="color: #1f2937; border-bottom: 2px solid #3b82f6; padding-bottom: 8px; font-size:1.3rem;">EuroLeague 2026-27 Standings, Simulator &amp; Playoff Calculator</h2>
 
                             <h3 style="color: #1f2937; margin-top:20px;">How does the EuroLeague Calculator work?</h3>
-                            <p>The <strong>EuroLeague Calculator</strong> is a free, fan-made interactive tool that lets you simulate every remaining game of the EuroLeague 2025-26 season. Pick the winners of any unplayed match and the standings table updates instantly, applying the official H2H (head-to-head) tiebreaker rules used by EuroLeague Basketball — win count, point differential in mutual games, overall point differential, and points scored.</p>
+                            <p>The <strong>EuroLeague Calculator</strong> is a free, fan-made interactive tool that lets you simulate every remaining game of the EuroLeague 2026-27 season. Pick the winners of any unplayed match and the standings table updates instantly, applying the official H2H (head-to-head) tiebreaker rules used by EuroLeague Basketball — win count, point differential in mutual games, overall point differential, and points scored.</p>
                             <p>Unlike simpler tools, this calculator resolves multi-team ties correctly. When three or more teams finish level on wins, the algorithm calculates H2H records within the tied group, then H2H point differential, and finally overall point differential — exactly as the official regulations specify. The bracket updates automatically based on your simulated standings, so you can instantly see who advances to the Top 6, who enters the Play-In, and who goes home.</p>
 
                             <h3 style="color: #1f2937; margin-top:20px;">Monte Carlo Probability Engine</h3>
@@ -3466,11 +3314,39 @@
                 }
             }
 
-            function getNextOpponentsHTML(teamName) {
+            // Texto automático de objetivos (referencia: cortes de la 25/26 → 6.º con 23 V, 10.º con 21 V)
+            function autoScenarioText(teamName) {
+                const team = teamsBase.find(x => x.name === teamName);
+                if (!team) return "";
+                let left = 0;
+                schedule.forEach(j => j.games.forEach(g => { if (!g.played && (g.home === teamName || g.away === teamName)) left++; }));
+                const w = team.initialWins, l = team.initialLosses;
+                const es = currentLang === 'es';
+                const need = target => {
+                    const n = target - w;
+                    if (n <= 0) return es ? `ya tiene las ${target} victorias` : `already has ${target} wins`;
+                    if (n > left) return es ? `ya no llega a ${target} victorias` : `can no longer reach ${target} wins`;
+                    return es ? `necesita ${n} de ${left} (${Math.round(n / left * 100)}%)` : `needs ${n} of ${left} (${Math.round(n / left * 100)}%)`;
+                };
+                if (es) {
+                    return `Balance ${w}-${l} con ${left} partidos por jugar.<br>
+                        Referencia de la 25/26: el 6.º acabó con 23 victorias y el 10.º con 21.<br>
+                        Para el Top 6 (23 V): <strong>${need(23)}</strong>.<br>
+                        Para el Play-In (21 V): <strong>${need(21)}</strong>.`;
+                }
+                return `Record ${w}-${l} with ${left} games left.<br>
+                    2025-26 reference: 6th place finished with 23 wins and 10th with 21.<br>
+                    For the Top 6 (23 W): <strong>${need(23)}</strong>.<br>
+                    For the Play-In (21 W): <strong>${need(21)}</strong>.`;
+            }
+
+            function getNextOpponentsHTML(teamName, limit = 4) {
                 let html = '<div class="schedule-cell">';
+                let shown = 0;
                 schedule.forEach(j => {
                     j.games.forEach(g => {
-                        if(!g.played) {
+                        if(!g.played && shown < limit && (g.home === teamName || g.away === teamName)) {
+                            shown++;
                             if (g.home === teamName) html += `<span class="game-badge badge-home">vs ${getTeamAbrev(g.away)}</span>`;
                             if (g.away === teamName) html += `<span class="game-badge badge-away">@ ${getTeamAbrev(g.home)}</span>`;
                         }
@@ -3523,7 +3399,7 @@
                 };    
                 
                 let currentScenarios = scenariosLang[currentLang] || scenariosLang['en'];
-                let scenarioText = currentScenarios[teamName] || currentScenarios['default'];
+                let scenarioText = currentScenarios[teamName] || currentScenarios['default'] || autoScenarioText(teamName);
 
                 html += `
                     <div class="scenario-box" style="background:#f0fdf4; border-color:#bbf7d0; margin-bottom:20px;">
@@ -3563,7 +3439,7 @@
                 `;
 
                 html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${ui.recentForm}</h4><div style="margin-bottom:20px;">${getFormHTML(teamName)}</div>`;
-                html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.next_games}</h4><div style="margin-bottom:20px; font-size: 1.1rem;">${getNextOpponentsHTML(teamName).replace('class="schedule-cell"', 'style="display:flex; gap:10px; flex-wrap:wrap;"')}</div>`;
+                html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.next_games}</h4><div style="margin-bottom:20px; font-size: 1.1rem;">${getNextOpponentsHTML(teamName, 10).replace('class="schedule-cell"', 'style="display:flex; gap:10px; flex-wrap:wrap;"')}</div>`;
                 html += `<h4 style="border-bottom:2px solid var(--border); padding-bottom:5px;">${t.direct_rivals}</h4>`;
                 
                 let rivals = teamsBase.filter(tb => tb.name !== teamName && Math.abs(tb.initialWins - team.initialWins) <= 2).sort((a,b) => b.initialWins - a.initialWins);
@@ -3788,10 +3664,15 @@
                 if(!container) return;
                 const t = i18n[currentLang] || i18n['es'];
                 let outerHtml = "";
-                
+                let shownRounds = 0, hiddenRounds = 0;
+
                 schedule.forEach(jornada => {
                     // 1. Comprobamos si quedan partidos por jugar en esta jornada
                     let hasUnplayed = jornada.games.some(g => !g.played);
+                    if (hasUnplayed && jornada.jornada !== "Partidos Aplazados") {
+                        if (shownRounds >= simVisibleRounds) { hiddenRounds++; return; }
+                        shownRounds++;
+                    }
                     
                     // 2. Si ya se han jugado todos (como la J36), nos saltamos esta jornada y no la pintamos
                     if (!hasUnplayed) return; 
@@ -3839,6 +3720,15 @@
                     });
                     outerHtml += jHeader + jGames + `</div>`;
                 });
+                if (hiddenRounds > 0) {
+                    const more = currentLang === 'es'
+                        ? `Mostrar 3 jornadas más (quedan ${hiddenRounds})`
+                        : `Show 3 more rounds (${hiddenRounds} left)`;
+                    outerHtml += `<button type="button" class="btn-more-rounds" onclick="simVisibleRounds += 3; renderMatches();">${more}</button>`;
+                }
+                if (!outerHtml) {
+                    outerHtml = `<p class="empty-state">${currentLang === 'es' ? 'El calendario se carga desde la EuroLeague. Si no aparece, recarga la página en unos minutos.' : 'The schedule loads from the EuroLeague. If it does not appear, reload the page in a few minutes.'}</p>`;
+                }
                 container.innerHTML = outerHtml;
             }
 
@@ -4018,6 +3908,12 @@
                     let winnerHome = m.scoreH > m.scoreA;
                     trRows += `<tr><td>${t.round} ${m.jornada}</td><td style="${winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${tName(m.home)}</td><td style="font-weight:bold; background:#f3f4f6;">${m.scoreH} - ${m.scoreA}</td><td style="${!winnerHome ? 'font-weight:bold; color:var(--primary);' : ''}">${tName(m.away)}</td></tr>`;
                 });
+                if (!trRows) {
+                    const msg = currentLang === 'es'
+                        ? 'Todavía no hay partidos terminados. Cada resultado aparece aquí en cuanto acaba el partido.'
+                        : 'No finished games yet. Each result appears here as soon as the game ends.';
+                    trRows = `<tr><td colspan="4" class="empty-state">${msg}</td></tr>`;
+                }
                 tbody.innerHTML = trRows;
             }
 
@@ -4444,21 +4340,31 @@
                     </div>`;
                 });
 
-                // ── TARJETAS RESULTADOS NORMALES ─────────────────────────
+                // ── TARJETAS PARTIDOS (API): jornada en curso o postemporada ──
                 let resultsHtml = "";
-                rawResultsArray.filter(raw => isNaN(parseInt(raw.split('|')[0]))).forEach(raw => {
-                    const p      = raw.split('|').map(s => s.trim());
-                    const phase  = p[0], teamA = p[1], teamB = p[2];
-                    const scoreA = p[3] || "-", scoreB = p[4] || "-";
-                    const ot     = p[5] ? `<span style="font-size:0.6rem;color:#ef4444;margin-left:4px;font-weight:bold;">${p[5]}</span>` : "";
-                    const qA = p[6] || "", qB = p[7] || "";
-                    const isPlayoff  = isNaN(parseInt(phase));
-                    const badgeColor = isPlayoff ? '#ea580c' : '#9ca3af';
-                    const label      = isPlayoff ? phase : `${t.round || 'Jornada'} ${phase}`;
+                const _fmtDate = iso => {
+                    if (!iso) return "";
+                    const d = new Date(iso);
+                    return `${d.getDate()}/${d.getMonth()+1} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+                };
+                bannerGamesArray.forEach(g => {
+                    const teamA = g.homeName, teamB = g.awayName;
+                    const hasScore = g.played || g.live;
+                    const scoreA = hasScore && g.home.score !== null ? g.home.score : "-";
+                    const scoreB = hasScore && g.away.score !== null ? g.away.score : "-";
+                    const isOT = g.home.q.length > 4;
+                    const ot = (g.played && isOT) ? `<span style="font-size:0.6rem;color:#ef4444;margin-left:4px;font-weight:bold;">OT</span>` : "";
+                    const badgeColor = g.phaseLbl ? '#ea580c' : '#9ca3af';
+                    const label      = g.phaseLbl || `${t.round || 'Jornada'} ${g.round}`;
+                    let statusRight;
+                    if (g.live)        statusRight = `<span style="color:#ef4444;font-weight:900;"><span class="el-live-dot"></span>${currentLang === 'es' ? 'EN VIVO' : 'LIVE'}</span>`;
+                    else if (g.played) statusRight = `<span style="color:var(--primary);">${t.final || "FINAL"}</span>`;
+                    else               statusRight = `<span style="color:#f8fafc;">${_fmtDate(g.date)}</span>`;
 
                     let quarters = "";
-                    if (qA && qB) {
-                        const numPeriods = qA.split(',').length;
+                    const qA = g.home.q, qB = g.away.q;
+                    if (hasScore && qA.length && qB.length) {
+                        const numPeriods = Math.max(qA.length, qB.length);
                         let headerRow = '<tr><th></th>';
                         for (let i = 0; i < numPeriods; i++) {
                             headerRow += i < 4
@@ -4466,31 +4372,32 @@
                                 : `<th style="color:#ef4444 !important;font-size:11px !important;">${numPeriods===5?'OT':'OT'+(i-3)}</th>`;
                         }
                         headerRow += '</tr>';
+                        const row = q => q.map(v => `<td>${v}</td>`).join('');
                         quarters = `<div class="el-quarters-tooltip"><table class="q-table">
                             ${headerRow}
-                            <tr><td><img src="${getLogo(teamA)}" width="14" style="vertical-align:middle;"></td><td>${qA.replace(/,/g,'</td><td>')}</td></tr>
-                            <tr><td><img src="${getLogo(teamB)}" width="14" style="vertical-align:middle;"></td><td>${qB.replace(/,/g,'</td><td>')}</td></tr>
+                            <tr><td><img src="${getLogo(teamA)}" width="14" style="vertical-align:middle;"></td>${row(qA)}</tr>
+                            <tr><td><img src="${getLogo(teamB)}" width="14" style="vertical-align:middle;"></td>${row(qB)}</tr>
                         </table></div>`;
                     }
 
                     resultsHtml += `
-                    <div class="el-game-card" onclick="this.classList.toggle('show-tooltip')">
+                    <div class="el-game-card${g.live ? ' is-live' : ''}${!hasScore ? ' is-upcoming' : ''}" onclick="this.classList.toggle('show-tooltip')">
                         <div class="el-game-status">
                             <span style="color:${badgeColor};font-weight:900;">${label}</span>
-                            <span style="color:var(--primary);">${scoreA==="-" ? "PRÓXIMO" : (t.final||"FINAL")}</span>
+                            ${statusRight}
                         </div>
                         <div class="el-game-main">
                             <div class="el-team-col">
-                                <img src="${getLogo(teamA)}" loading="lazy">
+                                <img src="${getLogo(teamA)}" loading="lazy" alt="${tName(teamA)}">
                                 <span class="el-team-name">${getTeamAbrev(teamA)} <span style="color:#9ca3af;font-weight:normal;">${getTeamRank(teamA)}</span></span>
                             </div>
-                            <div class="el-score-center">
-                                <span class="${parseInt(scoreA,10)>parseInt(scoreB,10)?'win':''}">${scoreA}${ot}</span>
+                            <div class="el-score-center">${hasScore ? `
+                                <span class="${g.played && scoreA > scoreB ? 'win' : ''}">${scoreA}${ot}</span>
                                 <span class="el-score-divider">-</span>
-                                <span class="${parseInt(scoreB,10)>parseInt(scoreA,10)?'win':''}">${scoreB}</span>
+                                <span class="${g.played && scoreB > scoreA ? 'win' : ''}">${scoreB}</span>` : `<span class="el-vs">vs</span>`}
                             </div>
                             <div class="el-team-col">
-                                <img src="${getLogo(teamB)}" loading="lazy">
+                                <img src="${getLogo(teamB)}" loading="lazy" alt="${tName(teamB)}">
                                 <span class="el-team-name">${getTeamAbrev(teamB)} <span style="color:#9ca3af;font-weight:normal;">${getTeamRank(teamB)}</span></span>
                             </div>
                         </div>
@@ -4499,7 +4406,10 @@
                     </div>`;
                 });
 
-                const all = playoffHtml + resultsHtml;
+                if (!playoffMatchesArray.length && !bannerGamesArray.length) { container.innerHTML = ""; return; }
+
+                
+const all = playoffHtml + resultsHtml;
                 container.innerHTML = `
                     <div class="el-results-banner" style="direction:ltr;">
                         <div class="el-ticker-wrap" style="width:100%;">
@@ -4537,10 +4447,22 @@
                     btnDrawer.addEventListener("click", toggleDrawer);
                     overlay.addEventListener("click", toggleDrawer);
                 }
-                autoUpdateData(); 
-                
+                loadCachedSeasonData();
+                autoUpdateData();
                 initFilters();
                 updateUI(); // Forzamos una carga inicial para aplicar idioma default
+                setDataStatus();
+                document.dispatchEvent(new Event("el:data-ready"));
+
+                refreshSeasonData().then(changed => {
+                    if (changed) {
+                        autoUpdateData();
+                        initFilters();
+                        updateUI();
+                        document.dispatchEvent(new Event("el:data-ready"));
+                    }
+                    scheduleAutoRefresh();
+                });
                 
                 let hash = window.location.hash.substring(1); 
                 if (hash && document.getElementById(hash)) {
@@ -4662,7 +4584,7 @@
                 }
 
                 // Run after renderBanner has been called
-                document.addEventListener('DOMContentLoaded', () => {
+                document.addEventListener('el:data-ready', () => {
                     setTimeout(initBannerDrag, 300);
                 });
             })();
@@ -4980,7 +4902,7 @@
             </p>
         </footer>
 
-        <div id="cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; background:#1f2937; color:white; padding:15px 20px; text-align:center; z-index:9999; display:none; font-family:sans-serif; box-shadow:0 -4px 12px rgba(0,0,0,0.4);">
+        <div id="cookie-banner" style="position:fixed; bottom:0; left:0; width:100%; box-sizing:border-box; background:#1f2937; color:white; padding:15px 20px; text-align:center; z-index:9999; display:none; font-family:sans-serif; box-shadow:0 -4px 12px rgba(0,0,0,0.4);">
             <p style="margin:0 0 8px 0; font-size:0.88rem; color:#d1d5db; max-width:800px; margin-left:auto; margin-right:auto;">
                 🍪 We use cookies to improve your experience and show relevant ads. See our 
                 <a href="privacidad.html" style="color:#60a5fa;">Privacy Policy</a> for details.
